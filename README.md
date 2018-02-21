@@ -22,3 +22,9 @@ clean up the container:
 ```
 docker-compose down
 ```
+
+# Inspect container
+
+```
+TBD
+```

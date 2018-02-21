@@ -1,6 +1,6 @@
 version: "2"
 services:
-  node:
+  chapter_listings:
     image: "node:9"
     user: "node"
     working_dir: /home/joj/src
@@ -9,6 +9,19 @@ services:
       - NPM_CONFIG_LOGLEVEL=info
     volumes:
       - ./src:/home/joj/src
-    expose:
-      - "8081"
     command: "npm --prefix /home/joj/src/chapter-listings run test-dev"
+
+  react_app:
+      image: "node:9"
+      user: "node"
+      working_dir: /home/joj/src
+      environment:
+        - NODE_ENV=dev
+        - NPM_CONFIG_LOGLEVEL=info
+      volumes:
+        - ./src:/home/joj/src
+      ports:
+        - "3000:3000"
+      expose:
+        - "3000"
+      command: "npm --prefix /home/joj/src/react-chat start"
