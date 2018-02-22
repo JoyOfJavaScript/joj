@@ -1,0 +1,43 @@
+{
+  "name": "blockchain",
+  "version": "0.1.0",
+  "private": true,
+  "devDependencies": {
+    "babel-cli": "^6.23.0",
+    "babel-core": "^6.22.1",
+    "babel-eslint": "^8.0.2",
+    "babel-plugin-transform-decorators": "^6.24.1",
+    "babel-plugin-transform-flow-strip-types": "^6.22.0",
+    "babel-polyfill": "^6.23.0",
+    "babel-preset-es2015": "^6.22.0",
+    "babel-preset-flow": "^6.23.0",
+    "babel-preset-stage-0": "^6.3.13",
+    "babel-preset-stage-2": "^6.22.0",
+    "chai": "4.1.0",
+    "eslint": "^4.18.0",
+    "eslint-plugin-flowtype-errors": "^3.3.6",
+    "eslint-plugin-fp": "^2.3.0",
+    "flow-bin": "^0.59.0",
+    "mocha": "^4.0.1",
+    "nodemon": "^1.11.0",
+    "rimraf": "^2.6.1",
+    "sinon": "^1.17.7",
+    "sinon-chai": "^2.8.0"
+  },
+  "dependencies": {
+    "data.either": "1.5.1",
+    "data.maybe": "1.2.2",
+    "data.task": "3.1.1",
+    "flow-typed": "^2.2.3",
+    "ramda": "0.24.1"
+  },
+  "scripts": {
+    "test": "mocha --recursive --require babel-register src/",
+    "test-dev": "nodemon --watch src/ --exec 'mocha --recursive --require babel-register src/ || true'",
+    "test-debug": "mocha --recursive --debug-brk --require babel-register",
+    "eslint": "eslint ./src/",
+    "flow": "flow",
+    "flow-init": "flow init",
+    "flow-status": "flow status"
+  }
+}
