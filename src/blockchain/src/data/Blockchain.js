@@ -1,21 +1,22 @@
 import Block from './Block'
+import { identity } from 'ramda'
 
-const Blockchain = (genesis = Block()) => {
+const Blockchain = chain => {
   // Private space
-  const data = Array.of(genesis)
+  const _data = chain || Array.of(Block.genesis())
 
   // Public interface
   return {
     // Returns first ever block created
-    genesis: () => data[0],
+    genesis: () => _data[0],
     // Returns last (or latest) block
-    last: () => data[data.length - 1],
+    last: () => _data[_data.length - 1],
     // Appends the new block to the end of the chain
-    append: block => data.append(block),
-    // Map a function over the blocks in the chain
-    map: () => null,
+    append: block => _data.concat(block),
     // Inject another block chain data
-    flatMap: () => null
+    flatMap: () => null,
+    // Get all blocks
+    blocks: () => _data.map(identity)
   }
 }
 

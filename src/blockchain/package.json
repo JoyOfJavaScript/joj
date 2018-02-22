@@ -32,8 +32,10 @@
     "ramda": "0.24.1"
   },
   "scripts": {
+    "start": "babel-node src/main.js --presets es2015,stage-2",
     "test": "mocha --recursive --require babel-register src/",
-    "test-dev": "nodemon --watch src/ --exec 'mocha --recursive --require babel-register src/ || true'",
+    "test-dev":
+      "nodemon --watch src/ --exec 'mocha --recursive --require babel-register src/ || true'",
     "test-debug": "mocha --recursive --debug-brk --require babel-register",
     "eslint": "eslint ./src/",
     "flow": "flow",
