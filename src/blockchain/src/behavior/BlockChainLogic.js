@@ -6,11 +6,13 @@ import { props, curry } from 'ramda'
 const addBlockTo = curry((blockchain, newBlock) => {
   // TODO: Fix here to add but retrn blockchan with added data
   return blockchain.push({
+    ...newBlock,
+
+    // Override fields in new object
     previousHash: blockchain.last().hash,
     hash: Block.calculateHash(
       props(['index', 'timestamp', 'data', 'previousHash'], newBlock)
-    ),
-    ...newBlock
+    )
   })
 })
 

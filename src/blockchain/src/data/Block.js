@@ -3,7 +3,7 @@ import { curry, compose } from 'ramda'
 
 const EPOCH = Date.parse('01 Jan 1970 00:00:00 GMT')
 const ALGO_SHA256 = 'sha256'
-const ENCODING = 'utf8'
+const ENCODING_UTF8 = 'hex'
 
 export const GENESIS_INDEX = 0
 
@@ -40,8 +40,8 @@ const formatData = (...pieces) => pieces.map(JSON.stringify).join('')
 const createDigest = curry((algorithm, encoding, data) =>
   crypto
     .createHash(algorithm)
-    .update(data, encoding)
-    .digest()
+    .update(data)
+    .digest(encoding)
 )
 
 /**
@@ -50,7 +50,7 @@ const createDigest = curry((algorithm, encoding, data) =>
  * @param {Array} pieces Pieces of data to join together into a single string
  */
 export const calculateHash = compose(
-  createDigest(ALGO_SHA256, ENCODING),
+  createDigest(ALGO_SHA256, ENCODING_UTF8),
   formatData
 )
 
