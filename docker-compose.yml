@@ -1,3 +1,4 @@
+# https://github.com/nodejs/docker-node#create-a-dockerfile-in-your-nodejs-app-project
 version: "2"
 services:
   chapter_listings:

@@ -18,3 +18,4 @@ addCoin(BlockLogic.newBlock(1, Date.call(null), Money('USD', 4)))
 addCoin(BlockLogic.newBlock(2, Date.call(null), Money('USD', 8)))
 
 console.log(coin.blocks().map(prettyStringify))
+console.log('Is blockchain valid?', BlockChainLogic.isChainValid(coin))

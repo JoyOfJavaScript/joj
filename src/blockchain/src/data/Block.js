@@ -54,7 +54,8 @@ export const calculateHash = compose(
   formatData
 )
 
-Block.calculateHash = calculateHash
+Block.calculateHash = ({ index, timestamp, data, previousHash }) =>
+  calculateHash(index, timestamp, data, previousHash)
 
 Block.genesis = data =>
   Block(GENESIS_INDEX, EPOCH, data || { data: 'Genesis Block' }, '-1')
