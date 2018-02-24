@@ -14,14 +14,14 @@ const mineCoin = BlockChainLogic.mineBlockTo(coin)
 const fourDollars = addCoin(
   BlockLogic.newBlock(1, Date.call(null), Money('USD', 4))
 )
-const eightDolalars = addCoin(
+const eightDollars = addCoin(
   BlockLogic.newBlock(2, Date.call(null), Money('USD', 8))
 )
-const hundredDolalars = mineCoin(
+const hundredDollars = mineCoin(
   BlockLogic.newBlock(2, Date.call(null), Money('USD', 100))
 )
 
-console.log(coin.blocks().map(JSON.stringify))
+//console.log(coin.blocks().map(JSON.stringify))
 
 describe('Create a valid Blockchain data structure', () => {
   it('Should create a block chain and assert if valid', () => {
@@ -34,7 +34,11 @@ describe('Create a valid Blockchain data structure', () => {
     }, TypeError)
 
     assert.throws(() => {
-      eightDolalars.data.amount = '10000000000'
+      eightDollars.data.amount = '10000000000'
+    }, TypeError)
+
+    assert.throws(() => {
+      hundredDollars.hash = '123'
     }, TypeError)
   })
 })

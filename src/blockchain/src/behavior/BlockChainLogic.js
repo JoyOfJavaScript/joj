@@ -4,7 +4,7 @@ import BlockLogic from './BlockLogic'
 import Pair from './util/Pair'
 import { props, curry, compose } from 'ramda'
 
-const MINING_DIFFICULTY = 2
+const MINING_DIFFICULTY = 4
 
 const append = (a, b) => a + b
 const join = separator => array => array.join(separator)
