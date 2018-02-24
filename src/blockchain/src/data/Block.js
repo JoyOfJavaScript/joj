@@ -16,12 +16,13 @@ export const GENESIS_INDEX = 0
  * @param {String} previousHash Reference to the previous block in the chain
  * @param {Function} hasherFn   Function used to compute a SHA256 hash for this block
  */
-const Block = (index, timestamp, data = {}, previousHash = '') => ({
+const Block = (index, timestamp, data = {}, previousHash = '', nonce = 0) => ({
   index,
   timestamp,
   data,
   previousHash,
-  hash: calculateHash(index, timestamp, data, previousHash)
+  nonce, // Random number used to be changed for mining purposes before adding to the blockchain
+  hash: calculateHash(index, timestamp, data, previousHash, nonce)
 })
 
 /**
@@ -54,8 +55,8 @@ export const calculateHash = compose(
   formatData
 )
 
-Block.calculateHash = ({ index, timestamp, data, previousHash }) =>
-  calculateHash(index, timestamp, data, previousHash)
+Block.calculateHash = ({ index, timestamp, data, previousHash, nonce }) =>
+  calculateHash(index, timestamp, data, previousHash || '', nonce || 0)
 
 Block.genesis = data =>
   Block(GENESIS_INDEX, EPOCH, data || { data: 'Genesis Block' }, '-1')

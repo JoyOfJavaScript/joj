@@ -4,6 +4,8 @@ import BlockLogic from './BlockLogic'
 import Pair from './util/Pair'
 import { props, curry, compose } from 'ramda'
 
+const MINING_DIFFICULTY = 2
+
 const append = (a, b) => a + b
 const join = separator => array => array.join(separator)
 
@@ -14,7 +16,20 @@ const addBlockTo = curry((blockchain, newBlock) => {
     // Override fields in new object
     previousHash: blockchain.last().hash
   }
+  // Current hash is based on the previous hash
   newBlock.hash = Block.calculateHash(newBlock)
+  return blockchain.push(newBlock)
+})
+
+const mineBlockTo = curry((blockchain, newBlock) => {
+  newBlock = {
+    ...newBlock,
+
+    // Override fields in new object
+    previousHash: blockchain.last().hash
+  }
+  // Mined hash is based on the previous hash
+  newBlock = BlockLogic.mineBlock(MINING_DIFFICULTY, newBlock)
   return blockchain.push(newBlock)
 })
 
@@ -45,6 +60,7 @@ const isChainValid = blockchain =>
  */
 const BlockChainLogic = {
   addBlockTo,
+  mineBlockTo,
   isChainValid
 }
 

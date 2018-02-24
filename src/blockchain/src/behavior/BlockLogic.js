@@ -11,6 +11,19 @@ const newBlock = (index, timestamp, data, previousHash = '') =>
     previousHash
   )
 
+const mineBlock = (difficulty, block) => {
+  const difficultyStr = Array(difficulty)
+    .fill(0)
+    .join('')
+  while (!block.hash.startsWith(difficultyStr)) {
+    // Using mutable code here for efficiency reasons
+    block.nonce++
+    block.hash = Block.calculateHash(block)
+  }
+  console.log(`Block mined: ${block.hash}`)
+  return block
+}
+
 // Checks index is greater than Genesis block index
 const checkIndex = index => () => index > Block.GENESIS_INDEX
 
@@ -28,7 +41,8 @@ const checkInvariant = name => checker => {
  * Exported BlockLogic interface
  */
 const BlockLogic = {
-  newBlock
+  newBlock,
+  mineBlock
 }
 
 export default BlockLogic

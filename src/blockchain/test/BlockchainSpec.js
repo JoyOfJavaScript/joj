@@ -8,6 +8,7 @@ import BlockChain from '../src/data/Blockchain'
 // Create blockchain
 const coin = BlockChain()
 const addCoin = BlockChainLogic.addBlockTo(coin)
+const mineCoin = BlockChainLogic.mineBlockTo(coin)
 
 // Add coins
 const fourDollars = addCoin(
@@ -16,8 +17,11 @@ const fourDollars = addCoin(
 const eightDolalars = addCoin(
   BlockLogic.newBlock(2, Date.call(null), Money('USD', 8))
 )
+const hundredDolalars = mineCoin(
+  BlockLogic.newBlock(2, Date.call(null), Money('USD', 100))
+)
 
-//console.log(coin.blocks().map(JSON.stringify))
+console.log(coin.blocks().map(JSON.stringify))
 
 describe('Create a valid Blockchain data structure', () => {
   it('Should create a block chain and assert if valid', () => {
