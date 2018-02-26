@@ -11,13 +11,14 @@ const ENCODING_UTF8 = 'hex'
  * @param {String} timestamp    When the block was created
  * @param {Object} data         Data associated with this block
  * @param {String} previousHash Reference to the previous block in the chain
- * @param {Function} hasherFn   Function used to compute a SHA256 hash for this block
+ * @param {String} nonce        Random number used to be changed for mining purposes before adding to the blockchain
+ * @return {Block} Newly created block with its own computed hash
  */
 const Block = (timestamp, data = {}, previousHash = '', nonce = 0) => ({
   timestamp,
   data,
   previousHash,
-  nonce, // Random number used to be changed for mining purposes before adding to the blockchain
+  nonce,
   hash: calculateHash(timestamp, data, previousHash, nonce)
 })
 
