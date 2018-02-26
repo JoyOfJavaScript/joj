@@ -5,24 +5,20 @@ const EPOCH = Date.parse('01 Jan 1970 00:00:00 GMT')
 const ALGO_SHA256 = 'sha256'
 const ENCODING_UTF8 = 'hex'
 
-export const GENESIS_INDEX = 0
-
 /**
  * Represents a single block in the chain
  *
- * @param {String} index        Location of block in the chain (optional)
  * @param {String} timestamp    When the block was created
  * @param {Object} data         Data associated with this block
  * @param {String} previousHash Reference to the previous block in the chain
  * @param {Function} hasherFn   Function used to compute a SHA256 hash for this block
  */
-const Block = (index, timestamp, data = {}, previousHash = '', nonce = 0) => ({
-  index,
+const Block = (timestamp, data = {}, previousHash = '', nonce = 0) => ({
   timestamp,
   data,
   previousHash,
   nonce, // Random number used to be changed for mining purposes before adding to the blockchain
-  hash: calculateHash(index, timestamp, data, previousHash, nonce)
+  hash: calculateHash(timestamp, data, previousHash, nonce)
 })
 
 /**
@@ -55,11 +51,10 @@ export const calculateHash = compose(
   formatData
 )
 
-Block.calculateHash = ({ index, timestamp, data, previousHash, nonce }) =>
-  calculateHash(index, timestamp, data, previousHash || '', nonce || 0)
+Block.calculateHash = ({ timestamp, data, previousHash, nonce }) =>
+  calculateHash(timestamp, data, previousHash || '', nonce || 0)
 
-Block.genesis = data =>
-  Block(GENESIS_INDEX, EPOCH, data || { data: 'Genesis Block' }, '-1')
+Block.genesis = data => Block(EPOCH, data || { data: 'Genesis Block' }, '-1')
 
 Block.inspect = block => `Block ${JSON.stringify(block)}`
 

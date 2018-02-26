@@ -41,4 +41,6 @@ describe('Create a valid Blockchain data structure', () => {
       hundredDollars.hash = '123'
     }, TypeError)
   })
+
+  //https://www.youtube.com/watch?v=fRV6cGXVQ4I
 })

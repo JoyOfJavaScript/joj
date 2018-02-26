@@ -1,6 +1,5 @@
 import Block from './Block'
-import { identity } from 'ramda'
-import { deepFreeze } from '../common/helpers'
+import '../common/helpers'
 
 /**
  * Untamperable block chain
