@@ -10,12 +10,8 @@ const ENCODING_UTF8 = 'hex'
 /**
  * Create a new block
  */
-const newBlock = (timestamp, data, previousHash = '') =>
-  Object.create(Block).init(
-    checkInvariant('timestamp', notEmpty, timestamp),
-    data,
-    previousHash
-  )
+const newBlock = (timestamp, data, previousHash) =>
+  Block(checkInvariant('timestamp', notEmpty, timestamp), data, previousHash)
 
 const newTxBlock = (timestamp, transactions) =>
   TransactionalBlock(timestamp, transactions)

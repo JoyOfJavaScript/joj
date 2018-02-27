@@ -11,22 +11,18 @@ const EPOCH = Date.parse('01 Jan 1970 00:00:00 GMT')
  * @param {String} nonce        Random number used to be changed for mining purposes before adding to the blockchain
  * @return {Block} Newly created block with its own computed hash
  */
-const Block = {
-  init: function(timestamp, data, previousHash) {
-    this.timestamp = timestamp
-    this.data = data
-    this.previousHash = previousHash
-    this.nonce = 0
-    this.hash = BlockLogic.calculateBlockHash(this)
-    return this
-  },
-  inspect() {
-    return `Block ${JSON.stringify(this, [
-      'timestamp',
-      'data',
-      'previousHash',
-      'hash'
-    ])}`
+const Block = (timestamp, data, previousHash = '') => {
+  const nonce = 0
+  const hash = BlockLogic.calculateBlockHash(timestamp, data, previousHash)
+  return {
+    timestamp,
+    data,
+    previousHash,
+    nonce,
+    hash,
+    inspect: () =>
+      `Block {ts: ${timestamp}, data: ${JSON.stringify(data)},\
+       ph: ${previousHash}, h: ${hash}}`
   }
 }
 
@@ -36,7 +32,6 @@ const Block = {
  * @param  {Object} data Misc block data to store
  * @return {Block} New genesis block
  */
-Block.genesis = data =>
-  Object.create(Block).init(EPOCH, data || { data: 'Genesis Block' }, '-1')
+Block.genesis = data => Block(EPOCH, data || { data: 'Genesis Block' }, '-1')
 
 export default Block

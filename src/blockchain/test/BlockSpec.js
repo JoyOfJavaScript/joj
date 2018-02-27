@@ -9,7 +9,7 @@ describe('Block object', () => {
     assert.equal(b.previousHash, '-1')
   })
   it('Should init a new block', () => {
-    const b = Object.create(Block).init('now', { data: 'test' }, '123')
+    const b = Block('now', { data: 'test' }, '123')
     assert.equal(b.timestamp, 'now')
     assert.deepEqual(b.data, { data: 'test' })
     assert.equal(b.previousHash, '123')
