@@ -1,5 +1,6 @@
 import crypto from 'crypto'
 import { curry, compose } from 'ramda'
+import { isEmpty } from '../common/helpers'
 
 const EPOCH = Date.parse('01 Jan 1970 00:00:00 GMT')
 const ALGO_SHA256 = 'sha256'
@@ -14,13 +15,17 @@ const ENCODING_UTF8 = 'hex'
  * @param {String} nonce        Random number used to be changed for mining purposes before adding to the blockchain
  * @return {Block} Newly created block with its own computed hash
  */
-const Block = (timestamp, data = {}, previousHash = '', nonce = 0) => ({
-  timestamp,
-  data,
-  previousHash,
-  nonce,
-  hash: calculateHash(timestamp, data, previousHash, nonce)
-})
+const Block = {
+  init: function(timestamp, data, previousHash = '') {
+    this.timestamp = timestamp
+    this.data = data
+    this.previousHash = previousHash
+    this.hash = calculateHash(this)
+    return this
+  }
+}
+
+Block.make = Object.create(Block).init
 
 /**
  * Format the provided data pieces and joins them together
@@ -47,15 +52,28 @@ const createDigest = curry((algorithm, encoding, data) =>
  *
  * @param {Array} pieces Pieces of data to join together into a single string
  */
-export const calculateHash = compose(
+const calculateHash = compose(
   createDigest(ALGO_SHA256, ENCODING_UTF8),
   formatData
 )
 
-Block.calculateHash = ({ timestamp, data, previousHash, nonce }) =>
-  calculateHash(timestamp, data, previousHash || '', nonce || 0)
+/**
+ * Static version of calculate hash
+ *
+ * @param  {String} Block Block data to calculate hash from
+ * @return {String} New hash
+ */
+Block.calculateHash = ({ timestamp, data, previousHash }, nonce = 0) =>
+  calculateHash(timestamp, data, previousHash || '', nonce)
 
-Block.genesis = data => Block(EPOCH, data || { data: 'Genesis Block' }, '-1')
+/**
+ * Create a genesis block. There should only ever be one genesis in a chain
+ *
+ * @param  {Object} data Misc block data to store
+ * @return {Block} New genesis block
+ */
+Block.genesis = data =>
+  Block.make(EPOCH, data || { data: 'Genesis Block' }, '-1')
 
 Block.inspect = block => `Block ${JSON.stringify(block)}`
 

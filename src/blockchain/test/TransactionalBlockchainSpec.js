@@ -12,13 +12,13 @@ const mineCoin = BlockChainLogic.mineBlockTo(coin)
 
 // Add coins
 const fourDollars = addCoin(
-  BlockLogic.newBlock(1, Date.call(null), Money('USD', 4))
+  BlockLogic.newBlock(Date.call(null), Money('USD', 4))
 )
 const eightDollars = addCoin(
-  BlockLogic.newBlock(2, Date.call(null), Money('USD', 8))
+  BlockLogic.newBlock(Date.call(null), Money('USD', 8))
 )
 const hundredDollars = mineCoin(
-  BlockLogic.newBlock(2, Date.call(null), Money('USD', 100))
+  BlockLogic.newBlock(Date.call(null), Money('USD', 100))
 )
 
 //console.log(coin.blocks().map(JSON.stringify))

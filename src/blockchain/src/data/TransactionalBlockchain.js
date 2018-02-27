@@ -1,9 +1,13 @@
 import Blockchain from './Blockchain'
 
 const TransactionalBlockchain = chain => {
-  // Delegate base behavior to Blockchain
+  // Delegate base behavior to Blockchain through OLLO
   const txBlockchain = Object.create(Blockchain(chain))
-  txBlockchain.pendingTransactions = []
+  // Private space
+  const _pendingTx = []
+
+  // Public space
+  txBlockchain.pendingTransactions = () => [..._pendingTx]
 
   return txBlockchain
 }

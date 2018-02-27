@@ -1,32 +1,38 @@
 import Block from '../data/Block'
-
-const checkInvariant = name => checker => data => {
-  if (!checker(data)) {
-    throw new Error(`Invalid argument. Please provide a valid for ${name}`)
-  }
-  return data
-}
-
-// Checks string is not empty
-const notEmpty = str => () => str && str.length > 0
+import TransactionalBlock from '../data/TransactionalBlock'
+import { notEmpty, checkInvariant } from '../common/helpers'
+import { curry } from 'ramda'
 
 /**
  * Create a new block
  */
 const newBlock = (timestamp, data, previousHash = '') =>
-  Block(checkInvariant('timestamp', notEmpty, timestamp), data, previousHash)
+  Block.make(
+    checkInvariant('timestamp', notEmpty, timestamp),
+    data,
+    previousHash
+  )
 
-const mineBlock = (difficulty, block) => {
-  const difficultyStr = Array(difficulty)
-    .fill(0)
-    .join('')
-  while (!block.hash.startsWith(difficultyStr)) {
-    // Using mutable code here for efficiency reasons
-    block.nonce++
-    block.hash = Block.calculateHash(block)
+const newTxBlock = (timestamp, transactions) =>
+  TransactionalBlock(timestamp, transactions)
+
+const mineBlock = (difficulty, block) =>
+  compareHashUntil(
+    block,
+    Array(difficulty)
+      .fill(0)
+      .join('')
+  )
+
+const compareHashUntil = (block, difficulty, nonce = 1) => {
+  if (block.hash.startsWith(difficulty)) {
+    // Base case reached, return new hash
+    console.log(`Block mined: ${block.hash}`)
+    return block
   }
-  console.log(`Block mined: ${block.hash}`)
-  return block
+  // Continue to compute the hash again with different nonce
+  block.hash = Block.calculateHash(block, nonce)
+  return compareHashUntil(block, difficulty, nonce + 1)
 }
 
 /**
@@ -34,6 +40,7 @@ const mineBlock = (difficulty, block) => {
  */
 const BlockLogic = {
   newBlock,
+  newTxBlock,
   mineBlock
 }
 
