@@ -7,7 +7,7 @@ import { curry } from 'ramda'
  * Create a new block
  */
 const newBlock = (timestamp, data, previousHash = '') =>
-  Block.make(
+  Object.create(Block).init(
     checkInvariant('timestamp', notEmpty, timestamp),
     data,
     previousHash
@@ -31,7 +31,8 @@ const compareHashUntil = (block, difficulty, nonce = 1) => {
     return block
   }
   // Continue to compute the hash again with different nonce
-  block.hash = Block.calculateHash(block, nonce)
+  block.nonce = nonce
+  block.hash = Block.calculateHash(block)
   return compareHashUntil(block, difficulty, nonce + 1)
 }
 

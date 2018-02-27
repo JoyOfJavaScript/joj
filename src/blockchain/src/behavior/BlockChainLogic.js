@@ -10,29 +10,22 @@ const MINING_REWARD_SCORE = 100
 const append = (a, b) => a + b
 const join = separator => array => array.join(separator)
 
+/**
+ * Recalculate new blocks hash
+ * Point new block's previous to current
+ */
 const addBlockTo = curry((blockchain, newBlock) => {
-  newBlock = {
-    ...newBlock,
-
-    // Override fields in new object
-    previousHash: blockchain.last().hash
-  }
-  // Current hash is based on the previous hash
+  newBlock.previousHash = blockchain.last().hash
   newBlock.hash = Block.calculateHash(newBlock)
-  return blockchain.push(newBlock)
+  blockchain.push(newBlock)
+  return newBlock
 })
 
 const mineBlockTo = curry((blockchain, newBlock) => {
-  newBlock = {
-    ...newBlock,
-
-    // Override fields in new object
-    previousHash: blockchain.last().hash
-  }
-
-  // Mined hash is based on the previous hash
+  newBlock.previousHash = blockchain.last().hash
   newBlock = BlockLogic.mineBlock(MINING_DIFFICULTY, newBlock)
-  return blockchain.push(newBlock)
+  blockchain.push(newBlock)
+  return newBlock
 })
 
 const minePendingTransactions = curry(txBlockchain => {

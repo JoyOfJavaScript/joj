@@ -16,16 +16,18 @@ const ENCODING_UTF8 = 'hex'
  * @return {Block} Newly created block with its own computed hash
  */
 const Block = {
-  init: function(timestamp, data, previousHash = '') {
+  init: function(timestamp, data, previousHash) {
     this.timestamp = timestamp
     this.data = data
     this.previousHash = previousHash
     this.hash = calculateHash(this)
+    this.nonce = 0
     return this
+  },
+  inspect() {
+    return `Block ${JSON.stringify(this)}`
   }
 }
-
-Block.make = Object.create(Block).init
 
 /**
  * Format the provided data pieces and joins them together
@@ -63,8 +65,8 @@ const calculateHash = compose(
  * @param  {String} Block Block data to calculate hash from
  * @return {String} New hash
  */
-Block.calculateHash = ({ timestamp, data, previousHash }, nonce = 0) =>
-  calculateHash(timestamp, data, previousHash || '', nonce)
+Block.calculateHash = ({ timestamp, data, previousHash, nonce }) =>
+  calculateHash(timestamp, data, previousHash || '', nonce || 0)
 
 /**
  * Create a genesis block. There should only ever be one genesis in a chain
@@ -73,8 +75,6 @@ Block.calculateHash = ({ timestamp, data, previousHash }, nonce = 0) =>
  * @return {Block} New genesis block
  */
 Block.genesis = data =>
-  Block.make(EPOCH, data || { data: 'Genesis Block' }, '-1')
-
-Block.inspect = block => `Block ${JSON.stringify(block)}`
+  Object.create(Block).init(EPOCH, data || { data: 'Genesis Block' }, '-1')
 
 export default Block
