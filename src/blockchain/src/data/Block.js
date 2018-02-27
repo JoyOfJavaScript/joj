@@ -21,7 +21,12 @@ const Block = {
     return this
   },
   inspect() {
-    return `Block ${JSON.stringify(this)}`
+    return `Block ${JSON.stringify(this, [
+      'timestamp',
+      'data',
+      'previousHash',
+      'hash'
+    ])}`
   }
 }
 

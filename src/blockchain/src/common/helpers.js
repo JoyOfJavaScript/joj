@@ -1,5 +1,7 @@
 import { curry } from 'ramda'
 
+export const inspect = obj => obj.inspect()
+
 // Checks string is not empty
 export const notEmpty = str => () => str && str.length > 0
 
