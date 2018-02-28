@@ -1,11 +1,6 @@
-import crypto from 'crypto'
 import Block from '../data/Block'
 import TransactionalBlock from '../data/TransactionalBlock'
 import { notEmpty, checkInvariant } from '../common/helpers'
-import { curry, compose } from 'ramda'
-
-const ALGO_SHA256 = 'sha256'
-const ENCODING_UTF8 = 'hex'
 
 /**
  * Create a new block
@@ -32,48 +27,9 @@ const compareHashUntil = (block, difficulty, nonce = 1) => {
   }
   // Continue to compute the hash again with higher nonce value
   block.nonce = nonce
-  block.hash = calculateBlockHash(block)
+  block.calculateHash()
   return compareHashUntil(block, difficulty, nonce + 1)
 }
-
-/**
- * Format the provided data pieces and joins them together
- *
- * @param {Array} pieces Pieces of data to join together into a single string
- */
-const formatData = (...pieces) => pieces.map(JSON.stringify).join('')
-
-/**
- * Create a SHA256 digest from a given data string
- *
- * @param {String} algorithm Algorithm to use (e.g. sha256)
- * @param {String} data      Data to use as seed for the hash
- */
-const createDigest = curry((algorithm, encoding, data) =>
-  crypto
-    .createHash(algorithm)
-    .update(data)
-    .digest(encoding)
-)
-
-/**
- * Calculates a hash from given block data pieces
- *
- * @param {Array} pieces Pieces of data to join together into a single string
- */
-const calculateHash = compose(
-  createDigest(ALGO_SHA256, ENCODING_UTF8),
-  formatData
-)
-
-/**
- * Static version of calculate hash
- *
- * @param  {String} Block Block data to calculate hash from
- * @return {String} New hash
- */
-const calculateBlockHash = ({ timestamp, data, previousHash, nonce }) =>
-  calculateHash(timestamp, data, previousHash || '', nonce || 0)
 
 /**
  * Exported BlockLogic interface
@@ -81,8 +37,7 @@ const calculateBlockHash = ({ timestamp, data, previousHash, nonce }) =>
 const BlockLogic = {
   newBlock,
   newTxBlock,
-  mineBlock,
-  calculateBlockHash
+  mineBlock
 }
 
 export default BlockLogic

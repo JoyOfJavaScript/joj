@@ -1,7 +1,8 @@
-import Block from '../data/Block'
 import BlockLogic from './BlockLogic'
 import Pair from './util/Pair'
 import { curry } from 'ramda'
+import Block from '../data/Block'
+
 // https://www.youtube.com/watch?v=fRV6cGXVQ4I
 
 const MINING_DIFFICULTY = 2
@@ -13,7 +14,7 @@ const MINING_REWARD_SCORE = 100
  */
 const addBlockTo = curry((blockchain, newBlock) => {
   newBlock.previousHash = blockchain.last().hash
-  newBlock.hash = BlockLogic.calculateBlockHash(newBlock)
+  newBlock.calculateHash()
   blockchain.push(newBlock)
   return newBlock
 })
@@ -49,7 +50,7 @@ const isChainValid = blockchain =>
       const previous = pair.right
       return (
         // 1 .Hashed can't be tampered with
-        current.hash === BlockLogic.calculateBlockHash(current) &&
+        current.hash === Block.calculateHash(current) &&
         // 2. Blocks form a chain
         current.previousHash === previous.hash
       )
