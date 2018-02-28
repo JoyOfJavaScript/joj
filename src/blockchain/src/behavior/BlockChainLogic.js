@@ -2,6 +2,7 @@ import BlockLogic from './BlockLogic'
 import Pair from './util/Pair'
 import { curry } from 'ramda'
 import Block from '../data/Block'
+import Transaction from '../data/Transaction'
 
 // https://www.youtube.com/watch?v=fRV6cGXVQ4I
 
@@ -26,12 +27,33 @@ const mineBlockTo = curry((blockchain, newBlock) => {
   return newBlock
 })
 
-const minePendingTransactions = curry(txBlockchain => {
+const balanceOfAddress = curry((blockchain, address) => {
+  let balance = 0
+  for (const block of this.chain) {
+    for (const trans of block.pendingTransactions) {
+      if (trans.fromAddress === address) {
+        balance -= trans.amount
+      }
+      if (trans.toAddress === address) {
+        balance += trans.amount
+      }
+    }
+  }
+  return balance
+})
+
+const minePendingTransactions = curry((txBlockchain, miningRewardAddress) => {
+  // Mine block and pass it all pending transactions in the chain
   // In reality, blocks are not to exceed 1MB, so not all tx are sent to all blocks
-  return BlockChainLogic.mineBlockTo(
+  const block = mineBlockTo(
     txBlockchain,
     BlockLogic.newTxBlock(Date.call(null), txBlockchain.pendingTransactions)
   )
+  // Reset pending transactions for this blockchain
+  txBlockchain.pendingTransactions = [
+    Transaction(null, miningRewardAddress, MINING_REWARD_SCORE)
+  ]
+  return block
 })
 
 const isChainValid = blockchain =>
@@ -62,7 +84,8 @@ const isChainValid = blockchain =>
 const BlockChainLogic = {
   addBlockTo,
   mineBlockTo,
-  isChainValid
+  isChainValid,
+  minePendingTransactions
 }
 
 export default BlockChainLogic

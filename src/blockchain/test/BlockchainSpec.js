@@ -1,5 +1,4 @@
 import assert from 'assert'
-import { compose } from 'ramda'
 import BlockChainLogic from '../src/behavior/BlockChainLogic'
 import BlockLogic from '../src/behavior/BlockLogic'
 import Money from '../src/data/Money'

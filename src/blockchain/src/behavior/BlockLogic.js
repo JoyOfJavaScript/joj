@@ -9,7 +9,10 @@ const newBlock = (timestamp, data, previousHash) =>
   Block(checkInvariant('timestamp', notEmpty, timestamp), data, previousHash)
 
 const newTxBlock = (timestamp, transactions) =>
-  TransactionalBlock(timestamp, transactions)
+  TransactionalBlock(
+    checkInvariant('timestamp', notEmpty, timestamp),
+    transactions
+  )
 
 const mineBlock = (difficulty, block) =>
   compareHashUntil(

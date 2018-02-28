@@ -1,16 +1,17 @@
 import Block from './Block'
-import { compose, curry } from 'ramda'
+import Transaction from '../behavior/traits/Transaction'
 
 // https://www.youtube.com/watch?v=fRV6cGXVQ4I
-const assign = curry(Object.assign)
-const TransactionalBlock = (timestamp, transactions = [], previousHash = '') =>
-  compose(assign({ transactions }), Block)(timestamp, null, previousHash)
-
-// Object.assign(
-//   {
-//     transactions
-//   },
-//
-// )
+const TransactionalBlock = (
+  timestamp,
+  pendingTransactions = [],
+  previousHash = ''
+) => {
+  const state = {
+    pendingTransactions
+  }
+  const parent = Block(timestamp, {}, previousHash)
+  return Object.assign(state, parent, Transaction(state))
+}
 
 export default TransactionalBlock

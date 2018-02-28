@@ -1,15 +1,13 @@
 import Blockchain from './Blockchain'
+import Transaction from '../behavior/traits/Transaction'
 
 const TransactionalBlockchain = chain => {
-  // Delegate base behavior to Blockchain through OLLO
-  const txBlockchain = Object.create(Blockchain(chain))
-  // Private space
-  const _pendingTx = []
+  const state = {
+    pendingTransactions: []
+  }
 
-  // Public space
-  txBlockchain.pendingTransactions = () => [..._pendingTx]
-
-  return txBlockchain
+  const parent = Blockchain(chain)
+  return Object.assign(state, parent, Transaction(state))
 }
 
 export default TransactionalBlockchain

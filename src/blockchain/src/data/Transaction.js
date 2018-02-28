@@ -1,10 +1,10 @@
-const Transaction = {
-  init: (fromAddress, toAddress, amount) => {
-    this.fromAddres = fromAddress
-    this.toAddress = toAddress
-    this.amount = amount
-    return this
-  }
-}
+import Transaction from '../behavior/traits/Transaction'
 
-Transaction.make = Object.create(Transaction).init
+const Transaction = (fromAddress, toAddress, amount) => {
+  const state = {
+    fromAddress,
+    toAddress,
+    amount
+  }
+  return Object.assign(state, Transaction(state))
+}
