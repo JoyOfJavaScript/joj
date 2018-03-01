@@ -22,6 +22,6 @@ describe('Compute the balance in a transactional blockchain', () => {
       coinTransactions,
       'luis-address'
     )
-    assert.equal(balance, 50)
+    assert.equal(balance, 0)
   })
 })

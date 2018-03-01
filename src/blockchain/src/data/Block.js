@@ -1,5 +1,6 @@
 import Hash from '../behavior/traits/Hash'
 import View from '../behavior/traits/View'
+import Genesis from '../behavior/traits/Genesis'
 
 const EPOCH = Date.parse('01 Jan 1970 00:00:00 GMT')
 
@@ -21,7 +22,12 @@ const Block = (timestamp, data, previousHash = '') => {
     hash: '',
     nonce: 0
   }
-  const instance = Object.assign(state, Hash(state), View(state))
+  const instance = Object.assign(
+    state,
+    Hash(state),
+    View(state),
+    Genesis(state)
+  )
   instance.calculateHash()
   return instance
 }

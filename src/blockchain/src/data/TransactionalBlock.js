@@ -1,7 +1,7 @@
-import Block from './Block'
 import PendingTransaction from '../behavior/traits/PendingTransaction'
 import TxView from '../behavior/traits/TxView'
 import Hash from '../behavior/traits/Hash'
+import Genesis from '../behavior/traits/Genesis'
 
 // https://www.youtube.com/watch?v=fRV6cGXVQ4I
 const TransactionalBlock = (
@@ -11,14 +11,19 @@ const TransactionalBlock = (
 ) => {
   const state = {
     pendingTransactions,
-    // Compose parent state
-    ...Block(timestamp, {}, previousHash) // Was not able to use Block as part of Object.assign because it would copy the state
+    timestamp,
+    previousHash,
+    hash: '',
+    nonce: 0
   }
-  return Object.assign(
+  const instance = Object.assign(
     state,
     Hash(state),
     PendingTransaction(state),
-    TxView(state)
+    TxView(state),
+    Genesis(state)
   )
+  instance.calculateHash()
+  return instance
 }
 export default TransactionalBlock

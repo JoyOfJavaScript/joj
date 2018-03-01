@@ -31,12 +31,14 @@ const calculateBalanceOfAddress = curry((blockchain, address) => {
   let balance = 0
   blockchain.blocks().forEach(block => {
     console.log('inside each block', block)
-    for (const trans of block.pendingTransactions) {
-      if (trans.fromAddress === address) {
-        balance -= trans.amount
-      }
-      if (trans.toAddress === address) {
-        balance += trans.amount
+    if (!block.isGenesis()) {
+      for (const trans of block.pendingTransactions) {
+        if (trans.fromAddress === address) {
+          balance -= trans.amount
+        }
+        if (trans.toAddress === address) {
+          balance += trans.amount
+        }
       }
     }
   })
