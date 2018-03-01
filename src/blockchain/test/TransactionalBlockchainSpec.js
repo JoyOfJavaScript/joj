@@ -18,10 +18,19 @@ describe('Compute the balance in a transactional blockchain', () => {
     console.log(coinTransactions.pendingTransactionsToString())
 
     BlockChainLogic.minePendingTransactions(coinTransactions, 'luis-address')
-    const balance = BlockChainLogic.calculateBalanceOfAddress(
+    let balance = BlockChainLogic.calculateBalanceOfAddress(
       coinTransactions,
       'luis-address'
     )
     assert.equal(balance, 0)
+
+    // Reward is in next block, so mine again
+    BlockChainLogic.minePendingTransactions(coinTransactions, 'luis-address')
+
+    balance = BlockChainLogic.calculateBalanceOfAddress(
+      coinTransactions,
+      'luis-address'
+    )
+    assert.equal(balance, 100)
   })
 })

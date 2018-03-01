@@ -1,8 +1,9 @@
 import BlockLogic from './BlockLogic'
 import Pair from './util/Pair'
-import { curry } from 'ramda'
+import { curry, compose, add, concat } from 'ramda'
 import Block from '../data/Block'
 import Transaction from '../data/Transaction'
+import '../common/helpers'
 
 // https://www.youtube.com/watch?v=fRV6cGXVQ4I
 
@@ -27,10 +28,23 @@ const mineBlockTo = curry((blockchain, newBlock) => {
   return newBlock
 })
 
+const calculateBalanceOfAddress = curry((blockchain, address) =>
+  blockchain
+    .blocks()
+    .filter(b => !b.isGenesis())
+    .map(txBlock => txBlock.pendingTransactions)
+    .reduce(concat)
+    .split(tx => tx.fromAddress === address, tx => tx.toAddress === address)
+    .biFlatMap(tx => -tx.amount, tx => tx.amount)
+    .reduce(add, 0)
+)
+
+/*
+IMPERATIVE VERSION OF calculateBalanceOfAddress
+
 const calculateBalanceOfAddress = curry((blockchain, address) => {
   let balance = 0
-  blockchain.blocks().forEach(block => {
-    console.log('inside each block', block)
+  for (const block of blockchain.blocks()) {
     if (!block.isGenesis()) {
       for (const trans of block.pendingTransactions) {
         if (trans.fromAddress === address) {
@@ -41,9 +55,10 @@ const calculateBalanceOfAddress = curry((blockchain, address) => {
         }
       }
     }
-  })
+  }
   return balance
 })
+*/
 
 const minePendingTransactions = curry((txBlockchain, miningRewardAddress) => {
   // Mine block and pass it all pending transactions in the chain
@@ -52,6 +67,7 @@ const minePendingTransactions = curry((txBlockchain, miningRewardAddress) => {
     txBlockchain,
     BlockLogic.newTxBlock(Date.call(null), txBlockchain.pendingTransactions)
   )
+
   // Reset pending transactions for this blockchain
   txBlockchain.pendingTransactions = [
     Transaction(null, miningRewardAddress, MINING_REWARD_SCORE)

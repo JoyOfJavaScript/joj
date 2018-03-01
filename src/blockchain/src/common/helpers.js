@@ -1,4 +1,14 @@
-import { curry } from 'ramda'
+import { curry, concat } from 'ramda'
+import Pair from '../behavior/util/Pair'
+
+Array.prototype.split = curry(function(pred1, pred2) {
+  return [this.filter(pred1), this.filter(pred2)]
+})
+
+Array.prototype.biFlatMap = curry(function(fn1, fn2) {
+  const [first, ...second] = this
+  return first.map(fn1).concat(second.reduce(concat).map(fn2))
+})
 
 // Checks string is not empty
 export const notEmpty = str => () => str && str.length > 0
