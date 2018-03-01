@@ -27,9 +27,10 @@ const mineBlockTo = curry((blockchain, newBlock) => {
   return newBlock
 })
 
-const balanceOfAddress = curry((blockchain, address) => {
+const calculateBalanceOfAddress = curry((blockchain, address) => {
   let balance = 0
-  for (const block of this.chain) {
+  blockchain.blocks().forEach(block => {
+    console.log('inside each block', block)
     for (const trans of block.pendingTransactions) {
       if (trans.fromAddress === address) {
         balance -= trans.amount
@@ -38,7 +39,7 @@ const balanceOfAddress = curry((blockchain, address) => {
         balance += trans.amount
       }
     }
-  }
+  })
   return balance
 })
 
@@ -85,7 +86,8 @@ const BlockChainLogic = {
   addBlockTo,
   mineBlockTo,
   isChainValid,
-  minePendingTransactions
+  minePendingTransactions,
+  calculateBalanceOfAddress
 }
 
 export default BlockChainLogic

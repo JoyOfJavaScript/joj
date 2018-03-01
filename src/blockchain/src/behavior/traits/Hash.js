@@ -1,4 +1,3 @@
-import BlockLogic from '../BlockLogic'
 import { curry, compose } from 'ramda'
 import crypto from 'crypto'
 
@@ -8,6 +7,7 @@ const ENCODING_UTF8 = 'hex'
 export const Hash = state => ({
   calculateHash: () => {
     const { timestamp, data, previousHash, nonce } = state
+    console.log('[DEBUG] Retrying hash: ', nonce)
     return (state.hash = computeCipher(timestamp, data, previousHash, nonce))
   }
 })

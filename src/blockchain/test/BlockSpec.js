@@ -13,5 +13,11 @@ describe('Block object', () => {
     assert.equal(b.timestamp, 'now')
     assert.deepEqual(b.data, { data: 'test' })
     assert.equal(b.previousHash, '123')
+    b.timestamp = 'tomorrow'
+    assert.equal(b.timestamp, 'tomorrow')
+    const currentHash = b.hash
+    b.nonce = 99
+    b.calculateHash()
+    assert.notEqual(currentHash, b.hash)
   })
 })

@@ -1,5 +1,5 @@
 import Blockchain from './Blockchain'
-import Transaction from '../behavior/traits/Transaction'
+import PendingTransaction from '../behavior/traits/PendingTransaction'
 
 const TransactionalBlockchain = chain => {
   const state = {
@@ -7,7 +7,7 @@ const TransactionalBlockchain = chain => {
   }
 
   const parent = Blockchain(chain)
-  return Object.assign(state, parent, Transaction(state))
+  return Object.assign(state, parent, PendingTransaction(state))
 }
 
 export default TransactionalBlockchain

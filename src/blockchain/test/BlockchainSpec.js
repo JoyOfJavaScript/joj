@@ -3,7 +3,6 @@ import BlockChainLogic from '../src/behavior/BlockChainLogic'
 import BlockLogic from '../src/behavior/BlockLogic'
 import Money from '../src/data/Money'
 import BlockChain from '../src/data/Blockchain'
-import { inspect } from '../src/common/helpers'
 
 // Create blockchain
 const coin = BlockChain()
@@ -24,7 +23,7 @@ const hundredDollars = mineCoin(
 )
 
 console.log('Number of blocks in chain: ', coin.size())
-console.log(coin.blocks().map(inspect))
+console.log(coin.blocks().map(x => x.inspect()))
 
 describe('Create a valid Blockchain data structure', () => {
   it('Should create a block chain and assert if valid', () => {
