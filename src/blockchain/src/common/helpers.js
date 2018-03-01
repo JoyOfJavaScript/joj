@@ -5,7 +5,7 @@ Array.prototype.split = curry(function(pred1, pred2) {
   return [this.filter(pred1), this.filter(pred2)]
 })
 
-Array.prototype.biFlatMap = curry(function(fn1, fn2) {
+Array.prototype.flatBiMap = curry(function(fn1, fn2) {
   const [first, ...second] = this
   return first.map(fn1).concat(second.reduce(concat).map(fn2))
 })

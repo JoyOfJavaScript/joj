@@ -35,7 +35,7 @@ const calculateBalanceOfAddress = curry((blockchain, address) =>
     .map(txBlock => txBlock.pendingTransactions)
     .reduce(concat)
     .split(tx => tx.fromAddress === address, tx => tx.toAddress === address)
-    .biFlatMap(tx => -tx.amount, tx => tx.amount)
+    .flatBiMap(tx => -tx.amount, tx => tx.amount)
     .reduce(add, 0)
 )
 
