@@ -1,7 +1,7 @@
 import { curry, compose } from 'ramda'
 import crypto from 'crypto'
 
-const ALGO_SHA256 = 'sha256'
+const ALGO_SHA256 = 'sha256' // hashcash-SHA256^2 (bitcoin)
 const ENCODING_UTF8 = 'hex'
 
 /**
