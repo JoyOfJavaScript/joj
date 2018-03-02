@@ -53,26 +53,24 @@ const calculateBalanceOfAddress = curry((blockchain, address) =>
     .reduce(Money.add, Money.nothing())
 )
 
-/*
--- IMPERATIVE VERSION OF calculateBalanceOfAddress --
-
-const calculateBalanceOfAddress = curry((blockchain, address) => {
-  let balance = 0
-  for (const block of blockchain.blocks()) {
-    if (!block.isGenesis()) {
-      for (const trans of block.pendingTransactions) {
-        if (trans.fromAddress === address) {
-          balance -= trans.amount
-        }
-        if (trans.toAddress === address) {
-          balance += trans.amount
-        }
-      }
-    }
-  }
-  return balance
-})
-*/
+//-- IMPERATIVE VERSION OF calculateBalanceOfAddress --
+//
+// const calculateBalanceOfAddress = curry((blockchain, address) => {
+//   let balance = Money.nothing()
+//   for (const block of blockchain.blocks()) {
+//     if (!block.isGenesis()) {
+//       for (const trans of block.pendingTransactions) {
+//         if (trans.fromAddress === address) {
+//           balance = balance.minus(trans.money)
+//         }
+//         if (trans.toAddress === address) {
+//           balance = balance.plus(trans.money)
+//         }
+//       }
+//     }
+//   }
+//   return balance
+// })
 
 const minePendingTransactions = curry((txBlockchain, miningRewardAddress) => {
   // Mine block and pass it all pending transactions in the chain
