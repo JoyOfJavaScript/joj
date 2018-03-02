@@ -2,7 +2,7 @@ import Hash from '../behavior/traits/Hash'
 import View from '../behavior/traits/View'
 import Genesis from '../behavior/traits/Genesis'
 
-const EPOCH = Date.parse('01 Jan 1970 00:00:00 GMT')
+const EPOCH = Date.parse('1 Jan 1970 00:00:00 GMT')
 
 /**
  * Represents a single block in the chain. By default, the block
@@ -15,6 +15,7 @@ const EPOCH = Date.parse('01 Jan 1970 00:00:00 GMT')
  * @return {Block} Newly created block with its own computed hash
  */
 const Block = (timestamp, data, previousHash = '') => {
+  // Public interface
   const state = {
     timestamp,
     data,

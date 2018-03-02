@@ -2,7 +2,12 @@ import Block from './Block'
 import '../common/helpers'
 
 /**
- * Untamperable block chain
+ * Untamperable block chain. You may initialize the chain with an existing
+ * chain. But the most common thing to do is initialize with an empty Chain
+ * and allow itself to bootstrap with a Genesis block.
+ *
+ * @param {Array} chain Chain to initialize blockchain with
+ * @return {Blockchain} Returns a blockchain object
  */
 const Blockchain = chain => {
   // Private space

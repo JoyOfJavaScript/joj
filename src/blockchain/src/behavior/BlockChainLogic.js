@@ -2,13 +2,14 @@ import BlockLogic from './BlockLogic'
 import Pair from './util/Pair'
 import { curry, compose, add, concat } from 'ramda'
 import Block from '../data/Block'
+import Money from '../data/Money'
 import Transaction from '../data/Transaction'
 import '../common/helpers'
 
 // https://www.youtube.com/watch?v=fRV6cGXVQ4I
 
 const MINING_DIFFICULTY = 2
-const MINING_REWARD_SCORE = 100
+const MINING_REWARD_SCORE = Money('₿', 100)
 
 /**
  * Recalculate new blocks hash
@@ -29,23 +30,26 @@ const mineBlockTo = curry((blockchain, newBlock) => {
 })
 
 const calculateBalanceOfAddress = curry((blockchain, address) =>
-  blockchain
-    // Traverse all blocks
-    .blocks()
-    // Ignore Genesis block as this won't ever have any pending transactions
-    .filter(b => !b.isGenesis())
-    // Retrieve all pending transactions
-    .map(txBlock => txBlock.pendingTransactions)
-    // Group the transactions of each block into an array
-    .reduce(concat)
-    // Separate the transactions into 2 groups:
-    //    1: Matches the fromAddress
-    //    2: Matches the toAddress
-    .split(tx => tx.fromAddress === address, tx => tx.toAddress === address)
-    // Now apply a function to each group to extract the amount to add/subtract
-    .flatBiMap(tx => -tx.amount, tx => tx.amount)
-    // Finally, add across all the values to compute sum
-    .reduce(add, 0)
+  Money(
+    '₿',
+    blockchain
+      // Traverse all blocks
+      .blocks()
+      // Ignore Genesis block as this won't ever have any pending transactions
+      .filter(b => !b.isGenesis())
+      // Retrieve all pending transactions
+      .map(txBlock => txBlock.pendingTransactions)
+      // Group the transactions of each block into an array
+      .reduce(concat)
+      // Separate the transactions into 2 groups:
+      //    1: Matches the fromAddress
+      //    2: Matches the toAddress
+      .split(tx => tx.fromAddress === address, tx => tx.toAddress === address)
+      // Now apply a function to each group to extract the amount to add/subtract
+      .flatBiMap(tx => -tx.money.amount, tx => tx.money.amount)
+      // Finally, add across all the values to compute sum
+      .reduce(add, 0)
+  )
 )
 
 /*
