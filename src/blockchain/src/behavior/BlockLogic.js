@@ -22,6 +22,7 @@ const mineBlock = (difficulty, block) =>
       .join('')
   )
 
+// TODO: use trampolining to simulate TCO in order to reach mining difficulty 4
 const compareHashUntil = (block, difficulty, nonce = 1) => {
   if (block.hash.startsWith(difficulty)) {
     // Base case reached, return new hash
