@@ -6,14 +6,16 @@ import Money from '../data/Money'
 import Transaction from '../data/Transaction'
 import '../common/helpers'
 
-// https://www.youtube.com/watch?v=fRV6cGXVQ4I
-
 const MINING_DIFFICULTY = 2
 const MINING_REWARD_SCORE = Money('₿', 100)
 
 /**
- * Recalculate new blocks hash
+ * Adds a new data block to the chain. It involves:
+ * Recalculate new blocks hash and add the block to the chain
  * Point new block's previous to current
+ *
+ * @param {Blockchain} blockchain Chain to add block to
+ * @param {Block}      newBlock   New block to add into the chain
  */
 const addBlockTo = curry((blockchain, newBlock) => {
   newBlock.previousHash = blockchain.last().hash
@@ -22,6 +24,14 @@ const addBlockTo = curry((blockchain, newBlock) => {
   return newBlock
 })
 
+/**
+ * Mines a new block into the chain. It involves:
+ * Recalculate new blocks hash until the difficulty condition is met (mine)
+ * Point new block's previous to current
+ *
+ * @param {Blockchain} blockchain Chain to add block to
+ * @param {Block}      newBlock   New block to add into the chain
+ */
 const mineBlockTo = curry((blockchain, newBlock) => {
   newBlock.previousHash = blockchain.last().hash
   newBlock = BlockLogic.mineBlock(MINING_DIFFICULTY, newBlock)
@@ -29,6 +39,13 @@ const mineBlockTo = curry((blockchain, newBlock) => {
   return newBlock
 })
 
+/**
+ * Calculates the balance of the chain looking into all of the pending
+ * transactions inside all the blocks in the chain
+ *
+ * @param {Blockchain} blockchain Chain to calculate balance from
+ * @param {Block}      address    Address to send reward to
+ */
 const calculateBalanceOfAddress = curry((blockchain, address) =>
   blockchain
     // Traverse all blocks
@@ -81,12 +98,22 @@ const minePendingTransactions = curry((txBlockchain, miningRewardAddress) => {
   )
 
   // Reset pending transactions for this blockchain
+  // Put reward transaction into the chain for next mining operation
   txBlockchain.pendingTransactions = [
     Transaction(null, miningRewardAddress, MINING_REWARD_SCORE)
   ]
   return block
 })
 
+/**
+ * Determines if the chain is valid by asserting the properties of a blockchain.
+ * Namely:
+ * 1. Every hash is unique and hasn't been tampered with
+ * 2. Every block properly points to the previous block
+ *
+ * @param {Blockchain} blockchain Chain to calculate balance from
+ * @return {Boolean} Whether the chain is valid
+ */
 const isChainValid = blockchain =>
   blockchain
     // Get all blocks
