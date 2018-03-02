@@ -14,8 +14,6 @@ describe('Compute the balance in a transactional blockchain', () => {
       Transaction('address2', 'address1', Money('₿', 50))
     )
 
-    console.log(coinTransactions.pendingTransactionsToString())
-
     BlockChainLogic.minePendingTransactions(coinTransactions, 'luis-address')
     let balance = BlockChainLogic.calculateBalanceOfAddress(
       coinTransactions,
