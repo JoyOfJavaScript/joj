@@ -11,11 +11,11 @@ const Money = (currency = '₿', amount = ZERO) => ({
   amount,
   currency,
   equals: other => currency === other.currency && amount === other.amount,
-  inspect: () => `${amount} ${currency}`,
+  inspect: () => `${currency}${amount} `,
   serialize: () => `{amount: ${amount}, currency: ${currency}`,
   round: (precision = 2) => Money(currency, precisionRound(amount, precision)),
-  minus: qty => Money(currency, amount - qty),
-  plus: qty => Money(currency, amount + qty)
+  minus: m => Money(currency, amount - m.amount),
+  plus: m => Money(currency, amount + m.amount)
 })
 
 /**

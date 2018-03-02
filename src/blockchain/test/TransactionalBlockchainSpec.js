@@ -30,6 +30,7 @@ describe('Compute the balance in a transactional blockchain', () => {
       coinTransactions,
       'luis-address'
     )
+    console.log('balance is', balance)
     assert.equal(balance.amount, Money('₿', 100).amount)
   })
 })
