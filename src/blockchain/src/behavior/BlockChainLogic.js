@@ -30,17 +30,26 @@ const mineBlockTo = curry((blockchain, newBlock) => {
 
 const calculateBalanceOfAddress = curry((blockchain, address) =>
   blockchain
+    // Traverse all blocks
     .blocks()
+    // Ignore Genesis block as this won't ever have any pending transactions
     .filter(b => !b.isGenesis())
+    // Retrieve all pending transactions
     .map(txBlock => txBlock.pendingTransactions)
+    // Group the transactions of each block into an array
     .reduce(concat)
+    // Separate the transactions into 2 groups:
+    //    1: Matches the fromAddress
+    //    2: Matches the toAddress
     .split(tx => tx.fromAddress === address, tx => tx.toAddress === address)
+    // Now apply a function to each group to extract the amount to add/subtract
     .flatBiMap(tx => -tx.amount, tx => tx.amount)
+    // Finally, add across all the values to compute sum
     .reduce(add, 0)
 )
 
 /*
-IMPERATIVE VERSION OF calculateBalanceOfAddress
+-- IMPERATIVE VERSION OF calculateBalanceOfAddress --
 
 const calculateBalanceOfAddress = curry((blockchain, address) => {
   let balance = 0
