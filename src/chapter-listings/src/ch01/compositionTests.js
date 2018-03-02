@@ -4,7 +4,7 @@ import fs from 'fs'
 import path from 'path'
 
 const read = file => fs.readFileSync(file)
-console.log('sd')
+
 const decode = (charset = 'utf8') => buffer =>
   !buffer ? '' : buffer.toString(charset)
 
