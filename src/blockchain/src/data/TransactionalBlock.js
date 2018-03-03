@@ -8,21 +8,16 @@ import Genesis from '../behavior/traits/Genesis'
  * These are used to move/transfer assets around within transactions
  * Bitcoins are a good example of transactional blocks
  *
- * @param {String} timestamp           When the block was created
  * @param {Array}  pendingTransactions Array of pending transactions from the chain
  * @param {String} previousHash        Reference to the previous block in the chain
  * @return {Block} Newly created block with its own computed hash
  *
  */
-const TransactionalBlock = (
-  timestamp,
-  pendingTransactions = [],
-  previousHash = ''
-) => {
+const TransactionalBlock = (pendingTransactions = [], previousHash = '') => {
   const state = {
     pendingTransactions,
-    timestamp,
     previousHash,
+    timestamp: Date.call(null),
     hash: '',
     nonce: 0
   }

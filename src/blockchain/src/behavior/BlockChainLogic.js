@@ -1,9 +1,10 @@
 import BlockLogic from './BlockLogic'
 import Pair from './util/Pair'
-import { curry, compose, add, concat } from 'ramda'
+import { curry, concat } from 'ramda'
 import Block from '../data/Block'
 import Money from '../data/Money'
 import Transaction from '../data/Transaction'
+import TransactionalBlock from '../data/TransactionalBlock'
 import '../common/helpers'
 
 const MINING_DIFFICULTY = 2
@@ -94,7 +95,7 @@ const minePendingTransactions = curry((txBlockchain, miningRewardAddress) => {
   // In reality, blocks are not to exceed 1MB, so not all tx are sent to all blocks
   const block = mineBlockTo(
     txBlockchain,
-    BlockLogic.newTxBlock(Date.call(null), txBlockchain.pendingTransactions)
+    TransactionalBlock(txBlockchain.pendingTransactions)
   )
 
   // Reset pending transactions for this blockchain

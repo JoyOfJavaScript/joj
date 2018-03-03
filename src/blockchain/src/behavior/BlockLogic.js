@@ -1,19 +1,3 @@
-import Block from '../data/Block'
-import TransactionalBlock from '../data/TransactionalBlock'
-import { notEmpty, checkInvariant } from '../common/helpers'
-
-/**
- * Create a new block
- */
-const newBlock = (timestamp, data, previousHash) =>
-  Block(checkInvariant('timestamp', notEmpty, timestamp), data, previousHash)
-
-const newTxBlock = (timestamp, transactions) =>
-  TransactionalBlock(
-    checkInvariant('timestamp', notEmpty, timestamp),
-    transactions
-  )
-
 const mineBlock = (difficulty, block) =>
   compareHashUntil(
     block,
@@ -39,8 +23,6 @@ const compareHashUntil = (block, difficulty, nonce = 1) => {
  * Exported BlockLogic interface
  */
 const BlockLogic = {
-  newBlock,
-  newTxBlock,
   mineBlock
 }
 

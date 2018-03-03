@@ -36,7 +36,7 @@
     "start": "babel-node src/main.js --presets es2015,stage-2",
     "test": "mocha --recursive --require babel-register test/",
     "test-dev":
-      "nodemon --watch src/ --exec 'mocha --recursive --require babel-register test/ || true'",
+      "nodemon --watch src/ --watch test/ --exec 'mocha --recursive --require babel-register test/ || true'",
     "eslint": "eslint src/",
     "flow": "flow",
     "flow-init": "flow init",

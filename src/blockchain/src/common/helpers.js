@@ -9,11 +9,11 @@ Array.prototype.flatBiMap = curry(function(fn1, fn2) {
   return first.map(fn1).concat(second.reduce(concat).map(fn2))
 })
 
-// Checks string is not empty
-export const notEmpty = str => () => str && str.length > 0
+// Checks object is not empty/ Works on strings or arrays
+export const notEmpty = data => () => data && data.length > 0
 
-// Checks string is empty
-export const isEmpty = str => () => !str || str.length === 0
+// Checks object is empty. Works on strings or arrays
+export const isEmpty = data => () => !data || data.length === 0
 
 export const checkInvariant = curry((name, checker, data) => {
   if (!checker(data)) {
