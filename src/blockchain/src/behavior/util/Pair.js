@@ -4,7 +4,7 @@ import { curry } from 'ramda'
  * Test whether some value is of type ctor
  * @param {Type} ctor  Any JavaScript type (Object | Function | Array | Number | String)
  * @param {Object} val Any value
- * @return {Boolean} True or false whether the value's type constructor matches
+ * @return {boolean} True or false whether the value's type constructor matches
  */
 
 export const is = ctor => val =>

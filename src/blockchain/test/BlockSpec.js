@@ -1,14 +1,14 @@
 import assert from 'assert'
-import Block from '../src/data/Block'
+import DataBlock from '../src/data/DataBlock'
 
 describe('Block object', () => {
   it('Should create genesis block', () => {
-    const b = Block.genesis()
+    const b = DataBlock.genesis()
     assert.deepEqual(b.data, { data: 'Genesis Block' })
     assert.equal(b.previousHash, '-1')
   })
   it('Should init a new block', () => {
-    const b = Block({ data: 'test' }, '123')
+    const b = DataBlock({ data: 'test' }, '123')
     assert.deepEqual(b.data, { data: 'test' })
     assert.equal(b.previousHash, '123')
     b.timestamp = 'tomorrow'

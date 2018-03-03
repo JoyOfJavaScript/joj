@@ -1,7 +1,7 @@
 import BlockLogic from './BlockLogic'
 import Pair from './util/Pair'
 import { curry, concat } from 'ramda'
-import Block from '../data/Block'
+import DataBlock from '../data/DataBlock'
 import Money from '../data/Money'
 import Transaction from '../data/Transaction'
 import TransactionalBlock from '../data/TransactionalBlock'
@@ -113,7 +113,7 @@ const minePendingTransactions = curry((txBlockchain, miningRewardAddress) => {
  * 2. Every block properly points to the previous block
  *
  * @param {Blockchain} blockchain Chain to calculate balance from
- * @return {Boolean} Whether the chain is valid
+ * @return {boolean} Whether the chain is valid
  */
 const isChainValid = blockchain =>
   blockchain
@@ -131,7 +131,7 @@ const isChainValid = blockchain =>
       const previous = pair.right
       return (
         // 1 .Hashed can't be tampered with
-        current.hash === Block.calculateHash(current) &&
+        current.hash === DataBlock.calculateHash(current) &&
         // 2. Blocks form a chain
         current.previousHash === previous.hash
       )

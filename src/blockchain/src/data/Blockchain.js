@@ -1,4 +1,4 @@
-import Block from './Block'
+import DataBlock from './DataBlock'
 import '../common/helpers'
 
 /**
@@ -11,7 +11,7 @@ import '../common/helpers'
  */
 const Blockchain = chain => {
   // Private space
-  const _data = chain || Array.of(Block.genesis())
+  const _data = chain || Array.of(DataBlock.genesis())
   let _size = 0
 
   // Public interface

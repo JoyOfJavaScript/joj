@@ -3,8 +3,8 @@ const ZERO = 0
 /**
  * Money value object
  *
- * @param {String} currency Type of currency (default: bitcoin)
- * @param {String} amount   Amount represented
+ * @param {string} currency Type of currency (default: bitcoin)
+ * @param {string} amount   Amount represented
  * @return {Money} Returns a money object
  */
 const Money = (currency = '₿', amount = ZERO) => ({
@@ -21,9 +21,9 @@ const Money = (currency = '₿', amount = ZERO) => ({
 /**
  * Returns the value of a number rounded to the nearest integer precision.
  *
- * @param {Number} number     Number to round
- * @param {Number} precision  Precision to round to
- * @return {Number} A round number
+ * @param  {number} number     Number to round
+ * @param  {number} precision  Precision to round to
+ * @return {number} A round number
  */
 const precisionRound = (number, precision) => {
   const factor = Math.pow(10, precision)

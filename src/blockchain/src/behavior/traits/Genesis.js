@@ -3,7 +3,7 @@
  * a Genesis block
  *
  * @param {Object} state State object of block
- * @return {Boolean} Returns true|false indicating whether the block is the first one in the chain
+ * @return {boolean} Returns true|false indicating whether the block is the first one in the chain
  */
 export const Genesis = state => ({
   isGenesis: () => {

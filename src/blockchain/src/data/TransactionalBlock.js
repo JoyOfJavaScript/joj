@@ -1,3 +1,4 @@
+import Block from './Block'
 import PendingTransaction from '../behavior/traits/PendingTransaction'
 import TxView from '../behavior/traits/TxView'
 import Hash from '../behavior/traits/Hash'
@@ -9,20 +10,17 @@ import Genesis from '../behavior/traits/Genesis'
  * Bitcoins are a good example of transactional blocks
  *
  * @param {Array}  pendingTransactions Array of pending transactions from the chain
- * @param {String} previousHash        Reference to the previous block in the chain
+ * @param {string} previousHash        Reference to the previous block in the chain
  * @return {Block} Newly created block with its own computed hash
  *
  */
 const TransactionalBlock = (pendingTransactions = [], previousHash = '') => {
   const state = {
-    pendingTransactions,
-    previousHash,
-    timestamp: Date.call(null),
-    hash: '',
-    nonce: 0
+    pendingTransactions
   }
   const instance = Object.assign(
     state,
+    Block(previousHash),
     Hash(state),
     PendingTransaction(state),
     TxView(state),

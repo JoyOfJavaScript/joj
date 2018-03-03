@@ -3,7 +3,7 @@
  * a block
  *
  * @param {Object} state State object of block
- * @return {String} Returns a string that reflects the state of the block
+ * @return {string} Returns a string that reflects the state of the block
  */
 export const View = state => ({
   inspect: () => {

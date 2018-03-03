@@ -11,7 +11,7 @@ const ENCODING_UTF8 = 'hex'
  * changes, it's a different block
  *
  * @param {Object} state Entire state object of the block
- * @return {String} Return a string hash of the block
+ * @return {string} Return a string hash of the block
  */
 export const Hash = state => ({
   calculateHash: () => {

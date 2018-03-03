@@ -1,8 +1,7 @@
 import assert from 'assert'
 import BlockChainLogic from '../src/behavior/BlockChainLogic'
-import BlockLogic from '../src/behavior/BlockLogic'
 import Money from '../src/data/Money'
-import Block from '../src/data/Block'
+import DataBlock from '../src/data/DataBlock'
 import BlockChain from '../src/data/Blockchain'
 
 // Create blockchain
@@ -13,9 +12,9 @@ const addCoin = BlockChainLogic.addBlockTo(coin)
 const mineCoin = BlockChainLogic.mineBlockTo(coin)
 
 // Add coins
-const fourDollars = addCoin(Block(Money('USD', 4)))
-const eightDollars = addCoin(Block(Money('USD', 8)))
-const hundredDollars = mineCoin(Block(Money('USD', 100)))
+const fourDollars = addCoin(DataBlock(Money('USD', 4)))
+const eightDollars = addCoin(DataBlock(Money('USD', 8)))
+const hundredDollars = mineCoin(DataBlock(Money('USD', 100)))
 
 console.log('Number of blocks in chain: ', coin.size())
 console.log(coin.blocks().map(x => x.inspect()))
