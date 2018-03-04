@@ -11,7 +11,7 @@ const Block = (previousHash = '') => {
   // Public interface
   const state = {
     previousHash,
-    timestamp: Date.call(null),
+    timestamp: Date.now(),
     hash: '',
     nonce: 0
   }
