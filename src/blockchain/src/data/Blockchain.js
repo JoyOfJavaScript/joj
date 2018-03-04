@@ -18,6 +18,11 @@ const Blockchain = chain => {
   return {
     constructor: Blockchain,
     [Symbol.hasInstance]: i => i.constructor.name === 'Blockchain',
+    [Symbol.iterator]: function*() {
+      for (const b of _data) {
+        yield b
+      }
+    },
     // Returns first ever block created
     genesis: () => _data[0],
     // Returns last (or latest) block
