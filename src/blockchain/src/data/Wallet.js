@@ -1,9 +1,20 @@
+import KeyPair from '../behavior/traits/KeyPair'
+
 /**
  * Construct a new Wallet
  *
- * @param {string} privateKey Used to sign transactions. Only holder of private key can decrypt
- * @param {string} publicKey  Public Key can be shared with others to receive payment and can be used as an address for a transaction.
- *                            I can also be used along with a transaction to verify transaction is valid and has not been tampered with
  * @return {Wallet} A new wallet
  */
-const Wallet = (privateKey, publicKey) => {}
+const Wallet = () => {
+  const state = {
+    publicKey: '',
+    privateKey: '',
+    constructor: Wallet,
+    [Symbol.hasInstance]: i => i.constructor.name === 'Wallet'
+  }
+  const instance = Object.assign(state, KeyPair(state))
+  instance.generateKeyPair()
+  return instance
+}
+
+export default Wallet

@@ -26,8 +26,6 @@ describe('Create a valid Blockchain data structure', () => {
     assert.equal(g.previousHash, '-1')
     assert.ok(blocks[0].data.equals(fourDollars.data))
     assert.ok(BlockChainLogic.isChainValid(coin))
-    console.log('testing', Object.prototype.toString.call(coin))
-    assert.equal('', coin.toString())
   })
 
   it('Should assert blocks + data are immutable', () => {
