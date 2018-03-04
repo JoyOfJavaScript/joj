@@ -16,6 +16,8 @@ const Blockchain = chain => {
 
   // Public interface
   return {
+    constructor: Blockchain,
+    [Symbol.hasInstance]: i => i.constructor.name === 'Blockchain',
     // Returns first ever block created
     genesis: () => _data[0],
     // Returns last (or latest) block

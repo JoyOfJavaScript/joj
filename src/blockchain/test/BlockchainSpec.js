@@ -21,6 +21,7 @@ console.log(coin.blocks().map(x => x.inspect()))
 
 describe('Create a valid Blockchain data structure', () => {
   it('Should create a block chain and assert if valid', () => {
+    assert.ok(coin instanceof BlockChain())
     assert.ok(BlockChainLogic.isChainValid(coin))
   })
 

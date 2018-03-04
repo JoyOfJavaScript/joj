@@ -6,7 +6,10 @@ describe('Block object', () => {
     const b = DataBlock.genesis()
     assert.deepEqual(b.data, { data: 'Genesis Block' })
     assert.equal(b.previousHash, '-1')
+    assert.equal('DataBlock', b.constructor.name)
+    assert.ok(b instanceof DataBlock())
   })
+
   it('Should init a new block', () => {
     const b = DataBlock({ data: 'test' }, '123')
     assert.deepEqual(b.data, { data: 'test' })

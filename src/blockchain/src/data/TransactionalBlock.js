@@ -16,6 +16,8 @@ import Genesis from '../behavior/traits/Genesis'
  */
 const TransactionalBlock = (pendingTransactions = [], previousHash = '') => {
   const state = {
+    constructor: TransactionalBlock,
+    [Symbol.hasInstance]: i => i.constructor.name === 'TransactionalBlock',
     pendingTransactions
   }
   const instance = Object.assign(

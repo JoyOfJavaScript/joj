@@ -12,6 +12,8 @@ import PendingTransaction from '../behavior/traits/PendingTransaction'
 const TransactionalBlockchain = chain => {
   // Public space
   const state = {
+    constructor: TransactionalBlockchain,
+    [Symbol.hasInstance]: i => i.constructor.name === 'TransactionalBlockchain',
     pendingTransactions: []
   }
 

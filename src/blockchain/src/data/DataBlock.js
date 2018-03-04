@@ -13,10 +13,13 @@ import Genesis from '../behavior/traits/Genesis'
  * @return {Block} Newly created block with its own computed hash
  * @augments Block
  */
-const DataBlock = (data, previousHash = '') => {
+const DataBlock = (data = {}, previousHash = '') => {
   // Public interface
   const state = {
-    data
+    constructor: DataBlock,
+    data,
+    // Used for instanceof checks
+    [Symbol.hasInstance]: i => i.constructor.name === 'DataBlock'
   }
   const instance = Object.assign(
     state,

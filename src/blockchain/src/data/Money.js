@@ -10,12 +10,15 @@ const ZERO = 0
 const Money = (currency = '₿', amount = ZERO) => ({
   amount,
   currency,
+  constructor: Money,
   equals: other => currency === other.currency && amount === other.amount,
-  inspect: () => `${currency}${amount} `,
+  inspect: () => `${currency}${amount}`,
   serialize: () => `{amount: ${amount}, currency: ${currency}`,
   round: (precision = 2) => Money(currency, precisionRound(amount, precision)),
   minus: m => Money(currency, amount - m.amount),
-  plus: m => Money(currency, amount + m.amount)
+  plus: m => Money(currency, amount + m.amount),
+  [Symbol.toPrimitive]: () => amount,
+  [Symbol.hasInstance]: i => i.constructor.name === 'Money'
 })
 
 /**

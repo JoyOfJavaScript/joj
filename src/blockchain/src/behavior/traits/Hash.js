@@ -2,7 +2,7 @@ import { curry, compose } from 'ramda'
 import crypto from 'crypto'
 
 const ALGO_SHA256 = 'sha256' // hashcash-SHA256^2 (bitcoin)
-const ENCODING_UTF8 = 'hex'
+const ENCODING_HEX = 'hex'
 
 /**
  * Hashes constitute the digital fingerprint of a block
@@ -49,7 +49,7 @@ const createDigest = curry((algorithm, encoding, data) =>
  * @return {String} Computed cipher
  */
 const computeCipher = compose(
-  createDigest(ALGO_SHA256, ENCODING_UTF8),
+  createDigest(ALGO_SHA256, ENCODING_HEX),
   formatData
 )
 
