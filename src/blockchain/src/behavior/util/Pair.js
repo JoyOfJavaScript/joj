@@ -1,5 +1,7 @@
 import { curry } from 'ramda'
 
+// Helper functions
+
 /**
  * Test whether some value is of type ctor
  *
@@ -41,8 +43,6 @@ export const Pair = (A, B) => (l, r) =>
     left,
     right,
     constructor: Pair,
-    [Symbol.hasInstance]: i =>
-      console.log(i.constructor) + i.constructor.name === 'Pair',
     [Symbol.iterator]: function*() {
       yield left
       yield right
@@ -76,4 +76,5 @@ Pair['@@implements'] = [
 
 Pair.TYPE = Pair(String, String)('', '')
 Pair['@@type'] = 'Pair'
+
 export default Pair

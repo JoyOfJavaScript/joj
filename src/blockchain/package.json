@@ -25,7 +25,8 @@
     "nodemon": "^1.11.0",
     "rimraf": "^2.6.1",
     "sinon": "^1.17.7",
-    "sinon-chai": "^2.8.0"
+    "sinon-chai": "^2.8.0",
+    "transform-runtime": "0.0.0"
   },
   "dependencies": {
     "data.either": "1.5.1",
