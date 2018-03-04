@@ -1,4 +1,4 @@
-import { curry } from 'ramda'
+import { curry, identity } from 'ramda'
 
 // Helper functions
 
@@ -51,8 +51,8 @@ export const Pair = (A, B) => (l, r) =>
     // bimap :: (a -> c) -> (b -> d) -> Pair(a, b) -> Pair(c, d)
     bimap: (C, D) => (f, g) => Pair(C, D)(f(left), g(right)),
     mergeMap: C => f => Pair(C, C)(f(left), f(right)),
-    foldL: (f, _) => f(left),
-    foldR: (_, g) => g(right),
+    foldL: (f, _ = identity) => f(identity(left)),
+    foldR: (_ = identity, g) => g(identity(right)),
     merge: f => f(left, right),
     equals: otherPair => left === otherPair.left && right === otherPair.right,
     inspect: () => `Pair [${left}, ${right}]`,

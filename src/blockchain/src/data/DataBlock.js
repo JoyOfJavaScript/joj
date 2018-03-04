@@ -17,9 +17,9 @@ const DataBlock = (data = {}, previousHash = '') => {
   // Public interface
   const state = {
     constructor: DataBlock,
-    data,
     // Used for instanceof checks
-    [Symbol.hasInstance]: i => i.constructor.name === 'DataBlock'
+    [Symbol.hasInstance]: i => i.constructor.name === 'DataBlock',
+    data
   }
   const instance = Object.assign(
     state,
@@ -28,6 +28,7 @@ const DataBlock = (data = {}, previousHash = '') => {
     View(state),
     Genesis(state)
   )
+  // Initialize the data block object with a precomputed hash
   instance.calculateHash()
   return instance
 }
