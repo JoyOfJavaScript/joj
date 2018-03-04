@@ -23,7 +23,7 @@ const TransactionalBlock = (pendingTransactions = [], previousHash = '') => {
   const instance = Object.assign(
     state,
     Block(previousHash),
-    Hash(state),
+    Hash(state, ['timestamp', 'previousHash', 'nonce']),
     PendingTransaction(state),
     TxView(state),
     Genesis(state)

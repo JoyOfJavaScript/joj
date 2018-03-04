@@ -10,14 +10,13 @@ const ENCODING_HEX = 'hex'
  * Blocks are immutable with respect to their hash, if the hash of a block
  * changes, it's a different block
  *
- * @param {Object} state Entire state object of the block
+ * @param {Object} state  Entire state object of the block
+ * @param {Array}  keys   List of attribute names used for hashing
  * @return {string} Return a string hash of the block
  */
-export const Hash = state => ({
+export const Hash = (state, keys) => ({
   calculateHash: () => {
-    const { timestamp, data, previousHash, nonce } = state
-    console.log('[DEBUG] Retrying hash: ', nonce)
-    return (state.hash = computeCipher(timestamp, data, previousHash, nonce))
+    return (state.hash = computeCipher(keys.map(k => state[k])))
   }
 })
 
@@ -53,7 +52,6 @@ const computeCipher = compose(
   formatData
 )
 
-Hash.calculateHash = ({ timestamp, data, previousHash, nonce }) =>
-  computeCipher(timestamp, data, previousHash, nonce)
+Hash.calculateHash = (state, fields) => computeCipher(fields.map(k => state[k]))
 
 export default Hash

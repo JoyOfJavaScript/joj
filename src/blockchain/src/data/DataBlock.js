@@ -24,7 +24,7 @@ const DataBlock = (data = {}, previousHash = '') => {
   const instance = Object.assign(
     state,
     Block(previousHash),
-    Hash(state),
+    Hash(state, ['timestamp', 'data', 'previousHash', 'nonce']),
     View(state),
     Genesis(state)
   )
@@ -39,5 +39,8 @@ const DataBlock = (data = {}, previousHash = '') => {
  * @return {Block} New genesis block
  */
 DataBlock.genesis = data => DataBlock(data || { data: 'Genesis Block' }, '-1')
-DataBlock.calculateHash = block => Hash.calculateHash(block)
+DataBlock.calculateHash = (
+  block,
+  fields = ['timestamp', 'data', 'previousHash', 'nonce']
+) => Hash.calculateHash(block, fields)
 export default DataBlock

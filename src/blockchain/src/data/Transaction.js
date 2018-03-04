@@ -1,5 +1,7 @@
+import Hash from '../behavior/traits/Hash'
+
 /**
- * A transaction holds information (typically) identifying who is making the payment
+ * A transaction holds information (keys) identifying who is making the payment
  * or relinquishing an asset, the monetary value being transacted and to whom is sent to.
  * Ownership of an asset (like  money) is transfered via transactions.
  *
@@ -14,8 +16,15 @@ const Transaction = (sender, recipient, funds) => {
     [Symbol.hasInstance]: i => i.constructor.name === 'Transaction',
     sender,
     recipient,
-    funds
+    funds,
+    hash: '',
+    nonce: 0
   }
-  return Object.assign(state)
+  const instance = Object.assign(
+    state,
+    Hash(state, ['sender', 'recipient', 'funds', 'nonce'])
+  )
+  instance.calculateHash()
+  return instance
 }
 export default Transaction
