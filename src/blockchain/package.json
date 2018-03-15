@@ -1,5 +1,5 @@
 {
-  "name": "blockchain",
+  "name": "joj-blockchain",
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
@@ -18,7 +18,6 @@
     "eslint": "^4.18.0",
     "eslint-plugin-flowtype-errors": "^3.3.6",
     "eslint-plugin-fp": "^2.3.0",
-    "faker": "^4.1.0",
     "flow-bin": "^0.59.0",
     "mocha": "^4.0.1",
     "nodemon": "^1.11.0",
@@ -37,11 +36,11 @@
   "scripts": {
     "lint": "eslint src/",
     "lint-fix": "eslint src/ --fix",
-    "start": "babel-node src/main.js --presets es2015,stage-2",
+    "start": "babel-node src/main.js",
     "test":
       "mocha --recursive --require babel-register --require babel-polyfill test/",
     "test-dev":
-      "nodemon --watch src/ --watch test/ --exec 'mocha --recursive --require babel-register test/ || true'",
+      "nodemon --watch src/ --watch test/ --exec 'mocha --recursive --require babel-register --require babel-polyfill test/ || true'",
     "flow": "flow",
     "flow-init": "flow init",
     "flow-status": "flow status"

@@ -1,1 +1,1 @@
-console.log((() => `hey man yeah right thats it!`)())
+console.log((() => `hey man yeah right thats it yo!`)())
