@@ -13,7 +13,7 @@ describe('Helper functions', () => {
         tx => tx.fromAddress === 'address1',
         tx => tx.toAddress === 'address1'
       )
-      .flatBiMap(tx => -tx.amount, tx => tx.amount)
+      .multiMap(tx => -tx.amount, tx => tx.amount)
 
     assert.deepEqual([-100, -200, 50], result)
   })

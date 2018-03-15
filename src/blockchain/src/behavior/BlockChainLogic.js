@@ -62,7 +62,7 @@ const calculateBalanceOfAddress = curry((blockchain, address) =>
     //    2: Matches the toAddress
     .split(tx => tx.sender === address, tx => tx.recipient === address)
     // Now apply a function to each group to extract the amount to add/subtract as money
-    .flatBiMap(
+    .multiMap(
       tx => Money(tx.funds.currency, -tx.funds.amount),
       tx => Money(tx.funds.currency, tx.funds.amount)
     )

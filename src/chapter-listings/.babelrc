@@ -1,4 +1,4 @@
 {
   "plugins": ["transform-decorators"],
-  "presets": ["es2015", "stage-2", "flow"]
+  "presets": ["es2015", "stage-2", "stage-3", "flow"]
 }

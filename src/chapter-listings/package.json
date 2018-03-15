@@ -11,8 +11,8 @@
     "babel-polyfill": "^6.23.0",
     "babel-preset-es2015": "^6.22.0",
     "babel-preset-flow": "^6.23.0",
-    "babel-preset-stage-0": "^6.3.13",
-    "babel-preset-stage-2": "^6.22.0",
+    "babel-preset-stage-2": "^6.24.1",
+    "babel-preset-stage-3": "^6.24.1",
     "chai": "4.1.0",
     "eslint": "^4.18.0",
     "eslint-plugin-flowtype-errors": "^3.3.6",
@@ -34,11 +34,12 @@
     "rxjs": "5.2.0"
   },
   "scripts": {
+    "lint": "eslint src/",
+    "lint-fix": "eslint src/ --fix",
     "test": "mocha --recursive --require babel-register src/",
     "test-dev":
       "nodemon --watch src/ --exec 'mocha --recursive --require babel-register src/ || true'",
     "test-debug": "mocha --recursive --debug-brk --require babel-register",
-    "eslint": "eslint ./src/",
     "flow": "flow",
     "flow-init": "flow init",
     "flow-status": "flow status"

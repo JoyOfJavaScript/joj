@@ -8,7 +8,7 @@
 
   "ecmaFeatures": {
     "arrowFunctions": true,                    // enable arrow functions
-    "binaryLiterals": false,                   // enable binary literals
+    "binaryLiterals": true,                    // enable binary literals
     "blockBindings": true,                     // enable let and const (aka block bindings)
     "classes": false,                          // enable classes
     "defaultParams": true,                     // enable default function parameters
