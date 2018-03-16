@@ -11,16 +11,19 @@ const Text = (id, x, y, fontFamily, fontSize, style = '', contents = '') => {
     y,
     style,
     fontFamily,
-    fontSize
+    fontSize,
+    contents
   }
   const rawTxtChild = {
-    render: () => contents
+    render: () => state.contents
   }
-  return Object.assign(
-    state,
-    Element(id, rawTxtChild),
-    HasTag(TAG),
-    CanRender(state, 'x', 'y', 'style', 'fontFamily', 'fontSize')
+  return Object.create(
+    Object.assign(
+      state,
+      Element(id, rawTxtChild),
+      HasTag(TAG),
+      CanRender(state, 'x', 'y', 'style', 'fontFamily', 'fontSize')
+    )
   )
 }
 
