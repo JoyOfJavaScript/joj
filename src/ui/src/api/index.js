@@ -1,6 +1,6 @@
 // Amalgamate both interfaces
 
-import SVG from './svg/Svg'
-import HTML from './html/Html'
+import SVG from './svg'
+import HTML from './html'
 
 export { SVG, HTML }

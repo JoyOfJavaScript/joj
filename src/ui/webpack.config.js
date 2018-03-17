@@ -10,6 +10,7 @@ module.exports = {
     path: path.resolve(__dirname, 'public', 'dist'),
     filename: 'app.js'
   },
+  devtool: 'sourcemap',
   module: {
     rules: [
       {

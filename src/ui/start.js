@@ -5,7 +5,7 @@ const params = {
   open: true,
   ignore: 'scss,my/templates',
   wait: 1000,
-  mount: [['/components', './node_modules']],
+  // mount: [['/components', './node_modules']],
   logLevel: 1
 }
 

@@ -10,7 +10,7 @@ import HasId from './attrs/core/HasId'
  * @param {Array}  children  Nested children SVG elements
  * @return {Element} Returns an element
  */
-const Element = (id, ...children) => {
+const Element = (id, children) => {
   const instance = {
     constructor: Element,
     [Symbol.hasInstance]: i => i.constructor.name === 'Element'

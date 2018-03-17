@@ -1,4 +1,5 @@
 import HasTag from './traits/HasTag'
+import HasDimension from './attrs/core/HasDimension'
 import CanRender from './traits/CanRender'
 import Element from './Element'
 
@@ -7,17 +8,15 @@ const TAG = 'svg'
 
 const Document = (width, height, ...children) => {
   const state = {
-    width,
-    height,
-    style: '',
     viewBox: `0 0 ${width} ${height}`,
     xmlns: NS
   }
   return Object.assign(
     state,
-    Element(null, children),
+    Element('doc', children),
     HasTag(TAG),
-    CanRender(state, 'width', 'height', 'viewBox', 'xmlns')
+    HasDimension(width, height),
+    CanRender(state, 'viewBox', 'xmlns')
   )
 }
 

@@ -1,5 +1,7 @@
 import { SVG } from './api'
 
+//const { Document, Text } = SVG
+//console.log('document', Document)
 const fetchRootElementName = id =>
   [].slice
     .call(document.getElementsByTagName('script'))
@@ -9,49 +11,36 @@ const fetchRootElementName = id =>
 
 const root = fetchRootElementName('data-root-id')
 
+//// Add in chapter, modular library design. Ex the design of Ramda, Rx etc
+
 // Initialize root element
 const rootElement = document.getElementById(root)
-rootElement.innerHTML = SVG.Document(
-  300,
-  300,
-  Welcome({ name: 'Luis' })
-).render()
+const data = [{ name: 'Luis' }]
+const doc = SVG.Document(400, 180, Names(data))
 
-function Welcome(props) {
-  return SVG.Text('a', 0, 35, 'Verdana', 35, '', `Welcome ${props.name}!!`)
+SVG.Document.render(doc, rootElement)
+
+function Names(props) {
+  return props.map(Welcome)
 }
 
-// const Welcome = Object.create(Text('a', 0, 35, 'Verdana', 35))
-// Welcome.__proto__.contents = 'Welcome Luis!!'
-// console.log('Welcome __proto__', Welcome.__proto__)
-//
-// class W extends Text {
-//   constructor() {
-//     super('a', 0, 35, 'Verdana', 35, '', 'Here')
-//   }
-//   render() {
-//     console.log('in this render!!!!')
-//     return `<text x="10" y="50" font-size="30">My SVG</text>`
-//   }
-// }
-//
-// const w = new W()
-// console.log(w.render())
-// console.log('w is', w)
-
-// rootElement.innerHTML = Document(300, 300, w).render()
-
-/**
-
-class Welcome extends React.Component {
-  render() {
-    return <h1>Hello, {this.props.name}</h1>;
-  }
+function Welcome({ name = 'Anonymous' }) {
+  return Group(
+    name,
+    SVG.Text(`${name}-label`, 60, 50, 'Verdana', 12, `Welcome ${name}!!`),
+    SVG.Rectangle(
+      `${name}-rect`,
+      50,
+      20,
+      150,
+      150,
+      20,
+      20,
+      'fill:red;stroke:black;stroke-width:5;opacity:0.5'
+    )
+  )
 }
 
-<svg width="300px" height="300px"
-xmlns="http://www.w3.org/2000/svg">
-<text x="10" y="50" font-size="30">My SVG</text>
-</svg>
-
-*/
+function Group(id, text, rect) {
+  return SVG.Group(id, text, rect)
+}
