@@ -28,13 +28,11 @@ function Welcome({ name = 'Anonymous' }) {
   return Group(
     name,
     SVG.Text(`${name}-label`, 60, 50, 'Verdana', 12, `Welcome ${name}!!`),
-    SVG.Rectangle(
+    SVG.Square(
       `${name}-rect`,
       50,
       20,
       150,
-      150,
-      20,
       20,
       'fill:red;stroke:black;stroke-width:5;opacity:0.5'
     )

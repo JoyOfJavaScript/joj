@@ -13,7 +13,7 @@ const Money = (currency = '₿', amount = ZERO) => ({
   constructor: Money,
   equals: other => currency === other.currency && amount === other.amount,
   inspect: () => `${currency} ${amount}`,
-  serialize: () => `{amount: ${amount}, currency: ${currency}`,
+  serialize: () => JSON.stringify({ amount, currency }),
   round: (precision = 2) => Money(currency, precisionRound(amount, precision)),
   minus: m => Money(currency, amount - m.amount),
   plus: m => Money(currency, amount + m.amount),
