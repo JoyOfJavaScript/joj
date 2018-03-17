@@ -1,7 +1,5 @@
 import { SVG } from './api'
 
-//const { Document, Text } = SVG
-//console.log('document', Document)
 const fetchRootElementName = id =>
   [].slice
     .call(document.getElementsByTagName('script'))
@@ -15,27 +13,36 @@ const root = fetchRootElementName('data-root-id')
 
 // Initialize root element
 const rootElement = document.getElementById(root)
-const data = [{ name: 'Luis' }]
-const doc = SVG.Document(400, 180, Names(data))
-
+const data = [{ name: 'Luis' }, { name: 'Ana' }, { name: 'Luke' }]
+const doc = SVG.Document(SVG.Model.Dimension(1000, 180), Names(data))
 SVG.Document.render(doc, rootElement)
 
 function Names(props) {
-  return props.map(Welcome)
+  return props.map((name, index) => WelcomeBox({ ...name, index }))
 }
 
-function Welcome({ name = 'Anonymous' }) {
+function WelcomeBox({ name = 'Anonymous', index = 0 }) {
+  const offset = index * 150
   return Group(
     name,
-    SVG.Text(`${name}-label`, 60, 50, 'Verdana', 12, `Welcome ${name}!!`),
-    SVG.Square(
-      `${name}-rect`,
-      50,
-      20,
-      150,
-      20,
-      'fill:red;stroke:black;stroke-width:5;opacity:0.5'
-    )
+    SVG.Text(
+      `${name}-label`,
+      SVG.Model.Point(offset, 50),
+      'Verdana',
+      12,
+      `Welcome ${name}!!`
+    ),
+    squareAt(name, offset)
+  )
+}
+
+function squareAt(name, x) {
+  return SVG.Square(
+    `${name}-rect`,
+    SVG.Model.Point(x, 10),
+    150,
+    20,
+    'fill:red;stroke:black;stroke-width:5;opacity:0.5'
   )
 }
 

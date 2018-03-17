@@ -1,4 +1,6 @@
 const HasTag = name => ({
-  getTagName: () => name
+  get tag() {
+    return name
+  }
 })
 export default HasTag

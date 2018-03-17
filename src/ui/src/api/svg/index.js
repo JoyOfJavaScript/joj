@@ -1,5 +1,6 @@
 import Document from './data/Document'
 import * as Elements from './data/elements'
+import * as Values from './data/value'
 
 // Helper function
 Document.render = (svgElement, rootHtmlElement) => {
@@ -8,5 +9,6 @@ Document.render = (svgElement, rootHtmlElement) => {
 
 export default {
   Document,
-  ...Elements
+  ...Elements,
+  Model: Values
 }

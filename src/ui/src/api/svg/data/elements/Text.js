@@ -1,12 +1,12 @@
 import HasTag from '../traits/HasTag'
-import HasLocation from '../../data/attrs/core/HasLocation'
+import HasLocation from '../../data/attrs/space/HasLocation'
 import CanRender from '../traits/CanRender'
 import Element from '../Element'
 
 const TAG = 'text'
 
 // eslint-disable-next-line max-params
-const Text = (id, x, y, fontFamily, fontSize, contents = '') => {
+const Text = (id, point, fontFamily, fontSize, contents = '') => {
   const state = {
     constructor: Text,
     [Symbol.hasInstance]: i => i.constructor.name === 'Text',
@@ -21,7 +21,7 @@ const Text = (id, x, y, fontFamily, fontSize, contents = '') => {
     state,
     Element(id, [rawTxtChild]),
     HasTag(TAG),
-    HasLocation(x, y),
+    HasLocation(point),
     CanRender(state, 'fontFamily', 'fontSize')
   )
 }

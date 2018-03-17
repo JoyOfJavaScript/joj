@@ -1,9 +1,9 @@
 /**
  * Money value object
  *
- * @param {string} currency Type of currency (default: bitcoin)
- * @param {string} amount   Amount represented
- * @return {Money} Returns a money object
+ * @param {number} x X coordinate
+ * @param {number} y Y coordinate
+ * @return {Point} Returns a Point object
  */
 const Point = (x = 0, y = 0) => ({
   x,

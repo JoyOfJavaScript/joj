@@ -1,4 +1,6 @@
 const HasId = id => ({
-  getId: () => id
+  get id() {
+    return id
+  }
 })
 export default HasId

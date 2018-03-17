@@ -1,13 +1,13 @@
 import HasTag from '../traits/HasTag'
-import HasLocation from '../../data/attrs/core/HasLocation'
-import HasDimension from '../../data/attrs/core/HasDimension'
+import HasLocation from '../../data/attrs/space/HasLocation'
+import HasDimension from '../../data/attrs/space/HasDimension'
 import CanRender from '../traits/CanRender'
 import Element from '../Element'
 
 const TAG = 'rect'
 
 // eslint-disable-next-line max-params
-const Rectangle = (id, x, y, width, height, rx, ry, style = '') => {
+const Rectangle = (id, point, dimension, rx, ry, style = '') => {
   const state = {
     constructor: Rectangle,
     [Symbol.hasInstance]: i => i.constructor.name === 'Rectangle',
@@ -19,8 +19,8 @@ const Rectangle = (id, x, y, width, height, rx, ry, style = '') => {
     state,
     Element(id, []),
     HasTag(TAG),
-    HasLocation(x, y),
-    HasDimension(width, height),
+    HasLocation(point),
+    HasDimension(dimension),
     CanRender(state, 'rx', 'ry', 'style')
   )
 }
