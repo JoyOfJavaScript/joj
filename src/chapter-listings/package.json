@@ -25,13 +25,9 @@
     "sinon-chai": "^2.8.0"
   },
   "dependencies": {
-    "redux": "^3.7.2",
-    "data.either": "1.5.1",
-    "data.maybe": "1.2.2",
-    "data.task": "3.1.1",
     "flow-typed": "^2.2.3",
-    "ramda": "0.24.1",
-    "rxjs": "5.2.0"
+    "rxjs": "5.2.0",
+    "joj-adt": "file:../adt"
   },
   "scripts": {
     "lint": "eslint src/",
