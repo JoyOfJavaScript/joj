@@ -1,4 +1,7 @@
 import { SVG } from './api'
+import { Maybe } from 'joj-adt'
+
+console.log(Maybe)
 
 const fetchRootElementName = id =>
   [].slice

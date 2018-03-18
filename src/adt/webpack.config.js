@@ -1,24 +1,17 @@
-const path = require('path')
-
 module.exports = {
-  entry: './src/client/app.js',
+  entry: './src/index.js',
   mode: 'development',
   target: 'web',
-  watch: true,
   output: {
-    path: path.resolve(__dirname, 'public', 'dist'),
-    filename: 'app.js'
+    path: require('path').resolve(__dirname),
+    filename: 'index.js'
   },
   devtool: 'sourcemap',
   module: {
     rules: [
       {
         test: /.js?$/,
-        exclude: [
-          /node_modules\/babel-/m,
-          /node_modules\/core-js\//m,
-          /node_modules\/regenerator-runtime\//m
-        ],
+        exclude: [/node_modules/],
         use: [
           { loader: 'babel-loader' },
           {
