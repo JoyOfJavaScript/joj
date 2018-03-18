@@ -9,10 +9,21 @@ services:
       - NODE_ENV=dev
       - NPM_CONFIG_LOGLEVEL=info
     volumes:
-      - ./src:/home/joj/src
+        - ./src:/home/joj/src
     command: "npm --prefix /home/joj/src/chapter-listings run test-dev"
 
-  react_app:
+  blockchain:
+      image: "node:9"
+      user: "node"
+      working_dir: /home/joj/src
+      environment:
+        - NODE_ENV=dev
+        - NPM_CONFIG_LOGLEVEL=info
+      volumes:
+        - ./src:/home/joj/src
+      command: "npm --prefix /home/joj/src/blockchain run test-dev"
+
+  ui:
       image: "node:9"
       user: "node"
       working_dir: /home/joj/src
@@ -22,7 +33,7 @@ services:
       volumes:
         - ./src:/home/joj/src
       ports:
-        - "3000:3000"
+        - "8181:8181"
       expose:
-        - "3000"
-      command: "npm --prefix /home/joj/src/react-chat start"
+        - "8181"
+      command: "npm --prefix /home/joj/src/ui start"
