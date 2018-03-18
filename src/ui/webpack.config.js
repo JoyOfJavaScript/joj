@@ -2,7 +2,7 @@ const path = require('path')
 const fs = require('fs')
 
 module.exports = {
-  entry: './src/app.js',
+  entry: './src/client/app.js',
   mode: 'development',
   target: 'web',
   watch: true,

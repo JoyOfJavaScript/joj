@@ -34,7 +34,6 @@
     "lint-fix": "eslint src/ --fix",
     "bundle": "webpack",
     "start-server": "babel-node start.js",
-    "start": "run-p bundle start-server",
-    "test-dev": "nodemon --watch src/ --watch test/ --exec 'mocha --recursive --require babel-register --require babel-polyfill test/ || true'"
+    "start": "run-p bundle start-server"
   }
 }
