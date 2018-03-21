@@ -15,5 +15,5 @@ const Maybe = a => ({
           )
         : a ? Maybe(Ma.fold().call(Ma, a)) : Maybe(/* Empty */)
 })
-
+Maybe['@@type'] = 'Maybe'
 module.exports = Maybe

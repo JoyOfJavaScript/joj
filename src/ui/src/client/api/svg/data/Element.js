@@ -11,11 +11,7 @@ import HasId from './attrs/core/HasId'
  * @return {Element} Returns an element
  */
 const Element = (id, children) => {
-  const instance = {
-    constructor: Element,
-    [Symbol.hasInstance]: i => i.constructor.name === 'Element'
-  }
-  return Object.assign(instance, HasId(id), HasChildren(flatten(children)))
+  return Object.assign({}, HasId(id), HasChildren(flatten(children)))
 }
 
 const flatten = array => [].concat.apply([], array)

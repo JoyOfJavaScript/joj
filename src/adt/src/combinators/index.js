@@ -1,7 +1,8 @@
+const isFunction = a => a && typeof a === 'function'
 const compose2 = (f, g) => (...args) => f(g(...args))
 const compose = (...fns) => fns.reduce(compose2)
 const pipe = (...fns) => fns.reduceRight(compose2)
-
+const flatten = array => [].concat.apply([], array)
 const curry = fn => (...args1) =>
   args1.length === fn.length
     ? fn(...args1)
@@ -10,4 +11,4 @@ const curry = fn => (...args1) =>
         return args.length >= fn.length ? fn(...args) : curry(fn)(...args)
       }
 
-export { curry, pipe, compose }
+export { isFunction, curry, pipe, compose, flatten }

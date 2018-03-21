@@ -7,7 +7,7 @@ import Element from '../Element'
 const TAG = 'rect'
 
 // eslint-disable-next-line max-params
-const Rectangle = (id, point, dimension, rx, ry, style = '') => {
+const Rectangle = ({ id, loc, dim, rx, ry, style = '' }) => {
   const state = {
     constructor: Rectangle,
     [Symbol.hasInstance]: i => i.constructor.name === 'Rectangle',
@@ -19,8 +19,8 @@ const Rectangle = (id, point, dimension, rx, ry, style = '') => {
     state,
     Element(id, []),
     HasTag(TAG),
-    HasLocation(point),
-    HasDimension(dimension),
+    HasLocation(loc),
+    HasDimension(dim),
     CanRender(state, 'rx', 'ry', 'style')
   )
 }

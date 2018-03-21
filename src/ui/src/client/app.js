@@ -4,8 +4,7 @@ import { Maybe } from 'joj-adt'
 console.log(Maybe)
 
 const fetchRootElementName = id =>
-  [].slice
-    .call(document.getElementsByTagName('script'))
+  Array.from(document.getElementsByTagName('script')) // was: [].slice.call() or [...nodelist]
     .filter(s => !!s.getAttribute(id))
     .map(s => s.getAttribute(id))
     .reduce(x => x)
@@ -14,39 +13,56 @@ const root = fetchRootElementName('data-root-id')
 
 //// Add in chapter, modular library design. Ex the design of Ramda, Rx etc
 
-// Initialize root element
-const rootElement = document.getElementById(root)
-const data = [{ name: 'Luis' }, { name: 'Ana' }, { name: 'Luke' }]
-const doc = SVG.Document(SVG.Model.Dimension(1000, 180), Names(data))
-SVG.Document.render(doc, rootElement)
+function App() {
+  const state = {
+    data: [{ name: 'Luis' }, { name: 'Ana' }, { name: 'Luke' }],
+    onClick: handleClick
+  }
 
-function Names(props) {
-  return props.map((name, index) => WelcomeBox({ ...name, index }))
+  const handleClick = event => {
+    event.preventDefault()
+    console.log(event.target)
+  }
+
+  return {
+    render() {
+      return SVG.Document.render(
+        SVG.Document(SVG.Model.Dimension(1000, 180), NamedBoxes(state)),
+        document.getElementById(root)
+      )
+    }
+  }
 }
 
-function WelcomeBox({ name = 'Anonymous', index = 0 }) {
+App().render()
+
+function NamedBoxes({ data, onClick }) {
+  return data.map(({ name }, index) => SquareWithText({ name, index, onClick }))
+}
+
+function SquareWithText({ name = 'Anonymous', index = 0, onClick }) {
   const offset = index * 150
-  return Group(
-    name,
-    SVG.Text(
-      `${name}-label`,
-      SVG.Model.Point(offset, 50),
-      'Verdana',
-      12,
-      `Welcome ${name}!!`
-    ),
-    squareAt(name, offset)
-  )
+  return Group(name, Text(name, offset), Square(name, offset))
 }
 
-function squareAt(name, x) {
-  return SVG.Square(
-    `${name}-rect`,
-    SVG.Model.Point(x, 10),
-    150,
-    20,
-    'fill:red;stroke:black;stroke-width:5;opacity:0.5'
-  )
+function Text(name, x) {
+  return SVG.Text({
+    id: `${name}-label`,
+    loc: SVG.Model.Point(x, 50),
+    fontFamily: 'Verdana',
+    fontSize: 12,
+    contents: `Welcome ${name}!!`
+  })
+}
+
+function Square(name, x) {
+  return SVG.Square({
+    id: `${name}-rect`,
+    loc: SVG.Model.Point(x, 10),
+    side: 150,
+    roundness: 20,
+    style: 'fill:red;stroke:black;stroke-width:5;opacity:0.5'
+  })
 }
 
 function Group(id, text, rect) {

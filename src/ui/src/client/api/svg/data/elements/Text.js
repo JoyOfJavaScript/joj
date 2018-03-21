@@ -2,28 +2,34 @@ import HasTag from '../traits/HasTag'
 import HasLocation from '../../data/attrs/space/HasLocation'
 import CanRender from '../traits/CanRender'
 import Element from '../Element'
+import { curry } from '../../common/combinators'
 
 const TAG = 'text'
 
-// eslint-disable-next-line max-params
-const Text = (id, point, fontFamily, fontSize, contents = '') => {
+const Text = ({ id, loc, fontFamily, fontSize, contents = '' }) => {
   const state = {
-    constructor: Text,
-    [Symbol.hasInstance]: i => i.constructor.name === 'Text',
     fontFamily,
     fontSize,
-    contents
+    contents,
+    render: {}
   }
   const rawTxtChild = {
-    render: () => state.contents
+    render: () => escapeContents(document, state.contents)
   }
+
   return Object.assign(
     state,
     Element(id, [rawTxtChild]),
     HasTag(TAG),
-    HasLocation(point),
+    HasLocation(loc),
     CanRender(state, 'fontFamily', 'fontSize')
   )
 }
+
+// Use the browser's built-in functionality to quickly and safely escape
+// the string
+const escapeContents = curry(
+  (document, str) => str // TODO: Finish
+)
 
 export default Text

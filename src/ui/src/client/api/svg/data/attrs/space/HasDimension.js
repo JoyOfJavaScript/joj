@@ -1,3 +1,5 @@
+//TODO: Use a Validation ADT to validate or error
+
 const HasDimension = dimensions => ({
   hasDimension: !!dimensions,
   get width() {
