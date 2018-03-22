@@ -44,6 +44,7 @@ const errorWith = str => {
 
 const Validation = {
   '@@type': 'Validation',
+  of: a => Success(a),
   fromNullable: (a, ...errors) => (a != null ? Success(a) : Failure(errors)),
   fromMaybe: (Ma, ...errors) => () => {
     if (Ma['@@type'] === 'Maybe') {
