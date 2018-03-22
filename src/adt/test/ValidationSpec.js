@@ -44,7 +44,7 @@ describe('Validation', () => {
 
   it('real world: not exceeds and startsWithNumber', () => {
     const data = 'luis atencio'
-    const v = Validation.of(x => y => data)
+    const v = Validation.of(x => x => x)
       .ap(notExceeds(3, data))
       .ap(startsWithNumber(data))
     assert.isOk(v.isFailure())
@@ -59,7 +59,7 @@ describe('Validation', () => {
 
   it('real world: not exceeds, startsWithNumber, with notEmpty', () => {
     const data = 'luis atencio'
-    const v = Validation.of(x => y => data)
+    const v = Validation.of(x => x => x)
       .ap(notExceeds(3, data))
       .ap(startsWithNumber(data))
       .ap(notEmpty(data))
