@@ -46,5 +46,12 @@ describe('From Maybe To Validation', () => {
 
     assert.isOk(m.isJust())
     assert.equal(m.get(), 'LUIS')
+
+    m = Validation.of(x => x)
+      .ap(notExceeds(3, 'luis'))
+      .toMaybe()
+      .map(toUpper)
+    assert.isOk(m.isNothing())
+    assert.throws(() => m.get(), TypeError)
   })
 })
