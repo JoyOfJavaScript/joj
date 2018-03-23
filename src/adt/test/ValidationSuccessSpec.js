@@ -9,6 +9,10 @@ const first = n => str => str.substring(0, n)
 const add = a => b => a + b
 
 describe('Validation#Sucess', () => {
+  it('Type', () => {
+    assert.equal(Success('Some Value')['@@type'], 'Validation')
+  })
+
   it('Identity', () => {
     assert.equal(
       Success('Some Value')

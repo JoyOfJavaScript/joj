@@ -7,6 +7,9 @@ const first = n => str => str.substring(0, n)
 const add = a => b => a + b
 
 describe('Validation#Failure', () => {
+  it('Type', () => {
+    assert.equal(Failure('Some Value')['@@type'], 'Validation')
+  })
   it('Fold', () => {
     assert.throws(Failure('FAILED!').fold, TypeError)
     assert.throws(Failure(null).fold, TypeError)

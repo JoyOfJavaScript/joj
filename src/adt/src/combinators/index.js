@@ -1,3 +1,4 @@
+const identity = a => a
 const isFunction = a => a && typeof a === 'function'
 const compose2 = (f, g) => (...args) => f(g(...args))
 const compose = (...fns) => fns.reduce(compose2)
@@ -11,4 +12,4 @@ const curry = fn => (...args1) =>
         return args.length >= fn.length ? fn(...args) : curry(fn)(...args)
       }
 
-export { isFunction, curry, pipe, compose, flatten }
+export { isFunction, curry, pipe, compose, flatten, identity }

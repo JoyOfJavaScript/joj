@@ -1,19 +1,72 @@
-const id = a => a
+import { isFunction, identity } from '../combinators'
+import { Success, Failure } from '../validation'
 
-const Maybe = a => ({
-  map: f => (a ? Maybe(f(a)) : Maybe(/* Empty */)),
-  fold: (f = id) => (a ? f(a) : 'Empty'),
-  flatMap: f => Maybe(f(a.fold())),
-  ap: Ma =>
-    Ma.fold() === 'Empty'
-      ? Maybe(/* Empty */)
-      : a && typeof a === 'function'
-        ? Maybe(
-            typeof Ma.fold() === 'function'
-              ? Ma.fold().call(Ma, a)
-              : a(Ma.fold())
-          )
-        : a ? Maybe(Ma.fold().call(Ma, a)) : Maybe(/* Empty */)
-})
-Maybe['@@type'] = 'Maybe'
+const Maybe = {
+  '@@type': 'Maybe',
+  of: a => Just(a)
+}
+
+export const Just = (Maybe.Just = a =>
+  Object.assign(
+    {
+      isJust: () => true,
+      isNothing: () => false,
+      fold: (fn = identity) => fn(a),
+      foldOrElse: (fn = identity) => fn(a),
+      map: fn => Maybe.fromNullable(fn(a)),
+      ap: Ma =>
+        Ma.isNothing()
+          ? // If applying to a Maybe.Nothing, skip
+            Nothing()
+          : // Applying a Maybe.Just
+            isFunction(a)
+            ? // If a is a function, look at the contents of Ma
+              Maybe(
+                isFunction(Ma.merge())
+                  ? // If Ma holds another function, fold Ma with a
+                    Ma.merge().call(Ma, a)
+                  : // Ma holds a value, apply that value to a
+                    a(Ma.merge())
+              )
+            : // a is a value and Ma has a function
+              Maybe(Ma.merge().call(Ma, a)),
+      get: () => a,
+      merge: () => a,
+      toValidation: () => Success(a)
+    },
+    Maybe
+  ))
+
+export const Nothing = (Maybe.Nothing = b =>
+  Object.assign(
+    {
+      isJust: () => false,
+      isNothing: () => true,
+      map: _ => Nothing(),
+      ap: Ma => Nothing(),
+      foldOrElse: (_, defaultValue) => defaultValue,
+      fold: _ => errorWith('Unable to fold from a Maybe.Nothing'),
+      get: () => errorWith('Unable to get from a Maybe.Nothing'),
+      merge: () => errorWith('Unable to merge from a Maybe.Nothing'),
+      toValidation: () => Failure(['Value is null or undefined'])
+    },
+    Maybe
+  ))
+
+const errorWith = str => {
+  // This will become more concise with throw expressions (https://github.com/tc39/proposal-throw-expressions)
+  throw new TypeError(str)
+}
+
+Maybe.fromNullable = (a, ...errors) => (a != null ? Just(a) : Nothing(errors))
+Maybe.fromValidation = Va => () => {
+  if (Va['@@type'] === 'Validation') {
+    if (Va.isSuccess()) {
+      return Just(Va.merge())
+    }
+    return Nothing()
+  }
+  return Maybe.fromNullable(Va)
+}
+
 module.exports = Maybe
