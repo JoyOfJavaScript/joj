@@ -1,13 +1,17 @@
-import { curry, concat } from 'ramda'
+import { Combinators } from 'joj-adt'
 
-Array.prototype.split = curry(function(pred1, pred2) {
+const { curry } = Combinators
+
+export const concat = (a, whole) => whole.concat(a)
+
+Array.prototype.split = function(pred1, pred2) {
   return [this.filter(pred1), this.filter(pred2)]
-})
+}
 
-Array.prototype.multiMap = curry(function(fn1, fn2) {
+Array.prototype.multiMap = function(fn1, fn2) {
   const [first, ...second] = this
   return first.map(fn1).concat(second.reduce(concat).map(fn2))
-})
+}
 
 // Checks object is not empty/ Works on strings or arrays
 export const notEmpty = data => () => data && data.length > 0

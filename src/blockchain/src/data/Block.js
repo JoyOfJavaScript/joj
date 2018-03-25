@@ -8,14 +8,12 @@
  * @return {Block} Newly created block with its own computed hash
  */
 const Block = (previousHash = '') => {
-  // Public interface
-  const state = {
+  return {
     previousHash,
     timestamp: Date.now(),
     hash: '',
     nonce: 0
   }
-  return state
 }
 
 export default Block

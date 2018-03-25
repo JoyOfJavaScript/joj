@@ -12,4 +12,4 @@ const curry = fn => (...args1) =>
         return args.length >= fn.length ? fn(...args) : curry(fn)(...args)
       }
 
-export { isFunction, curry, pipe, compose, flatten, identity }
+module.exports = { isFunction, curry, pipe, compose, flatten, identity }

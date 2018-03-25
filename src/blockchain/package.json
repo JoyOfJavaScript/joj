@@ -26,21 +26,14 @@
     "transform-runtime": "0.0.0"
   },
   "dependencies": {
-    "data.either": "1.5.1",
-    "data.maybe": "1.2.2",
-    "data.task": "3.1.1",
-    "flow-typed": "^2.2.3",
-    "ramda": "0.24.1",
     "joj-adt": "file:../adt"
   },
   "scripts": {
     "lint": "eslint src/",
     "lint-fix": "eslint src/ --fix",
     "start": "babel-node src/main.js",
-    "test":
-      "mocha --recursive --require babel-register --require babel-polyfill test/",
-    "test-dev":
-      "nodemon --watch src/ --watch test/ --exec 'mocha --recursive --require babel-register --require babel-polyfill test/ || true'",
+    "test": "mocha --recursive --require babel-register --require babel-polyfill test/",
+    "test-dev": "nodemon --watch src/ --watch test/ --exec 'mocha --recursive --require babel-register --require babel-polyfill test/ || true'",
     "flow": "flow",
     "flow-init": "flow init",
     "flow-status": "flow status"

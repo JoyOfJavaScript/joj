@@ -1,11 +1,13 @@
 import BlockLogic from './BlockLogic'
 import Pair from './util/Pair'
-import { curry, concat } from 'ramda'
+import { Combinators } from 'joj-adt'
 import DataBlock from '../data/DataBlock'
 import Money from '../data/Money'
 import Transaction from '../data/Transaction'
 import TransactionalBlock from '../data/TransactionalBlock'
-import '../common/helpers'
+import { concat } from '../common/helpers'
+
+const { curry } = Combinators
 
 const MINING_DIFFICULTY = 2
 const MINING_REWARD_SCORE = Money('₿', 100)

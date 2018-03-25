@@ -3,5 +3,6 @@
 module.exports = {
   Maybe: require('./maybe'),
   Validation: require('./validation'),
-  Combinators: require('./combinators')
+  Combinators: require('./combinators'),
+  Conversions: require('./conversions')
 }

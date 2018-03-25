@@ -1,6 +1,5 @@
-import { curry, identity } from 'ramda'
-
-// Helper functions
+import { Combinators } from 'joj-adt'
+const { curry, identity } = Combinators
 
 /**
  * Test whether some value is of type ctor

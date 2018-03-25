@@ -1,5 +1,7 @@
-import { curry, compose } from 'ramda'
 import crypto from 'crypto'
+import { Combinators } from 'joj-adt'
+
+const { curry, compose } = Combinators
 
 const ALGO_SHA256 = 'sha256' // hashcash-SHA256^2 (bitcoin)
 const ENCODING_HEX = 'hex'
