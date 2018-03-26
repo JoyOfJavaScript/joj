@@ -32,8 +32,8 @@ const addBlockTo = curry((blockchain, newBlock) => {
  * Recalculate new blocks hash until the difficulty condition is met (mine)
  * Point new block's previous to current
  *
- * @param {Blockchain} blockchain Chain to add block to
- * @param {Block}      newBlock   New block to add into the chain
+ * @param {Blockchain}  blockchain Chain to add block to
+ * @param {DataBlock}   newBlock   New block to add into the chain
  */
 const mineBlockTo = curry((blockchain, newBlock) => {
   newBlock.previousHash = blockchain.last().hash
@@ -47,7 +47,7 @@ const mineBlockTo = curry((blockchain, newBlock) => {
  * transactions inside all the blocks in the chain
  *
  * @param {Blockchain} blockchain Chain to calculate balance from
- * @param {Block}      address    Address to send reward to
+ * @param {string}     address    Address to send reward to
  */
 const calculateBalanceOfAddress = curry((blockchain, address) =>
   blockchain

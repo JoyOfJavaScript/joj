@@ -5,10 +5,12 @@
  * mean to be abstract
  *
  * @param {string} previousHash Reference to the previous block in the chain
- * @return {Block} Newly created block with its own computed hash
+ * @return {BlockHeader} Newly created block with its own computed hash
  */
-const Block = (previousHash = '') => {
+const BlockHeader = (previousHash = '') => {
   return {
+    difficulty: 2,
+    version: '1.0',
     previousHash,
     timestamp: Date.now(),
     hash: '',
@@ -16,4 +18,4 @@ const Block = (previousHash = '') => {
   }
 }
 
-export default Block
+export default BlockHeader

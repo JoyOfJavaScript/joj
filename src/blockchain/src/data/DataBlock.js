@@ -1,4 +1,4 @@
-import Block from './Block'
+import BlockHeader from './BlockHeader'
 import Hash from '../behavior/traits/Hash'
 import View from '../behavior/traits/View'
 import Genesis from '../behavior/traits/Genesis'
@@ -11,7 +11,7 @@ import Genesis from '../behavior/traits/Genesis'
  * @param {Object} data         Data associated with this block
  * @param {string} previousHash Reference to the previous block in the chain
  * @return {Block} Newly created block with its own computed hash
- * @augments Block
+ * @augments BlockHeader
  */
 const DataBlock = (data = {}, previousHash = '') => {
   // Public interface
@@ -23,7 +23,7 @@ const DataBlock = (data = {}, previousHash = '') => {
   }
   const instance = Object.assign(
     state,
-    Block(previousHash),
+    BlockHeader(previousHash),
     Hash(state, ['timestamp', 'data', 'previousHash', 'nonce']),
     View(state),
     Genesis(state)

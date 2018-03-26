@@ -1,4 +1,4 @@
-import Block from './Block'
+import BlockHeader from './BlockHeader'
 import PendingTransaction from '../behavior/traits/PendingTransaction'
 import TxView from '../behavior/traits/TxView'
 import Hash from '../behavior/traits/Hash'
@@ -15,6 +15,7 @@ import Genesis from '../behavior/traits/Genesis'
  * @augments Block
  */
 const TransactionalBlock = (pendingTransactions = [], previousHash = '') => {
+  // TODO: change order of args
   const state = {
     constructor: TransactionalBlock,
     [Symbol.hasInstance]: i => i.constructor.name === 'TransactionalBlock',
@@ -22,7 +23,7 @@ const TransactionalBlock = (pendingTransactions = [], previousHash = '') => {
   }
   const instance = Object.assign(
     state,
-    Block(previousHash),
+    BlockHeader(previousHash),
     Hash(state, ['timestamp', 'previousHash', 'nonce']),
     PendingTransaction(state),
     TxView(state),
