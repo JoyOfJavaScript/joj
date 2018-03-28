@@ -1,6 +1,5 @@
 import BlockLogic from './BlockLogic'
-import Pair from './util/Pair'
-import { Combinators } from 'joj-adt'
+import { Combinators, Pair } from 'joj-adt'
 import DataBlock from '../data/DataBlock'
 import Money from '../data/Money'
 import Transaction from '../data/Transaction'
@@ -140,9 +139,9 @@ const isChainValid = blockchain =>
     })
 
 /**
- * Exported BlockChainLogic interface
+ * Exported BlockchainLogic interface
  */
-const BlockChainLogic = {
+const BlockchainLogic = {
   addBlockTo,
   mineBlockTo,
   isChainValid,
@@ -150,4 +149,4 @@ const BlockChainLogic = {
   calculateBalanceOfAddress
 }
 
-export default BlockChainLogic
+export default BlockchainLogic

@@ -1,9 +1,11 @@
-class Block {
+class BlockHeader {
   constructor(previousHash) {
     this.previousHash = previousHash
     this.timestamp = Date.now()
     this.hash = ''
     this.nonce = 0
+    this.difficulty = 2
+    this.version = '1.0'
   }
 
   get hash() {
@@ -23,4 +25,4 @@ class Block {
   }
 }
 
-export default Block
+export default BlockHeader

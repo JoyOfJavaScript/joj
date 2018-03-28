@@ -1,5 +1,5 @@
 import assert from 'assert'
-import BlockChainLogic from '../src/behavior/BlockChainLogic'
+import BlockchainLogic from '../src/behavior/BlockchainLogic'
 import Money from '../src/data/Money'
 import DataBlock from '../src/data/DataBlock'
 import BlockChain from '../src/data/Blockchain'
@@ -8,8 +8,8 @@ import BlockChain from '../src/data/Blockchain'
 const coin = BlockChain()
 
 // Adder functions
-const addCoin = BlockChainLogic.addBlockTo(coin)
-const mineCoin = BlockChainLogic.mineBlockTo(coin)
+const addCoin = BlockchainLogic.addBlockTo(coin)
+const mineCoin = BlockchainLogic.mineBlockTo(coin)
 
 // Add coins
 const fourDollars = addCoin(DataBlock(Money('USD', 4)))
@@ -25,7 +25,7 @@ describe('Create a valid Blockchain data structure', () => {
     const [g, ...blocks] = coin
     assert.equal(g.previousHash, '-1')
     assert.ok(blocks[0].data.equals(fourDollars.data))
-    assert.ok(BlockChainLogic.isChainValid(coin))
+    assert.ok(BlockchainLogic.isChainValid(coin))
   })
 
   it('Should assert blocks + data are immutable', () => {

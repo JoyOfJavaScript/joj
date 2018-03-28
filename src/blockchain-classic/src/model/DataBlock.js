@@ -1,6 +1,6 @@
-import Block from './Block'
+import BlockHeader from './BlockHeader'
 
-class DataBlock extends Block {
+class DataBlock extends BlockHeader {
   constructor(previousHash, data) {
     super(previousHash)
     this.data = data

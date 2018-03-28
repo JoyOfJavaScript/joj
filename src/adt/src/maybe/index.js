@@ -12,7 +12,6 @@ export const Just = (Maybe.Just = a =>
       isJust: () => true,
       isNothing: () => false,
       fold: (fn = identity) => fn(a),
-      foldOrElse: (fn = identity) => fn(a),
       map: fn => Maybe.fromNullable(fn(a)),
       ap: Ma =>
         Ma.isNothing()
@@ -21,7 +20,7 @@ export const Just = (Maybe.Just = a =>
           : // Applying a Maybe.Just
             isFunction(a)
             ? // If a is a function, look at the contents of Ma
-              Maybe(
+              Maybe.of(
                 isFunction(Ma.merge())
                   ? // If Ma holds another function, fold Ma with a
                     Ma.merge().call(Ma, a)
@@ -29,8 +28,11 @@ export const Just = (Maybe.Just = a =>
                     a(Ma.merge())
               )
             : // a is a value and Ma has a function
-              Maybe(Ma.merge().call(Ma, a)),
+              Maybe.of(Ma.merge().call(Ma, a)),
       get: () => a,
+      getOrElse: _ => a,
+      getOrElseThrow: error => a,
+      orElseThrow: error => Just(a),
       merge: () => a,
       toValidation: () => Success(a)
     },
@@ -44,11 +46,17 @@ export const Nothing = (Maybe.Nothing = b =>
       isNothing: () => true,
       map: _ => Nothing(),
       ap: Ma => Nothing(),
-      foldOrElse: (_, defaultValue) => defaultValue,
       fold: _ => errorWith('Unable to fold from a Maybe.Nothing'),
       get: () => errorWith('Unable to get from a Maybe.Nothing'),
       merge: () => errorWith('Unable to merge from a Maybe.Nothing'),
-      toValidation: () => Failure(['Value is null or undefined'])
+      toValidation: () => Failure(['Value is null or undefined']),
+      getOrElse: defaultValue => defaultValue,
+      getOrElseThrow: error => {
+        throw error
+      },
+      orElseThrow: error => {
+        throw error
+      }
     },
     Maybe
   ))

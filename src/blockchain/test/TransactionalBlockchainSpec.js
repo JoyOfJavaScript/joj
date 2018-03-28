@@ -1,5 +1,5 @@
 import assert from 'assert'
-import BlockChainLogic from '../src/behavior/BlockChainLogic'
+import BlockchainLogic from '../src/behavior/BlockchainLogic'
 import Money from '../src/data/Money'
 import TransactionalBlockchain from '../src/data/TransactionalBlockchain'
 import Transaction from '../src/data/Transaction'
@@ -14,17 +14,17 @@ describe('Compute the balance in a transactional blockchain', () => {
       Transaction('address2', 'address1', Money('₿', 50))
     )
 
-    BlockChainLogic.minePendingTransactions(coinTransactions, 'luis-address')
-    let balance = BlockChainLogic.calculateBalanceOfAddress(
+    BlockchainLogic.minePendingTransactions(coinTransactions, 'luis-address')
+    let balance = BlockchainLogic.calculateBalanceOfAddress(
       coinTransactions,
       'luis-address'
     )
     assert.equal(balance.amount, Money.nothing().amount)
 
     // Reward is in next block, so mine again
-    BlockChainLogic.minePendingTransactions(coinTransactions, 'luis-address')
+    BlockchainLogic.minePendingTransactions(coinTransactions, 'luis-address')
 
-    balance = BlockChainLogic.calculateBalanceOfAddress(
+    balance = BlockchainLogic.calculateBalanceOfAddress(
       coinTransactions,
       'luis-address'
     )

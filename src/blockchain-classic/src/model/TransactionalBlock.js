@@ -1,7 +1,7 @@
-import Block from './Block'
+import BlockHeader from './BlockHeader'
 
 // https://github.com/getify/You-Dont-Know-JS/blob/master/this%20%26%20object%20prototypes/ch4.md
-class TransactionalBlock extends Block {
+class TransactionalBlock extends BlockHeader {
   constructor(previousHash, pendingTransactions) {
     super(previousHash)
     this.pendingTransactions = pendingTransactions

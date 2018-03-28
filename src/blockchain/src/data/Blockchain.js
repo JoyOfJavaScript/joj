@@ -15,6 +15,7 @@ const Blockchain = chain => {
   let _size = 0
 
   // Public interface
+  // Consider returning Object.assign(Array.prototype, {...})
   return {
     constructor: Blockchain,
     [Symbol.hasInstance]: i => i.constructor.name === 'Blockchain',
@@ -40,5 +41,26 @@ const Blockchain = chain => {
     size: () => _size
   }
 }
+
+// var SubArray = function() {
+//     var arrInst = new Array(...arguments); // spread arguments object
+//     /* Object.getPrototypeOf(arrInst) === Array.prototype */
+//     Object.setPrototypeOf(arrInst, SubArray.prototype);     //redirectionA
+//     return arrInst; // now instanceof SubArray
+// };
+//
+// SubArray.prototype = {
+//     // SubArray.prototype.constructor = SubArray;
+//     constructor: SubArray,
+//
+//     // methods avilable for all instances of SubArray
+//     add: function(element){return this.push(element);},
+//     ...
+// };
+//
+// Object.setPrototypeOf(SubArray.prototype, Array.prototype); //redirectionB
+//
+// var subArr = new SubArray(1, 2);
+// subArr.add(3); subArr[2]; // 3
 
 export default Blockchain
