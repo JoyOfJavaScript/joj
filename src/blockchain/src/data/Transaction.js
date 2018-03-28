@@ -17,17 +17,13 @@ const Transaction = (sender, recipient, funds, inputs = []) => {
     sender,
     recipient,
     funds,
-    hash: '',
     inputs,
     nonce: 0
   }
-  const instance = Object.assign(
+  return Object.assign(
     state,
     Hash(state, ['sender', 'recipient', 'value', 'nonce'])
   )
-  // Initialize the transaction object with a precomputed hash
-  instance.calculateHash()
-  return instance
 }
 export default Transaction
 

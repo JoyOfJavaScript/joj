@@ -19,6 +19,9 @@ const ENCODING_HEX = 'hex'
 export const Hash = (state, keys) => ({
   calculateHash: () => {
     return (state.hash = computeCipher(keys.map(k => state[k])))
+  },
+  get hash() {
+    return this.calculateHash()
   }
 })
 

@@ -21,16 +21,13 @@ const DataBlock = (data = {}, previousHash = '') => {
     [Symbol.hasInstance]: i => i.constructor.name === 'DataBlock',
     data
   }
-  const instance = Object.assign(
+  return Object.assign(
     state,
     BlockHeader(previousHash),
     Hash(state, ['timestamp', 'data', 'previousHash', 'nonce']),
     View(state),
     Genesis(state)
   )
-  // Initialize the data block object with a precomputed hash
-  instance.calculateHash()
-  return instance
 }
 
 /**

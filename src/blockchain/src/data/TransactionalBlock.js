@@ -21,7 +21,7 @@ const TransactionalBlock = (pendingTransactions = [], previousHash = '') => {
     [Symbol.hasInstance]: i => i.constructor.name === 'TransactionalBlock',
     pendingTransactions
   }
-  const instance = Object.assign(
+  return Object.assign(
     state,
     BlockHeader(previousHash),
     Hash(state, ['timestamp', 'previousHash', 'nonce']),
@@ -29,7 +29,5 @@ const TransactionalBlock = (pendingTransactions = [], previousHash = '') => {
     TxView(state),
     Genesis(state)
   )
-  instance.calculateHash()
-  return instance
 }
 export default TransactionalBlock
