@@ -11,13 +11,14 @@ export const PendingTransaction = state => ({
     return state.pendingTransactions
   },
   addPendingTransaction(tx) {
-    state.pendingTransactions.push(tx)
+    state.pendingTransactions.set(tx.hash, tx)
   },
   pendingTransactionsToString() {
+    //TODO: map over the map and print key value pairs
     return state.pendingTransactions.map(JSON.stringify).join(' ')
   },
   countPendingTransactions() {
-    return state.pendingTransactions.length
+    return state.pendingTransactions.size
   }
 })
 

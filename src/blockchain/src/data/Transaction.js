@@ -1,4 +1,5 @@
 import Hash from '../behavior/traits/Hash'
+import Signature from '../behavior/traits/Signature'
 
 /**
  * A transaction holds information (keys) identifying who is making the payment
@@ -12,8 +13,6 @@ import Hash from '../behavior/traits/Hash'
  */
 const Transaction = (sender, recipient, funds, inputs = []) => {
   const state = {
-    constructor: Transaction,
-    [Symbol.hasInstance]: i => i.constructor.name === 'Transaction',
     sender,
     recipient,
     funds,
@@ -22,7 +21,8 @@ const Transaction = (sender, recipient, funds, inputs = []) => {
   }
   return Object.assign(
     state,
-    Hash(state, ['sender', 'recipient', 'value', 'nonce'])
+    Hash(state, ['sender', 'recipient', 'funds', 'nonce']),
+    Signature(state, ['sender', 'recipient', 'funds'])
   )
 }
 export default Transaction
