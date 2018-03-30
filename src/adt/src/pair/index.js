@@ -54,8 +54,11 @@ export const Pair = (A, B) => (l, r) =>
     merge: f => f(left, right),
     equals: otherPair => left === otherPair.left && right === otherPair.right,
     inspect: () => `Pair [${left}, ${right}]`,
+    toArray: () => [left, right],
     [Symbol.toPrimitive]: hint =>
-      hint === 'string' ? `Pair [${left}, ${right}]` : [left, right]
+      console.log('As primitive', hint) + hint === 'string'
+        ? `Pair [${left}, ${right}]`
+        : [left, right]
   }))(
     // Check that objects passed into this tuple are the right type
     typeOf(A)(l),

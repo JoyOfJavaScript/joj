@@ -19,7 +19,7 @@ describe('Compute the balance in a transactional blockchain', () => {
       coinTransactions,
       'luis-address'
     )
-    assert.equal(balance.amount, Money.nothing().amount)
+    assert.equal(balance.amount, Money.zero().amount)
 
     // Reward is in next block, so mine again
     BlockchainLogic.minePendingTransactions(coinTransactions, 'luis-address')

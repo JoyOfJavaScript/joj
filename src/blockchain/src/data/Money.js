@@ -34,7 +34,7 @@ const precisionRound = (number, precision) => {
 }
 
 // Static helper functions
-Money.nothing = currency => Money(currency, ZERO)
+Money.zero = currency => Money(currency, ZERO)
 Money.add = (m1, m2) => m1.plus(m2)
 Money.subtract = (m1, m2) => m1.minus(m2)
 

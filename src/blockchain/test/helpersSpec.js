@@ -1,5 +1,5 @@
 import assert from 'assert'
-import '../src/common/helpers'
+import { concat } from '../src/common/helpers'
 
 describe('Helper functions', () => {
   it('Should split the data following two conditions', () => {
@@ -13,7 +13,12 @@ describe('Helper functions', () => {
         tx => tx.fromAddress === 'address1',
         tx => tx.toAddress === 'address1'
       )
-      .multiMap(tx => -tx.amount, tx => tx.amount)
+      .bimap(Array, Array)(
+        arrA => arrA.map(tx => -tx.amount),
+        arrB => arrB.map(tx => tx.amount)
+      )
+      .toArray()
+      .reduce(concat)
 
     assert.deepEqual([-100, -200, 50], result)
   })

@@ -1,16 +1,12 @@
 import { Combinators } from 'joj-adt'
+import { Pair } from 'joj-adt'
 
 const { curry } = Combinators
 
-export const concat = (a, whole) => whole.concat(a)
+export const concat = (a, b) => a.concat(b)
 
-Array.prototype.split = function(pred1, pred2) {
-  return [this.filter(pred1), this.filter(pred2)]
-}
-
-Array.prototype.multiMap = function(fn1, fn2) {
-  const [first, ...second] = this
-  return first.map(fn1).concat(second.reduce(concat).map(fn2))
+Array.prototype.split = function(predA, predB) {
+  return Pair(Array, Array)(this.filter(predA), this.filter(predB))
 }
 
 // Checks object is not empty/ Works on strings or arrays

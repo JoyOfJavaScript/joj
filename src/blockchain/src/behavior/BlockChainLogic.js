@@ -55,7 +55,7 @@ const calculateBalanceOfAddress = curry((blockchain, address) =>
     // Ignore Genesis block as this won't ever have any pending transactions
     .filter(b => !b.isGenesis())
     // Retrieve all pending transactions
-    .map(txBlock => txBlock.pendingTransactions)
+    .map(txBlock => Array.from(txBlock.pendingTransactions.values()))
     // Group the transactions of each block into an array
     .reduce(concat)
     // Separate the transactions into 2 groups:
@@ -63,13 +63,14 @@ const calculateBalanceOfAddress = curry((blockchain, address) =>
     //    2: Matches the toAddress
     .split(tx => tx.sender === address, tx => tx.recipient === address)
     // Now apply a function to each group to extract the amount to add/subtract as money
-    .multiMap(
-      tx => Money(tx.funds.currency, -tx.funds.amount),
-      tx => Money(tx.funds.currency, tx.funds.amount)
+    .bimap(Array, Array)(
+      arrA => arrA.map(tx => Money(tx.funds.currency, -tx.funds.amount)),
+      arrB => arrB.map(tx => Money(tx.funds.currency, tx.funds.amount))
     )
+    .toArray()
     // Finally, add across all the values to compute sum
     // Money is monoidal over Money.add and Money.nothing
-    .reduce(Money.add, Money.nothing())
+    .reduce(Money.add, Money.zero())
 )
 
 //-- IMPERATIVE VERSION OF calculateBalanceOfAddress --

@@ -14,8 +14,9 @@ export const PendingTransaction = state => ({
     state.pendingTransactions.set(tx.hash, tx)
   },
   pendingTransactionsToString() {
-    //TODO: map over the map and print key value pairs
-    return state.pendingTransactions.map(JSON.stringify).join(' ')
+    return Array.from(state.pendingTransactions.values())
+      .map(JSON.stringify)
+      .join(' ')
   },
   countPendingTransactions() {
     return state.pendingTransactions.size
