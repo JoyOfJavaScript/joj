@@ -66,8 +66,9 @@ const errorWith = str => {
   throw new TypeError(str)
 }
 
-Maybe.fromNullable = (a) => (a != null ? Just(a) : Nothing())
-Maybe.fromEmpty = (a) => Maybe.fromNullable(a).map(x => x.length === 0 ? null : x)
+Maybe.fromNullable = a => (a != null ? Just(a) : Nothing())
+Maybe.fromEmpty = a =>
+  Maybe.fromNullable(a).map(x => (x.length === 0 ? null : x))
 Maybe.fromValidation = Va => () => {
   if (Va['@@type'] === 'Validation') {
     if (Va.isSuccess()) {
