@@ -22,7 +22,7 @@ export const Hash = (state, keys) => ({
     return (state.hash = computeCipher(keys.map(k => state[k])))
   },
   get hash() {
-    return Maybe.fromNullable(state.hash).getOrElse(this.calculateHash())
+    return Maybe.fromEmpty(state.hash).getOrElse(this.calculateHash())
   }
 })
 

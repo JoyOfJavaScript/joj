@@ -67,7 +67,7 @@ const calculateBalanceOfAddress = curry((blockchain, address) =>
       arrA => arrA.map(tx => Money(tx.funds.currency, -tx.funds.amount)),
       arrB => arrB.map(tx => Money(tx.funds.currency, tx.funds.amount))
     )
-    .toArray()
+    .merge(concat)
     // Finally, add across all the values to compute sum
     // Money is monoidal over Money.add and Money.nothing
     .reduce(Money.add, Money.zero())
