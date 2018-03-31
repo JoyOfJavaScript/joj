@@ -23,6 +23,7 @@
     "nodemon": "^1.11.0",
     "sinon": "^1.17.7",
     "sinon-chai": "^2.8.0",
+    "standard": "^11.0.1",
     "transform-runtime": "0.0.0"
   },
   "dependencies": {
@@ -32,12 +33,9 @@
     "lint": "eslint src/",
     "lint-fix": "eslint src/ --fix",
     "start": "babel-node src/main.js",
-    "test":
-      "mocha --recursive --require babel-register --require babel-polyfill --check-leaks test/",
-    "test-dev":
-      "nodemon --watch src/ --watch test/ --exec 'mocha --recursive --require babel-register --require babel-polyfill test/ || true'",
-    "test-debug":
-      "mocha --source-maps --inspect-brk --watch --recursive --require babel-register --require babel-polyfill --no-timeouts",
+    "test": "mocha --recursive --require babel-register --require babel-polyfill --check-leaks test/",
+    "test-dev": "nodemon --watch src/ --watch test/ --exec 'mocha --recursive --require babel-register --require babel-polyfill test/ || true'",
+    "test-debug": "mocha --source-maps --inspect-brk --watch --recursive --require babel-register --require babel-polyfill --no-timeouts",
     "flow": "flow",
     "flow-init": "flow init",
     "flow-status": "flow status"

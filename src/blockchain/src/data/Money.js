@@ -1,3 +1,5 @@
+import { Validation } from 'joj-adt'
+
 const ZERO = 0
 
 /**
@@ -11,14 +13,16 @@ const Money = (currency = '₿', amount = ZERO) => ({
   amount,
   currency,
   constructor: Money,
-  equals: other => currency === other.currency && amount === other.amount,
+  equals: other =>
+    Object.is(currency, other.currency) && Object.is(amount, other.amount),
   inspect: () => `${currency} ${amount}`,
   serialize: () => JSON.stringify({ amount, currency }),
   round: (precision = 2) => Money(currency, precisionRound(amount, precision)),
   minus: m => Money(currency, amount - m.amount),
   plus: m => Money(currency, amount + m.amount),
+  compareTo: other => amount - other.amount,
   [Symbol.toPrimitive]: () => amount,
-  [Symbol.hasInstance]: i => i.constructor.name === 'Money'
+  [Symbol.hasInstance]: i => i.constructor.name === 'Money',
 })
 
 /**
@@ -33,9 +37,31 @@ const precisionRound = (number, precision) => {
   return Math.round(number * factor) / factor
 }
 
-// Static helper functions
+// Zero
 Money.zero = currency => Money(currency, ZERO)
-Money.add = (m1, m2) => m1.plus(m2)
-Money.subtract = (m1, m2) => m1.minus(m2)
+
+// Compare money objects
+Money.compare = (m1, m2) =>
+  Validation.of(x => m1.compareTo(m2))
+    .ap(currencyMatch(m1, m2))
+    .merge()
+
+// Add two money objects
+Money.add = (m1, m2) =>
+  Validation.of(x => m1.plus(m2))
+    .ap(currencyMatch(m1, m2))
+    .merge()
+
+// Subtract two Money objects
+Money.subtract = (m1, m2) =>
+  Validation.of(x => m1.minus(m2))
+    .ap(currencyMatch(m1, m2))
+    .merge()
+
+// Check that currency matches
+const currencyMatch = (m1, m2) =>
+  m1.currency === m2.currency
+    ? Validation.Success(true)
+    : Validation.Failure(['Currency mismatch!'])
 
 export default Money

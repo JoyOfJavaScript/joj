@@ -11,13 +11,12 @@ import Signature from '../behavior/traits/Signature'
  * @param {Money}  funds      Amount to transfer
  * @return {Transaction} Newly created transaction
  */
-const Transaction = (sender, recipient, funds, inputs = []) => {
+const Transaction = (sender, recipient, funds) => {
   const state = {
     sender,
     recipient,
     funds,
-    inputs,
-    nonce: 0
+    nonce: 0,
   }
   return Object.assign(
     state,

@@ -14,7 +14,7 @@ const TransactionalBlockchain = chain => {
   const state = {
     constructor: TransactionalBlockchain,
     [Symbol.hasInstance]: i => i.constructor.name === 'TransactionalBlockchain',
-    pendingTransactions: new Map()
+    pendingTransactions: [],
   }
 
   return Object.assign(state, Blockchain(chain), PendingTransaction(state))

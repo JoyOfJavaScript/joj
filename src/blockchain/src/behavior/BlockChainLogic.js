@@ -5,11 +5,11 @@ import Money from '../data/Money'
 import Transaction from '../data/Transaction'
 import TransactionalBlock from '../data/TransactionalBlock'
 import { concat } from '../common/helpers'
+import fs from 'fs'
 
 const { curry } = Combinators
 
-const MINING_DIFFICULTY = 2
-const MINING_REWARD_SCORE = Money('₿', 100)
+const MINING_REWARD_SCORE = Money('₿', 100) // Represents the reward for mining the block
 
 /**
  * Adds a new data block to the chain. It involves:
@@ -36,7 +36,7 @@ const addBlockTo = curry((blockchain, newBlock) => {
  */
 const mineBlockTo = curry((blockchain, newBlock) => {
   newBlock.previousHash = blockchain.last().hash
-  newBlock = BlockLogic.mineBlock(MINING_DIFFICULTY, newBlock)
+  newBlock = BlockLogic.mineBlock(newBlock.difficulty, newBlock)
   blockchain.push(newBlock)
   return newBlock
 })
@@ -103,7 +103,7 @@ const minePendingTransactions = curry((txBlockchain, miningRewardAddress) => {
   // Reset pending transactions for this blockchain
   // Put reward transaction into the chain for next mining operation
   txBlockchain.pendingTransactions = [
-    Transaction(null, miningRewardAddress, MINING_REWARD_SCORE)
+    Transaction(null, miningRewardAddress, MINING_REWARD_SCORE),
   ]
   return block
 })
@@ -139,6 +139,43 @@ const isChainValid = blockchain =>
       )
     })
 
+// eslint-disable-next-line max-statements
+const transferFundsBetween = (txBlockchain, walletA, walletB, funds) => {
+  // Check for enough funds
+  const balanceA = BlockchainLogic.calculateBalanceOfAddress(
+    txBlockchain,
+    walletA.address
+  )
+
+  if (Money.compare(balanceA, funds) < 0) {
+    throw new RangeError('Insufficient funds!')
+  }
+
+  const balanceB = BlockchainLogic.calculateBalanceOfAddress(
+    txBlockchain,
+    walletB.address
+  )
+
+  const txA = Transaction(
+    null,
+    walletA.publicKey,
+    Money.subtract(balanceA, funds)
+  )
+  txA.generateSignature(walletA.privateKey, walletA.passphrase)
+  txBlockchain.addPendingTransaction(txA)
+
+  const txB = Transaction(null, walletB.publicKey, Money.add(balanceB, funds))
+  txB.generateSignature(walletB.privateKey, walletB.passphrase)
+  txBlockchain.addPendingTransaction(txB)
+
+  // Create a block in the chain to reflect this transfer
+  const block = addBlockTo(
+    txBlockchain,
+    TransactionalBlock(txBlockchain.pendingTransactions)
+  )
+  return block
+}
+
 /**
  * Exported BlockchainLogic interface
  */
@@ -147,7 +184,8 @@ const BlockchainLogic = {
   mineBlockTo,
   isChainValid,
   minePendingTransactions,
-  calculateBalanceOfAddress
+  calculateBalanceOfAddress,
+  transferFundsBetween,
 }
 
 export default BlockchainLogic

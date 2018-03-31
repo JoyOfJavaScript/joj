@@ -1,5 +1,4 @@
 import crypto from 'crypto'
-import fs from 'fs'
 import { Maybe } from 'joj-adt'
 
 const ENCODING_HEX = 'hex'
@@ -19,15 +18,8 @@ export const Signature = (state, keys) => ({
       keys.map(k => state[k]).join(''),
       state.signature
     )
-  }
+  },
 })
-
-/**
- * Read contents of path and decode to UTF-8
- *
- */
-const readEncoded = (encoding = 'utf8') => path =>
-  fs.readFileSync(path, encoding)
 
 /**
  * Signs the input data given a private key
@@ -41,17 +33,15 @@ const readEncoded = (encoding = 'utf8') => path =>
 const signInput = (privateKeyPath, passphrase, input) =>
   Maybe.of(k => p => i => k)
     .ap(
-      Maybe.fromNullable(privateKeyPath)
-        .map(readEncoded('utf8'))
-        .orElseThrow(
-          new Error(`Unable to fetch key from path ${privateKeyPath}`)
-        )
+      Maybe.fromNullable(privateKeyPath).orElseThrow(
+        new Error(`Unable to fetch key from path ${privateKeyPath}`)
+      )
     )
     .ap(Maybe.fromNullable(passphrase))
     .ap(Maybe.fromNullable(input))
     .map(pem => ({
       key: pem,
-      passphrase
+      passphrase,
     }))
     .map(credentials => {
       const sign = crypto.createSign(SIGN_ALGO)
@@ -66,7 +56,7 @@ const signInput = (privateKeyPath, passphrase, input) =>
 
 const verifySignatureInput = (publicKeyPath, data, signature) =>
   Maybe.of(k => d => s => k)
-    .ap(Maybe.fromNullable(publicKeyPath).map(readEncoded('utf8')))
+    .ap(Maybe.fromNullable(publicKeyPath))
     .ap(Maybe.fromNullable(data))
     .ap(Maybe.fromNullable(signature))
     .map(pem => {
