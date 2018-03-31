@@ -5,7 +5,6 @@ import Money from '../data/Money'
 import Transaction from '../data/Transaction'
 import TransactionalBlock from '../data/TransactionalBlock'
 import { concat } from '../common/helpers'
-import fs from 'fs'
 
 const { curry } = Combinators
 
@@ -55,9 +54,9 @@ const calculateBalanceOfAddress = curry((blockchain, address) =>
     // Ignore Genesis block as this won't ever have any pending transactions
     .filter(b => !b.isGenesis())
     // Retrieve all pending transactions
-    .map(txBlock => Array.from(txBlock.pendingTransactions.values()))
+    .map(txBlock => Array.from(txBlock.pendingTransactions))
     // Group the transactions of each block into an array
-    .reduce(concat)
+    .reduce((a, b) => a.concat(b))
     // Separate the transactions into 2 groups:
     //    1: Matches the fromAddress
     //    2: Matches the toAddress
@@ -67,7 +66,7 @@ const calculateBalanceOfAddress = curry((blockchain, address) =>
       arrA => arrA.map(tx => Money(tx.funds.currency, -tx.funds.amount)),
       arrB => arrB.map(tx => Money(tx.funds.currency, tx.funds.amount))
     )
-    .merge(concat)
+    .merge((a, b) => a.concat(b))
     // Finally, add across all the values to compute sum
     // Money is monoidal over Money.add and Money.nothing
     .reduce(Money.add, Money.zero())
@@ -151,29 +150,21 @@ const transferFundsBetween = (txBlockchain, walletA, walletB, funds) => {
     throw new RangeError('Insufficient funds!')
   }
 
-  const balanceB = BlockchainLogic.calculateBalanceOfAddress(
-    txBlockchain,
-    walletB.address
-  )
-
-  const txA = Transaction(
-    null,
-    walletA.publicKey,
+  const transfer = Transaction(
+    walletA.address,
+    walletB.address,
     Money.subtract(balanceA, funds)
   )
-  txA.generateSignature(walletA.privateKey, walletA.passphrase)
-  txBlockchain.addPendingTransaction(txA)
+  transfer.generateSignature(walletA.privateKey, walletA.passphrase)
 
-  const txB = Transaction(null, walletB.publicKey, Money.add(balanceB, funds))
-  txB.generateSignature(walletB.privateKey, walletB.passphrase)
-  txBlockchain.addPendingTransaction(txB)
+  // Create a new transaction in the blockchain representing the transfer
+  txBlockchain.addPendingTransaction(transfer)
 
-  // Create a block in the chain to reflect this transfer
-  const block = addBlockTo(
+  // Create a block in the chain to reflect this new transfer
+  return addBlockTo(
     txBlockchain,
     TransactionalBlock(txBlockchain.pendingTransactions)
   )
-  return block
 }
 
 /**

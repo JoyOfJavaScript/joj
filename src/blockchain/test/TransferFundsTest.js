@@ -1,6 +1,6 @@
 import { assert } from 'chai'
 import Wallet from '../src/data/Wallet'
-import Transaction from '../src/data/Transaction'
+import TransactionalBlock from '../src/data/TransactionalBlock'
 import BlockchainLogic from '../src/behavior/BlockchainLogic'
 import TransactionalBlockchain from '../src/data/TransactionalBlockchain'
 import Money from '../src/data/Money'
@@ -22,7 +22,7 @@ describe('Transfer Funds', () => {
     const wb = Wallet(
       fs.readFileSync(path.join(base, 'ana-public.pem'), 'utf8'),
       fs.readFileSync(path.join(base, 'ana-private.pem'), 'utf8'),
-      'ana'
+      'anad'
     )
 
     const bitcoin = TransactionalBlockchain()
@@ -36,16 +36,7 @@ describe('Transfer Funds', () => {
     )
     assert.isOk(balance.equals(Money.zero()))
 
-    // Luke picks up reward
-    BlockchainLogic.minePendingTransactions(bitcoin, wa.address)
-
-    const newBalance = BlockchainLogic.calculateBalanceOfAddress(
-      bitcoin,
-      wa.address
-    )
-    console.log('New balance is', newBalance)
-    assert.isOk(newBalance.equals(Money('₿', 100)))
-
+    // Current blockchain contains the reward transaction for Luke,
     // Transfer funds between Luke and Ana
     BlockchainLogic.transferFundsBetween(bitcoin, wa, wb, Money('₿', 50))
 
@@ -59,7 +50,13 @@ describe('Transfer Funds', () => {
       wa.address
     )
 
-    assert.isOk(anaBalance.equals(Money('₿', 50)))
-    assert.isOk(lukeBalance.equals(Money('₿', 50)))
+    assert.isOk(
+      anaBalance.equals(Money('₿', 50)),
+      "Ana's balance should be ₿50.00"
+    )
+    assert.isOk(
+      lukeBalance.equals(Money('₿', 50)),
+      "Luke's balance should be ₿50.00"
+    )
   })
 })

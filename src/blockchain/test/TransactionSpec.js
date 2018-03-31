@@ -25,7 +25,7 @@ describe('Signature', () => {
     )
     const luke = fs.readFileSync(path.join(base, 'luke-public.pem'), 'utf8')
 
-    const transaction = Transaction(coinbase, luke, Money('USD', 30), null)
+    const transaction = Transaction(coinbase, luke, Money('USD', 30))
     const signature = transaction.generateSignature(privateKey, 'coinbase')
     console.log('Signed data', signature)
     assert.isNotEmpty(signature)
