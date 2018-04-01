@@ -27,25 +27,30 @@ describe('Transfer Funds', () => {
 
     const bitcoin = TransactionalBlockchain()
 
-    // Money was mined
+    // Money was mined, after mining the reward is BTC 100 for wa
     BlockchainLogic.minePendingTransactions(bitcoin, wa.address)
 
-    const balance = BlockchainLogic.calculateBalanceOfAddress(
-      bitcoin,
-      wa.address
-    )
+    let balance = BlockchainLogic.calculateBalanceOfAddress(bitcoin, wa.address)
+
     assert.isOk(balance.equals(Money.zero()))
+
+    // Mine the next block to retrieve reward
+    BlockchainLogic.minePendingTransactions(bitcoin, wa.address)
+
+    balance = BlockchainLogic.calculateBalanceOfAddress(bitcoin, wa.address)
+
+    assert.isOk(balance.equals(Money('₿', 100)))
 
     // Current blockchain contains the reward transaction for Luke,
     // Transfer funds between Luke and Ana
     BlockchainLogic.transferFundsBetween(bitcoin, wa, wb, Money('₿', 50))
 
-    const anaBalance = BlockchainLogic.calculateBalanceOfAddress(
+    let anaBalance = BlockchainLogic.calculateBalanceOfAddress(
       bitcoin,
       wb.address
     )
 
-    const lukeBalance = BlockchainLogic.calculateBalanceOfAddress(
+    let lukeBalance = BlockchainLogic.calculateBalanceOfAddress(
       bitcoin,
       wa.address
     )
@@ -57,6 +62,49 @@ describe('Transfer Funds', () => {
     assert.isOk(
       lukeBalance.equals(Money('₿', 50)),
       "Luke's balance should be ₿50.00"
+    )
+
+    // Both wallets currently have BTC 50
+
+    // Current blockchain contains the reward transaction for Luke,
+    // Transfer funds between Luke and Ana
+    BlockchainLogic.transferFundsBetween(bitcoin, wa, wb, Money('₿', 20))
+
+    anaBalance = BlockchainLogic.calculateBalanceOfAddress(bitcoin, wb.address)
+
+    lukeBalance = BlockchainLogic.calculateBalanceOfAddress(bitcoin, wa.address)
+
+    // Assert Ana has BTC 70 and Luke has BTC 30
+    assert.isOk(
+      anaBalance.equals(Money('₿', 70)),
+      "Ana's balance should be ₿70.00"
+    )
+    assert.isOk(
+      lukeBalance.equals(Money('₿', 30)),
+      "Luke's balance should be ₿30.00"
+    )
+
+    // Luke sends another BTC 10 to Ana
+    BlockchainLogic.transferFundsBetween(bitcoin, wa, wb, Money('₿', 10))
+
+    anaBalance = BlockchainLogic.calculateBalanceOfAddress(bitcoin, wb.address)
+
+    lukeBalance = BlockchainLogic.calculateBalanceOfAddress(bitcoin, wa.address)
+
+    // Assert Ana has BTC 80 and Luke has BTC 20
+    assert.isOk(
+      anaBalance.equals(Money('₿', 80)),
+      "Ana's balance should be ₿80.00"
+    )
+    assert.isOk(
+      lukeBalance.equals(Money('₿', 20)),
+      "Luke's balance should be ₿20.00"
+    )
+
+    assert.throws(
+      () =>
+        BlockchainLogic.transferFundsBetween(bitcoin, wa, wb, Money('₿', 30)),
+      RangeError
     )
   })
 })

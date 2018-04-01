@@ -56,7 +56,7 @@ const calculateBalanceOfAddress = curry((blockchain, address) =>
     // Retrieve all pending transactions
     .map(txBlock => Array.from(txBlock.pendingTransactions))
     // Group the transactions of each block into an array
-    .reduce((a, b) => a.concat(b))
+    .reduce(concat)
     // Separate the transactions into 2 groups:
     //    1: Matches the fromAddress
     //    2: Matches the toAddress
@@ -66,7 +66,7 @@ const calculateBalanceOfAddress = curry((blockchain, address) =>
       arrA => arrA.map(tx => Money(tx.funds.currency, -tx.funds.amount)),
       arrB => arrB.map(tx => Money(tx.funds.currency, tx.funds.amount))
     )
-    .merge((a, b) => a.concat(b))
+    .merge(concat)
     // Finally, add across all the values to compute sum
     // Money is monoidal over Money.add and Money.nothing
     .reduce(Money.add, Money.zero())
@@ -150,21 +150,13 @@ const transferFundsBetween = (txBlockchain, walletA, walletB, funds) => {
     throw new RangeError('Insufficient funds!')
   }
 
-  const transfer = Transaction(
-    walletA.address,
-    walletB.address,
-    Money.subtract(balanceA, funds)
-  )
+  const transfer = Transaction(walletA.address, walletB.address, funds)
   transfer.generateSignature(walletA.privateKey, walletA.passphrase)
 
   // Create a new transaction in the blockchain representing the transfer
-  txBlockchain.addPendingTransaction(transfer)
+  const block = addBlockTo(txBlockchain, TransactionalBlock([transfer]))
 
-  // Create a block in the chain to reflect this new transfer
-  return addBlockTo(
-    txBlockchain,
-    TransactionalBlock(txBlockchain.pendingTransactions)
-  )
+  return block
 }
 
 /**

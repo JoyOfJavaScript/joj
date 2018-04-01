@@ -38,7 +38,7 @@ const Blockchain = chain => {
     // Get block at a certain position in the chain
     blockAt: index => (index >= _size ? null : _data[index]),
     // Returns size of chain
-    size: () => _size
+    size: () => _size,
   }
 }
 
