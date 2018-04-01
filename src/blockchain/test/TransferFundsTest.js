@@ -27,14 +27,14 @@ describe('Transfer Funds', () => {
     const ledger = TransactionalBlockchain()
 
     // Money was mined, after mining the reward is BTC 100 for wa
-    BlockchainLogic.minePendingTransactions(ledger, wa.address)
+    BlockchainLogic.minePendingTransactions(ledger, wa)
 
     let balance = BlockchainLogic.calculateBalanceOfAddress(ledger, wa.address)
 
     assert.isOk(balance.equals(Money.zero()))
 
     // Mine the next block to retrieve reward
-    BlockchainLogic.minePendingTransactions(ledger, wa.address)
+    BlockchainLogic.minePendingTransactions(ledger, wa)
 
     balance = BlockchainLogic.calculateBalanceOfAddress(ledger, wa.address)
 
@@ -109,6 +109,6 @@ describe('Transfer Funds', () => {
     // Print ledger
     console.log(ledger.blocks().map(x => x.inspect()))
 
-    assert.ok(BlockchainLogic.isChainValid(ledger))
+    assert.isOk(BlockchainLogic.isChainValid(ledger, true), 'Is ledger valid?')
   })
 })

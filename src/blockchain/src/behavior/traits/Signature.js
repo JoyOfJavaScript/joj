@@ -55,19 +55,19 @@ const signInput = (privateKeyPath, passphrase, input) =>
     )
 
 const verifySignatureInput = (publicKeyPath, data, signature) =>
-  Maybe.of(k => d => s => k)
+  Maybe.of(k => d => s => [k, d, s])
     .ap(Maybe.fromNullable(publicKeyPath))
     .ap(Maybe.fromNullable(data))
     .ap(Maybe.fromNullable(signature))
-    .map(pem => {
+    .map(([pem, input, sign]) => {
       const verify = crypto.createVerify(SIGN_ALGO)
-      verify.update(data)
-      return verify.verify(pem, signature, ENCODING_HEX)
+      verify.update(input)
+      return verify.verify(pem, sign, ENCODING_HEX)
     })
-    .getOrElseThrow(() => {
-      throw new RangeError(
-        'Please provide valid arguments for [publicKey] [data] and [signature]'
+    .getOrElseThrow(
+      new RangeError(
+        `Please provide valid arguments for publicKeyPath: [${publicKeyPath}], data: [${data}], and signature: [${signature}]`
       )
-    })
+    )
 
 export default Signature

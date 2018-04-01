@@ -1,9 +1,8 @@
 import BlockLogic from './BlockLogic'
-import { Combinators, Pair } from 'joj-adt'
-import DataBlock from '../data/DataBlock'
 import Money from '../data/Money'
 import Transaction from '../data/Transaction'
 import TransactionalBlock from '../data/TransactionalBlock'
+import { Combinators, Pair } from 'joj-adt'
 import { concat } from '../common/helpers'
 
 const { curry } = Combinators
@@ -91,7 +90,7 @@ const calculateBalanceOfAddress = curry((blockchain, address) =>
 //   return balance
 // })
 
-const minePendingTransactions = curry((txBlockchain, miningRewardAddress) => {
+const minePendingTransactions = curry((txBlockchain, wallet) => {
   // Mine block and pass it all pending transactions in the chain
   // In reality, blocks are not to exceed 1MB, so not all tx are sent to all blocks
   const block = mineBlockTo(
@@ -101,9 +100,10 @@ const minePendingTransactions = curry((txBlockchain, miningRewardAddress) => {
 
   // Reset pending transactions for this blockchain
   // Put reward transaction into the chain for next mining operation
-  txBlockchain.pendingTransactions = [
-    Transaction(null, miningRewardAddress, MINING_REWARD_SCORE),
-  ]
+  const tx = Transaction(null, wallet.address, MINING_REWARD_SCORE)
+  tx.generateSignature(wallet.privateKey, wallet.passphrase)
+
+  txBlockchain.pendingTransactions = [tx]
   return block
 })
 
@@ -116,7 +116,7 @@ const minePendingTransactions = curry((txBlockchain, miningRewardAddress) => {
  * @param {Blockchain} blockchain Chain to calculate balance from
  * @return {boolean} Whether the chain is valid
  */
-const isChainValid = blockchain =>
+const isChainValid = (blockchain, checkTransactions = false) =>
   blockchain
     // Get all blocks
     .blocks()
@@ -134,7 +134,16 @@ const isChainValid = blockchain =>
         // 1 Hashed can't be tampered with
         current.hash === current.calculateHash() &&
         // 2. Blocks form a chain
-        current.previousHash === previous.hash
+        current.previousHash === previous.hash &&
+        (checkTransactions
+          ? // 3. Check is hash is solved
+            current.hash.substring(0, current.difficulty) ===
+              Array(current.difficulty)
+                .fill(0)
+                .join('') &&
+            // 4. Verify Transaction signatures
+            current.pendingTransactions.every(tx => tx.verifySignature())
+          : true)
       )
     })
 
@@ -154,7 +163,7 @@ const transferFundsBetween = (txBlockchain, walletA, walletB, funds) => {
   transfer.generateSignature(walletA.privateKey, walletA.passphrase)
 
   // Create a new transaction in the blockchain representing the transfer
-  const block = addBlockTo(txBlockchain, TransactionalBlock([transfer]))
+  const block = mineBlockTo(txBlockchain, TransactionalBlock([transfer]))
 
   return block
 }
