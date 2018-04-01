@@ -31,7 +31,7 @@ const Blockchain = chain => {
     // Appends the new block to the end of the chain, returns a new chain
     // pointing to the new structure (for efficiency you might want to use push instead of concat)
     push: block => {
-      _size = _data.push(Object.deepFreeze(block))
+      _size = _data.push(block)
     },
     // Get all blocks (don't return original to caller)
     blocks: () => [..._data],

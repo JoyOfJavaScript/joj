@@ -131,8 +131,8 @@ const isChainValid = blockchain =>
       const current = pair.left
       const previous = pair.right
       return (
-        // 1 .Hashed can't be tampered with
-        current.hash === DataBlock.calculateHash(current) &&
+        // 1 Hashed can't be tampered with
+        current.hash === current.calculateHash() &&
         // 2. Blocks form a chain
         current.previousHash === previous.hash
       )
