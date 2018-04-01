@@ -26,15 +26,15 @@ describe('Transfer Funds', () => {
 
     const ledger = TransactionalBlockchain()
 
-    // Money was mined, after mining the reward is BTC 100 for wa
-    BlockchainLogic.minePendingTransactions(ledger, wa)
+    // Mine some initial block, after mining the reward is BTC 100 for wa
+    BlockchainLogic.minePendingTransactions(ledger, wa.address)
 
     let balance = BlockchainLogic.calculateBalanceOfAddress(ledger, wa.address)
 
     assert.isOk(balance.equals(Money.zero()))
 
     // Mine the next block to retrieve reward
-    BlockchainLogic.minePendingTransactions(ledger, wa)
+    BlockchainLogic.minePendingTransactions(ledger, wa.address)
 
     balance = BlockchainLogic.calculateBalanceOfAddress(ledger, wa.address)
 

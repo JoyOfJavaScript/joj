@@ -2,11 +2,20 @@ import BlockLogic from './BlockLogic'
 import Money from '../data/Money'
 import Transaction from '../data/Transaction'
 import TransactionalBlock from '../data/TransactionalBlock'
+import Wallet from '../data/Wallet'
 import { Combinators, Pair } from 'joj-adt'
 import { concat } from '../common/helpers'
+import fs from 'fs'
+import path from 'path'
 
 const { curry } = Combinators
 
+const BASE = path.join(__dirname, '../../../..', 'config')
+const COINBASE = Wallet(
+  fs.readFileSync(path.join(BASE, 'coinbase-public.pem'), 'utf8'),
+  fs.readFileSync(path.join(BASE, 'coinbase-private.pem'), 'utf8'),
+  'coinbase'
+)
 const MINING_REWARD_SCORE = Money('₿', 100) // Represents the reward for mining the block
 
 /**
@@ -90,7 +99,7 @@ const calculateBalanceOfAddress = curry((blockchain, address) =>
 //   return balance
 // })
 
-const minePendingTransactions = curry((txBlockchain, wallet) => {
+const minePendingTransactions = curry((txBlockchain, address) => {
   // Mine block and pass it all pending transactions in the chain
   // In reality, blocks are not to exceed 1MB, so not all tx are sent to all blocks
   const block = mineBlockTo(
@@ -100,8 +109,8 @@ const minePendingTransactions = curry((txBlockchain, wallet) => {
 
   // Reset pending transactions for this blockchain
   // Put reward transaction into the chain for next mining operation
-  const tx = Transaction(null, wallet.address, MINING_REWARD_SCORE)
-  tx.generateSignature(wallet.privateKey, wallet.passphrase)
+  const tx = Transaction(COINBASE.address, address, MINING_REWARD_SCORE)
+  tx.generateSignature(COINBASE.privateKey, COINBASE.passphrase)
 
   txBlockchain.pendingTransactions = [tx]
   return block
@@ -114,6 +123,7 @@ const minePendingTransactions = curry((txBlockchain, wallet) => {
  * 2. Every block properly points to the previous block
  *
  * @param {Blockchain} blockchain Chain to calculate balance from
+ * @param {boolean} checkTransactions Whether to check for transactions as well
  * @return {boolean} Whether the chain is valid
  */
 const isChainValid = (blockchain, checkTransactions = false) =>
