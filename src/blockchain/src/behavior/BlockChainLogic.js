@@ -1,4 +1,3 @@
-import Blockchain from '../data/Blockchain'
 import BlockLogic from './BlockLogic'
 import Money from '../data/Money'
 import Transaction from '../data/Transaction'
@@ -11,10 +10,10 @@ import path from 'path'
 const { curry } = Combinators
 
 const BASE = path.join(__dirname, '../../../..', 'config')
-const COINBASE = Wallet(
-  fs.readFileSync(path.join(BASE, 'coinbase-public.pem'), 'utf8'),
-  fs.readFileSync(path.join(BASE, 'coinbase-private.pem'), 'utf8'),
-  'coinbase'
+const NETWORK = Wallet(
+  fs.readFileSync(path.join(BASE, 'bitcoin-public.pem'), 'utf8'),
+  fs.readFileSync(path.join(BASE, 'bitcoin-private.pem'), 'utf8'),
+  'bitcoin'
 )
 const MINING_REWARD_SCORE = Money('₿', 100) // Represents the reward for mining the block
 
@@ -103,11 +102,15 @@ const minePendingTransactions = curry((txBlockchain, address) => {
     TransactionalBlock(txBlockchain.pendingTransactions)
   )
 
+  // TODO: Instead of MINING_REWARD_SCORE. Inspect the pending transactions and come up with a
+  // suitable transaction fee
+
   // Reset pending transactions for this blockchain
   // Put reward transaction into the chain for next mining operation
-  const tx = Transaction(COINBASE.address, address, MINING_REWARD_SCORE)
-  tx.generateSignature(COINBASE.privateKey, COINBASE.passphrase)
+  const tx = Transaction(NETWORK.address, address, MINING_REWARD_SCORE)
+  tx.generateSignature(NETWORK.privateKey, NETWORK.passphrase)
 
+  // After the transactions have been added to a block, reset them with the reward for the next miner
   txBlockchain.pendingTransactions = [tx]
   return block
 })
@@ -167,9 +170,8 @@ const transferFundsBetween = (txBlockchain, walletA, walletB, funds) => {
   transfer.generateSignature(walletA.privateKey, walletA.passphrase)
 
   // Create a new transaction in the blockchain representing the transfer
-  const block = mineBlockTo(txBlockchain, TransactionalBlock([transfer]))
-
-  return block
+  txBlockchain.pendingTransactions.push(transfer)
+  return transfer
 }
 
 /**

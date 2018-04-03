@@ -1,7 +1,7 @@
 import DataBlock from './DataBlock'
 import { Pair } from 'joj-adt'
 
-//http://2ality.com/2013/03/subclassing-builtins-es6.html
+//Alternate solution: http://2ality.com/2013/03/subclassing-builtins-es6.html
 
 /**
  * Untamperable block chain. You may initialize the chain with an existing
