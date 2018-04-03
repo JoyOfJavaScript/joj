@@ -6,7 +6,7 @@
  * @param {Object} state Instance data
  * @return {Object} An object containing methods to manage the state of pending transactions
  */
-export const PendingTransaction = state => ({
+const PendingTransaction = state => ({
   get pendingTransactions() {
     return state.pendingTransactions
   },

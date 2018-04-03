@@ -1,4 +1,12 @@
 {
-  "plugins": ["transform-decorators"],
+  "plugins": [
+    "transform-decorators",
+    [
+      "babel-plugin-transform-builtin-extend",
+      {
+        "globals": ["Error", "Array"]
+      }
+    ]
+  ],
   "presets": ["es2015", "stage-3", "flow"]
 }

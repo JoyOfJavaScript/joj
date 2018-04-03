@@ -1,10 +1,10 @@
+import Blockchain from '../data/Blockchain'
 import BlockLogic from './BlockLogic'
 import Money from '../data/Money'
 import Transaction from '../data/Transaction'
 import TransactionalBlock from '../data/TransactionalBlock'
 import Wallet from '../data/Wallet'
 import { Combinators, Pair } from 'joj-adt'
-import { concat } from '../common/helpers'
 import fs from 'fs'
 import path from 'path'
 
@@ -57,14 +57,10 @@ const mineBlockTo = curry((blockchain, newBlock) => {
  */
 const calculateBalanceOfAddress = curry((blockchain, address) =>
   blockchain
-    // Traverse all blocks
-    .blocks()
     // Ignore Genesis block as this won't ever have any pending transactions
     .filter(b => !b.isGenesis())
     // Retrieve all pending transactions
-    .map(txBlock => Array.from(txBlock.pendingTransactions))
-    // Group the transactions of each block into an array
-    .reduce(concat)
+    .flatMap(txBlock => txBlock.pendingTransactions)
     // Separate the transactions into 2 groups:
     //    1: Matches the fromAddress
     //    2: Matches the toAddress
@@ -74,7 +70,7 @@ const calculateBalanceOfAddress = curry((blockchain, address) =>
       arrA => arrA.map(tx => Money(tx.funds.currency, -tx.funds.amount)),
       arrB => arrB.map(tx => Money(tx.funds.currency, tx.funds.amount))
     )
-    .merge(concat)
+    .merge((a, b) => a.concat(b))
     // Finally, add across all the values to compute sum
     // Money is monoidal over Money.add and Money.nothing
     .reduce(Money.add, Money.zero())
@@ -128,13 +124,11 @@ const minePendingTransactions = curry((txBlockchain, address) => {
  */
 const isChainValid = (blockchain, checkTransactions = false) =>
   blockchain
-    // Get all blocks
-    .blocks()
     // Skip the first one (the array will be off-by-one with respect to the blockchain)
     .slice(1)
     // Convert the resulting array into pairs of blocks Pair(current, previous)
     .map((currentBlock, currentIndex) =>
-      Pair(Object, Object)(currentBlock, blockchain.blockAt(currentIndex))
+      Pair(Object, Object)(currentBlock, blockchain[currentIndex])
     )
     // Validate every pair of blocks is valid
     .every(pair => {

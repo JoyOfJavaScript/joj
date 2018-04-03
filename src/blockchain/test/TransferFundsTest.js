@@ -1,7 +1,7 @@
 import { assert } from 'chai'
 import Wallet from '../src/data/Wallet'
 import BlockchainLogic from '../src/behavior/BlockchainLogic'
-import TransactionalBlockchain from '../src/data/TransactionalBlockchain'
+import Blockchain from '../src/data/Blockchain'
 import Money from '../src/data/Money'
 import path from 'path'
 import fs from 'fs'
@@ -24,7 +24,7 @@ describe('Transfer Funds', () => {
       'anad'
     )
 
-    const ledger = TransactionalBlockchain()
+    const ledger = Blockchain.init()
 
     // Mine some initial block, after mining the reward is BTC 100 for wa
     BlockchainLogic.minePendingTransactions(ledger, wa.address)
@@ -107,7 +107,7 @@ describe('Transfer Funds', () => {
       RangeError
     )
     // Print ledger
-    console.log(ledger.blocks().map(x => x.inspect()))
+    console.log(ledger.map(x => x.inspect()))
 
     assert.isOk(BlockchainLogic.isChainValid(ledger, true), 'Is ledger valid?')
   })

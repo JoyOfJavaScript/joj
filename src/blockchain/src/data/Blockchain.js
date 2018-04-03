@@ -1,5 +1,7 @@
 import DataBlock from './DataBlock'
-import '../common/helpers'
+import { Pair } from 'joj-adt'
+
+//http://2ality.com/2013/03/subclassing-builtins-es6.html
 
 /**
  * Untamperable block chain. You may initialize the chain with an existing
@@ -9,58 +11,33 @@ import '../common/helpers'
  * @param {Array} chain Chain to initialize blockchain with
  * @return {Blockchain} Returns a blockchain object
  */
-const Blockchain = chain => {
-  // Private space
-  const _data = chain || Array.of(DataBlock.genesis())
-  let _size = 0
+// Talk about species and the species pattern
+// http://exploringjs.com/es6/ch_classes.html#sec_species-pattern
+class Blockchain extends Array {
+  constructor() {
+    super()
+  }
 
-  // Public interface
-  // Consider returning Object.assign(Array.prototype, {...})
-  return {
-    constructor: Blockchain,
-    [Symbol.hasInstance]: i => i.constructor.name === 'Blockchain',
-    [Symbol.iterator]: function*() {
-      for (const b of _data) {
-        yield b
-      }
-    },
-    // Returns first ever block created
-    genesis: () => _data[0],
-    // Returns last (or latest) block
-    last: () => _data[_data.length - 1],
-    // Appends the new block to the end of the chain, returns a new chain
-    // pointing to the new structure (for efficiency you might want to use push instead of concat)
-    push: block => {
-      _size = _data.push(block)
-    },
-    // Get all blocks (don't return original to caller)
-    blocks: () => [..._data],
-    // Get block at a certain position in the chain
-    blockAt: index => (index >= _size ? null : _data[index]),
-    // Returns size of chain
-    size: () => _size,
+  static init() {
+    const blockchain = Blockchain.of(DataBlock.genesis())
+    blockchain.pendingTransactions = []
+    return blockchain
+  }
+
+  /**
+   * Returns Genesis (first block) in the chain
+   * @return {DataBlock} First block
+   */
+  genesis() {
+    return this[0]
+  }
+
+  last() {
+    return this[this.length - 1]
+  }
+
+  split(predA, predB) {
+    return Pair(Array, Array)(this.filter(predA), this.filter(predB))
   }
 }
-
-// var SubArray = function() {
-//     var arrInst = new Array(...arguments); // spread arguments object
-//     /* Object.getPrototypeOf(arrInst) === Array.prototype */
-//     Object.setPrototypeOf(arrInst, SubArray.prototype);     //redirectionA
-//     return arrInst; // now instanceof SubArray
-// };
-//
-// SubArray.prototype = {
-//     // SubArray.prototype.constructor = SubArray;
-//     constructor: SubArray,
-//
-//     // methods avilable for all instances of SubArray
-//     add: function(element){return this.push(element);},
-//     ...
-// };
-//
-// Object.setPrototypeOf(SubArray.prototype, Array.prototype); //redirectionB
-//
-// var subArr = new SubArray(1, 2);
-// subArr.add(3); subArr[2]; // 3
-
 export default Blockchain

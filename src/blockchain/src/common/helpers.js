@@ -1,13 +1,6 @@
 import { Combinators } from 'joj-adt'
-import { Pair } from 'joj-adt'
 
 const { curry } = Combinators
-
-export const concat = (a, b) => a.concat(b)
-
-Array.prototype.split = function(predA, predB) {
-  return Pair(Array, Array)(this.filter(predA), this.filter(predB))
-}
 
 // Checks object is not empty/ Works on strings or arrays
 export const notEmpty = data => () => data && data.length > 0

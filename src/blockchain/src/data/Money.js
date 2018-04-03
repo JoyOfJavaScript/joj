@@ -58,7 +58,12 @@ Money.subtract = (m1, m2) =>
     .ap(currencyMatch(m1, m2))
     .merge()
 
-// Check that currency matches
+/**
+ * Check that currency matches
+ * @param  {Money} m1 First instance
+ * @param  {Money} m2 Second instance
+ * @return {Validation} Validates whether currencies match
+ */
 const currencyMatch = (m1, m2) =>
   m1.currency === m2.currency
     ? Validation.Success(true)
