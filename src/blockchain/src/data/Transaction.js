@@ -1,5 +1,5 @@
-import Hash from '../behavior/traits/Hash'
-import Signature from '../behavior/traits/Signature'
+import Hash from './traits/Hash'
+import Signature from './traits/Signature'
 
 /**
  * A transaction holds information (keys) identifying who is making the payment

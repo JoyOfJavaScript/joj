@@ -1,8 +1,8 @@
 import BlockHeader from './BlockHeader'
-import PendingTransaction from '../behavior/traits/PendingTransaction'
-import TxView from '../behavior/traits/TxView'
-import Hash from '../behavior/traits/Hash'
-import Genesis from '../behavior/traits/Genesis'
+import PendingTransaction from './traits/PendingTransaction'
+import TxView from './traits/TxView'
+import Hash from './traits/Hash'
+import Genesis from './traits/Genesis'
 
 /**
  * Transactional blocks contain the set of all pending transactions in the chain
@@ -19,7 +19,7 @@ const TransactionalBlock = (pendingTransactions = [], previousHash = '') => {
   const state = {
     constructor: TransactionalBlock,
     [Symbol.hasInstance]: i => i.constructor.name === 'TransactionalBlock',
-    pendingTransactions
+    pendingTransactions,
   }
   return Object.assign(
     state,

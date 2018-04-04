@@ -2,7 +2,7 @@
  * Construct a new Wallet. The private key is used to sign the data and the
  * public key can be used to verify its integrity
  *
- * @param {string} publickey  Public Key (PEM). Also used as wallet's address to send funds to
+ * @param {string} publicKey  Public Key (PEM). Also used as wallet's address to send funds to
  * @param {string} privateKey Private key
  * @param {string} passphrase Passphrase corresponding with private key
  * @return {Wallet} A new wallet

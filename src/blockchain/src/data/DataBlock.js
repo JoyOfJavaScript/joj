@@ -1,7 +1,7 @@
 import BlockHeader from './BlockHeader'
-import Hash from '../behavior/traits/Hash'
-import View from '../behavior/traits/View'
-import Genesis from '../behavior/traits/Genesis'
+import Hash from './traits/Hash'
+import View from './traits/View'
+import Genesis from './traits/Genesis'
 
 /**
  * Represents a single block in the chain. By default, the block
@@ -19,7 +19,7 @@ const DataBlock = (data = {}, previousHash = '') => {
     constructor: DataBlock,
     // Used for instanceof checks
     [Symbol.hasInstance]: i => i.constructor.name === 'DataBlock',
-    data
+    data,
   }
   return Object.assign(
     state,
