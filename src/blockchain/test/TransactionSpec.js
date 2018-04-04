@@ -33,4 +33,23 @@ describe('Signature', () => {
     const result = transaction.verifySignature()
     assert.isOk(result)
   })
+
+  it('Should sign transaction with null recipient', () => {
+    const base = path.join(__dirname, '../../..', 'config')
+    const privateKey = fs.readFileSync(
+      path.join(base, 'coinbase-private.pem'),
+      'utf8'
+    )
+    const publicKey = fs.readFileSync(
+      path.join(base, 'coinbase-public.pem'),
+      'utf8'
+    )
+
+    const transaction = Transaction(null, publicKey, Money('USD', 30))
+    const signature = transaction.generateSignature(privateKey, 'coinbase')
+    console.log('Signed data', signature)
+    assert.isNotEmpty(signature)
+    const result = transaction.verifySignature()
+    assert.isOk(result)
+  })
 })

@@ -15,7 +15,6 @@ const NETWORK = Wallet(
   fs.readFileSync(path.join(BASE, 'bitcoin-private.pem'), 'utf8'),
   'bitcoin'
 )
-const MINING_REWARD_SCORE = Money('₿', 100) // Represents the reward for mining the block
 
 /**
  * Adds a new data block to the chain. It involves:
@@ -95,19 +94,28 @@ const calculateBalanceOfAddress = curry((blockchain, address) =>
 // })
 
 const minePendingTransactions = curry((txBlockchain, address) => {
+  // Reward is bigger when there are more transactions to process
+  const reward =
+    Math.abs(
+      txBlockchain.pendingTransactions
+        .filter(tx => tx.funds.amount < 0)
+        .reduce((a, b) => a + b, 0)
+    ) *
+    txBlockchain.pendingTransactions.length *
+    0.02
+
   // Mine block and pass it all pending transactions in the chain
   // In reality, blocks are not to exceed 1MB, so not all tx are sent to all blocks
+  // We keep transactions immutable by substracting similar transactions for the fee
   const block = mineBlockTo(
     txBlockchain,
     TransactionalBlock(txBlockchain.pendingTransactions)
   )
 
-  // TODO: Instead of MINING_REWARD_SCORE. Inspect the pending transactions and come up with a
-  // suitable transaction fee
-
   // Reset pending transactions for this blockchain
-  // Put reward transaction into the chain for next mining operation
-  const tx = Transaction(NETWORK.address, address, MINING_REWARD_SCORE)
+  // Put fee transaction into the chain for next mining operation
+  // Network will reward the first miner to mine the block with the transaction fee
+  const tx = Transaction(NETWORK.address, address, Money('₿', reward))
   tx.generateSignature(NETWORK.privateKey, NETWORK.passphrase)
 
   // After the transactions have been added to a block, reset them with the reward for the next miner
@@ -165,12 +173,16 @@ const transferFundsBetween = (txBlockchain, walletA, walletB, funds) => {
   if (Money.compare(balanceA, funds) < 0) {
     throw new RangeError('Insufficient funds!')
   }
-
+  const fee = Money.multiply(funds, Money('₿', 0.02))
   const transfer = Transaction(walletA.address, walletB.address, funds)
   transfer.generateSignature(walletA.privateKey, walletA.passphrase)
 
-  // Create a new transaction in the blockchain representing the transfer
-  txBlockchain.pendingTransactions.push(transfer)
+  // Sender pays the fee
+  const txFee = Transaction(null, walletA.address, fee.asNegative())
+  txFee.generateSignature(walletA.privateKey, walletA.passphrase)
+
+  // Create new transactions in the blockchain representing the transfer and the fee
+  txBlockchain.pendingTransactions.push(transfer, txFee)
   return transfer
 }
 

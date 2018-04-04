@@ -9,13 +9,19 @@ export const Signature = (state, keys) => ({
     return (state.signature = signInput(
       privateKeyPath,
       passphrase,
-      keys.map(k => state[k]).join('')
+      keys
+        .map(k => state[k])
+        .filter(prop => !!prop)
+        .join('')
     ))
   },
   verifySignature() {
     return verifySignatureInput(
-      state.sender,
-      keys.map(k => state[k]).join(''),
+      state.sender || state.recipient,
+      keys
+        .map(k => state[k])
+        .filter(prop => !!prop)
+        .join(''),
       state.signature
     )
   },

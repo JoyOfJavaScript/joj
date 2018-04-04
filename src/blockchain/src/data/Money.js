@@ -20,8 +20,10 @@ const Money = (currency = '₿', amount = ZERO) => ({
   round: (precision = 2) => Money(currency, precisionRound(amount, precision)),
   minus: m => Money(currency, amount - m.amount),
   plus: m => Money(currency, amount + m.amount),
+  times: m => Money(currency, amount * m.amount),
   compareTo: other => amount - other.amount,
-  [Symbol.toPrimitive]: () => amount,
+  asNegative: () => Money(currency, -amount),
+  [Symbol.toPrimitive]: () => precisionRound(amount, 2),
   [Symbol.hasInstance]: i => i.constructor.name === 'Money',
 })
 
@@ -55,6 +57,11 @@ Money.add = (m1, m2) =>
 // Subtract two Money objects
 Money.subtract = (m1, m2) =>
   Validation.of(x => m1.minus(m2))
+    .ap(currencyMatch(m1, m2))
+    .merge()
+
+Money.multiply = (m1, m2) =>
+  Validation.of(x => m1.times(m2))
     .ap(currencyMatch(m1, m2))
     .merge()
 
