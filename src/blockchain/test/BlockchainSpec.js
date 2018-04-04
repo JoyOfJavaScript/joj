@@ -1,5 +1,5 @@
 import assert from 'assert'
-import BlockchainLogic from '../src/behavior/BlockchainLogic'
+import BlockchainService from '../src/behavior/BlockchainService'
 import Money from '../src/data/Money'
 import DataBlock from '../src/data/DataBlock'
 import BlockChain from '../src/data/Blockchain'
@@ -8,7 +8,7 @@ import BlockChain from '../src/data/Blockchain'
 const coin = BlockChain.init()
 
 // Adder functions
-const addCoin = BlockchainLogic.addBlockTo(coin)
+const addCoin = BlockchainService.addBlockTo(coin)
 
 // Add coins
 const fourDollars = addCoin(DataBlock(Money('USD', 4)))
@@ -22,6 +22,6 @@ describe('Create a valid Blockchain data structure', () => {
     const [g, ...blocks] = coin
     assert.equal(g.previousHash, '-1')
     assert.ok(blocks[0].data.equals(fourDollars.data))
-    assert.ok(BlockchainLogic.isChainValid(coin))
+    assert.ok(BlockchainService.isChainValid(coin))
   })
 })

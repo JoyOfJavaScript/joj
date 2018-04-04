@@ -1,6 +1,6 @@
 import { assert } from 'chai'
 import Wallet from '../src/data/Wallet'
-import BlockchainLogic from '../src/behavior/BlockchainLogic'
+import BlockchainService from '../src/behavior/BlockchainService'
 import Blockchain from '../src/data/Blockchain'
 import Money from '../src/data/Money'
 import Transaction from '../src/data/Transaction'
@@ -39,9 +39,9 @@ describe('Transfer Funds', () => {
     ledger.pendingTransactions = [first]
 
     // Mine some initial block, after mining the reward is BTC 100 for wa
-    BlockchainLogic.minePendingTransactions(ledger, miner.address)
+    BlockchainService.minePendingTransactions(ledger, miner.address)
 
-    const balance = BlockchainLogic.calculateBalanceOfAddress(
+    const balance = BlockchainService.calculateBalanceOfAddress(
       ledger,
       miner.address
     )
@@ -51,19 +51,19 @@ describe('Transfer Funds', () => {
     assert.isOk(balance.equals(Money('₿', 100)))
 
     // Mine the next block to retrieve reward
-    BlockchainLogic.minePendingTransactions(ledger, miner.address)
+    BlockchainService.minePendingTransactions(ledger, miner.address)
 
-    BlockchainLogic.transferFundsBetween(ledger, miner, luke, Money('₿', 20))
-    BlockchainLogic.minePendingTransactions(ledger, miner.address)
+    BlockchainService.transferFundsBetween(ledger, miner, luke, Money('₿', 20))
+    BlockchainService.minePendingTransactions(ledger, miner.address)
 
-    let lukeBalance = BlockchainLogic.calculateBalanceOfAddress(
+    let lukeBalance = BlockchainService.calculateBalanceOfAddress(
       ledger,
       luke.address
     )
     console.log("Luke's balance is", lukeBalance)
     assert.isOk(lukeBalance.equals(Money('₿', 20)))
 
-    const minerBalance = BlockchainLogic.calculateBalanceOfAddress(
+    const minerBalance = BlockchainService.calculateBalanceOfAddress(
       ledger,
       miner.address
     )
@@ -71,15 +71,15 @@ describe('Transfer Funds', () => {
     assert.isOk(minerBalance.equals(Money('₿', 79.6)))
 
     // Transfer funds between Luke and Ana
-    BlockchainLogic.transferFundsBetween(ledger, luke, ana, Money('₿', 10))
-    BlockchainLogic.minePendingTransactions(ledger, miner.address)
+    BlockchainService.transferFundsBetween(ledger, luke, ana, Money('₿', 10))
+    BlockchainService.minePendingTransactions(ledger, miner.address)
 
-    let anaBalance = BlockchainLogic.calculateBalanceOfAddress(
+    let anaBalance = BlockchainService.calculateBalanceOfAddress(
       ledger,
       ana.address
     )
 
-    lukeBalance = BlockchainLogic.calculateBalanceOfAddress(
+    lukeBalance = BlockchainService.calculateBalanceOfAddress(
       ledger,
       luke.address
     )
@@ -94,12 +94,15 @@ describe('Transfer Funds', () => {
     )
 
     // Both wallets currently have about 10 BTC
-    BlockchainLogic.transferFundsBetween(ledger, luke, ana, Money('₿', 5))
-    BlockchainLogic.minePendingTransactions(ledger, miner.address)
+    BlockchainService.transferFundsBetween(ledger, luke, ana, Money('₿', 5))
+    BlockchainService.minePendingTransactions(ledger, miner.address)
 
-    anaBalance = BlockchainLogic.calculateBalanceOfAddress(ledger, ana.address)
+    anaBalance = BlockchainService.calculateBalanceOfAddress(
+      ledger,
+      ana.address
+    )
 
-    lukeBalance = BlockchainLogic.calculateBalanceOfAddress(
+    lukeBalance = BlockchainService.calculateBalanceOfAddress(
       ledger,
       luke.address
     )
@@ -115,13 +118,16 @@ describe('Transfer Funds', () => {
     )
 
     // Ana sends Luke some BTC 5, then Luke returns 3
-    BlockchainLogic.transferFundsBetween(ledger, ana, luke, Money('₿', 5))
-    BlockchainLogic.transferFundsBetween(ledger, luke, ana, Money('₿', 3))
-    BlockchainLogic.minePendingTransactions(ledger, miner.address)
+    BlockchainService.transferFundsBetween(ledger, ana, luke, Money('₿', 5))
+    BlockchainService.transferFundsBetween(ledger, luke, ana, Money('₿', 3))
+    BlockchainService.minePendingTransactions(ledger, miner.address)
 
-    anaBalance = BlockchainLogic.calculateBalanceOfAddress(ledger, ana.address)
+    anaBalance = BlockchainService.calculateBalanceOfAddress(
+      ledger,
+      ana.address
+    )
 
-    lukeBalance = BlockchainLogic.calculateBalanceOfAddress(
+    lukeBalance = BlockchainService.calculateBalanceOfAddress(
       ledger,
       luke.address
     )
@@ -139,12 +145,20 @@ describe('Transfer Funds', () => {
     // No funds left to transfer!
     assert.throws(
       () =>
-        BlockchainLogic.transferFundsBetween(ledger, luke, ana, Money('₿', 30)),
+        BlockchainService.transferFundsBetween(
+          ledger,
+          luke,
+          ana,
+          Money('₿', 30)
+        ),
       RangeError
     )
     // Print ledger
     console.log(ledger.map(x => x.inspect()))
 
-    assert.isOk(BlockchainLogic.isChainValid(ledger, true), 'Is ledger valid?')
+    assert.isOk(
+      BlockchainService.isChainValid(ledger, true),
+      'Is ledger valid?'
+    )
   })
 })

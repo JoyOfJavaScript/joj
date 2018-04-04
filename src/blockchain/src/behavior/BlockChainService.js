@@ -1,4 +1,4 @@
-import BlockLogic from './BlockLogic'
+import BlockService from './BlockService'
 import Money from '../data/Money'
 import Transaction from '../data/Transaction'
 import TransactionalBlock from '../data/TransactionalBlock'
@@ -41,7 +41,7 @@ const addBlockTo = curry((blockchain, newBlock) => {
  */
 const mineBlockTo = curry((blockchain, newBlock) => {
   newBlock.previousHash = blockchain.last().hash
-  newBlock = BlockLogic.mineBlock(newBlock.difficulty, newBlock)
+  newBlock = BlockService.mineBlock(newBlock.difficulty, newBlock)
   blockchain.push(newBlock)
   return newBlock
 })
@@ -165,7 +165,7 @@ const isChainValid = (blockchain, checkTransactions = false) =>
 // eslint-disable-next-line max-statements
 const transferFundsBetween = (txBlockchain, walletA, walletB, funds) => {
   // Check for enough funds
-  const balanceA = BlockchainLogic.calculateBalanceOfAddress(
+  const balanceA = BlockchainService.calculateBalanceOfAddress(
     txBlockchain,
     walletA.address
   )
@@ -187,9 +187,9 @@ const transferFundsBetween = (txBlockchain, walletA, walletB, funds) => {
 }
 
 /**
- * Exported BlockchainLogic interface
+ * Exported BlockchainService interface
  */
-const BlockchainLogic = {
+const BlockchainService = {
   addBlockTo,
   mineBlockTo,
   isChainValid,
@@ -198,4 +198,4 @@ const BlockchainLogic = {
   transferFundsBetween,
 }
 
-export default BlockchainLogic
+export default BlockchainService
