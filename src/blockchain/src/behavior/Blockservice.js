@@ -1,10 +1,14 @@
-const mineBlock = (difficulty, block) =>
-  compareHashUntil(
-    block,
-    Array(difficulty)
-      .fill(0)
-      .join('')
-  )
+const mineBlock = async (difficulty, block) =>
+  new Promise((resolve, _) => {
+    resolve(
+      compareHashUntil(
+        block,
+        Array(difficulty)
+          .fill(0)
+          .join('')
+      )
+    )
+  })
 
 // TODO: use trampolining to simulate TCO in order to reach mining difficulty 4
 const compareHashUntil = (block, difficulty, nonce = 1) => {
@@ -23,7 +27,7 @@ const compareHashUntil = (block, difficulty, nonce = 1) => {
  * Exported BlockLogic interface
  */
 const BlockLogic = {
-  mineBlock
+  /* async */ mineBlock,
 }
 
 export default BlockLogic

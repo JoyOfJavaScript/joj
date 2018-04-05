@@ -9,7 +9,7 @@ import fs from 'fs'
 
 describe('Transfer Funds', () => {
   // eslint-disable-next-line max-statements
-  it('Should transfer funds from one wallet to the next', () => {
+  it('Should transfer funds from one wallet to the next', async () => {
     const base = path.join(__dirname, '../..', 'blockchain-wallets')
     // Luke's digital wallet
     const luke = Wallet(
@@ -39,7 +39,7 @@ describe('Transfer Funds', () => {
     ledger.pendingTransactions = [first]
 
     // Mine some initial block, after mining the reward is BTC 100 for wa
-    BlockchainService.minePendingTransactions(ledger, miner.address)
+    await BlockchainService.minePendingTransactions(ledger, miner.address)
 
     const balance = BlockchainService.calculateBalanceOfAddress(
       ledger,
@@ -51,10 +51,10 @@ describe('Transfer Funds', () => {
     assert.isOk(balance.equals(Money('₿', 100)))
 
     // Mine the next block to retrieve reward
-    BlockchainService.minePendingTransactions(ledger, miner.address)
+    await BlockchainService.minePendingTransactions(ledger, miner.address)
 
     BlockchainService.transferFundsBetween(ledger, miner, luke, Money('₿', 20))
-    BlockchainService.minePendingTransactions(ledger, miner.address)
+    await BlockchainService.minePendingTransactions(ledger, miner.address)
 
     let lukeBalance = BlockchainService.calculateBalanceOfAddress(
       ledger,
@@ -74,7 +74,7 @@ describe('Transfer Funds', () => {
 
     // Transfer funds between Luke and Ana
     BlockchainService.transferFundsBetween(ledger, luke, ana, Money('₿', 10))
-    BlockchainService.minePendingTransactions(ledger, miner.address)
+    await BlockchainService.minePendingTransactions(ledger, miner.address)
 
     let anaBalance = BlockchainService.calculateBalanceOfAddress(
       ledger,
@@ -97,7 +97,7 @@ describe('Transfer Funds', () => {
 
     // Both wallets currently have about 10 BTC
     BlockchainService.transferFundsBetween(ledger, luke, ana, Money('₿', 5))
-    BlockchainService.minePendingTransactions(ledger, miner.address)
+    await BlockchainService.minePendingTransactions(ledger, miner.address)
 
     anaBalance = BlockchainService.calculateBalanceOfAddress(
       ledger,
@@ -122,7 +122,7 @@ describe('Transfer Funds', () => {
     // Ana sends Luke some BTC 5, then Luke returns 3
     BlockchainService.transferFundsBetween(ledger, ana, luke, Money('₿', 5))
     BlockchainService.transferFundsBetween(ledger, luke, ana, Money('₿', 3))
-    BlockchainService.minePendingTransactions(ledger, miner.address)
+    await BlockchainService.minePendingTransactions(ledger, miner.address)
 
     anaBalance = BlockchainService.calculateBalanceOfAddress(
       ledger,

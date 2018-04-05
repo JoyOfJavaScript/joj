@@ -42,9 +42,9 @@ const addBlockTo = curry((blockchain, newBlock) => {
  * @param {Blockchain}  blockchain Chain to add block to
  * @param {DataBlock}   newBlock   New block to add into the chain
  */
-const mineBlockTo = curry((blockchain, newBlock) => {
+const mineBlockTo = curry(async (blockchain, newBlock) => {
   newBlock.previousHash = blockchain.last().hash
-  newBlock = BlockService.mineBlock(newBlock.difficulty, newBlock)
+  newBlock = await BlockService.mineBlock(newBlock.difficulty, newBlock)
   blockchain.push(newBlock)
   return newBlock
 })
@@ -97,43 +97,44 @@ const calculateBalanceOfAddress = curry((blockchain, address) =>
 // })
 
 // Proof of Work
-const minePendingTransactions = curry((txBlockchain, address) => {
-  // Reward is bigger when there are more transactions to process
-  const fee =
-    Math.abs(
-      txBlockchain.pendingTransactions
-        .filter(tx => tx.funds.amount < 0)
-        .map(tx => tx.funds.amount)
-        .reduce((a, b) => a + b, 0)
-    ) *
-    txBlockchain.pendingTransactions.length *
-    0.02
-
+const minePendingTransactions = curry(async (txBlockchain, address) =>
   // Mine block and pass it all pending transactions in the chain
   // In reality, blocks are not to exceed 1MB, so not all tx are sent to all blocks
   // We keep transactions immutable by substracting similar transactions for the fee
-  const block = mineBlockTo(
+  mineBlockTo(
     txBlockchain,
     TransactionalBlock(txBlockchain.pendingTransactions)
-  )
+  ).then(block => {
+    // Reward is bigger when there are more transactions to process
+    const fee =
+      Math.abs(
+        txBlockchain.pendingTransactions
+          .filter(tx => tx.funds.amount < 0)
+          .map(tx => tx.funds.amount)
+          .reduce((a, b) => a + b, 0)
+      ) *
+      txBlockchain.pendingTransactions.length *
+      0.02
 
-  // Reset pending transactions for this blockchain
-  // Put fee transaction into the chain for next mining operation
-  // Network will reward the first miner to mine the block with the transaction fee
-  const tx = Transaction(
-    NETWORK.address,
-    address,
-    Money.add(Money('₿', fee), MINING_REWARD)
-  )
-  tx.generateSignature(NETWORK.privateKey, NETWORK.passphrase)
+    // Reset pending transactions for this blockchain
+    // Put fee transaction into the chain for next mining operation
+    // Network will reward the first miner to mine the block with the transaction fee
+    const tx = Transaction(
+      NETWORK.address,
+      address,
+      Money.add(Money('₿', fee), MINING_REWARD)
+    )
+    tx.generateSignature(NETWORK.privateKey, NETWORK.passphrase)
 
-  // After the transactions have been added to a block, reset them with the reward for the next miner
-  txBlockchain.pendingTransactions = [tx]
+    // After the transactions have been added to a block, reset them with the reward for the next miner
+    txBlockchain.pendingTransactions = [tx]
 
-  // Validate the entire chain
-  BlockchainService.isChainValid(txBlockchain, true)
-  return block
-})
+    // Validate the entire chain
+    BlockchainService.isChainValid(txBlockchain, true)
+
+    return block
+  })
+)
 
 /**
  * Determines if the chain is valid by asserting the properties of a blockchain.
@@ -203,9 +204,9 @@ const transferFundsBetween = (txBlockchain, walletA, walletB, funds) => {
  */
 const BlockchainService = {
   addBlockTo,
-  mineBlockTo,
+  /* async */ mineBlockTo,
   isChainValid,
-  minePendingTransactions,
+  /* async */ minePendingTransactions,
   calculateBalanceOfAddress,
   transferFundsBetween,
 }
