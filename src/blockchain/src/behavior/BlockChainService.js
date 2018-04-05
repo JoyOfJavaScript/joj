@@ -7,6 +7,9 @@ import { Combinators, Pair } from 'joj-adt'
 import fs from 'fs'
 import path from 'path'
 
+// As of writing, current mining reward
+const MINING_REWARD = Money('₿', 12.5)
+
 const { curry } = Combinators
 
 const BASE = path.join(__dirname, '../../../..', 'config')
@@ -93,12 +96,14 @@ const calculateBalanceOfAddress = curry((blockchain, address) =>
 //   return balance
 // })
 
+// Proof of Work
 const minePendingTransactions = curry((txBlockchain, address) => {
   // Reward is bigger when there are more transactions to process
-  const reward =
+  const fee =
     Math.abs(
       txBlockchain.pendingTransactions
         .filter(tx => tx.funds.amount < 0)
+        .map(tx => tx.funds.amount)
         .reduce((a, b) => a + b, 0)
     ) *
     txBlockchain.pendingTransactions.length *
@@ -115,11 +120,18 @@ const minePendingTransactions = curry((txBlockchain, address) => {
   // Reset pending transactions for this blockchain
   // Put fee transaction into the chain for next mining operation
   // Network will reward the first miner to mine the block with the transaction fee
-  const tx = Transaction(NETWORK.address, address, Money('₿', reward))
+  const tx = Transaction(
+    NETWORK.address,
+    address,
+    Money.add(Money('₿', fee), MINING_REWARD)
+  )
   tx.generateSignature(NETWORK.privateKey, NETWORK.passphrase)
 
   // After the transactions have been added to a block, reset them with the reward for the next miner
   txBlockchain.pendingTransactions = [tx]
+
+  // Validate the entire chain
+  BlockchainService.isChainValid(txBlockchain, true)
   return block
 })
 

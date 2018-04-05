@@ -63,12 +63,14 @@ describe('Transfer Funds', () => {
     console.log("Luke's balance is", lukeBalance)
     assert.isOk(lukeBalance.equals(Money('₿', 20)))
 
-    const minerBalance = BlockchainService.calculateBalanceOfAddress(
+    let minerBalance = BlockchainService.calculateBalanceOfAddress(
       ledger,
       miner.address
     )
-    console.log("Miner's balance is", minerBalance)
-    assert.isOk(minerBalance.equals(Money('₿', 79.6)))
+    assert.isOk(
+      minerBalance.equals(Money('₿', 104.6)),
+      `Miner's balance is ${minerBalance}`
+    )
 
     // Transfer funds between Luke and Ana
     BlockchainService.transferFundsBetween(ledger, luke, ana, Money('₿', 10))
@@ -153,6 +155,16 @@ describe('Transfer Funds', () => {
         ),
       RangeError
     )
+
+    minerBalance = BlockchainService.calculateBalanceOfAddress(
+      ledger,
+      miner.address
+    )
+    assert.isOk(
+      minerBalance.round().equals(Money('₿', 142.14)),
+      `Miner's balance is ${minerBalance}`
+    )
+
     // Print ledger
     console.log(ledger.map(x => x.inspect()))
 
