@@ -4,14 +4,12 @@
  *
  * @param {string} publicKey  Public Key (PEM). Also used as wallet's address to send funds to
  * @param {string} privateKey Private key
- * @param {string} passphrase Passphrase corresponding with private key
  * @return {Wallet} A new wallet
  */
-const Wallet = (publicKey, privateKey, passphrase = '') => {
+const Wallet = (publicKey, privateKey) => {
   return {
     publicKey, // Public key will act as our address
     privateKey, // Private key is used to sign our transactions
-    passphrase,
     get address() {
       return publicKey
     },

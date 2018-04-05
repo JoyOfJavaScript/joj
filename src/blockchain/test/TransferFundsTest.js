@@ -14,22 +14,19 @@ describe('Transfer Funds', () => {
     // Luke's digital wallet
     const luke = Wallet(
       fs.readFileSync(path.join(base, 'luke-public.pem'), 'utf8'),
-      fs.readFileSync(path.join(base, 'luke-private.pem'), 'utf8'),
-      'luke'
+      fs.readFileSync(path.join(base, 'luke-private.pem'), 'utf8')
     )
 
     // Ana's digital wallet
     const ana = Wallet(
       fs.readFileSync(path.join(base, 'ana-public.pem'), 'utf8'),
-      fs.readFileSync(path.join(base, 'ana-private.pem'), 'utf8'),
-      'anad'
+      fs.readFileSync(path.join(base, 'ana-private.pem'), 'utf8')
     )
 
     // Some miner
     const miner = Wallet(
       fs.readFileSync(path.join(base, 'coinbase-public.pem'), 'utf8'),
-      fs.readFileSync(path.join(base, 'coinbase-private.pem'), 'utf8'),
-      'coinbase'
+      fs.readFileSync(path.join(base, 'coinbase-private.pem'), 'utf8')
     )
 
     const ledger = Blockchain.init()

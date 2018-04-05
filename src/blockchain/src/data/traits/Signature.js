@@ -5,10 +5,9 @@ const ENCODING_HEX = 'hex'
 const SIGN_ALGO = 'RSA-SHA256'
 
 export const Signature = (state, keys) => ({
-  generateSignature(privateKeyPath, passphrase) {
+  generateSignature(privateKeyPath) {
     return (state.signature = signInput(
       privateKeyPath,
-      passphrase,
       keys
         .map(k => state[k])
         .filter(prop => !!prop)
@@ -31,23 +30,20 @@ export const Signature = (state, keys) => ({
  * Signs the input data given a private key
  *
  * @param {string} privateKeyPath Private used to sign
- * @param {string} passphrase     Passphrase used to generate key pair
  * @param {string} input          Input data to sign
  * @return {string} Signed data
  * @throws {RangeError} In case any of actual arguments is invalid
  */
-const signInput = (privateKeyPath, passphrase, input) =>
-  Maybe.of(k => p => i => k)
+const signInput = (privateKeyPath, input) =>
+  Maybe.of(k => i => k)
     .ap(
       Maybe.fromNullable(privateKeyPath).orElseThrow(
         new Error(`Unable to fetch key from path ${privateKeyPath}`)
       )
     )
-    .ap(Maybe.fromNullable(passphrase))
     .ap(Maybe.fromNullable(input))
     .map(pem => ({
       key: pem,
-      passphrase,
     }))
     .map(credentials => {
       const sign = crypto.createSign(SIGN_ALGO)
@@ -56,7 +52,7 @@ const signInput = (privateKeyPath, passphrase, input) =>
     })
     .getOrElseThrow(
       new RangeError(
-        'Please provide valid arguments for [privateKey], [passphrase] and [input]'
+        'Please provide valid arguments for [privateKey] and [input]'
       )
     )
 
