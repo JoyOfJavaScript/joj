@@ -5,7 +5,7 @@ import fs from 'fs'
 
 describe('Wallet', () => {
   it('Should create a valid wallet with public and private keys', () => {
-    const base = path.join(__dirname, '../../..', 'config')
+    const base = path.join(__dirname, '../..', 'blockchain-wallets')
     const privateKey = path.join(base, 'coinbase-private.pem')
     const publicKey = path.join(base, 'coinbase-public.pem')
     const wa = Wallet(

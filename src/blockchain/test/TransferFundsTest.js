@@ -10,7 +10,7 @@ import fs from 'fs'
 describe('Transfer Funds', () => {
   // eslint-disable-next-line max-statements
   it('Should transfer funds from one wallet to the next', () => {
-    const base = path.join(__dirname, '../../..', 'config')
+    const base = path.join(__dirname, '../..', 'blockchain-wallets')
     // Luke's digital wallet
     const luke = Wallet(
       fs.readFileSync(path.join(base, 'luke-public.pem'), 'utf8'),

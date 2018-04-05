@@ -14,7 +14,7 @@ describe('Transaction', () => {
 
 describe('Signature', () => {
   it('Should Sign Data using a private key', () => {
-    const base = path.join(__dirname, '../../..', 'config')
+    const base = path.join(__dirname, '../..', 'blockchain-wallets')
     const privateKey = fs.readFileSync(
       path.join(base, 'coinbase-private.pem'),
       'utf8'
@@ -35,7 +35,7 @@ describe('Signature', () => {
   })
 
   it('Should sign transaction with null recipient', () => {
-    const base = path.join(__dirname, '../../..', 'config')
+    const base = path.join(__dirname, '../..', 'blockchain-wallets')
     const privateKey = fs.readFileSync(
       path.join(base, 'coinbase-private.pem'),
       'utf8'

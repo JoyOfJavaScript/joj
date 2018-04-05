@@ -12,7 +12,7 @@ const MINING_REWARD = Money('₿', 12.5)
 
 const { curry } = Combinators
 
-const BASE = path.join(__dirname, '../../../..', 'config')
+const BASE = path.join(__dirname, '../../..', 'blockchain-wallets')
 const NETWORK = Wallet(
   fs.readFileSync(path.join(BASE, 'bitcoin-public.pem'), 'utf8'),
   fs.readFileSync(path.join(BASE, 'bitcoin-private.pem'), 'utf8'),
