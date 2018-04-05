@@ -25,8 +25,8 @@ describe('Transfer Funds', () => {
 
     // Some miner
     const miner = Wallet(
-      fs.readFileSync(path.join(base, 'coinbase-public.pem'), 'utf8'),
-      fs.readFileSync(path.join(base, 'coinbase-private.pem'), 'utf8')
+      fs.readFileSync(path.join(base, 'miner-public.pem'), 'utf8'),
+      fs.readFileSync(path.join(base, 'miner-private.pem'), 'utf8')
     )
 
     const ledger = Blockchain.init()
