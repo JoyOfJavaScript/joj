@@ -20,7 +20,7 @@ const DataBlock = (data = {}, previousHash = '') => {
     [Symbol.hasInstance]: i => i.constructor.name === 'DataBlock',
     data,
     inspect: () => {
-      const { timestamp, data, previousHash, hash } = state
+      const { timestamp, hash } = state
       return `DataBlock {ts: ${timestamp}, data: ${JSON.stringify(data)},\
          ph: ${previousHash}, h: ${hash}}`
     },
