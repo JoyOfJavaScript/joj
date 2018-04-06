@@ -32,7 +32,7 @@ describe('Transfer Funds', () => {
     const ledger = Blockchain.init()
 
     const first = Transaction(null, miner.address, Money('₿', 100))
-    first.generateSignature(miner.privateKey, miner.passphrase)
+    first.generateSignature(miner.privateKey)
     ledger.pendingTransactions = [first]
 
     // Mine some initial block, after mining the reward is BTC 100 for wa
