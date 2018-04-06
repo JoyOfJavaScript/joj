@@ -46,6 +46,7 @@ describe('Signature', () => {
     )
 
     const transaction = Transaction(null, publicKey, Money('USD', 30))
+    assert.isNotEmpty(transaction.id)
     const signature = transaction.generateSignature(privateKey, 'coinbase')
     console.log('Signed data', signature)
     assert.isNotEmpty(signature)
