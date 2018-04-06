@@ -1,6 +1,5 @@
 import BlockHeader from './BlockHeader'
 import Hash from './traits/Hash'
-import View from './traits/View'
 import Genesis from './traits/Genesis'
 
 /**
@@ -20,12 +19,16 @@ const DataBlock = (data = {}, previousHash = '') => {
     // Used for instanceof checks
     [Symbol.hasInstance]: i => i.constructor.name === 'DataBlock',
     data,
+    inspect: () => {
+      const { timestamp, data, previousHash, hash } = state
+      return `DataBlock {ts: ${timestamp}, data: ${JSON.stringify(data)},\
+         ph: ${previousHash}, h: ${hash}}`
+    },
   }
   return Object.assign(
     state,
     BlockHeader(previousHash),
     Hash(state, ['timestamp', 'data', 'previousHash', 'nonce']),
-    View(state),
     Genesis(state)
   )
 }
