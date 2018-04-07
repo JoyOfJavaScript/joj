@@ -1,5 +1,5 @@
 import crypto from 'crypto'
-import { Maybe } from 'joj-adt'
+import { Maybe } from '@joj/adt'
 
 const ENCODING_HEX = 'hex'
 const SIGN_ALGO = 'RSA-SHA256'

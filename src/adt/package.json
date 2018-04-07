@@ -1,5 +1,5 @@
 {
-  "name": "joj-adt",
+  "name": "@joj/adt",
   "version": "1.0.0",
   "private": true,
   "main": "./dist/index.js",

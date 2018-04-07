@@ -1,4 +1,4 @@
-import { Validation } from 'joj-adt'
+import { Validation } from '@joj/adt'
 
 const ZERO = 0
 

@@ -1,4 +1,4 @@
-import { Combinators } from 'joj-adt'
+import { Combinators } from '@joj/adt'
 
 const { curry } = Combinators
 

@@ -1,5 +1,5 @@
 {
-  "name": "joj-blockchain",
+  "name": "@joj/blockchain",
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
@@ -28,7 +28,7 @@
     "transform-runtime": "0.0.0"
   },
   "dependencies": {
-    "joj-adt": "file:../adt"
+    "@joj/adt": "file:../adt"
   },
   "scripts": {
     "lint": "eslint src/",

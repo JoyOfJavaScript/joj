@@ -1,6 +1,5 @@
 import crypto from 'crypto'
-import { Combinators } from 'joj-adt'
-import { Maybe } from 'joj-adt'
+import { Combinators, Maybe } from '@joj/adt'
 
 const { curry, compose } = Combinators
 
@@ -23,7 +22,7 @@ export const Hash = (state, keys) => ({
   },
   get hash() {
     return Maybe.fromEmpty(state.hash).getOrElse(this.calculateHash())
-  }
+  },
 })
 
 /**

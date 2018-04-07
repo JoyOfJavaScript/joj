@@ -3,7 +3,7 @@ import Money from '../data/Money'
 import Transaction from '../data/Transaction'
 import TransactionalBlock from '../data/TransactionalBlock'
 import Wallet from '../data/Wallet'
-import { Combinators, Pair } from 'joj-adt'
+import { Combinators, Pair } from '@joj/adt'
 import fs from 'fs'
 import path from 'path'
 
