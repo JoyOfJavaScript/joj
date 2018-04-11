@@ -1,4 +1,5 @@
 import crypto from 'crypto'
+import SecureHandler from '../../common/SecureHandler'
 import { Maybe } from '@joj/adt'
 
 const ENCODING_HEX = 'hex'
@@ -15,7 +16,7 @@ export const Signature = (state, keys) => ({
     ))
   },
   verifySignature() {
-    return verifySignatureInput(
+    return signatureVerifier(
       state.sender || state.recipient,
       keys
         .map(k => state[k])
@@ -29,16 +30,16 @@ export const Signature = (state, keys) => ({
 /**
  * Signs the input data given a private key
  *
- * @param {string} privateKeyPath Private used to sign
- * @param {string} input          Input data to sign
+ * @param {string} privateKey Private key used to sign
+ * @param {string} input      Input data to sign
  * @return {string} Signed data
  * @throws {RangeError} In case any of actual arguments is invalid
  */
-const signInput = (privateKeyPath, input) =>
+const signInput = (privateKey, input) =>
   Maybe.of(k => i => k)
     .ap(
-      Maybe.fromNullable(privateKeyPath).orElseThrow(
-        new Error(`Unable to fetch key from path ${privateKeyPath}`)
+      Maybe.fromNullable(privateKey).orElseThrow(
+        new Error(`Unable to fetch key from path ${privateKey}`)
       )
     )
     .ap(Maybe.fromNullable(input))
@@ -56,9 +57,9 @@ const signInput = (privateKeyPath, input) =>
       )
     )
 
-const verifySignatureInput = (publicKeyPath, data, signature) =>
+const verifySignatureInput = (publicKey, data, signature) =>
   Maybe.of(k => d => s => [k, d, s])
-    .ap(Maybe.fromNullable(publicKeyPath))
+    .ap(Maybe.fromNullable(publicKey))
     .ap(Maybe.fromNullable(data))
     .ap(Maybe.fromNullable(signature))
     .map(([pem, input, sign]) => {
@@ -68,8 +69,14 @@ const verifySignatureInput = (publicKeyPath, data, signature) =>
     })
     .getOrElseThrow(
       new RangeError(
-        `Please provide valid arguments for publicKeyPath: [${publicKeyPath}], data: [${data}], and signature: [${signature}]`
+        `Please provide valid arguments for publicKey: [${publicKey}], data: [${data}], and signature: [${signature}]`
       )
     )
+
+const attempts = []
+
+const signatureVerifier = !process.env.SECURE
+  ? new Proxy(verifySignatureInput, SecureHandler(attempts))
+  : verifySignatureInput
 
 export default Signature

@@ -24,7 +24,7 @@ const TransactionalBlock = (pendingTransactions = [], previousHash = '') => {
   return Object.assign(
     state,
     BlockHeader(previousHash),
-    Hash(state, ['timestamp', 'previousHash', 'nonce']),
+    Hash.init(state, ['timestamp', 'previousHash', 'nonce']),
     PendingTransaction(state),
     TxView(state),
     Genesis(state)

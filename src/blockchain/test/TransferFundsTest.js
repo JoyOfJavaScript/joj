@@ -8,7 +8,6 @@ import path from 'path'
 import fs from 'fs'
 
 describe('Transfer Funds', () => {
-  // eslint-disable-next-line max-statements
   it('Should transfer funds from one wallet to the next', async () => {
     const base = path.join(__dirname, '../..', 'blockchain-wallets')
     // Luke's digital wallet
@@ -163,7 +162,8 @@ describe('Transfer Funds', () => {
     )
 
     // Print ledger
-    console.log(ledger.map(x => x.inspect()))
+    // TODO:  Use ES7 String padding to format this output
+    //console.log(ledger.map(x => x.inspect()))
 
     assert.isOk(
       BlockchainService.isChainValid(ledger, true),

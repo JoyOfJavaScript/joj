@@ -23,7 +23,7 @@ const Transaction = (sender, recipient, funds) => {
   }
   return Object.assign(
     state,
-    Hash(state, ['sender', 'recipient', 'funds', 'nonce']),
+    Hash.init(state, ['sender', 'recipient', 'funds', 'nonce']),
     Signature(state, ['sender', 'recipient', 'funds'])
   )
 }

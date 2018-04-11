@@ -39,7 +39,7 @@
     "test-dev":
       "nodemon --watch src/ --watch test/ --exec 'mocha --recursive --require babel-register --require babel-polyfill test/ || true'",
     "test-debug":
-      "mocha --source-maps --inspect-brk --watch --recursive --require babel-register --require babel-polyfill --no-timeouts",
+      "DEBUG=true mocha --recursive --require babel-register --require babel-polyfill --check-leaks",
     "flow": "flow",
     "flow-init": "flow init",
     "flow-status": "flow status"
