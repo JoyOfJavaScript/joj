@@ -1,13 +1,14 @@
-const MAX_ATTEMPTS = process.env.SECURE_ATTEMPTS || 3
-
-const SecureHandler = attemptsRegistry => {
+const SecureHandler = maxAttempts => {
+  const attemptsRegistry = []
   return {
     apply(target, thisArg, ...args) {
-      console.log(`[INFO] Through secure handler ${args}`)
+      console.log(
+        `[INFO] Using secure handler to guard against malicious activity`
+      )
       const result = Reflect.apply(target, thisArg, ...args)
       if (!result) {
         console.log(`[WARN] Number of attempts ${attemptsRegistry.length}`)
-        if (attemptsRegistry.push(1) > MAX_ATTEMPTS) {
+        if (attemptsRegistry.push(1) > maxAttempts) {
           throw new Error('Security violation detected! Halting program!')
         }
       } else {

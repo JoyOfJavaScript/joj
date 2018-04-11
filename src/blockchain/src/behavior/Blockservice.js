@@ -13,8 +13,6 @@ const mineBlock = async (difficulty, block) =>
 // TODO: use trampolining to simulate TCO in order to reach mining difficulty 4
 const compareHashUntil = (block, difficulty, nonce = 1) => {
   if (block.hash.startsWith(difficulty)) {
-    // Base case reached, return new hash
-    console.log(`Block mined: ${block.hash}`)
     return block
   }
   // Continue to compute the hash again with higher nonce value

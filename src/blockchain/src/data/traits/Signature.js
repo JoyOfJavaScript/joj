@@ -73,10 +73,11 @@ const verifySignatureInput = (publicKey, data, signature) =>
       )
     )
 
-const attempts = []
-
 const signatureVerifier = !process.env.SECURE
-  ? new Proxy(verifySignatureInput, SecureHandler(attempts))
+  ? new Proxy(
+      verifySignatureInput,
+      SecureHandler(process.env.SECURE_ATTEMPTS || 3)
+    )
   : verifySignatureInput
 
 export default Signature
