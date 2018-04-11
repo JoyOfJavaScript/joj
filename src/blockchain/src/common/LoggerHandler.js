@@ -2,7 +2,7 @@ import Logger from './Logger'
 
 const LoggerHandler = (...interceptProps) => ({
   get(target, key) {
-    if (interceptProps.includes(key)) {
+    if (interceptProps.includes(key) && key in target) {
       const value = target[key]
       Logger.trace(`Inspecting property "${key}" with value "${value}"`)
       return value

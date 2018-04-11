@@ -1,20 +1,3 @@
-import { Combinators } from '@joj/adt'
-
-const { curry } = Combinators
-
-// Checks object is not empty/ Works on strings or arrays
-export const notEmpty = data => () => data && data.length > 0
-
-// Checks object is empty. Works on strings or arrays
-export const isEmpty = data => () => !data || data.length === 0
-
-export const checkInvariant = curry((name, checker, data) => {
-  if (!checker(data)) {
-    throw new Error(`Invalid argument. Please provide a valid for ${name}`)
-  }
-  return data
-})
-
 /**
  * Freeze an object (making it immutable) as well as any nested object
  * in this object's graph

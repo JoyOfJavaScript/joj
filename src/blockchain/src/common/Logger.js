@@ -1,14 +1,14 @@
 import { Combinators } from '@joj/adt'
 
-export const Levels = {
-  TRACE: 0,
-  INFO: 1,
-  WARN: 2,
-  ERROR: 3,
-}
+export const Levels = new Map([
+  ['TRACE', 0],
+  ['INFO', 1],
+  ['WARN', 2],
+  ['ERROR', 3],
+])
 
 const log = Combinators.curry((level, message, error = null) => {
-  if (Levels[getLogSetting()] <= level) {
+  if (Levels.has(getLogSetting()) <= level) {
     console.log(
       `[${getLogSetting()}] ${new Date(Date.now()).toString()} ${message}`,
       level === error && error ? error.message : ''
@@ -21,8 +21,8 @@ const getLogSetting = () =>
 
 export default {
   log,
-  trace: log(Levels.TRACE),
-  info: log(Levels.INFO),
-  warn: log(Levels.WARN),
-  error: log(Levels.ERROR),
+  trace: log(Levels.get('TRACE')),
+  info: log(Levels.get('INFO')),
+  warn: log(Levels.get('WARN')),
+  error: log(Levels.get('ERROR')),
 }
