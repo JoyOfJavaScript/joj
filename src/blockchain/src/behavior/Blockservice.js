@@ -1,3 +1,5 @@
+import Logger from '../common/Logger'
+
 const mineBlock = async (difficulty, block) =>
   new Promise((resolve, _) => {
     resolve(
@@ -21,11 +23,21 @@ const compareHashUntil = (block, difficulty, nonce = 1) => {
   return compareHashUntil(block, difficulty, nonce + 1)
 }
 
+const handler = {
+  apply(target, thisArg, ...args) {
+    const newBlock = Reflect.apply(target, thisArg, ...args)
+    return newBlock.then(b => {
+      Logger.trace(`New block mined! ${b.hash}`)
+      return b
+    })
+  },
+}
+
 /**
  * Exported BlockLogic interface
  */
 const BlockLogic = {
-  /* async */ mineBlock,
+  mineBlock: process.env.LOG ? new Proxy(mineBlock, handler) : mineBlock,
 }
 
 export default BlockLogic

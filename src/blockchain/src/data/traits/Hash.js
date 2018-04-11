@@ -59,7 +59,7 @@ const computeCipher = compose(
 
 Hash.calculateHash = (state, fields) => computeCipher(fields.map(k => state[k]))
 Hash.init = (...args) =>
-  process.env.DEBUG
+  process.env.LOG
     ? new Proxy(Hash(...args), LoggerHandler('hash'))
     : Hash(...args)
 

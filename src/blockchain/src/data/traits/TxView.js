@@ -11,7 +11,7 @@ export const TxView = state => ({
     return `TxBlock { ts: ${timestamp},\
                       ptx: ${JSON.stringify(pendingTransactions)},\
                       ph: ${previousHash}, h: ${hash}}, n: ${nonce} }`
-  }
+  },
 })
 
 export default TxView

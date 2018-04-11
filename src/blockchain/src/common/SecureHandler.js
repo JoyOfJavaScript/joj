@@ -1,14 +1,19 @@
+import Logger from '../common/Logger'
+
 const SecureHandler = maxAttempts => {
   const attemptsRegistry = []
   return {
     apply(target, thisArg, ...args) {
-      console.log(
-        `[INFO] Using secure handler to guard against malicious activity`
+      Logger.trace(
+        `Using secure handler to guard against malicious activity on ${
+          target.name
+        }`
       )
       const result = Reflect.apply(target, thisArg, ...args)
       if (!result) {
-        console.log(`[WARN] Number of attempts ${attemptsRegistry.length}`)
+        Logger.warn(`Number of attempts ${attemptsRegistry.length}`)
         if (attemptsRegistry.push(1) > maxAttempts) {
+          Logger.error(`Number of exceeded ${attemptsRegistry.length}!`)
           throw new Error('Security violation detected! Halting program!')
         }
       } else {
