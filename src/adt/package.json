@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "main": "./dist/index.js",
+  "description": "Functional Algebratic Types",
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
@@ -30,8 +31,10 @@
     "lint-fix": "eslint src/ --fix",
     "build": "babel src --out-dir dist",
     "prepublish": "npm run build",
-    "test": "mocha --check-leaks --recursive --require babel-register --require babel-polyfill test/",
-    "test-dev": "nodemon --watch src/ --watch test/ --exec 'mocha --recursive --require babel-register --require babel-polyfill test/ || true'",
+    "test":
+      "mocha --check-leaks --recursive --require babel-register --require babel-polyfill test/",
+    "test-dev":
+      "nodemon --watch src/ --watch test/ --exec 'mocha --recursive --require babel-register --require babel-polyfill test/ || true'",
     "flow": "flow",
     "flow-init": "flow init",
     "flow-status": "flow status"

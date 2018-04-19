@@ -1,6 +1,6 @@
 import { assert } from 'chai'
 import Wallet from '../src/data/Wallet'
-import BlockchainService from '../src/behavior/BlockchainService'
+import BlockchainService from '../src/service/BlockchainService'
 import Blockchain from '../src/data/Blockchain'
 import Money from '../src/data/Money'
 import Transaction from '../src/data/Transaction'

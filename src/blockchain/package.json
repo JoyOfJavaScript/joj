@@ -2,6 +2,8 @@
   "name": "@joj/blockchain",
   "version": "0.1.0",
   "private": true,
+  "main": "./dist/index.js",
+  "description": "Simple blockchain primitives",
   "devDependencies": {
     "babel-cli": "^6.23.0",
     "babel-core": "^6.26.0",
@@ -34,6 +36,7 @@
     "lint": "eslint src/",
     "lint-fix": "eslint src/ --fix",
     "start": "babel-node src/main.js",
+    "build": "babel src --out-dir dist",
     "test":
       "mocha --recursive --require babel-register --require babel-polyfill --check-leaks",
     "test-dev":

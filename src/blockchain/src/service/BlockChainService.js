@@ -1,11 +1,12 @@
+import fs from 'fs'
+import path from 'path'
 import BlockService from './BlockService'
+import Blockchain from '../data/Blockchain'
 import Money from '../data/Money'
 import Transaction from '../data/Transaction'
 import TransactionalBlock from '../data/TransactionalBlock'
 import Wallet from '../data/Wallet'
 import { Combinators, Pair } from '@joj/adt'
-import fs from 'fs'
-import path from 'path'
 
 // As of writing, current mining reward
 const MINING_REWARD = Money('₿', 12.5)
@@ -18,6 +19,8 @@ const NETWORK = Wallet(
   fs.readFileSync(path.join(BASE, 'bitcoin-private.pem'), 'utf8'),
   'bitcoin'
 )
+
+const newBlockchain = () => Blockchain.init()
 
 /**
  * Adds a new data block to the chain. It involves:
@@ -163,13 +166,15 @@ const isChainValid = (blockchain, checkTransactions = false) =>
         current.hash === current.calculateHash() &&
         // 2. Blocks form a chain
         current.previousHash === previous.hash &&
+        // 3. Check timestamps
+        current.timestamp >= previous.timestamp &&
+        // 4. Check is hash is solved
         (checkTransactions
-          ? // 3. Check is hash is solved
-            current.hash.substring(0, current.difficulty) ===
+          ? current.hash.substring(0, current.difficulty) ===
               Array(current.difficulty)
                 .fill(0)
                 .join('') &&
-            // 4. Verify Transaction signatures
+            // 5. Verify Transaction signatures
             current.pendingTransactions.every(tx => tx.verifySignature())
           : true)
       )
@@ -209,6 +214,7 @@ const BlockchainService = {
   /* async */ minePendingTransactions,
   calculateBalanceOfAddress,
   transferFundsBetween,
+  newBlockchain,
 }
 
 export default BlockchainService

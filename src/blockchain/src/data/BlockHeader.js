@@ -8,6 +8,8 @@
  * @return {BlockHeader} Newly created block with its own computed hash
  */
 const BlockHeader = (previousHash = '') => {
+  // Separate difficuly, version, and timestamp into BlockMeta (make it immutable and extend BlockHeader)
+  // tampering with timestamp breaks block chain validation
   return {
     difficulty: 2,
     version: '1.0',
