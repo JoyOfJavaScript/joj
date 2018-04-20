@@ -43,9 +43,10 @@ wsServer.on('request', request => {
 let chain = null
 
 function processRequest(req, connection) {
+  console.log(`Action received ${req.action}`)
   switch (req.action) {
     case Actions.NEW:
-      console.log('New Blockchain')
+      console.log('Requesting new blockchain')
       chain = BlockchainService.newBlockchain()
       connection.sendUTF(
         JSON.stringify({
@@ -55,7 +56,27 @@ function processRequest(req, connection) {
         })
       )
       break
-    default:
-      console.log(`Unrecognized action ${req.action}`)
+    case Actions.VALIDATE_BC:
+      connection.sendUTF(
+        JSON.stringify({
+          status: 'Success',
+          action: Actions.VALIDATE_BC,
+          payload: {
+            result: BlockchainService.isChainValid(chain) ? true : false,
+          },
+        })
+      )
+      break
+    default: {
+      const msg = `Unrecognized action ${req.action}`
+      console.log(msg)
+      connection.sendUTF(
+        JSON.stringify({
+          status: 'Warning',
+          action: Actions.DISPLAY_ERROR,
+          payload: { message: msg },
+        })
+      )
+    }
   }
 }

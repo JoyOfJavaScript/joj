@@ -7,6 +7,9 @@ import { listen$, throttle$, filter$ } from '../shared/observable/operators'
 
 const { compose } = Combinators
 
+const WebSocket = window.WebSocket || window.MozWebSocket
+const client = new WebSocket('ws://127.0.0.1:1337')
+
 const fetchRootElementName = id =>
   Array.from(document.getElementsByTagName('script')) // was: [].slice.call() or [...nodelist]
     .filter(s => !!s.getAttribute(id))
@@ -29,22 +32,6 @@ const throttledClickListener$ = compose(
   listen$('click')
 )
 
-const subscription = throttledClickListener$(
-  document.getElementById('validate-blockchain-button')
-).subscribe({
-  next(val) {
-    console.log(val)
-  },
-  error(err) {
-    console.log('Received an error: ' + err)
-  },
-  complete() {
-    console.log('Stream complete')
-  },
-})
-
-const WebSocket = window.WebSocket || window.MozWebSocket
-const client = new WebSocket('ws://127.0.0.1:1337')
 client.onopen = function() {
   if (client.readyState === client.OPEN) {
     console.log('WebSocket Client Connected and ready')
@@ -57,6 +44,24 @@ client.onopen = function() {
   }
 }
 
+const validateBlockchain$ = throttledClickListener$(
+  document.getElementById('validate-blockchain-button')
+).subscribe({
+  next(val) {
+    client.send(
+      JSON.stringify({
+        action: Actions.VALIDATE_BC,
+      })
+    )
+  },
+  error(err) {
+    console.log('Received an error: ' + err)
+  },
+  complete() {
+    console.log('Stream complete')
+  },
+})
+
 client.onerror = function(event) {
   // an error occurred when sending/receiving data
   console.log(event)
@@ -64,12 +69,12 @@ client.onerror = function(event) {
     console.log('Error recieved')
   }
   // After calling this function, no more events will be sent
-  subscription.unsubscribe()
+  validateBlockchain$.unsubscribe()
 }
 
 client.onclose = () => {
   // After calling this function, no more events will be sent
-  subscription.unsubscribe()
+  validateBlockchain$.unsubscribe()
 }
 
 client.onmessage = function(message) {
@@ -86,17 +91,24 @@ client.onmessage = function(message) {
 
 function processResponse(message) {
   console.log(message)
-  const { status, action } = JSON.parse(message.data)
+  const { status, action, payload } = JSON.parse(message.data)
   if (status === 'Success') {
     switch (action) {
       case Actions.ADD_GENESIS:
         state.push({ name: 'Genesis' })
         break
+      case Actions.VALIDATE_BC:
+        if (payload.result) {
+          alert('Chain is valid!')
+        } else {
+          alert('Chain is NOT valid!')
+        }
+        break
       default:
         alert('Unknown action')
     }
   } else {
-    alert(`Error ocurred: ${message}`)
+    alert(`Error ocurred: ${payload.message}`)
   }
 }
 
