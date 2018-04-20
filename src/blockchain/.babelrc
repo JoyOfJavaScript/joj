@@ -8,5 +8,5 @@
       }
     ]
   ],
-  "presets": ["es2015", "stage-3", "flow"]
+  "presets": ["env"]
 }

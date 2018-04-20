@@ -4,7 +4,7 @@ import { Just, Nothing } from '../maybe'
 // Abstract
 const Validation = {
   '@@type': 'Validation',
-  of: a => Success(a)
+  of: a => Success(a),
 }
 
 export const Success = (Validation.Success = a =>
@@ -22,13 +22,15 @@ export const Success = (Validation.Success = a =>
             ? Success(
                 isFunction(Va.fold()) ? Va.fold().call(Va, a) : a(Va.fold())
               )
-            : a ? Success(Va.fold().call(Va, a)) : Failure(),
+            : a
+              ? Success(Va.fold().call(Va, a))
+              : Failure(),
       concat: Va => Va,
       bifold: (successTransform, _) => successTransform(a),
       // This what makes Validation not a real monad (also not a real disjunction)
       bimap: (successTransform, _) => Success(successTransform(a)),
       merge: () => a,
-      toMaybe: () => Just(a)
+      toMaybe: () => Just(a),
     },
     Validation
   ))
@@ -48,7 +50,7 @@ export const Failure = (Validation.Failure = b =>
       bimap: (_, failTransform) => Failure(failTransform(b)),
       fold: _ => errorWith('Unable to fold from a Validate.Failure'),
       merge: () => b,
-      toMaybe: () => Nothing()
+      toMaybe: () => Nothing(),
     },
     Validation
   ))
@@ -71,4 +73,5 @@ Validation.fromMaybe = (Ma, ...errors) => () => {
   return Validation.fromNullable(Ma)
 }
 
+export default Validation
 module.exports = Validation

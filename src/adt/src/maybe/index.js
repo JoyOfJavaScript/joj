@@ -3,7 +3,7 @@ import { Success, Failure } from '../validation'
 
 const Maybe = {
   '@@type': 'Maybe',
-  of: a => Just(a)
+  of: a => Just(a),
 }
 
 export const Just = (Maybe.Just = a =>
@@ -34,7 +34,7 @@ export const Just = (Maybe.Just = a =>
       getOrElseThrow: error => a,
       orElseThrow: error => Just(a),
       merge: () => a,
-      toValidation: () => Success(a)
+      toValidation: () => Success(a),
     },
     Maybe
   ))
@@ -56,7 +56,7 @@ export const Nothing = (Maybe.Nothing = b =>
       },
       orElseThrow: error => {
         throw error
-      }
+      },
     },
     Maybe
   ))
@@ -79,4 +79,5 @@ Maybe.fromValidation = Va => () => {
   return Maybe.fromNullable(Va)
 }
 
+export default Maybe
 module.exports = Maybe

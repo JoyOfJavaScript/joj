@@ -216,5 +216,5 @@ const BlockchainService = {
   transferFundsBetween,
   newBlockchain,
 }
-
 export default BlockchainService
+module.exports = BlockchainService //TODO: using export default will result in default: {} object within the import

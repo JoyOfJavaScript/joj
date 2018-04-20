@@ -1,9 +1,8 @@
 import { SVG } from '../api'
-import ChangeProxy from './ChangeProxy'
 
 function App(props) {
   let state = {
-    ...props,
+    blocks: props,
     onClick: handleClick,
   }
 
@@ -14,19 +13,20 @@ function App(props) {
 
   return {
     render() {
+      console.log('rendering', state)
       return SVG.Document(SVG.Model.Dimension(1000, 180), NamedBoxes(state))
     },
-    set state(newState) {
-      state = { ...state, newState }
-    },
-    get state() {
-      return state
+    set state(s) {
+      console.log('setting state', state)
+      state = { ...s, ...state }
     },
   }
 }
 
-function NamedBoxes({ data, onClick }) {
-  return data.map(({ name }, index) => SquareWithText({ name, index, onClick }))
+function NamedBoxes({ blocks, onClick }) {
+  return blocks.map(({ name }, index) =>
+    SquareWithText({ name, index, onClick })
+  )
 }
 
 function SquareWithText({ name = 'Anonymous', index = 0, onClick }) {
@@ -45,6 +45,7 @@ function Text(name, x) {
 }
 
 function Square(name, x) {
+  console.log(`Adding new square  ${name}`)
   return SVG.Square({
     id: `${name}-rect`,
     loc: SVG.Model.Point(x, 10),

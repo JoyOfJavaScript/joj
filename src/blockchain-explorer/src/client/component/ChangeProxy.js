@@ -1,16 +1,15 @@
 const ChangeProxy = (object, onChange) => {
   const handler = {
-    defineProperty(target, property, descriptor) {
-      console.log('Proxy hit')
-      onChange()
-      return Reflect.defineProperty(target, property, descriptor)
-    },
-    deleteProperty(target, property) {
-      onChange()
-      return Reflect.deleteProperty(target, property)
+    set: function(target, property, value, receiver) {
+      console.log(
+        'setting ' + property + ' for ' + target + ' with value ' + value
+      )
+      target[property] = value
+      onChange(target)
+      // you have to return true to accept the changes
+      return true
     },
   }
-
   return new Proxy(object, handler)
 }
 

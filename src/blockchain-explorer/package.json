@@ -39,7 +39,7 @@
     "lint-fix": "eslint src/ --fix",
     "bundle": "webpack",
     "start-httpd": "babel-node start.js",
-    "start-ws-server": "babel-node start-ws.js",
-    "start": "run-p bundle start-httpd start-ws-server"
+    "start-server": "nodemon src/server/index.js --exec babel-node",
+    "start": "run-p bundle start-httpd start-server"
   }
 }
