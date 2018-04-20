@@ -2,6 +2,10 @@ import App from './component/App'
 import ChangeProxy from './component/ChangeProxy'
 import { SVG } from './api'
 import * as Actions from '../shared/actions'
+import { Combinators } from '@joj/adt'
+import { listen$, throttle$, filter$ } from '../shared/observable/operators'
+
+const { compose } = Combinators
 
 const fetchRootElementName = id =>
   Array.from(document.getElementsByTagName('script')) // was: [].slice.call() or [...nodelist]
@@ -17,6 +21,26 @@ const root = fetchRootElementName('data-root-id')
 const state = ChangeProxy([], newState => {
   console.log('new state', newState)
   SVG.Document.render(App(newState).render(), document.getElementById(root))
+})
+
+const throttledClickListener$ = compose(
+  filter$(event => event.button === 0),
+  throttle$(2000),
+  listen$('click')
+)
+
+const subscription = throttledClickListener$(
+  document.getElementById('validate-blockchain-button')
+).subscribe({
+  next(val) {
+    console.log(val)
+  },
+  error(err) {
+    console.log('Received an error: ' + err)
+  },
+  complete() {
+    console.log('Stream complete')
+  },
 })
 
 const WebSocket = window.WebSocket || window.MozWebSocket
@@ -39,6 +63,13 @@ client.onerror = function(event) {
   if (event.type === 'error') {
     console.log('Error recieved')
   }
+  // After calling this function, no more events will be sent
+  subscription.unsubscribe()
+}
+
+client.onclose = () => {
+  // After calling this function, no more events will be sent
+  subscription.unsubscribe()
 }
 
 client.onmessage = function(message) {
@@ -68,3 +99,24 @@ function processResponse(message) {
     alert(`Error ocurred: ${message}`)
   }
 }
+
+/*
+function exitHandler(options, err) {
+    if (options.cleanup) console.log('clean');
+    if (err) console.log(err.stack);
+    if (options.exit) process.exit();
+}
+
+//do something when app is closing
+process.on('exit', exitHandler.bind(null,{cleanup:true}));
+
+//catches ctrl+c event
+process.on('SIGINT', exitHandler.bind(null, {exit:true}));
+
+// catches "kill pid" (for example: nodemon restart)
+process.on('SIGUSR1', exitHandler.bind(null, {exit:true}));
+process.on('SIGUSR2', exitHandler.bind(null, {exit:true}));
+
+//catches uncaught exceptions
+process.on('uncaughtException', exitHandler.bind(null, {exit:true}));
+*/
