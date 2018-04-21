@@ -40,7 +40,7 @@ function Text(name, x) {
     loc: SVG.Model.Point(x, 50),
     fontFamily: 'Verdana',
     fontSize: 12,
-    contents: `Welcome ${name}!!`,
+    contents: name,
   })
 }
 
