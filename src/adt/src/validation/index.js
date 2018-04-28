@@ -4,12 +4,15 @@ import { Just, Nothing } from '../maybe'
 // Abstract
 const Validation = {
   '@@type': 'Validation',
+  '@@implements': ['map', 'ap', 'fold', 'bimap', 'merge'],
   of: a => Success(a),
 }
 
 export const Success = (Validation.Success = a =>
   Object.assign(
     {
+      [Symbol.toStringTag]: 'Validation#Success',
+      [Symbol.for('maybe')]: () => Just(a),
       isSuccess: () => true,
       isFailure: () => false,
       fold: (fn = identity) => fn(a),
@@ -38,6 +41,8 @@ export const Success = (Validation.Success = a =>
 export const Failure = (Validation.Failure = b =>
   Object.assign(
     {
+      [Symbol.toStringTag]: 'Validation#Failure',
+      [Symbol.for('maybe')]: () => Nothing(),
       isSuccess: () => false,
       isFailure: () => true,
       map: _ => Failure(b),

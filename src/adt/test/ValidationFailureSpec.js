@@ -9,10 +9,15 @@ const add = a => b => a + b
 describe('Validation#Failure', () => {
   it('Type', () => {
     assert.equal(Failure('Some Value')['@@type'], 'Validation')
+    assert.isOk(
+      Failure('Some value')
+        .toString()
+        .includes('Validation#Failure')
+    )
   })
   it('Fold', () => {
-    assert.throws(Failure('FAILED!').fold, TypeError)
-    assert.throws(Failure(null).fold, TypeError)
+    assert.throws(() => Failure('FAILED!').fold(), TypeError)
+    assert.throws(() => Failure(null).fold(), TypeError)
   })
   it('Map', () => {
     assert.deepEqual(

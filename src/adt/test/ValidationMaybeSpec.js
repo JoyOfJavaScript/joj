@@ -35,7 +35,7 @@ describe('From Maybe To Validation', () => {
       .toValidation()
 
     assert.isOk(v.isFailure())
-    assert.deepEqual(v.merge(), ['Value is null or undefined'])
+    assert.deepEqual(v.merge(), ['Expected non-null argument'])
   })
 
   it('Validation -> Maybe', () => {

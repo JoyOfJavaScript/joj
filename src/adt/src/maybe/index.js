@@ -9,6 +9,8 @@ const Maybe = {
 export const Just = (Maybe.Just = a =>
   Object.assign(
     {
+      [Symbol.toStringTag]: 'Maybe#Just',
+      [Symbol.for('validation')]: () => Success(a),
       isJust: () => true,
       isNothing: () => false,
       fold: (fn = identity) => fn(a),
@@ -42,6 +44,8 @@ export const Just = (Maybe.Just = a =>
 export const Nothing = (Maybe.Nothing = b =>
   Object.assign(
     {
+      [Symbol.toStringTag]: 'Maybe#Nothing',
+      [Symbol.for('validation')]: () => Failure(['Expected non-null argument']),
       isJust: () => false,
       isNothing: () => true,
       map: _ => Nothing(),
@@ -49,7 +53,7 @@ export const Nothing = (Maybe.Nothing = b =>
       fold: _ => errorWith('Unable to fold from a Maybe.Nothing'),
       get: () => errorWith('Unable to get from a Maybe.Nothing'),
       merge: () => errorWith('Unable to merge from a Maybe.Nothing'),
-      toValidation: () => Failure(['Value is null or undefined']),
+      toValidation: () => Failure(['Expected non-null argument']),
       getOrElse: defaultValue => defaultValue,
       getOrElseThrow: error => {
         throw error
