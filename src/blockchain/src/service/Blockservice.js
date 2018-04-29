@@ -1,26 +1,17 @@
 import Logger from '../common/Logger'
 
 const mineBlock = async (difficulty, block) =>
-  new Promise((resolve, _) => {
-    resolve(
-      compareHashUntil(
-        block,
-        Array(difficulty)
-          .fill(0)
-          .join('')
-      )
-    )
-  })
+  Promise.resolve(compareHashUntil(block, ''.padStart(difficulty, '0')))
 
 // TODO: use trampolining to simulate TCO in order to reach mining difficulty 4
-const compareHashUntil = (block, difficulty, nonce = 1) => {
-  if (block.hash.startsWith(difficulty)) {
+const compareHashUntil = (block, hashPrefix, nonce = 1) => {
+  if (block.hash.startsWith(hashPrefix)) {
     return block
   }
   // Continue to compute the hash again with higher nonce value
   block.nonce = nonce
   block.calculateHash()
-  return compareHashUntil(block, difficulty, nonce + 1)
+  return compareHashUntil(block, hashPrefix, nonce + 1)
 }
 
 const handler = {

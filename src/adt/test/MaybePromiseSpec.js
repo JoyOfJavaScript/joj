@@ -1,8 +1,11 @@
 import { assert } from 'chai'
-import { Maybe } from '../src'
+import { Maybe, Combinators } from '../src'
+import computeHash from './computeHash'
 
-describe('Combine Promises with Maybe', () => {
-  it('Should do async defensive coding  ', () => {
-    assert.isOk(true)
-  })
-})
+const { compose, curry } = Combinators
+
+describe('Combine Maybe with Validation', () => {})
+
+describe('Combine Maybe with Either', () => {})
+
+describe('Combine Maybe with Try', () => {})
