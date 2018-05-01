@@ -83,15 +83,16 @@ describe('Combine Maybe with Validation', () => {
 
     assert.deepEqual(nullVal, ['Expected non-null argument'])
 
-    const input = null
-    const nullVal2 = Validation.of(x => x => x)
-      .ap(Maybe.fromNullable(input).toValidation())
-      .ap(notEmpty(input))
-      .merge()
-    assert.deepEqual(nullVal2, [
+    const validateArg = arg =>
+      Validation.of(x => x => x)
+        .ap(Maybe.fromNullable(arg).toValidation())
+        .ap(notEmpty(arg))
+
+    assert.deepEqual(validateArg(null).merge(), [
       'Expected non-null argument',
       'String is empty',
     ])
+    assert.equal(validateArg(null).getOrElse('other'), 'other')
   })
 })
 

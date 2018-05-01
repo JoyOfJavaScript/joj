@@ -34,6 +34,7 @@ export const Success = (Validation.Success = a =>
       // This what makes Validation not a real monad (also not a real disjunction)
       bimap: (successTransform, _) => Success(successTransform(a)),
       merge: () => a,
+      getOrElse: defaultValue => a,
       toMaybe: () => Just(a),
     },
     Validation
@@ -57,6 +58,7 @@ export const Failure = (Validation.Failure = b =>
       bimap: (_, failTransform) => Failure(failTransform(b)),
       fold: _ => errorWith('Unable to fold from a Validate.Failure'),
       merge: () => b,
+      getOrElse: defaultValue => defaultValue,
       toMaybe: () => Nothing(),
     },
     Validation
