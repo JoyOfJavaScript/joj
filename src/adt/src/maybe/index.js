@@ -15,6 +15,7 @@ export const Just = (Maybe.Just = a =>
       isNothing: () => false,
       fold: (fn = identity) => fn(a),
       map: fn => Maybe.fromNullable(fn(a)),
+      flatMap: fn => Maybe.fromNullable(fn(a).merge()),
       ap: Ma =>
         Ma.isNothing()
           ? // If applying to a Maybe.Nothing, skip
@@ -49,8 +50,9 @@ export const Nothing = (Maybe.Nothing = b =>
       isJust: () => false,
       isNothing: () => true,
       map: _ => Nothing(),
+      flatMap: fn => Nothing(),
       ap: Ma => Nothing(),
-      fold: _ => errorWith('Unable to fold from a Maybe.Nothing'),
+      fold: fn => fn(),
       get: () => errorWith('Unable to get from a Maybe.Nothing'),
       merge: () => errorWith('Unable to merge from a Maybe.Nothing'),
       toValidation: () => Failure(['Expected non-null argument']),

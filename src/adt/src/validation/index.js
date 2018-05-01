@@ -4,7 +4,7 @@ import { Just, Nothing } from '../maybe'
 // Abstract
 const Validation = {
   '@@type': 'Validation',
-  '@@implements': ['map', 'ap', 'fold', 'bimap', 'merge'],
+  '@@implements': ['of', 'map', 'ap', 'fold', 'bimap', 'merge'],
   of: a => Success(a),
 }
 
@@ -18,6 +18,7 @@ export const Success = (Validation.Success = a =>
       fold: (fn = identity) => fn(a),
       foldOrElse: (fn = identity) => fn(a),
       map: fn => Validation.fromNullable(fn(a)),
+      flatMap: fn => Validation.fromNullable(fn(a).merge()),
       ap: Va =>
         Va.isFailure()
           ? Va
@@ -46,6 +47,7 @@ export const Failure = (Validation.Failure = b =>
       isSuccess: () => false,
       isFailure: () => true,
       map: _ => Failure(b),
+      flatMap: _ => Failure(b),
       ap: Va => (Va.isFailure() ? Failure(b.concat(Va.merge())) : Failure(b)),
       foldOrElse: (_, defaultValue) => defaultValue,
       concat: Va =>
