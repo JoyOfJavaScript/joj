@@ -26,9 +26,6 @@
     "sinon": "^1.17.7",
     "sinon-chai": "^2.8.0"
   },
-  "dependencies": {
-    "@joj/adt": "file:./lib/@joj/adt"
-  },
   "scripts": {
     "lint": "eslint src/",
     "lint-fix": "eslint src/ --fix",

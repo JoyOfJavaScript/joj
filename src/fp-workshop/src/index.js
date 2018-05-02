@@ -1,3 +1,3 @@
-import { Maybe } from '@joj/adt'
+import { Maybe } from './adt'
 
 console.log(Maybe)
