@@ -1,3 +1,4 @@
+// Function combinators
 const identity = a => a
 const isFunction = a => a && typeof a === 'function'
 const compose2 = (f, g) => (...args) => f(g(...args))
@@ -12,4 +13,19 @@ const curry = fn => (...args1) =>
         return args.length >= fn.length ? fn(...args) : curry(fn)(...args)
       }
 
-module.exports = { isFunction, curry, pipe, compose, flatten, identity }
+// ADT helpers
+const map = curry((f, M) => M.map(f))
+const flatMap = curry((f, M) => M.flatMap(f))
+const fold = M => M.fold()
+
+module.exports = {
+  isFunction,
+  curry,
+  pipe,
+  compose,
+  flatten,
+  identity,
+  map,
+  flatMap,
+  fold,
+}

@@ -2,6 +2,7 @@
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
+// Function combinators
 var identity = function identity(a) {
   return a;
 };
@@ -47,4 +48,25 @@ var curry = function curry(fn) {
   };
 };
 
-module.exports = { isFunction: isFunction, curry: curry, pipe: pipe, compose: compose, flatten: flatten, identity: identity };
+// ADT helpers
+var map = curry(function (f, M) {
+  return M.map(f);
+});
+var flatMap = curry(function (f, M) {
+  return M.flatMap(f);
+});
+var fold = function fold(M) {
+  return M.fold();
+};
+
+module.exports = {
+  isFunction: isFunction,
+  curry: curry,
+  pipe: pipe,
+  compose: compose,
+  flatten: flatten,
+  identity: identity,
+  map: map,
+  flatMap: flatMap,
+  fold: fold
+};

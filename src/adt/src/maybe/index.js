@@ -52,7 +52,7 @@ export const Nothing = (Maybe.Nothing = b =>
       map: _ => Nothing(),
       flatMap: fn => Nothing(),
       ap: Ma => Nothing(),
-      fold: fn => fn(),
+      fold: _ => errorWith('Unable to fold from a Maybe.Nothing'),
       get: () => errorWith('Unable to get from a Maybe.Nothing'),
       merge: () => errorWith('Unable to merge from a Maybe.Nothing'),
       toValidation: () => Failure(['Expected non-null argument']),

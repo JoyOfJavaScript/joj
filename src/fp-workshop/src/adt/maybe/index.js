@@ -72,8 +72,8 @@ var Nothing = exports.Nothing = Maybe.Nothing = function (b) {
     return Nothing();
   }), _defineProperty(_Object$assign2, 'ap', function ap(Ma) {
     return Nothing();
-  }), _defineProperty(_Object$assign2, 'fold', function fold(fn) {
-    return fn();
+  }), _defineProperty(_Object$assign2, 'fold', function fold(_) {
+    return errorWith('Unable to fold from a Maybe.Nothing');
   }), _defineProperty(_Object$assign2, 'get', function get() {
     return errorWith('Unable to get from a Maybe.Nothing');
   }), _defineProperty(_Object$assign2, 'merge', function merge() {
