@@ -2,7 +2,7 @@
  * Unit 1 JavaScript ES6/ES7 Essentials
  * @author Luis Atencio
  */
-console.log('Beginning of unit 1')
+console.log('\x1b[36m', 'Beginning of unit 1')
 
 // Arrow functions
 const identity = x => x
@@ -35,12 +35,8 @@ console.log(result)
 
 // Assignment destructuring
 
-
 // Rest parameter
-
 
 // Parameter spread
 
-
-
-console.log('End of unit 1')
+console.log('%s\x1b[0m', 'End of unit 1')

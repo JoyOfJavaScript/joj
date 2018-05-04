@@ -5,14 +5,6 @@
  */
 console.log('-------Beginning of unit 3-------')
 
-// Format constants
-const UNDERSCORE = '\x1b[4m'
-const RESET = '\x1b[0m'
-
-// Color constants
-const CYAN = '\x1b[36m'
-const YELLOW = '\x1b[33m'
-
 //
 // CURRY 2
 //

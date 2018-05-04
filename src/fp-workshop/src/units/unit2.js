@@ -2,37 +2,27 @@
  * Unit 2 Function Composition
  * @author Luis Atencio
  */
-console.log('-------Beginning of unit 2-------')
-
-// Format constants
-const UNDERSCORE = '\x1b[4m'
-const RESET = '\x1b[0m'
-
-// Color constants
-const CYAN = '\x1b[36m'
-const YELLOW = '\x1b[33m'
+console.log('\x1b[33m', '-------Beginning of unit 2-------')
 
 //
 // COMPOSE 2
 //
 const compose2 = (f, g) => x => f(g(x))
-const toUpper = str => str.toUpperCase()
-const logCyan = str => console.log(`${CYAN}%s\x1b[0m`, str)
+const toChars = Array.from
+const count = arr => (!arr ? 0 : arr.length)
 
-const printCyan = compose2(logCyan, toUpper)
-printCyan('uxdevsummit')
+const countLetters = compose2(count, toChars)
+console.log('Letters in uxdevsummit:', countLetters('uxdevsummit'))
 
 //
 // COMPOSE 3
 //
-
 const compose3 = (f, g, h) => x => f(g(h(x)))
+const padStr = s => s.padStart(2)
+const map = f => arr => arr.map(f)
+const toUpper = str => str.toUpperCase()
 
-const formatString = compose3(
-  ([COLOR, str]) => [`${UNDERSCORE}${COLOR}%s${RESET}`, str],
-  str => [YELLOW, str],
-  toUpper
-)
+const formatString = compose3(map(toUpper), map(padStr), Array.from)
 console.log(...formatString('uxdevsummit'))
 
 //
@@ -57,4 +47,4 @@ const input = 'The quick brown fox jumps over the lazy dog'
 //   countWords2('The quick brown fox jumps over the lazy dog')
 // )
 
-console.log('-------End of unit 2-------')
+console.log('%s\x1b[0m', '-------End of unit 2-------')
