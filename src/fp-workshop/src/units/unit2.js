@@ -3,7 +3,7 @@
  * @author Luis Atencio
  */
 import { print } from './util'
-console.log('-------Beginning of unit 2-------')
+console.log('--------------Beginning of unit 2--------------')
 
 //
 // COMPOSE 2
@@ -48,4 +48,4 @@ const input = 'The quick brown fox jumps over the lazy dog'
 //   countWords2('The quick brown fox jumps over the lazy dog')
 // )
 
-console.log('-------End of unit 2-------')
+console.log('--------------End of unit 2--------------')

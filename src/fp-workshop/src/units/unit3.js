@@ -4,7 +4,7 @@
  * @author Luis Atencio
  */
 import { print } from './util'
-console.log('-------Beginning of unit 3-------')
+console.log('--------------Beginning of unit 3--------------')
 
 //
 // CURRY 2
@@ -21,4 +21,4 @@ print('Raise two to the third.', raiseTwo(3))
 import { Combinators } from '../adt'
 const { curry } = Combinators
 
-console.log('-------End of unit 3-------')
+console.log('--------------End of unit 3--------------')

@@ -17,7 +17,7 @@
 // import unit3 from './units/unit3'
 
 // // Unit 4: Functor
-// import unit4 from './units/unit4'
+import unit4 from './units/unit4'
 
 // Unit 5: Applicative
 // import unit5 from './units/unit5'
@@ -29,4 +29,4 @@
 // import unit7 from './units/unit7'
 
 // // Unit 8: Dealign with effects
-import unit8 from './units/unit8'
+// import unit8 from './units/unit8'

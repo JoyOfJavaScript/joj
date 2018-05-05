@@ -3,7 +3,7 @@
  * @author Luis Atencio
  */
 import { print } from './util'
-console.log('-------Beginning of unit 1-------')
+console.log('--------------Beginning of unit 1--------------')
 
 // Arrow functions
 const identity = x => x
@@ -55,4 +55,4 @@ function allValid(...args) {
 
 print('All valid?', allValid(1, 2, 3))
 print('All valid?', allValid(1, 2, null, 3))
-console.log('-------End of unit 1-------')
+console.log('--------------End of unit 1--------------')

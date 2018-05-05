@@ -5,5 +5,5 @@ module.exports = {
   Validation: require('./validation'),
   Combinators: require('./combinators'),
   Conversions: require('./conversions'),
-  Pair: require('./pair')
+  Pair: require('./pair'),
 }

@@ -7,7 +7,7 @@ import { print } from './util'
 import { Combinators, Maybe } from '../adt'
 const { map, compose, curry, flatMap } = Combinators
 const { Just } = Maybe
-console.log('-------Beginning of unit 6-------')
+console.log('--------------Beginning of unit 6--------------')
 
 // Helpers
 const add = curry((a, b) => a + b)
@@ -115,4 +115,4 @@ const areaCode3 = compose(
 )
 print('Exercise 6.3 answer (954)', areaCode3(user))
 
-console.log('-------End of unit 6-------')
+console.log('--------------End of unit 6--------------')
