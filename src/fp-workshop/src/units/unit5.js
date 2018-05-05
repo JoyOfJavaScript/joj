@@ -10,17 +10,6 @@ console.log('-------Beginning of unit 5-------')
 const { curry } = Combinators
 
 //
-// MAYBE
-//
-const splitOn = curry((separator, str) => str.split(separator || /\s/))
-
-const breakSentence = sentence =>
-  Maybe.of(splitOn(/\s/)).ap(Maybe.fromNullable(sentence))
-
-console.log('Break "Hello World"', breakSentence('Hello World').toString())
-console.log('Break "Hello World"', breakSentence(null).toString())
-
-//
 // VALIDATION
 //
 const notEmpty = str =>
@@ -46,5 +35,17 @@ const v = Validation.of(x => x => x)
 
 console.log('is Failure?', v.isFailure())
 console.log('Validation message: ', v.toString())
+
+//
+// Exercise 5. Use Maybe to conditionally break up a sentence given a
+// certain separator string (e.g. space, a new line, etc)
+//
+const splitOn = curry((separator, str) => str.split(separator || /\s/))
+
+const breakSentence = sentence =>
+  Maybe.of(splitOn(/\s/)).ap(Maybe.fromNullable(sentence))
+
+console.log('Break "Hello World"', breakSentence('Hello World').toString())
+console.log('Break "Hello World"', breakSentence(null).toString())
 
 console.log('-------End of unit 5-------')

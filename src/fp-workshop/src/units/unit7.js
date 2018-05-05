@@ -43,7 +43,7 @@ const nullVal = Maybe.fromNullable(null)
 console.log('Prints a null validation message', nullVal)
 
 //
-// Exercise 7.1 Validate an argument is not null nor empty
+// Exercise 7 Validate an argument is not null nor empty
 //
 // Use ADTs Maybe and Validation to implement parameter validation
 // in a functional manner.

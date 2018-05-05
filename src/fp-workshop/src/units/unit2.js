@@ -32,7 +32,7 @@ import { Combinators } from '../adt'
 const { compose } = Combinators
 
 //
-// Exercise 2.1 Count the number of words using this input variable
+// Exercise 2 Count the number of words using this input variable
 //
 const input = 'The quick brown fox jumps over the lazy dog'
 // const tokenize = str => str.split(/\s/)

@@ -11,12 +11,12 @@ console.log('Identity of "a"', identity('a'))
 // Multiline arrow function
 const decide = condition => {
   if (condition === 'left') {
-    return 'Turn left'
+    return 'Turn left!'
   } else {
-    return 'Turn right'
+    return 'Turn right!'
   }
 }
-console.log(decide('left'))
+console.log('Where to turn?', decide('left'))
 
 // Exercise 1.1
 // Transform function 'decide' to using a single arrow function
@@ -33,10 +33,25 @@ const result = arr
   .reduce((a, b) => a + b)
 console.log(result)
 
-// Assignment destructuring
+// Assignment destructuring: Arrays
+const [a, b, ...rest] = [10, 20, 30, 40, 50]
+console.log(rest)
 
-// Rest parameter
+const { name, middle = 'J', lastname } = { name: 'Luis', lastname: 'Atencio' }
+console.log('Full name: ', `${name} ${middle} ${lastname}`)
 
-// Parameter spread
+// Spread syntax
+function sum(x, y, z) {
+  return x + y + z
+}
+const numbers = [1, 2, 3]
+console.log(sum(...numbers))
 
+// Variable-length arguments
+function allValid(...args) {
+  return args.every(a => a !== null)
+}
+
+console.log('All valid?', allValid(1, 2, 3))
+console.log('All valid?', allValid(1, 2, null, 3))
 console.log('%s\x1b[0m', 'End of unit 1')
