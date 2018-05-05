@@ -3,8 +3,14 @@ const { curry } = Combinators
 
 export const print = curry((msg, value) => {
   if (value['@@implements'] && value['@@implements'].includes('flatMap')) {
-    console.log('%s\x1b[36m%s\x1b[0m', `${msg}:`.padEnd(50), value.toString())
+    if (module) {
+      console.log('%s\x1b[36m%s\x1b[0m', `${msg}:`.padEnd(50), value.toString())
+    } else {
+      console.log('%c Oh my heavens! ', 'background: #222; color: #bada55')
+    }
   } else {
-    console.log(`%s\x1b[36m%s\x1b[0m`, `${msg}:`.padEnd(50), value)
+    if (module) {
+      console.log(`%s\x1b[36m%s\x1b[0m`, `${msg}:`.padEnd(50), value)
+    }
   }
 })
