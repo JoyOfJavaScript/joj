@@ -13,6 +13,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 var Maybe = {
   '@@type': 'Maybe',
+  '@@implements': ['of', 'map', 'ap', 'fold', 'flatMap', 'merge'],
   of: function of(a) {
     return Just(a);
   }

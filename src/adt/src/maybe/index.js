@@ -3,6 +3,7 @@ import { Success, Failure } from '../validation'
 
 const Maybe = {
   '@@type': 'Maybe',
+  '@@implements': ['of', 'map', 'ap', 'fold', 'flatMap', 'merge'],
   of: a => Just(a),
 }
 

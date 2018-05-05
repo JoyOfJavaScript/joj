@@ -3,7 +3,7 @@
  *
  * @author Luis Atencio
  */
-console.log('-------Beginning of unit 7-------')
+print('-------Beginning of unit 7-------')
 import { Maybe, Validation } from '../adt'
 const { Success, Failure } = Validation
 
@@ -13,8 +13,8 @@ const { Success, Failure } = Validation
 // otherwise, it returns Nothing
 //
 const safeHead = ([h]) => Maybe.fromNullable(h)
-console.log('Head of [1,2,3]', safeHead([1, 2, 3]).merge())
-console.log('Is head of empty array nothing?', safeHead([]).isNothing())
+print('Head of [1,2,3]', safeHead([1, 2, 3]).merge())
+print('Is head of empty array nothing?', safeHead([]).isNothing())
 
 //
 // MAYBE => VALIDATION
@@ -32,15 +32,15 @@ const emptyVal1 = Maybe.fromNullable('')
   .flatMap(notEmpty)
   .merge()
 
-console.log('Empty test 1', emptyVal)
-console.log('Empty test 2', emptyVal1)
+print('Empty test 1', emptyVal)
+print('Empty test 2', emptyVal1)
 
 const nullVal = Maybe.fromNullable(null)
   .toValidation()
   .flatMap(notEmpty)
   .merge()
 
-console.log('Prints a null validation message', nullVal)
+print('Prints a null validation message', nullVal)
 
 //
 // Exercise 7 Validate an argument is not null nor empty
@@ -56,7 +56,7 @@ const validateArg = arg =>
     .ap(Maybe.fromNullable(arg).toValidation())
     .ap(notEmpty(arg))
 
-console.log('Prints validation messages', validateArg(null).merge())
-console.log('Print default value', validateArg(null).getOrElse('other'))
+print('Prints validation messages', validateArg(null).merge())
+print('Print default value', validateArg(null).getOrElse('other'))
 
-console.log('-------End of unit 7-------')
+print('-------End of unit 7-------')

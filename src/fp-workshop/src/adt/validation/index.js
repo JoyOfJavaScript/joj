@@ -14,7 +14,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 // Abstract
 var Validation = {
   '@@type': 'Validation',
-  '@@implements': ['of', 'map', 'ap', 'fold', 'bimap', 'merge'],
+  '@@implements': ['of', 'map', 'ap', 'fold', 'flatMap', 'bimap', 'merge'],
   of: function of(a) {
     return Success(a);
   }

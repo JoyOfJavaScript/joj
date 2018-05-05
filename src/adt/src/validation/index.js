@@ -4,7 +4,7 @@ import { Just, Nothing } from '../maybe'
 // Abstract
 const Validation = {
   '@@type': 'Validation',
-  '@@implements': ['of', 'map', 'ap', 'fold', 'bimap', 'merge'],
+  '@@implements': ['of', 'map', 'ap', 'fold', 'flatMap', 'bimap', 'merge'],
   of: a => Success(a),
 }
 

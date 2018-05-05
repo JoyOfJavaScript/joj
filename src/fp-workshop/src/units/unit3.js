@@ -3,7 +3,7 @@
  *
  * @author Luis Atencio
  */
-console.log('-------Beginning of unit 3-------')
+print('-------Beginning of unit 3-------')
 
 //
 // CURRY 2
@@ -11,8 +11,8 @@ console.log('-------Beginning of unit 3-------')
 const curry2 = f => a => b => f(a, b)
 const raise = curry2((b, e) => b ** e)
 const raiseTwo = raise(2)
-console.log('Raise two to...', raiseTwo)
-console.log('Raise two to the third.', raiseTwo(3))
+print('Raise two to...', raiseTwo)
+print('Raise two to the third.', raiseTwo(3))
 
 //
 // CURRY N
@@ -20,4 +20,4 @@ console.log('Raise two to the third.', raiseTwo(3))
 import { Combinators } from '../adt'
 const { curry } = Combinators
 
-console.log('-------End of unit 3-------')
+print('-------End of unit 3-------')

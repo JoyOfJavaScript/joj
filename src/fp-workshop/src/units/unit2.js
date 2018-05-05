@@ -2,7 +2,7 @@
  * Unit 2 Function Composition
  * @author Luis Atencio
  */
-console.log('\x1b[33m', '-------Beginning of unit 2-------')
+print('\x1b[33m', '-------Beginning of unit 2-------')
 
 //
 // COMPOSE 2
@@ -12,7 +12,7 @@ const toChars = Array.from
 const count = arr => (!arr ? 0 : arr.length)
 
 const countLetters = compose2(count, toChars)
-console.log('Letters in uxdevsummit:', countLetters('uxdevsummit'))
+print('Letters in uxdevsummit:', countLetters('uxdevsummit'))
 
 //
 // COMPOSE 3
@@ -23,7 +23,7 @@ const map = f => arr => arr.map(f)
 const toUpper = str => str.toUpperCase()
 
 const formatString = compose3(map(toUpper), map(padStr), Array.from)
-console.log(...formatString('uxdevsummit'))
+print(...formatString('uxdevsummit'))
 
 //
 // COMPOSE N
@@ -38,13 +38,13 @@ const input = 'The quick brown fox jumps over the lazy dog'
 // const tokenize = str => str.split(/\s/)
 // const count = arr => (!arr ? 0 : arr.length)
 // const countWords = compose(count, tokenize)
-//console.log('Number of words', countWords(input))
+//print('Number of words', countWords(input))
 
 // const countRec = ([a, ...tail]) => (!a ? 0 : 1 + countRec(tail))
 // const countWords2 = compose(countRec, tokenize)
-// console.log(
+// print(
 //   'Number of words',
 //   countWords2('The quick brown fox jumps over the lazy dog')
 // )
 
-console.log('%s\x1b[0m', '-------End of unit 2-------')
+print('%s\x1b[0m', '-------End of unit 2-------')

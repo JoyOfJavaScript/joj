@@ -1,9 +1,8 @@
 import https from 'https'
 
 console.log('-------Beginning Last Unit-------')
-import { Combinators, Maybe, Validation } from '../adt'
-const { Success, Failure } = Validation
-const { Just, Nothing } = Maybe
+import { print, header } from './util'
+import { Combinators, Maybe } from '../adt'
 const { compose, curry, flatMap, map, fold } = Combinators
 
 const API = 'https://www.googleapis.com/books/v1/volumes'
@@ -37,7 +36,7 @@ const orElse = curry((msg, maybe) => maybe.getOrElse(msg))
 
 const printSafeProperty = name =>
   compose(
-    then(console.log),
+    then(print('Safe property')),
     then(
       compose(
         orElse('Book property not found'),
@@ -62,10 +61,6 @@ const printSafeTitle = printSafeProperty('title')
  * Fetches the author of said book
  */
 const printSafeAuthors = printSafeProperty('authors')
-printSafeTitle(`${API}?q=isbn:0747532699`).then(() =>
-  console.log('-------THANKS!!!-------')
-)
+printSafeTitle(`${API}?q=isbn:0747532699`)
 
-printSafeAuthors(`${API}?q=isbn:0747532699`).then(() =>
-  console.log('-------THANKS!!!-------')
-)
+printSafeAuthors(`${API}?q=isbn:0747532699`).then(() => header('THANKS!'))
