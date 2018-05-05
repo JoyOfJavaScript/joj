@@ -16,6 +16,9 @@
 // // Unit 3: Currying
 // import unit3 from './units/unit3'
 
+// // Unit 4: Functor
+// import unit4 from './units/unit4'
+
 // Unit 5: Applicative
 // import unit5 from './units/unit5'
 
