@@ -62,5 +62,4 @@ const printSafeTitle = printSafeProperty('title')
  */
 const printSafeAuthors = printSafeProperty('authors')
 printSafeTitle(`${API}?q=isbn:0747532699`)
-
-printSafeAuthors(`${API}?q=isbn:0747532699`).then(() => header('THANKS!'))
+printSafeAuthors(`${API}?q=isbn:0747532699`)
