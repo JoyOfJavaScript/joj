@@ -3,9 +3,12 @@
  *
  * @author Luis Atencio
  */
-print('-------Beginning of unit 7-------')
+
+import { print } from './util'
 import { Maybe, Validation } from '../adt'
 const { Success, Failure } = Validation
+
+console.log('-------Beginning of unit 7-------')
 
 //
 // ARRAY => MAYBE
@@ -59,4 +62,4 @@ const validateArg = arg =>
 print('Prints validation messages', validateArg(null).merge())
 print('Print default value', validateArg(null).getOrElse('other'))
 
-print('-------End of unit 7-------')
+console.log('-------End of unit 7-------')

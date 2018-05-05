@@ -2,7 +2,8 @@
  * Unit 2 Function Composition
  * @author Luis Atencio
  */
-print('\x1b[33m', '-------Beginning of unit 2-------')
+import { print } from './util'
+console.log('-------Beginning of unit 2-------')
 
 //
 // COMPOSE 2
@@ -47,4 +48,4 @@ const input = 'The quick brown fox jumps over the lazy dog'
 //   countWords2('The quick brown fox jumps over the lazy dog')
 // )
 
-print('%s\x1b[0m', '-------End of unit 2-------')
+console.log('-------End of unit 2-------')

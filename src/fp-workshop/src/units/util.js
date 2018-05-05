@@ -1,10 +1,5 @@
-import art from 'ascii-art'
 import { Combinators } from '../adt'
 const { curry } = Combinators
-
-export function header(text) {
-  art.font(text, 'Doom', console.log)
-}
 
 export const print = curry((msg, value) => {
   if (value['@@implements'] && value['@@implements'].includes('flatMap')) {

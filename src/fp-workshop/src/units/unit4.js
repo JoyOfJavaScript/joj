@@ -3,10 +3,11 @@
  *
  * @author Luis Atencio
  */
+import { print } from './util'
 import { Combinators } from '../adt'
 const { compose, curry } = Combinators
 
-print('-------Beginning of unit 4-------')
+console.log('-------Beginning of unit 4-------')
 
 Function.prototype.map = function(f) {
   return compose(this, f)
@@ -26,4 +27,4 @@ print('Square and increment 2', squareInc(2))
 // Containers
 //
 
-print('-------End of unit 4-------')
+console.log('-------End of unit 4-------')

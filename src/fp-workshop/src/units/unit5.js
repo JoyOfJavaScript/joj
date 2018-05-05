@@ -3,9 +3,10 @@
  *
  * @author Luis Atencio
  */
+import { print } from './util'
 import { Maybe, Validation, Combinators } from '../adt'
 const { Success, Failure } = Validation
-print('-------Beginning of unit 5-------')
+console.log('-------Beginning of unit 5-------')
 
 const { curry } = Combinators
 
@@ -48,4 +49,4 @@ const breakSentence = sentence =>
 print('Break "Hello World"', breakSentence('Hello World').toString())
 print('Break "Hello World"', breakSentence(null).toString())
 
-print('-------End of unit 5-------')
+console.log('-------End of unit 5-------')

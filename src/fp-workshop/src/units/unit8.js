@@ -1,7 +1,7 @@
 import https from 'https'
 
 console.log('-------Beginning Last Unit-------')
-import { print, header } from './util'
+import { print } from './util'
 import { Combinators, Maybe } from '../adt'
 const { compose, curry, flatMap, map, fold } = Combinators
 
