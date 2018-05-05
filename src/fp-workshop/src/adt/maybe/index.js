@@ -21,7 +21,7 @@ var Maybe = {
 var Just = exports.Just = Maybe.Just = function (a) {
   var _Object$assign;
 
-  return Object.assign((_Object$assign = {}, _defineProperty(_Object$assign, Symbol.toStringTag, 'Maybe#Just'), _defineProperty(_Object$assign, Symbol.for('validation'), function () {
+  return Object.assign((_Object$assign = {}, _defineProperty(_Object$assign, Symbol.for('validation'), function () {
     return (0, _validation.Success)(a);
   }), _defineProperty(_Object$assign, 'isJust', function isJust() {
     return true;
@@ -54,13 +54,15 @@ var Just = exports.Just = Maybe.Just = function (a) {
     return a;
   }), _defineProperty(_Object$assign, 'toValidation', function toValidation() {
     return (0, _validation.Success)(a);
+  }), _defineProperty(_Object$assign, 'toString', function toString() {
+    return 'Maybe#Just (' + a + ')';
   }), _Object$assign), Maybe);
 };
 
 var Nothing = exports.Nothing = Maybe.Nothing = function (b) {
   var _Object$assign2;
 
-  return Object.assign((_Object$assign2 = {}, _defineProperty(_Object$assign2, Symbol.toStringTag, 'Maybe#Nothing'), _defineProperty(_Object$assign2, Symbol.for('validation'), function () {
+  return Object.assign((_Object$assign2 = {}, _defineProperty(_Object$assign2, Symbol.for('validation'), function () {
     return (0, _validation.Failure)(['Expected non-null argument']);
   }), _defineProperty(_Object$assign2, 'isJust', function isJust() {
     return false;
@@ -73,7 +75,7 @@ var Nothing = exports.Nothing = Maybe.Nothing = function (b) {
   }), _defineProperty(_Object$assign2, 'ap', function ap(Ma) {
     return Nothing();
   }), _defineProperty(_Object$assign2, 'fold', function fold(_) {
-    return errorWith('Unable to fold from a Maybe.Nothing');
+    return Nothing();
   }), _defineProperty(_Object$assign2, 'get', function get() {
     return errorWith('Unable to get from a Maybe.Nothing');
   }), _defineProperty(_Object$assign2, 'merge', function merge() {
@@ -86,6 +88,8 @@ var Nothing = exports.Nothing = Maybe.Nothing = function (b) {
     throw error;
   }), _defineProperty(_Object$assign2, 'orElseThrow', function orElseThrow(error) {
     throw error;
+  }), _defineProperty(_Object$assign2, 'toString', function toString() {
+    return 'Maybe#Nothing ()';
   }), _Object$assign2), Maybe);
 };
 

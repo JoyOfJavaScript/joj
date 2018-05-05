@@ -11,7 +11,6 @@ const Validation = {
 export const Success = (Validation.Success = a =>
   Object.assign(
     {
-      [Symbol.toStringTag]: 'Validation#Success',
       [Symbol.for('maybe')]: () => Just(a),
       isSuccess: () => true,
       isFailure: () => false,
@@ -36,6 +35,7 @@ export const Success = (Validation.Success = a =>
       merge: () => a,
       getOrElse: defaultValue => a,
       toMaybe: () => Just(a),
+      toString: () => `Validation#Success (${a})`,
     },
     Validation
   ))
@@ -43,7 +43,6 @@ export const Success = (Validation.Success = a =>
 export const Failure = (Validation.Failure = b =>
   Object.assign(
     {
-      [Symbol.toStringTag]: 'Validation#Failure',
       [Symbol.for('maybe')]: () => Nothing(),
       isSuccess: () => false,
       isFailure: () => true,
@@ -60,6 +59,7 @@ export const Failure = (Validation.Failure = b =>
       merge: () => b,
       getOrElse: defaultValue => defaultValue,
       toMaybe: () => Nothing(),
+      toString: () => `Validation#Failure (${b})`,
     },
     Validation
   ))

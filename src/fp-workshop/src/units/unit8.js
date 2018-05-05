@@ -6,6 +6,8 @@ const { Success, Failure } = Validation
 const { Just, Nothing } = Maybe
 const { compose, curry, flatMap, map, fold } = Combinators
 
+const API = 'https://www.googleapis.com/books/v1/volumes'
+
 /**
  * Fetch data from any URL and return a promise
  *
@@ -31,24 +33,39 @@ function fetch(url) {
 const safeHead = ([h]) => Maybe.fromNullable(h)
 const then = curry((f, P) => P.then(f))
 const prop = curry((name, obj) => obj[name])
+const orElse = curry((msg, maybe) => maybe.getOrElse(msg))
 
-const printSafeTitle = compose(
-  then(console.log),
-  then(
-    compose(
-      fold,
-      map(prop('title')),
-      map(prop('volumeInfo')),
-      flatMap(safeHead),
-      map(prop('items'))
-    )
-  ),
-  then(Maybe.fromNullable),
-  fold,
-  map(fetch),
-  Maybe.fromNullable
+const printSafeProperty = name =>
+  compose(
+    then(console.log),
+    then(
+      compose(
+        orElse('Book property not found'),
+        map(prop(name)),
+        map(prop('volumeInfo')),
+        flatMap(safeHead),
+        map(prop('items'))
+      )
+    ),
+    then(Maybe.fromNullable),
+    fold,
+    map(fetch),
+    Maybe.fromNullable
+  )
+
+/**
+ * Fetches a book from the provided URL and prints the title of that book
+ */
+const printSafeTitle = printSafeProperty('title')
+
+/**
+ * Fetches the author of said book
+ */
+const printSafeAuthors = printSafeProperty('authors')
+printSafeTitle(`${API}?q=isbn:0747532699`).then(() =>
+  console.log('-------THANKS!!!-------')
 )
 
-printSafeTitle(
-  'https://www.googleapis.com/books/v1/volumes?q=isbn:0747532699'
-).then(() => console.log('-------THANKS!!!-------'))
+printSafeAuthors(`${API}?q=isbn:0747532699`).then(() =>
+  console.log('-------THANKS!!!-------')
+)

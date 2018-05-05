@@ -16,5 +16,11 @@
 // // Unit 3: Currying
 // import unit3 from './units/unit3'
 
-// Unit 7: Natural Transformations
-import unit8 from './units/unit8'
+// Unit 5: Applicative
+import unit5 from './units/unit5'
+
+// Unit 7: Natural transformations
+// import unit7 from './units/unit7'
+
+// // Unit 7: Dealign with effects
+// import unit8 from './units/unit8'

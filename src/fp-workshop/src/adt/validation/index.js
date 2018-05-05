@@ -23,7 +23,7 @@ var Validation = {
 var Success = exports.Success = Validation.Success = function (a) {
   var _Object$assign;
 
-  return Object.assign((_Object$assign = {}, _defineProperty(_Object$assign, Symbol.toStringTag, 'Validation#Success'), _defineProperty(_Object$assign, Symbol.for('maybe'), function () {
+  return Object.assign((_Object$assign = {}, _defineProperty(_Object$assign, Symbol.for('maybe'), function () {
     return (0, _maybe.Just)(a);
   }), _defineProperty(_Object$assign, 'isSuccess', function isSuccess() {
     return true;
@@ -53,13 +53,15 @@ var Success = exports.Success = Validation.Success = function (a) {
     return a;
   }), _defineProperty(_Object$assign, 'toMaybe', function toMaybe() {
     return (0, _maybe.Just)(a);
+  }), _defineProperty(_Object$assign, 'toString', function toString() {
+    return 'Validation#Success (' + a + ')';
   }), _Object$assign), Validation);
 };
 
 var Failure = exports.Failure = Validation.Failure = function (b) {
   var _Object$assign2;
 
-  return Object.assign((_Object$assign2 = {}, _defineProperty(_Object$assign2, Symbol.toStringTag, 'Validation#Failure'), _defineProperty(_Object$assign2, Symbol.for('maybe'), function () {
+  return Object.assign((_Object$assign2 = {}, _defineProperty(_Object$assign2, Symbol.for('maybe'), function () {
     return (0, _maybe.Nothing)();
   }), _defineProperty(_Object$assign2, 'isSuccess', function isSuccess() {
     return false;
@@ -87,6 +89,8 @@ var Failure = exports.Failure = Validation.Failure = function (b) {
     return defaultValue;
   }), _defineProperty(_Object$assign2, 'toMaybe', function toMaybe() {
     return (0, _maybe.Nothing)();
+  }), _defineProperty(_Object$assign2, 'toString', function toString() {
+    return 'Validation#Failure (' + b + ')';
   }), _Object$assign2), Validation);
 };
 
