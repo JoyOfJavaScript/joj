@@ -36,16 +36,16 @@ const { compose } = Combinators
 // Exercise 2 Count the number of words using this input variable
 //
 const input = 'The quick brown fox jumps over the lazy dog'
-// const tokenize = str => str.split(/\s/)
-// const count = arr => (!arr ? 0 : arr.length)
-// const countWords = compose(count, tokenize)
-//print('Number of words', countWords(input))
+const tokenize = str => str.split(/\s/)
+const count = arr => (!arr ? 0 : arr.length)
+const countWords = compose(count, tokenize)
+print('Number of words', countWords(input))
 
-// const countRec = ([a, ...tail]) => (!a ? 0 : 1 + countRec(tail))
-// const countWords2 = compose(countRec, tokenize)
-// print(
-//   'Number of words',
-//   countWords2('The quick brown fox jumps over the lazy dog')
-// )
+const countRec = ([a, ...tail]) => (!a ? 0 : 1 + countRec(tail))
+const countWords2 = compose(countRec, tokenize)
+print(
+  'Number of words',
+  countWords2('The quick brown fox jumps over the lazy dog')
+)
 
 console.log('--------------End of unit 2--------------')
