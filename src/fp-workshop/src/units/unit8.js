@@ -9,6 +9,8 @@ import { print } from './util'
 import { Combinators, Maybe } from '../adt'
 const { compose, curry, flatMap, map, fold } = Combinators
 
+console.log('--------------Last unit--------------')
+
 // Google Books API
 const API = 'https://www.googleapis.com/books/v1/volumes'
 
