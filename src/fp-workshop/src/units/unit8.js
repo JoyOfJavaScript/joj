@@ -1,10 +1,15 @@
-import https from 'https'
+/**
+ * Unit 8 Dealing with effects
+ *
+ * @author Luis Atencio
+ */
 
-console.log('--------------Beginning Last Unit--------------')
+import https from 'https'
 import { print } from './util'
 import { Combinators, Maybe } from '../adt'
 const { compose, curry, flatMap, map, fold } = Combinators
 
+// Google Books API
 const API = 'https://www.googleapis.com/books/v1/volumes'
 
 /**
@@ -13,8 +18,8 @@ const API = 'https://www.googleapis.com/books/v1/volumes'
  * @param {String} url URL to fetch data from
  * @return {Promise}   JSON response wrapped in a promise
  */
-function fetch(url) {
-  return new Promise((resolve, reject) => {
+const fetch = url =>
+  new Promise((resolve, reject) => {
     https.get(url, res => {
       const data = []
       res.on('data', chunk => {
@@ -27,7 +32,6 @@ function fetch(url) {
       res.on('error', err => reject(new Error(err)))
     })
   })
-}
 
 const safeHead = ([h]) => Maybe.fromNullable(h)
 const then = curry((f, P) => P.then(f))

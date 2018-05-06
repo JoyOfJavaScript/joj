@@ -1,5 +1,6 @@
 /**
  * Unit 2 Function Composition
+ *
  * @author Luis Atencio
  */
 import { print } from './util'
@@ -37,7 +38,6 @@ const { compose } = Combinators
 //
 const input = 'The quick brown fox jumps over the lazy dog'
 const tokenize = str => str.split(/\s/)
-const count = arr => (!arr ? 0 : arr.length)
 const countWords = compose(count, tokenize)
 print('Number of words', countWords(input))
 

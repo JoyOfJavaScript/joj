@@ -1,5 +1,6 @@
 /**
  * Unit 1 JavaScript ES6/ES7 Essentials
+ *
  * @author Luis Atencio
  */
 import { print } from './util'
@@ -50,7 +51,7 @@ print('Summing 1,2,3', sum(...numbers))
 
 // Variable-length arguments
 function allValid(...args) {
-  return args.every(a => a !== null)
+  return args.every(x => x !== null)
 }
 
 print('All valid?', allValid(1, 2, 3))

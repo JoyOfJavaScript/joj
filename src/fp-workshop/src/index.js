@@ -8,25 +8,25 @@
 // OUTLINE
 //
 // Unit 1: JavaScript Essentials
-// import unit1 from './units/unit1'
+import unit1 from './units/unit1'
 
-// // Unit 2: Function composition
-// import unit2 from './units/unit2'
+// Unit 2: Function composition
+import unit2 from './units/unit2'
 
-// // Unit 3: Currying
+// Unit 3: Currying
 import unit3 from './units/unit3'
 
-// // Unit 4: Functor
-// import unit4 from './units/unit4'
+// Unit 4: Functor
+import unit4 from './units/unit4'
 
 // Unit 5: Applicative
-// import unit5 from './units/unit5'
+import unit5 from './units/unit5'
 
 // Unit 6: Monads
-// import unit6 from './units/unit6'
+import unit6 from './units/unit6'
 
 // Unit 7: Natural transformations
-// import unit7 from './units/unit7'
+import unit7 from './units/unit7'
 
-// // Unit 8: Dealign with effects
-// import unit8 from './units/unit8'
+// Unit 8: Dealign with effects
+import unit8 from './units/unit8'
