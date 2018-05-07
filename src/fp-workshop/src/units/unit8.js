@@ -88,22 +88,28 @@ printSafeAuthors(`${API}?q=isbn:0747532699`)
 import { Observable } from 'rxjs/Observable'
 import 'rxjs/add/observable/fromPromise'
 import 'rxjs/add/observable/from'
+import 'rxjs/add/observable/of'
 import 'rxjs/add/operator/switchMap'
 import 'rxjs/add/operator/map'
-import 'rxjs/add/operator/do'
+import 'rxjs/add/operator/filter'
 import 'rxjs/add/operator/pluck'
 
-Observable.fromPromise(fetch(`${API}?q=isbn:0747532699`))
-  // Natural transformation
-  .switchMap(maybeToPromise)
-  .pluck('items')
-  // Natural transformation Observable([a]) => Observable(a)
-  .switchMap(Observable.from)
-  // Read properties
-  .pluck('volumeInfo')
-  .pluck('title')
-  .subscribe(
-    value => print('From Observable', value),
-    error => print(`[ERROR] Error thrown`, error.message),
-    () => print('Done!')
-  )
+const readProperty$ = curry((name, url) =>
+  Observable.of(url)
+    .filter(u => u && u.length > 0)
+    .switchMap(u => Observable.fromPromise(fetch(u)))
+    // Natural transformation
+    .switchMap(maybeToPromise)
+    .pluck('items')
+    // Natural transformation Observable([a]) => Observable(a)
+    .switchMap(Observable.from)
+    // Read properties
+    .pluck('volumeInfo')
+    .pluck(name)
+)
+const readTitle$ = readProperty$('title')
+readTitle$(`${API}?q=isbn:0747532699`).subscribe(
+  value => print('From Observable', value),
+  error => print(`[ERROR] Error thrown`, error.message),
+  () => print('Done!')
+)
