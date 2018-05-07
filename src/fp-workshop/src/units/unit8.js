@@ -4,6 +4,7 @@
  * @author Luis Atencio
  */
 
+import Rx from 'rxjs'
 import https from 'https'
 import { print } from './util'
 import { Combinators, Maybe } from '../adt'
@@ -42,19 +43,29 @@ const orElse = curry((msg, maybe) => maybe.getOrElse(msg))
 
 const printSafeProperty = name =>
   compose(
+    // Print the information found
     then(print('Safe property')),
     then(
       compose(
+        // Print message if any of this fails
         orElse('Book property not found'),
+        // Extract name of property of interest (title | author)
         map(prop(name)),
+        // Extract the volumeInfo
         map(prop('volumeInfo')),
+        // Safe read first element
         flatMap(safeHead),
+        // Extract the items property
         map(prop('items'))
       )
     ),
+    // Wrap the result of the promise
     then(Maybe.fromNullable),
+    // Fold the promise
     fold,
+    // Fetch data
     map(fetch),
+    // Lift input to function into Maybe
     Maybe.fromNullable
   )
 
@@ -69,3 +80,25 @@ const printSafeTitle = printSafeProperty('title')
 const printSafeAuthors = printSafeProperty('authors')
 printSafeTitle(`${API}?q=isbn:0747532699`)
 printSafeAuthors(`${API}?q=isbn:0747532699`)
+
+//
+// OBSERVABLES
+//
+Rx.Observable.from(fetch(`${API}?q=isbn:0747532699`))
+  .map(
+    compose(
+      // Extract name of property of interest (title | author)
+      map(prop('title')),
+      // Extract the volumeInfo
+      map(prop('volumeInfo')),
+      // Safe read first element
+      flatMap(safeHead),
+      // Extract the items property
+      map(prop('items'))
+    )
+  )
+  .subscribe(
+    value => print('Value from Observable', value),
+    error => print(`[ERROR] Error thrown`, error.message),
+    () => print('Done!')
+  )

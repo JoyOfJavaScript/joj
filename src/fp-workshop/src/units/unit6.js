@@ -12,7 +12,7 @@ console.log('--------------Beginning of unit 6--------------')
 // Helpers
 const add = curry((a, b) => a + b)
 const isOdd = a => a % 2 === 1
-const square = a => a * a
+const square = a => a ** 2
 const prop = curry((name, obj) => obj[name])
 
 //

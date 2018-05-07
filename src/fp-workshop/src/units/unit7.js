@@ -9,6 +9,7 @@ import { Maybe, Validation } from '../adt'
 const { Success, Failure } = Validation
 
 console.log('--------------Beginning of unit 7--------------')
+const square = a => a ** 2
 
 //
 // ARRAY => MAYBE
@@ -18,6 +19,14 @@ console.log('--------------Beginning of unit 7--------------')
 const safeHead = ([h]) => Maybe.fromNullable(h)
 print('Head of [1,2,3]', safeHead([1, 2, 3]).merge())
 print('Is head of empty array nothing?', safeHead([]).isNothing())
+
+//
+// NATURAL TRANSFORMATION LAW
+//
+// nt(x).map(f) == nt(x.map(f))
+
+print('Left site ', safeHead([1, 2, 3]).map(square))
+print('Right side', safeHead([1, 2, 3].map(square)))
 
 //
 // MAYBE => VALIDATION
