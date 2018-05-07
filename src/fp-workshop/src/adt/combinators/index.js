@@ -55,9 +55,9 @@ var map = curry(function (f, M) {
 var flatMap = curry(function (f, M) {
   return M.flatMap(f);
 });
-var fold = function fold(M) {
-  return M.fold();
-};
+var fold = curry(function (f, M) {
+  return M.fold(f);
+});
 
 module.exports = {
   isFunction: isFunction,

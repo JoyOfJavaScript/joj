@@ -16,7 +16,7 @@ const curry = fn => (...args1) =>
 // ADT helpers
 const map = curry((f, M) => M.map(f))
 const flatMap = curry((f, M) => M.flatMap(f))
-const fold = M => M.fold()
+const fold = curry((f, M) => M.fold(f))
 
 module.exports = {
   isFunction,

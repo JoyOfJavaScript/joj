@@ -29,8 +29,11 @@ const fetch = url =>
         data.push(chunk)
       })
       res.on('end', function() {
-        const json = JSON.parse(data.join(''))
-        resolve(json)
+        if (data.length > 0) {
+          resolve(Maybe.Just(JSON.parse(data.join(''))))
+        } else {
+          resolve(Maybe.Nothing())
+        }
       })
       res.on('error', err => reject(new Error(err)))
     })
@@ -40,6 +43,8 @@ const safeHead = ([h]) => Maybe.fromNullable(h)
 const then = curry((f, P) => P.then(f))
 const prop = curry((name, obj) => obj[name])
 const orElse = curry((msg, maybe) => maybe.getOrElse(msg))
+
+const maybeToPromise = m => m.fold(a => Promise.resolve(a))
 
 const printSafeProperty = name =>
   compose(
@@ -54,17 +59,15 @@ const printSafeProperty = name =>
         // Extract the volumeInfo
         map(prop('volumeInfo')),
         // Safe read first element
-        flatMap(safeHead),
+        safeHead,
         // Extract the items property
-        map(prop('items'))
+        prop('items')
       )
     ),
-    // Wrap the result of the promise
-    then(Maybe.fromNullable),
-    // Fold the promise
-    fold,
+    // Natural transformation
+    then(maybeToPromise),
     // Fetch data
-    map(fetch),
+    fold(fetch),
     // Lift input to function into Maybe
     Maybe.fromNullable
   )
@@ -84,21 +87,21 @@ printSafeAuthors(`${API}?q=isbn:0747532699`)
 //
 // OBSERVABLES
 //
-Rx.Observable.from(fetch(`${API}?q=isbn:0747532699`))
-  .map(
-    compose(
-      // Extract name of property of interest (title | author)
-      map(prop('title')),
-      // Extract the volumeInfo
-      map(prop('volumeInfo')),
-      // Safe read first element
-      flatMap(safeHead),
-      // Extract the items property
-      map(prop('items'))
-    )
-  )
-  .subscribe(
-    value => print('Value from Observable', value),
-    error => print(`[ERROR] Error thrown`, error.message),
-    () => print('Done!')
-  )
+// Rx.Observable.from(fetch(`${API}?q=isbn:0747532699`))
+//   .map(
+//     compose(
+//       // Extract name of property of interest (title | author)
+//       map(prop('title')),
+//       // Extract the volumeInfo
+//       map(prop('volumeInfo')),
+//       // Safe read first element
+//       flatMap(safeHead),
+//       // Extract the items property
+//       map(prop('items'))
+//     )
+//   )
+//   .subscribe(
+//     value => print('Value from Observable', value),
+//     error => print(`[ERROR] Error thrown`, error.message),
+//     () => print('Done!')
+//   )
