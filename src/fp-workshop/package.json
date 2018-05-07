@@ -22,7 +22,7 @@
     "eslint-plugin-fp": "^2.3.0",
     "flow-bin": "^0.59.0",
     "mocha": "^4.0.1",
-    "nodemon": "^1.11.0",
+    "nodemon": "^1.17.4",
     "sinon": "^1.17.7",
     "sinon-chai": "^2.8.0"
   },
@@ -37,6 +37,6 @@
   "dependencies": {
     "crypto-browserify": "^3.12.0",
     "https-browserify": "^1.0.0",
-    "rxjs": "^6.1.0"
+    "rxjs": "^5.5.10"
   }
 }

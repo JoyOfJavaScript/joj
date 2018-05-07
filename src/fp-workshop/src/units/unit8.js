@@ -3,12 +3,10 @@
  *
  * @author Luis Atencio
  */
-
-import Rx from 'rxjs'
 import https from 'https'
 import { print } from './util'
 import { Combinators, Maybe } from '../adt'
-const { compose, curry, flatMap, map, fold } = Combinators
+const { compose, curry, map, fold } = Combinators
 
 console.log('--------------Last unit--------------')
 
@@ -58,13 +56,13 @@ const printSafeProperty = name =>
         map(prop(name)),
         // Extract the volumeInfo
         map(prop('volumeInfo')),
-        // Safe read first element
+        // Safe read first element (second natural transformation)
         safeHead,
         // Extract the items property
         prop('items')
       )
     ),
-    // Natural transformation
+    // Extract the maybe out from the promise (First Natural transformation)
     then(maybeToPromise),
     // Fetch data
     fold(fetch),
@@ -87,21 +85,25 @@ printSafeAuthors(`${API}?q=isbn:0747532699`)
 //
 // OBSERVABLES
 //
-// Rx.Observable.from(fetch(`${API}?q=isbn:0747532699`))
-//   .map(
-//     compose(
-//       // Extract name of property of interest (title | author)
-//       map(prop('title')),
-//       // Extract the volumeInfo
-//       map(prop('volumeInfo')),
-//       // Safe read first element
-//       flatMap(safeHead),
-//       // Extract the items property
-//       map(prop('items'))
-//     )
-//   )
-//   .subscribe(
-//     value => print('Value from Observable', value),
-//     error => print(`[ERROR] Error thrown`, error.message),
-//     () => print('Done!')
-//   )
+import { Observable } from 'rxjs/Observable'
+import 'rxjs/add/observable/fromPromise'
+import 'rxjs/add/observable/from'
+import 'rxjs/add/operator/switchMap'
+import 'rxjs/add/operator/map'
+import 'rxjs/add/operator/do'
+import 'rxjs/add/operator/pluck'
+
+Observable.fromPromise(fetch(`${API}?q=isbn:0747532699`))
+  // Natural transformation
+  .switchMap(maybeToPromise)
+  .pluck('items')
+  // Natural transformation Observable([a]) => Observable(a)
+  .switchMap(Observable.from)
+  // Read properties
+  .pluck('volumeInfo')
+  .pluck('title')
+  .subscribe(
+    value => print('From Observable', value),
+    error => print(`[ERROR] Error thrown`, error.message),
+    () => print('Done!')
+  )
