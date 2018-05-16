@@ -1,4 +1,4 @@
 {
-  "plugins": ["transform-decorators"],
-  "presets": ["es2015", "stage-3", "flow"]
+  "plugins": ["transform-decorators", "@babel/plugin-syntax-import-meta"],
+  "presets": ["@babel/preset-env", "@babel/preset-stage-3"]
 }
