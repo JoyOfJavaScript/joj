@@ -44,6 +44,7 @@ class ServiceLocator {
         newInstance = this._prepareGetterInjection(this.repository, clazz)
         break
       default:
+        throw new Error(`Unsupported service preparation strategy: ${type}`)
     }
     this.repository.set(serviceName, newInstance)
     return newInstance
@@ -65,7 +66,9 @@ class ServiceLocator {
       clazz,
       deps.filter(dep => !!dep && dep.length > 0).map(dep => {
         if (!this.repository.has(dep)) {
-          throw new Error(`Dependency not found in service locator: ${dep}`)
+          throw new Error(
+            `Dependency not found in service locator: ${dep}. Make sure you're adding dependencies in the right order`
+          )
         }
         return repository[dep]
       }),
