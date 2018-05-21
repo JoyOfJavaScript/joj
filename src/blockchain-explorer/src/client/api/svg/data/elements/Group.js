@@ -1,6 +1,6 @@
-import HasTag from '../traits/HasTag'
+import HasTag from '../../../shared/attrs/core/HasTag'
 import CanRender from '../traits/CanRender'
-import Element from '../Element'
+import Element from '../../../shared/data/Element'
 
 const TAG = 'g'
 

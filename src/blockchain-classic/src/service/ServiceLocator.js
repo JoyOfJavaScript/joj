@@ -1,4 +1,4 @@
-class ServiceLocator {
+export default class ServiceLocator {
   repository
   static locator
 
@@ -34,14 +34,10 @@ class ServiceLocator {
     let newInstance = null
     switch (type) {
       case 'constructor':
-        newInstance = this._prepareConstructorInjection(
-          this.repository,
-          clazz,
-          deps
-        )
+        newInstance = _prepareConstructorInjection(this.repository, clazz, deps)
         break
       case 'getter':
-        newInstance = this._prepareGetterInjection(this.repository, clazz)
+        newInstance = _prepareGetterInjection(this.repository, clazz)
         break
       default:
         throw new Error(`Unsupported service preparation strategy: ${type}`)
@@ -49,32 +45,33 @@ class ServiceLocator {
     this.repository.set(serviceName, newInstance)
     return newInstance
   }
-
-  _prepareGetterInjection(repository, clazz) {
-    return new Proxy(Reflect.construct(clazz, [], clazz), {
-      get(target, key) {
-        if (repository.has(key)) {
-          return repository.get(key)
-        }
-        return target[key]
-      },
-    })
-  }
-
-  _prepareConstructorInjection(repository, clazz, deps = []) {
-    return Reflect.construct(
-      clazz,
-      deps.filter(dep => !!dep && dep.length > 0).map(dep => {
-        if (!this.repository.has(dep)) {
-          throw new Error(
-            `Dependency not found in service locator: ${dep}. Make sure you're adding dependencies in the right order`
-          )
-        }
-        return repository[dep]
-      }),
-      clazz
-    )
-  }
 }
 
-export default ServiceLocator
+//------------------------------------------------------------------------------------//
+//                      Private helper functions                                      //
+//------------------------------------------------------------------------------------//
+function _prepareGetterInjection(repository, clazz) {
+  return new Proxy(Reflect.construct(clazz, [], clazz), {
+    get(target, key) {
+      if (repository.has(key)) {
+        return repository.get(key)
+      }
+      return target[key]
+    },
+  })
+}
+
+function _prepareConstructorInjection(repository, clazz, deps = []) {
+  return Reflect.construct(
+    clazz,
+    deps.filter(dep => !!dep && dep.length > 0).map(dep => {
+      if (!repository.has(dep)) {
+        throw new Error(
+          `Dependency not found in service locator: ${dep}. Make sure you're adding dependencies in the right order`
+        )
+      }
+      return repository[dep]
+    }),
+    clazz
+  )
+}

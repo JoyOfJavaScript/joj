@@ -1,8 +1,8 @@
-import HasTag from '../traits/HasTag'
+import HasTag from '../../../shared/attrs/core/HasTag'
 import HasLocation from '../../data/attrs/space/HasLocation'
 import HasDimension from '../../data/attrs/space/HasDimension'
 import CanRender from '../traits/CanRender'
-import Element from '../Element'
+import Element from '../../../shared/data/Element'
 
 const TAG = 'rect'
 

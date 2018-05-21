@@ -64,9 +64,8 @@ const validateBlockchain$ = throttledClickListener$(
 
 client.onerror = function(event) {
   // an error occurred when sending/receiving data
-  console.log(event)
   if (event.type === 'error') {
-    console.log('Error recieved')
+    console.log('Error recieved', event)
   }
   // After calling this function, no more events will be sent
   validateBlockchain$.unsubscribe()

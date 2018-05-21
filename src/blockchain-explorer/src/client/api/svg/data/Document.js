@@ -1,23 +1,23 @@
-import HasTag from './traits/HasTag'
+import HasChildren from '../../shared/attrs/core/HasChildren'
 import HasDimension from './attrs/space/HasDimension'
 import CanRender from './traits/CanRender'
-import Element from './Element'
-
-const NS = 'http://www.w3.org/2000/svg'
-const TAG = 'svg'
+import Element from '../../shared/data/Element'
 
 const Document = (dimensions, ...children) => {
-  const state = {
+  const _state = {
     viewBox: `0 0 ${dimensions.width} ${dimensions.height}`,
-    xmlns: NS
+    xmlns: 'http://www.w3.org/2000/svg',
   }
   return Object.assign(
-    state,
-    Element('doc', children),
-    HasTag(TAG),
+    _state,
+    Element('doc', 'svg'),
+    HasChildren(flatten(children)),
     HasDimension(dimensions),
-    CanRender(state, 'viewBox', 'xmlns')
+    CanRender(_state, 'viewBox', 'xmlns')
   )
 }
+
+//HasChildren(flatten(children))
+const flatten = array => [].concat.apply([], array)
 
 export default Document

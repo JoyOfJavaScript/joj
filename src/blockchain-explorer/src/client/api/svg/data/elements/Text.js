@@ -1,7 +1,7 @@
-import HasTag from '../traits/HasTag'
+import HasTag from '../../../shared/attrs/core/HasTag'
 import HasLocation from '../../data/attrs/space/HasLocation'
 import CanRender from '../traits/CanRender'
-import Element from '../Element'
+import Element from '../../../shared/data/Element'
 import { curry } from '../../common/combinators'
 
 const TAG = 'text'
