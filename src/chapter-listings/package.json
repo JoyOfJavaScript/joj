@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
-    "babel-cli": "^6.23.0",
+    "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
     "babel-eslint": "^8.2.3",
     "babel-plugin-transform-builtin-extend": "^1.1.2",
@@ -20,9 +20,11 @@
     "babel-preset-stage-3": "^6.24.1",
     "chai": "4.1.0",
     "eslint": "^4.19.1",
+    "eslint-plugin-flowtype": "^2.47.1",
     "eslint-plugin-flowtype-errors": "^3.5.1",
     "eslint-plugin-fp": "^2.3.0",
     "flow-bin": "^0.59.0",
+    "flow-typed": "^2.4.0",
     "mocha": "^4.0.1",
     "nodemon": "^1.17.4",
     "rimraf": "^2.6.1",
@@ -30,17 +32,16 @@
     "sinon-chai": "^2.8.0"
   },
   "dependencies": {
-    "flow-typed": "^2.4.0",
     "@joj/adt": "file:../adt",
     "rxjs": "5.2.0"
   },
   "scripts": {
     "lint": "eslint src/",
     "lint-fix": "eslint src/ --fix",
+    "flow": "flow",
     "test": "mocha --recursive --require babel-register --require babel-polyfill --check-leaks",
     "test-dev": "nodemon --watch src/ --exec 'mocha --recursive --require babel-register --require babel-polyfill --check-leaks || true'",
     "test-debug": "mocha --recursive --debug-brk --require babel-register",
-    "flow": "flow",
     "flow-init": "flow init",
     "flow-status": "flow status"
   }
