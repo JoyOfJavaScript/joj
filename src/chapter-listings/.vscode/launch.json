@@ -11,7 +11,7 @@
       "cwd": "${workspaceRoot}",
       "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
       "args": [
-        "./test/*.js",
+        "./src/*.js",
         "--recursive",
         "--require",
         "babel-register",

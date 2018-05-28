@@ -39,8 +39,10 @@
     "lint": "eslint src/",
     "lint-fix": "eslint src/ --fix",
     "flow": "flow",
-    "test": "mocha --recursive --require babel-register --require babel-polyfill --check-leaks",
-    "test-dev": "nodemon --watch src/ --exec 'mocha --recursive --require babel-register --require babel-polyfill --check-leaks || true'",
+    "test":
+      "flow && mocha --recursive --require babel-register --require babel-polyfill --check-leaks",
+    "test-dev":
+      "nodemon --watch src/ --exec 'flow && mocha --recursive --require babel-register --require babel-polyfill --check-leaks src || true'",
     "test-debug": "mocha --recursive --debug-brk --require babel-register",
     "flow-init": "flow init",
     "flow-status": "flow status"

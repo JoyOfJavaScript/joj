@@ -2,7 +2,7 @@
 version: "2"
 services:
   chapter_listings:
-    image: "node:9"
+    image: "node:10.2.1-slim"
     user: "node"
     working_dir: /home/joj/src
     environment:
@@ -10,30 +10,30 @@ services:
       - NPM_CONFIG_LOGLEVEL=info
     volumes:
         - ./src:/home/joj/src
-    command: "npm --prefix /home/joj/src/chapter-listings run test-dev"
+    command: "npm --prefix /home/joj/src/chapter-listings run test-dev src"
 
-  blockchain:
-      image: "node:9"
-      user: "node"
-      working_dir: /home/joj/src
-      environment:
-        - NODE_ENV=dev
-        - NPM_CONFIG_LOGLEVEL=info
-      volumes:
-        - ./src:/home/joj/src
-      command: "npm --prefix /home/joj/src/blockchain run test-dev"
+  # blockchain:
+  #     image: "node:9"
+  #     user: "node"
+  #     working_dir: /home/joj/src
+  #     environment:
+  #       - NODE_ENV=dev
+  #       - NPM_CONFIG_LOGLEVEL=info
+  #     volumes:
+  #       - ./src:/home/joj/src
+  #     command: "npm --prefix /home/joj/src/blockchain run test-dev"
 
-  ui:
-      image: "node:9"
-      user: "node"
-      working_dir: /home/joj/src
-      environment:
-        - NODE_ENV=dev
-        - NPM_CONFIG_LOGLEVEL=info
-      volumes:
-        - ./src:/home/joj/src
-      ports:
-        - "8181:8181"
-      expose:
-        - "8181"
-      command: "npm --prefix /home/joj/src/ui start"
+  # ui:
+  #     image: "node:9"
+  #     user: "node"
+  #     working_dir: /home/joj/src
+  #     environment:
+  #       - NODE_ENV=dev
+  #       - NPM_CONFIG_LOGLEVEL=info
+  #     volumes:
+  #       - ./src:/home/joj/src
+  #     ports:
+  #       - "8181:8181"
+  #     expose:
+  #       - "8181"
+  #     command: "npm --prefix /home/joj/src/ui start"

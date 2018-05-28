@@ -17,6 +17,7 @@ describe('Object Composition', () => {
     const Div = compose({}, HasId('myDiv'), HasTag('div'))
     expect(Div.id).to.be.equal('myDiv')
     expect(Div.tag).to.be.equal('div')
+    console.log(Div)
     expect(Div.isHtmlTag()).to.be.true
   })
   it('Uses imperative concat with spread syntax', () => {

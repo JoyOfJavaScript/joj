@@ -25,7 +25,7 @@ describe('Composition with types', () => {
       read
     )
     const file = path.join(__dirname, '..//..', 'res', 'sample.txt')
-    const result = countWords(123)
+    const result = countWords(file)
     console.log('Result is: ', result)
     expect(result).to.be.equal(7)
   })
