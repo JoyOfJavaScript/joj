@@ -1,3 +1,6 @@
+require('@babel/register')({
+  extensions: ['.ts', '.js', '.tsx', '.jsx'],
+})
 import { assert, expect } from 'chai'
 import { Combinators, Result } from '@joj/adt'
 import fs from 'fs'

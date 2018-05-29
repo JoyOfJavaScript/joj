@@ -1,3 +1,6 @@
+require('@babel/register')({
+  extensions: ['.ts', '.js', '.tsx', '.jsx'],
+})
 import { expect } from 'chai'
 
 describe('Object Composition', () => {
