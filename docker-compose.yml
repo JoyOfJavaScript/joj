@@ -1,6 +1,17 @@
 # https://github.com/nodejs/docker-node#create-a-dockerfile-in-your-nodejs-app-project
 version: "2"
 services:
+  adt:
+      image: "node:10.2.1-slim"
+      user: "node"
+      working_dir: /home/joj/src
+      environment:
+        - NODE_ENV=dev
+        - NPM_CONFIG_LOGLEVEL=info
+      volumes:
+        - ./src:/home/joj/src
+      command: "npm --prefix /home/joj/src/adt run build"
+  
   chapter_listings:
     image: "node:10.2.1-slim"
     user: "node"
@@ -12,8 +23,9 @@ services:
         - ./src:/home/joj/src
     command: "npm --prefix /home/joj/src/chapter-listings run test-dev src"
 
+
   # blockchain:
-  #     image: "node:9"
+  #     image: "node:10.2.1-slim"
   #     user: "node"
   #     working_dir: /home/joj/src
   #     environment:
