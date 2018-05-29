@@ -1,12 +1,14 @@
 {
-  "plugins": [
-    "transform-decorators",
+  "presets": [
     [
-      "babel-plugin-transform-builtin-extend",
+      "@babel/preset-env",
       {
-        "globals": ["Error", "Array"]
+        "targets": {
+          "node": "current"
+        },
+        "useBuiltIns": "usage",
+        "debug": true
       }
     ]
-  ],
-  "presets": ["env"]
+  ]
 }

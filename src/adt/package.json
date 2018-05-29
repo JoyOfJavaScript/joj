@@ -22,7 +22,7 @@
     "lint-fix": "eslint src/ --fix",
     "prepublish": "npm run build",
     "test":
-      "mocha --check-leaks --recursive --require test/testSetup test/**/*Spec.js ",
+      "mocha --check-leaks --recursive --require test/testSetup test/**/*Spec.js",
     "test-dev":
       "nodemon --watch src/ --watch test/ --exec 'mocha --recursive --require test/testSetup test/**/*Spec.js || true'",
     "flow": "flow",
