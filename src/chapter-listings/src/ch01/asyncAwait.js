@@ -1,8 +1,5 @@
-require('@babel/register')({
-  extensions: ['.ts', '.js', '.tsx', '.jsx'],
-})
-import { assert, expect } from 'chai'
-import { Combinators, Result } from '@joj/adt'
+import { assert } from 'chai'
+import { Combinators } from '@joj/adt'
 import fs from 'fs'
 import path from 'path'
 
@@ -57,7 +54,7 @@ describe('Async/Await', () => {
     assert.isTrue(result >= 6)
   })
 
-  it('Should count the words in a file using promises with either', async () => {
+  it('Should count the words in a file using promises', async () => {
     const exists = f =>
       new Promise((resolve, reject) => {
         fs.access(f, fs.constants.R_OK, err => {

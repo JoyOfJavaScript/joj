@@ -25,6 +25,6 @@ describe('Conversions', () => {
   it('Should convert from Validation#Failure to Maybe#Nothing', () => {
     const Ma = compose(toMaybe, notEmpty)
     assert.isOk(Ma('').isNothing())
-    assert.throws(() => Ma('').fold(), TypeError)
+    assert.throws(() => Ma('').get(), TypeError)
   })
 })
