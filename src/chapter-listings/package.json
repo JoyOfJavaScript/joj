@@ -24,7 +24,7 @@
     "sinon-chai": "^2.8.0"
   },
   "dependencies": {
-    "@joj/adt": "file:../adt",
+    "@joj/adt": "file:../adt/dist",
     "rxjs": "5.2.0"
   },
   "scripts": {

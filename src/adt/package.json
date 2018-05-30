@@ -2,7 +2,7 @@
   "name": "@joj/adt",
   "version": "1.0.0",
   "private": true,
-  "main": "./dist/index.js",
+  "main": "index.js",
   "description": "Functional Algebratic Types",
   "devDependencies": {
     "@babel/cli": "^7.0.0-beta.49",
@@ -30,7 +30,7 @@
     "test-dev":
       "nodemon --watch src/ --watch test/ --exec 'mocha --recursive --require test/testSetup test/**/*Spec.js || true'",
     "flow": "flow",
-    "build": "babel src --out-dir dist",
+    "build": "babel src --out-dir dist && cp -f package.json dist",
     "flow-init": "flow init",
     "flow-status": "flow status"
   }

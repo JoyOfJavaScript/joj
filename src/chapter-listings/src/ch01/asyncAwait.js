@@ -1,9 +1,7 @@
 import { assert } from 'chai'
-import { Combinators } from '@joj/adt'
+import { curry } from '@joj/adt/combinators'
 import fs from 'fs'
 import path from 'path'
-
-const { curry } = Combinators
 
 const decode = curry(
   (charset, buffer) => (!buffer ? '' : buffer.toString(charset))
