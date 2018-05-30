@@ -4,6 +4,7 @@ import fs from 'fs'
 import path from 'path'
 import { Combinators, Result } from '@joj/adt'
 
+
 const decode = (buffer: buffer$Encoding): string =>
   !buffer ? '' : buffer.toString()
 
@@ -29,20 +30,6 @@ describe('Composition with types', () => {
 
   it('Should read the contensts of a file into Result', () => {
     const { Ok, Error } = Result
-
-    type _Ok<T> = {
-      map: (*) => *,
-      get: () => T,
-      getOrElse: (d: string) => T,
-    }
-
-    type _Error = {
-      map: (*) => *,
-      get: Error,
-      getOrElse: (d: string) => string,
-    }
-
-    type _Result<T> = _Ok<T> | _Error
 
     const read: string => _Result<buffer$NonBufferEncoding> = name =>
       fs.existsSync(name)

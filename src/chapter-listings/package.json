@@ -19,9 +19,7 @@
     "flow-bin": "^0.59.0",
     "flow-typed": "^2.4.0",
     "mocha": "^4.0.1",
-    "nodemon": "^1.17.4",
-    "sinon": "^1.17.7",
-    "sinon-chai": "^2.8.0"
+    "nodemon": "^1.17.4"
   },
   "dependencies": {
     "@joj/adt": "file:../adt/dist",
@@ -31,8 +29,10 @@
     "lint": "eslint src/",
     "lint-fix": "eslint src/ --fix",
     "flow": "flow",
-    "test": "flow && mocha --recursive --require src/testSetup.js --check-leaks",
-    "test-dev": "nodemon --watch src/ --exec 'flow && mocha --recursive --require src/testSetup.js --check-leaks src || true'",
+    "test":
+      "flow && mocha --recursive --require src/testSetup.js --check-leaks",
+    "test-dev":
+      "nodemon --watch src/ --exec 'flow && mocha --recursive --require src/testSetup.js --check-leaks src || true'",
     "test-debug": "mocha --recursive --debug-brk --require babel-register",
     "flow-init": "flow init",
     "flow-status": "flow status"

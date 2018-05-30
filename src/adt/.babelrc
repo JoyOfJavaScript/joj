@@ -11,5 +11,6 @@
         "debug": true
       }
     ]
-  ]
+  ],
+  "ignore": ["src/_types/*.js"]
 }
