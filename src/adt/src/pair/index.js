@@ -1,4 +1,4 @@
-import { curry, compose } from '../combinators'
+import { curry, identity } from '../combinators'
 
 /**
  * Test whether some value is of type ctor

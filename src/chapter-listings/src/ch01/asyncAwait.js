@@ -13,8 +13,6 @@ const tokenize = str => (str || '').split(/\s+/)
 
 const count = arr => (!arr ? 0 : arr.length)
 
-const compose = (...fns) => x => fns.reduceRight((v, f) => f(v), x)
-
 describe('Async/Await', () => {
   it('Should count the words in a file using promises', async () => {
     const exists = f =>
