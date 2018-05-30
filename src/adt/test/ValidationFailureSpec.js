@@ -1,7 +1,6 @@
 import { assert } from 'chai'
-import { Validation } from '../src'
+import { Failure, Success } from '../src/validation'
 
-const { Failure, Success } = Validation
 const toLower = str => str.toLowerCase()
 const first = n => str => str.substring(0, n)
 const add = a => b => a + b

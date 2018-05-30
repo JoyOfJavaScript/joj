@@ -87,4 +87,3 @@ Maybe.fromValidation = Va => () => {
 }
 
 export default Maybe
-module.exports = Maybe

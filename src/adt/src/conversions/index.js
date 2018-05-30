@@ -8,7 +8,5 @@ const toOther = sym => M => {
   )
 }
 
-module.exports = {
-  toValidation: toOther(Symbol.for('validation')),
-  toMaybe: toOther(Symbol.for('maybe')),
-}
+export const toValidation = toOther(Symbol.for('validation'))
+export const toMaybe = toOther(Symbol.for('maybe'))

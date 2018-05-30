@@ -1,5 +1,5 @@
 import { assert } from 'chai'
-import { Pair } from '../src'
+import Pair from '../src/pair'
 
 describe('Pair', () => {
   it('Should destructure a pair of strings  ', () => {

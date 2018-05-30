@@ -41,7 +41,7 @@
 
   "plugins": ["fp"],
 
-  "extends": ["eslint:recommended"],
+  "extends": ["eslint:recommended", "plugin:flowtype/recommended"],
 
   "rules": {
     "comma-dangle": 0,

@@ -83,4 +83,3 @@ Validation.fromMaybe = (Ma, ...errors) => () => {
 }
 
 export default Validation
-module.exports = Validation

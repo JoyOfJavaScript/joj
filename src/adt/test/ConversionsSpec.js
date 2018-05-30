@@ -1,10 +1,13 @@
 import { assert } from 'chai'
 import { toValidation, toMaybe } from '../src/conversions'
-import { Maybe, Validation as V } from '../src'
+import Maybe from '../src/maybe'
+import Validation from '../src/validation'
 import { compose } from '../src/combinators'
 
 const notEmpty = str =>
-  str && str.length > 0 ? V.Success(str) : V.Failure(['String is empty'])
+  str && str.length > 0
+    ? Validation.Success(str)
+    : Validation.Failure(['String is empty'])
 
 describe('Conversions', () => {
   it('Should convert from Maybe#Just to Validation#Succcess', () => {

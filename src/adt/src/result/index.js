@@ -88,4 +88,3 @@ Result.fromValidation = Va => () => {
 }
 
 export default Result
-module.exports = Result

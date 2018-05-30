@@ -1,8 +1,9 @@
 import { assert } from 'chai'
-import { Validation, Maybe, Combinators } from '../src'
+import Validation, { Success, Failure } from '../src/validation'
+import Maybe from '../src/maybe'
+import { curry } from '../src/combinators'
 
-const { Success, Failure } = Validation
-const { curry } = Combinators
+//const { Success, Failure } = Validation
 
 const toUpper = str => str.toUpperCase()
 

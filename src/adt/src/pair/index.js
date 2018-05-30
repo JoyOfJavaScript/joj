@@ -1,4 +1,4 @@
-import { curry, identity } from '../combinators'
+import { curry, compose } from '../combinators'
 
 /**
  * Test whether some value is of type ctor
@@ -81,4 +81,3 @@ Pair.TYPE = Pair(String, String)('', '')
 Pair['@@type'] = 'Pair'
 
 export default Pair
-module.exports = Pair

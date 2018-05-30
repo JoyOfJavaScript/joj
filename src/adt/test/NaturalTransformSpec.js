@@ -1,9 +1,10 @@
 import { assert } from 'chai'
-import { Maybe, Validation, Combinators } from '../src'
+import Validation from '../src/validation'
+import Maybe from '../src/maybe'
+import { compose } from '../src/combinators'
 import computeHash from './computeHash'
 
 const { Success, Failure } = Validation
-const { compose, curry } = Combinators
 
 describe('Natural transformation: List => Maybe', () => {
   it('SafeHead', () => {

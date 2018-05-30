@@ -1,8 +1,6 @@
 import { assert } from 'chai'
-import { Validation, Combinators } from '../src'
-
-const { Success, Failure } = Validation
-const { curry } = Combinators
+import Validation, { Success, Failure } from '../src/validation'
+import { curry } from '../src/combinators'
 
 const notEmpty = str =>
   str && str.length > 0 ? Success(str) : Failure(['String is empty'])
@@ -51,7 +49,7 @@ describe('Validation', () => {
     assert.deepEqual(
       [
         'String exceeds set length of 3',
-        'Strings does not start with a number'
+        'Strings does not start with a number',
       ],
       v.merge()
     )
@@ -67,7 +65,7 @@ describe('Validation', () => {
     assert.deepEqual(
       [
         'String exceeds set length of 3',
-        'Strings does not start with a number'
+        'Strings does not start with a number',
       ],
       v.merge()
     )

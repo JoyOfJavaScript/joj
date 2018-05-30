@@ -1,11 +1,11 @@
 // Function combinators
-const identity = a => a
-const isFunction = a => a && typeof a === 'function'
-const compose2 = (f, g) => (...args) => f(g(...args))
-const compose = (...fns) => fns.reduce(compose2)
-const pipe = (...fns) => fns.reduceRight(compose2)
-const flatten = array => [].concat.apply([], array)
-const curry = fn => (...args1) =>
+export const identity = a => a
+export const isFunction = a => a && typeof a === 'function'
+export const compose2 = (f, g) => (...args) => f(g(...args))
+export const compose = (...fns) => fns.reduce(compose2)
+export const pipe = (...fns) => fns.reduceRight(compose2)
+export const flatten = array => [].concat.apply([], array)
+export const curry = fn => (...args1) =>
   args1.length === fn.length
     ? fn(...args1)
     : (...args2) => {
@@ -14,18 +14,6 @@ const curry = fn => (...args1) =>
       }
 
 // ADT helpers
-const map = curry((f, M) => M.map(f))
-const flatMap = curry((f, M) => M.flatMap(f))
-const fold = curry((f, M) => M.fold(f))
-
-module.exports = {
-  isFunction,
-  curry,
-  pipe,
-  compose,
-  flatten,
-  identity,
-  map,
-  flatMap,
-  fold,
-}
+export const map = curry((f, M) => M.map(f))
+export const flatMap = curry((f, M) => M.flatMap(f))
+export const fold = curry((f, M) => M.fold(f))
