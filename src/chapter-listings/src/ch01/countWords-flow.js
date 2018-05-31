@@ -1,9 +1,11 @@
 //@flow
+declare var describe: any
+declare var it: any
 import { expect } from 'chai'
 import fs from 'fs'
 import path from 'path'
 import { Combinators, Result } from '@joj/adt'
-
+import type { _Result } from '@joj/adt/_types'
 
 const decode = (buffer: buffer$Encoding): string =>
   !buffer ? '' : buffer.toString()
@@ -31,21 +33,23 @@ describe('Composition with types', () => {
   it('Should read the contensts of a file into Result', () => {
     const { Ok, Error } = Result
 
-    const read: string => _Result<buffer$NonBufferEncoding> = name =>
-      fs.existsSync(name)
+    function read(name: string): _Result {
+      return fs.existsSync(name)
         ? Ok(fs.readFileSync(name))
         : Error('File does not exist!')
+    }
 
-    // expect(read(file).isOk()).to.be.true
+    expect(read(file).map(decode)).to.be.true
     // expect(read('xxx').isError()).to.be.true
 
-    const countResult: (_Result<buffer$NonBufferEncoding>) => number = r =>
-      r
-        .map(decode)
-        .map(tokenize)
-        .map(count)
-        .getOrElse(0)
+    // function countResult(result: _Result<buffer$Encoding>): number {
+    //   return result
+    //     .map(decode)
+    //     .map(tokenize)
+    //     .map(count)
+    //     .getOrElse(0)
+    // }
 
-    expect(countResult(read(file))).to.be.equal(7)
+    // expect(countResult(read(file))).to.be.equal(7)
   })
 })

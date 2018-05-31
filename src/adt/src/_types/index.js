@@ -1,20 +1,9 @@
 //@flow
-export type Union<T> = {
-  map: (*) => *,
+export type _ADT<T> = {
+  fold: <T2>(f: (a: T) => T2) => T2,
+  map: <T2>(f: (a: T) => T2) => _ADT<T2>,
+  flatMap: <T2>(f: (a: T) => _ADT<T2>) => _ADT<T2>,
+  //ap: <T2>(f: (a: T) => _ADT<T2>) => _ADT<T2>,
   get: () => T,
-  getOrElse: (d: string) => T,
+  getOrElse: any => any, // Using 'any' so that the return value can flow into any type
 }
-
-export type _Ok<T> = {
-  map: (*) => *,
-  get: () => T,
-  getOrElse: (d: string) => T,
-}
-
-export type _Error = {
-  map: (*) => *,
-  get: Error,
-  getOrElse: (d: string) => string,
-}
-
-export type _Result<T> = _Ok<T> | _Error

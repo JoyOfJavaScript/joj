@@ -29,10 +29,8 @@
     "lint": "eslint src/",
     "lint-fix": "eslint src/ --fix",
     "flow": "flow",
-    "test":
-      "flow && mocha --recursive --require src/testSetup.js --check-leaks",
-    "test-dev":
-      "nodemon --watch src/ --exec 'flow && mocha --recursive --require src/testSetup.js --check-leaks src || true'",
+    "test": "flow && mocha --recursive --require src/testSetup.js --check-leaks",
+    "test-dev": "nodemon --watch src/ --exec 'flow && mocha --recursive --require src/testSetup.js --check-leaks src || true'",
     "test-debug": "mocha --recursive --debug-brk --require babel-register",
     "flow-init": "flow init",
     "flow-status": "flow status"
