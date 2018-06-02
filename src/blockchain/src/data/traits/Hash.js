@@ -1,6 +1,7 @@
 import crypto from 'crypto'
 import LoggerHandler from '../../common/LoggerHandler'
-import { Combinators, Maybe } from '@joj/adt'
+import Maybe from '@joj/adt/maybe'
+import Combinators from '@joj/adt/combinators'
 
 const { curry, compose } = Combinators
 const ALGO_SHA256 = 'sha256' // hashcash-SHA256^2 (bitcoin)

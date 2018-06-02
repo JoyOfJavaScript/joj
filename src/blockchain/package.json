@@ -23,7 +23,7 @@
     "standard": "^11.0.1"
   },
   "dependencies": {
-    "@joj/adt": "file:../adt"
+    "@joj/adt": "file:../adt/dist"
   },
   "scripts": {
     "lint": "eslint src/",

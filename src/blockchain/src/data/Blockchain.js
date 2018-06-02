@@ -1,5 +1,5 @@
 import DataBlock from './DataBlock'
-import { Pair } from '@joj/adt'
+import Pair from '@joj/adt/pair'
 
 //Alternate solution: http://2ality.com/2013/03/subclassing-builtins-es6.html
 

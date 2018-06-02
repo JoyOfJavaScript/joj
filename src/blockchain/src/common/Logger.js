@@ -1,4 +1,4 @@
-import { Combinators } from '@joj/adt'
+import Combinators from '@joj/adt/combinators'
 
 export const Levels = new Map([
   ['TRACE', 0],

@@ -6,7 +6,8 @@ import Money from '../data/Money'
 import Transaction from '../data/Transaction'
 import TransactionalBlock from '../data/TransactionalBlock'
 import Wallet from '../data/Wallet'
-import { Combinators, Pair } from '@joj/adt'
+import Combinators from '@joj/adt/combinators'
+import Pair from '@joj/adt/pair'
 
 // As of writing, current mining reward
 const MINING_REWARD = Money('₿', 12.5)

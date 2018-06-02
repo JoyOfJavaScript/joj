@@ -1,6 +1,6 @@
 import crypto from 'crypto'
 import SecureHandler from '../../common/SecureHandler'
-import { Maybe } from '@joj/adt'
+import Maybe from '@joj/adt/maybe'
 
 const ENCODING_HEX = 'hex'
 const SIGN_ALGO = 'RSA-SHA256'
