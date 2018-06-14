@@ -1,4 +1,15 @@
 {
-  "plugins": ["transform-runtime"],
-  "presets": ["es2015", "stage-3"]
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "targets": {
+          "node": "current"
+        },
+        "useBuiltIns": "usage",
+        "debug": true
+      }
+    ]
+  ],
+  "sourceMaps": "inline"
 }

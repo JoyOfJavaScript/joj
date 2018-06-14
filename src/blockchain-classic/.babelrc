@@ -1,4 +1,15 @@
 {
-  "plugins": ["transform-decorators", "@babel/plugin-syntax-import-meta"],
-  "presets": ["@babel/preset-env", "@babel/preset-stage-3"]
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "targets": {
+          "node": "current"
+        },
+        "useBuiltIns": "usage",
+        "debug": true
+      }
+    ]
+  ],
+  "sourceMaps": "inline"
 }

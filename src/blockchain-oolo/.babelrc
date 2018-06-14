@@ -1,4 +1,15 @@
 {
-  "plugins": ["transform-decorators"],
-  "presets": ["es2015", "stage-3", "flow"]
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "targets": {
+          "node": "current"
+        },
+        "useBuiltIns": "usage",
+        "debug": true
+      }
+    ]
+  ],
+  "sourceMaps": "inline"
 }

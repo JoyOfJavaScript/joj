@@ -12,5 +12,6 @@
       }
     ]
   ],
-  "ignore": ["src/_types/*.js"]
+  "ignore": ["src/_types/*.js"],
+  "sourceMaps": "inline"
 }
