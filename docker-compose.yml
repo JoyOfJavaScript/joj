@@ -21,7 +21,7 @@ services:
       - NPM_CONFIG_LOGLEVEL=info
     volumes:
         - ./src:/home/joj/src
-    command: "npm --prefix /home/joj/src/chapter-listings run test-dev src"
+    command: "npm --prefix /home/joj/src/chapter-listings run test-dev"
 
 
   # blockchain:

@@ -4,7 +4,6 @@
     "ecmaVersion": 7,
     "sourceType": "module"
   },
-
   "ecmaFeatures": {
     "arrowFunctions": true,
     "binaryLiterals": false,
@@ -30,7 +29,6 @@
     "globalReturn": false,
     "jsx": true
   },
-
   "env": {
     "es6": true,
     "browser": false,
@@ -38,11 +36,14 @@
     "amd": false,
     "mocha": true
   },
-
-  "plugins": ["fp", "flowtype"],
-
-  "extends": ["eslint:recommended", "flowtype/recommended"],
-
+  "plugins": [
+    "fp",
+    "flowtype"
+  ],
+  "extends": [
+    "eslint:recommended",
+    "flowtype/recommended"
+  ],
   "rules": {
     "comma-dangle": 0,
     "no-cond-assign": 0,
@@ -73,7 +74,6 @@
     "valid-jsdoc": 1,
     "valid-typeof": 1,
     "no-unexpected-multiline": 0,
-
     "accessor-pairs": 0,
     "block-scoped-var": 0,
     "complexity": 1,
@@ -125,9 +125,7 @@
     "vars-on-top": 0,
     "wrap-iife": 0,
     "yoda": 0,
-
     "strict": 0,
-
     "no-catch-shadow": 0,
     "no-delete-var": 1,
     "no-label-var": 0,
@@ -138,7 +136,6 @@
     "no-undefined": 1,
     "no-unused-vars": 1,
     "no-use-before-define": 1,
-
     "handle-callback-err": 0,
     "no-mixed-requires": 0,
     "no-new-require": 0,
@@ -146,7 +143,6 @@
     "no-process-exit": 0,
     "no-restricted-modules": 0,
     "no-sync": 0,
-
     "array-bracket-spacing": 0,
     "brace-style": 0,
     "camelcase": 1,
@@ -195,7 +191,6 @@
     "space-unary-ops": 0,
     "spaced-comment": 0,
     "wrap-regex": 0,
-
     "constructor-super": 0,
     "generator-star-spacing": 0,
     "no-this-before-super": 0,
@@ -205,14 +200,12 @@
     "prefer-rest-params": 1,
     "require-yield": 1,
     "rest-spread-spacing": 1,
-
     "max-depth": 0,
     "max-len": 0,
     "max-params": 1,
     "max-statements": 1,
     "no-bitwise": 0,
     "no-plusplus": 1,
-
     "fp/no-unused-expression": 0
   }
 }

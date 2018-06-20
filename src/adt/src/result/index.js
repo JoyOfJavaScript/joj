@@ -1,5 +1,6 @@
-import { isFunction, identity } from '../combinators'
-import { Success, Failure } from '../validation'
+/*eslint fp/no-mutation:0,fp/no-throw:0*/
+import { Failure, Success } from '../validation'
+import { identity, isFunction } from '../combinators'
 
 const Result = {
   '@@type': 'Result',
@@ -28,6 +29,10 @@ export const Error = (Result.Error = a =>
         throw new Error(a)
       },
       toString: () => `Result#Error (${a})`,
+      toJSON: () => ({
+        type: 'Result#Error',
+        value: a,
+      }),
     },
     Result
   ))
@@ -64,6 +69,10 @@ export const Ok = (Result.Ok = b =>
       merge: () => b,
       toValidation: () => Success(b),
       toString: () => `Result#Ok (${b})`,
+      toJSON: () => ({
+        type: 'Result#Ok',
+        value: b,
+      }),
     },
     Result
   ))

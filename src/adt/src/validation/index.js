@@ -1,5 +1,6 @@
-import { isFunction, identity } from '../combinators'
+/*eslint fp/no-mutation:0,fp/no-throw:0*/
 import { Just, Nothing } from '../maybe'
+import { identity, isFunction } from '../combinators'
 
 // Abstract
 const Validation = {
@@ -36,6 +37,10 @@ export const Success = (Validation.Success = a =>
       getOrElse: defaultValue => a,
       toMaybe: () => Just(a),
       toString: () => `Validation#Success (${a})`,
+      toJSON: () => ({
+        type: 'Validation#Success',
+        value: a,
+      }),
     },
     Validation
   ))
@@ -60,6 +65,10 @@ export const Failure = (Validation.Failure = b =>
       getOrElse: defaultValue => defaultValue,
       toMaybe: () => Nothing(),
       toString: () => `Validation#Failure (${b})`,
+      toJSON: () => ({
+        type: 'Validation#Failure',
+        value: b,
+      }),
     },
     Validation
   ))

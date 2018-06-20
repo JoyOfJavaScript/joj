@@ -1,5 +1,6 @@
-import { isFunction, identity } from '../combinators'
-import { Success, Failure } from '../validation'
+/*eslint fp/no-mutation:0*/
+import { Failure, Success } from '../validation'
+import { identity, isFunction } from '../combinators'
 
 const Maybe = {
   '@@type': 'Maybe',
@@ -39,6 +40,10 @@ export const Just = (Maybe.Just = a =>
       merge: () => a,
       toValidation: () => Success(a),
       toString: () => `Maybe#Just (${a})`,
+      toJSON: () => ({
+        type: 'Maybe#Just',
+        value: a,
+      }),
     },
     Maybe
   ))
@@ -64,6 +69,10 @@ export const Nothing = (Maybe.Nothing = b =>
         throw error
       },
       toString: () => `Maybe#Nothing ()`,
+      toJSON: () => ({
+        type: 'Maybe#Nothing',
+        value: {},
+      }),
     },
     Maybe
   ))
