@@ -15,11 +15,7 @@
 
   "plugins": ["fp", "flowtype"],
 
-  "extends": [
-    "eslint:recommended",
-    "plugin:flowtype/recommended",
-    "plugin:fp/recommended"
-  ],
+  "extends": ["eslint:recommended", "plugin:flowtype/recommended", "plugin:fp/recommended"],
 
   "rules": {
     "no-duplicate-imports": "error",
@@ -29,7 +25,6 @@
     "no-param-reassign": "error",
     "symbol-description": "error",
     "sort-imports": "error",
-    "semi": ["error", "never"],
     "no-shadow": "error",
     "prefer-promise-reject-errors": "error",
     "eqeqeq": ["error", "smart"],
