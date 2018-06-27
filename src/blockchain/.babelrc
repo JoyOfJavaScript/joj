@@ -10,5 +10,6 @@
         "debug": true
       }
     ]
-  ]  
+  ],
+  "sourceMaps": "inline"  
 }

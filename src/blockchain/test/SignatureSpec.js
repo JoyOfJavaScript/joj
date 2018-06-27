@@ -33,7 +33,7 @@ describe('Signature', () => {
     const otherPrivateKey = fs.readFileSync(lukePrivateKeyPath, 'utf8')
     signature.generateSignature(otherPrivateKey)
 
-    for (const i in [1, 2, 3]) {
+    for (const i in [1, 2]) {
       assert.isNotOk(signature.verifySignature())
     }
 

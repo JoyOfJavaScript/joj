@@ -5,25 +5,38 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Run ES6-Babel Tests",
+      "name": "All tests",
       "type": "node",
       "request": "launch",
       "cwd": "${workspaceRoot}",
       "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
       "args": [
-        "./test/*.js",
+        "./test/*Spec.js",
         "--recursive",
         "--require",
-        "babel-register",
-        "--require",
-        "babel-polyfill",
-        "-u",
-        "tdd",
+        "./test/testSetup.js",                
         "--no-timeout",
         "--colors"
       ],
       "runtimeArgs": ["--nolazy"],
-      "sourceMaps": true
+      "sourceMaps": true,
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen"
+    },
+    {
+        "type": "node",
+        "request": "launch",
+        "name": "Current file",
+        "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
+        "args": [
+            "--require",
+            "./test/testSetup.js",                
+            "--no-timeout",            
+            "--colors",
+            "${file}"
+        ],
+        "console": "integratedTerminal",
+        "internalConsoleOptions": "neverOpen"
     }
   ]
 }
