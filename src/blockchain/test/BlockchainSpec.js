@@ -14,12 +14,12 @@ const addCoin = BlockchainService.addBlockTo(coin)
 const fourDollars = addCoin(DataBlock(Money('USD', 4)))
 
 console.log('Number of blocks in chain: ', coin.length)
-console.log(coin.map(x => x.inspect()))
+console.log(coin.toArray().map(x => x.inspect()))
 
 describe('Create a valid Blockchain data structure', () => {
   it('Should create a block chain and assert if valid', () => {
-    assert.ok(coin instanceof Array)
-    const [g, ...blocks] = coin
+    assert.ok(coin.toArray() instanceof Array)
+    const [g, ...blocks] = coin.toArray()
     assert.equal(g.previousHash, '-1')
     assert.ok(blocks[0].data.equals(fourDollars.data))
     assert.ok(BlockchainService.isChainValid(coin))

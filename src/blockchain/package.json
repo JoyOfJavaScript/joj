@@ -7,6 +7,7 @@
   "devDependencies": {
     "@babel/cli": "^7.0.0-beta.49",
     "@babel/core": "^7.0.0-beta.49",
+    "@babel/node": "^7.0.0-beta.51",
     "@babel/preset-env": "^7.0.0-beta.49",
     "@babel/preset-flow": "^7.0.0-beta.49",
     "@babel/register": "^7.0.0-beta.49",
@@ -27,7 +28,7 @@
     "lint": "eslint src/",
     "lint-fix": "eslint src/ --fix",
     "start": "babel-node src/main.js",
-    "build": "babel src --out-dir dist",
+    "build": "babel src --out-dir dist --source-maps",
     "test": "mocha --recursive --require test/testSetup test/**/*Spec.js --check-leaks",
     "test-dev": "nodemon --watch src/ --watch test/ --exec 'mocha --recursive --require test/testSetup test/**/*Spec.js test/ || true'",
     "test-debug": "LOG=trace mocha --recursive --require test/testSetup test/**/*Spec.js --check-leaks",

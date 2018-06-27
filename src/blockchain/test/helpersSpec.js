@@ -1,5 +1,6 @@
 import assert from 'assert'
 import Blockchain from '../src/data/Blockchain'
+import helpers from '../src/common/helpers'
 
 describe('Helper functions', () => {
   it('Should split the data following two conditions', () => {
@@ -9,14 +10,9 @@ describe('Helper functions', () => {
     data.push({ fromAddress: 'address1', toAddress: 'address2', amount: 200 })
 
     const result = data
-      .split(
-        tx => tx.fromAddress === 'address1',
-        tx => tx.toAddress === 'address1'
-      )
-      .bimap(Array, Array)(
-        arrA => arrA.map(tx => -tx.amount),
-        arrB => arrB.map(tx => tx.amount)
-      )
+      .toArray()
+      .split(tx => tx.fromAddress === 'address1', tx => tx.toAddress === 'address1')
+      .bimap(Array, Array)(arrA => arrA.map(tx => -tx.amount), arrB => arrB.map(tx => tx.amount))
       .toArray()
       .reduce((a, b) => a.concat(b))
 

@@ -15,7 +15,7 @@ describe('Signature', () => {
 
     const state = {
       sender: fs.readFileSync(coinbasepublicKeyPath, 'utf8'),
-      recipient: fs.readFileSync(lukePublicKeyPath, 'utf8'),
+      recipient: fs.readFileSync(lukePublicKeyPath, 'utf8')
     }
 
     let signature = Signature(state, ['sender', 'recipient'])
