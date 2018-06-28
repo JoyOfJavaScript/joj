@@ -14,6 +14,7 @@
     "babel-eslint": "^8.2.3",
     "chai": "4.1.0",
     "eslint": "^4.18.0",
+    "eslint-plugin-flowtype": "^2.49.3",
     "eslint-plugin-flowtype-errors": "^3.3.6",
     "eslint-plugin-fp": "^2.3.0",
     "flow-bin": "^0.59.0",
@@ -25,13 +26,12 @@
     "@joj/adt": "file:../adt/dist"
   },
   "scripts": {
-    "lint": "eslint src/",
-    "lint-fix": "eslint src/ --fix",
-    "start": "babel-node src/main.js",
+    "lint": "eslint src",
+    "lint-fix": "eslint src --fix",
     "build": "babel src --out-dir dist --source-maps",
-    "test": "mocha --recursive --require test/testSetup test/**/*Spec.js --check-leaks",
-    "test-dev": "nodemon --watch src/ --watch test/ --exec 'mocha --recursive --require test/testSetup test/**/*Spec.js test/ || true'",
-    "test-debug": "LOG=trace mocha --recursive --require test/testSetup test/**/*Spec.js --check-leaks",
+    "test": "mocha --recursive --require test/testSetup test/**/*Spec.js --check-leaks --colors",
+    "test-dev": "nodemon --watch src/ --watch test/ --exec 'mocha --recursive --require test/testSetup test/**/*Spec.js test/ --colors || true'",
+    "test-debug": "LOG=trace mocha --recursive --require test/testSetup test/**/*Spec.js --check-leaks --colors",
     "flow": "flow",
     "flow-init": "flow init",
     "flow-status": "flow status"

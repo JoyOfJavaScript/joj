@@ -18,8 +18,7 @@
         "--no-timeout",
         "--colors"
       ],
-      "runtimeArgs": ["--nolazy"],
-      "sourceMaps": true,
+      "runtimeArgs": ["--nolazy"],      
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen"
     },
