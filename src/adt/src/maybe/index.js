@@ -1,11 +1,12 @@
-/*eslint fp/no-mutation:0*/
+/* eslint fp/no-mutation:0 */
 import { Failure, Success } from '../validation'
 import { identity, isFunction } from '../combinators'
 
 const Maybe = {
   '@@type': 'Maybe',
   '@@implements': ['of', 'map', 'ap', 'fold', 'flatMap', 'merge'],
-  of: a => Just(a),
+  [Symbol.toStringTag]: 'Maybe',
+  of: a => Just(a)
 }
 
 export const Just = (Maybe.Just = a =>
@@ -18,21 +19,21 @@ export const Just = (Maybe.Just = a =>
       map: fn => Maybe.fromNullable(fn(a)),
       flatMap: fn => Maybe.fromNullable(fn(a).merge()),
       ap: Ma =>
-        Ma.isNothing()
+        (Ma.isNothing()
           ? // If applying to a Maybe.Nothing, skip
             Nothing()
           : // Applying a Maybe.Just
             isFunction(a)
-            ? // If a is a function, look at the contents of Ma
-              Maybe.of(
-                isFunction(Ma.merge())
-                  ? // If Ma holds another function, fold Ma with a
-                    Ma.merge().call(Ma, a)
-                  : // Ma holds a value, apply that value to a
-                    a(Ma.merge())
-              )
-            : // a is a value and Ma has a function
-              Maybe.of(Ma.merge().call(Ma, a)),
+              ? // If a is a function, look at the contents of Ma
+                Maybe.of(
+                  isFunction(Ma.merge())
+                    ? // If Ma holds another function, fold Ma with a
+                      Ma.merge().call(Ma, a)
+                    : // Ma holds a value, apply that value to a
+                      a(Ma.merge())
+                )
+              : // a is a value and Ma has a function
+                Maybe.of(Ma.merge().call(Ma, a))),
       get: () => a,
       getOrElse: _ => a,
       getOrElseThrow: error => a,
@@ -42,8 +43,8 @@ export const Just = (Maybe.Just = a =>
       toString: () => `Maybe#Just (${a})`,
       toJSON: () => ({
         type: 'Maybe#Just',
-        value: a,
-      }),
+        value: a
+      })
     },
     Maybe
   ))
@@ -71,8 +72,8 @@ export const Nothing = (Maybe.Nothing = b =>
       toString: () => `Maybe#Nothing ()`,
       toJSON: () => ({
         type: 'Maybe#Nothing',
-        value: {},
-      }),
+        value: {}
+      })
     },
     Maybe
   ))
