@@ -23,9 +23,10 @@ const DataBlock = (data = {}, previousHash = '') => {
       const { timestamp, hash } = state
       return `DataBlock {ts: ${timestamp}, data: ${JSON.stringify(data)},\
          ph: ${previousHash}, h: ${hash}}`
-    },
+    }
   }
   return Object.assign(
+    // analyze why rest param does't work
     state,
     BlockHeader(previousHash),
     Hash(state, ['timestamp', 'data', 'previousHash', 'nonce']),
