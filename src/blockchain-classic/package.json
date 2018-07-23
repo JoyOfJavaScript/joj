@@ -3,22 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
-    "@babel/cli": "^7.0.0-beta.47",
-    "@babel/core": "^7.0.0-beta.47",
-    "@babel/plugin-syntax-import-meta": "^7.0.0-beta.47",
-    "@babel/polyfill": "^7.0.0-beta.47",
-    "@babel/preset-env": "^7.0.0-beta.47",
-    "@babel/preset-es2015": "^7.0.0-beta.47",
-    "@babel/preset-flow": "^7.0.0-beta.47",
-    "@babel/preset-stage-2": "^7.0.0-beta.47",
-    "@babel/preset-stage-3": "^7.0.0-beta.47",
-    "@babel/register": "^7.0.0-beta.47",
-    "babel-eslint": "^8.0.2",
-    "babel-plugin-transform-decorators": "^6.24.1",
-    "babel-plugin-transform-flow-strip-types": "^6.22.0",
-    "babel-plugin-transform-regenerator": "^6.26.0",
-    "babel-plugin-transform-runtime": "^6.23.0",
-    "babel-preset-env": "^1.7.0",
+    "@babel/cli": "^7.0.0-beta.49",
+    "@babel/core": "^7.0.0-beta.49",
+    "@babel/plugin-proposal-class-properties": "^7.0.0-beta.53",
+    "@babel/preset-env": "^7.0.0-beta.49",
+    "@babel/preset-flow": "^7.0.0-beta.49",
+    "@babel/register": "^7.0.0-beta.49",
+    "babel-eslint": "^8.2.3",
     "chai": "4.1.0",
     "eslint": "^4.18.0",
     "eslint-plugin-flowtype-errors": "^3.3.6",
@@ -31,11 +22,12 @@
     "transform-runtime": "0.0.0"
   },
   "dependencies": {
-    "joj-adt": "file:../adt"
+    "@joj/adt": "file:../adt/dist"
   },
   "scripts": {
     "lint": "eslint src/",
     "lint-fix": "eslint src/ --fix",
+    "build": "rm -rf dist && babel src --out-dir dist",
     "start": "babel-node src/main.js",
     "test": "mocha --recursive --require @babel/register --require @babel/polyfill test/",
     "test-dev": "nodemon --watch src/ --watch test/ --exec 'mocha --recursive --require babel-register --require babel-polyfill test/ || true'",

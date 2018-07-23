@@ -4,7 +4,7 @@ import HasBlocks from '../data/traits/HasBlocks'
 // Alternate solution: http://2ality.com/2013/03/subclassing-builtins-es6.html
 
 /**
- * Untamperable block chain. You may initialize the chain with an existing
+ * Untamperable blockchain. You may initialize the chain with an existing
  * chain. But the most common thing to do is initialize with an empty Chain
  * and allow itself to bootstrap with a Genesis block.
  *

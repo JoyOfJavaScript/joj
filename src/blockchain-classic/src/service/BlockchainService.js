@@ -1,10 +1,10 @@
 class BlockchainService {
   blockService
-  constructor(blockService) {
+  constructor (blockService) {
     this.blockService = blockService
   }
 
-  get blockService() {
+  get blockService () {
     return this.blockService
   }
 }

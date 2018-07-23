@@ -2,6 +2,8 @@ import Validation from '@joj/adt/validation'
 
 const ZERO = 0
 
+// TODO: look into using: https://github.com/tc39/proposal-bigint
+
 /**
  * Money value object
  *
@@ -24,7 +26,7 @@ const Money = (currency = '₿', amount = ZERO) => ({
   compareTo: other => amount - other.amount,
   asNegative: () => Money(currency, -amount),
   [Symbol.toPrimitive]: () => precisionRound(amount, 2),
-  [Symbol.hasInstance]: i => i.constructor.name === 'Money',
+  [Symbol.hasInstance]: i => i.constructor.name === 'Money'
 })
 
 /**
@@ -44,26 +46,18 @@ Money.zero = currency => Money(currency, ZERO)
 
 // Compare money objects
 Money.compare = (m1, m2) =>
-  Validation.of(x => m1.compareTo(m2))
-    .ap(currencyMatch(m1, m2))
-    .merge()
+  Validation.of(x => m1.compareTo(m2)).ap(currencyMatch(m1, m2)).merge()
 
 // Add two money objects
 Money.add = (m1, m2) =>
-  Validation.of(x => m1.plus(m2))
-    .ap(currencyMatch(m1, m2))
-    .merge()
+  Validation.of(x => m1.plus(m2)).ap(currencyMatch(m1, m2)).merge()
 
 // Subtract two Money objects
 Money.subtract = (m1, m2) =>
-  Validation.of(x => m1.minus(m2))
-    .ap(currencyMatch(m1, m2))
-    .merge()
+  Validation.of(x => m1.minus(m2)).ap(currencyMatch(m1, m2)).merge()
 
 Money.multiply = (m1, m2) =>
-  Validation.of(x => m1.times(m2))
-    .ap(currencyMatch(m1, m2))
-    .merge()
+  Validation.of(x => m1.times(m2)).ap(currencyMatch(m1, m2)).merge()
 
 /**
  * Check that currency matches
@@ -72,8 +66,8 @@ Money.multiply = (m1, m2) =>
  * @return {Validation} Validates whether currencies match
  */
 const currencyMatch = (m1, m2) =>
-  m1.currency === m2.currency
+  (m1.currency === m2.currency
     ? Validation.Success(true)
-    : Validation.Failure(['Currency mismatch!'])
+    : Validation.Failure(['Currency mismatch!']))
 
 export default Money
