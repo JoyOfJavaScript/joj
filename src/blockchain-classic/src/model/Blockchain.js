@@ -1,7 +1,7 @@
-import DataBlock from './DataBlock';
-import Pair from '@joj/adt/pair';
+import DataBlock from './DataBlock'
+import Pair from '@joj/adt/pair'
 
-//Alternate solution: http://2ality.com/2013/03/subclassing-builtins-es6.html
+// Alternate solution: http://2ality.com/2013/03/subclassing-builtins-es6.html
 
 /**
  * Untamperable block chain. You may initialize the chain with an existing
@@ -14,30 +14,30 @@ import Pair from '@joj/adt/pair';
 // Talk about species and the species pattern
 // http://exploringjs.com/es6/ch_classes.html#sec_species-pattern
 class Blockchain extends Array {
-  constructor() {
-    super();
+  constructor () {
+    super()
   }
 
-  static init() {
-    const blockchain = Blockchain.of(DataBlock.genesis());
-    blockchain.pendingTransactions = [];
-    return blockchain;
+  static init () {
+    const blockchain = Blockchain.of(DataBlock.genesis())
+    blockchain.pendingTransactions = []
+    return blockchain
   }
 
   /**
    * Returns Genesis (first block) in the chain
    * @return {DataBlock} First block
    */
-  genesis() {
-    return this[0];
+  genesis () {
+    return this[0]
   }
 
-  last() {
-    return this[this.length - 1];
+  last () {
+    return this[this.length - 1]
   }
 
-  split(predA, predB) {
-    return Pair(Array, Array)(this.filter(predA), this.filter(predB));
+  split (predA, predB) {
+    return Pair(Array, Array)(this.filter(predA), this.filter(predB))
   }
 }
-export default Blockchain;
+export default Blockchain

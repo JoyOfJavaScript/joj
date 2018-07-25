@@ -29,7 +29,7 @@
     "lint": "eslint src",
     "lint-fix": "eslint src --fix",
     "build": "babel src --out-dir dist --source-maps",
-    "test": "mocha --recursive --require test/testSetup test/**/*Spec.js --check-leaks --colors",
+    "test": "mocha --recursive --require test/testSetup.js test/**/*Spec.js --check-leaks --colors",
     "test-dev": "nodemon --watch src/ --watch test/ --exec 'mocha --recursive --require test/testSetup test/**/*Spec.js test/ --colors || true'",
     "test-debug": "LOG=trace mocha --recursive --require test/testSetup test/**/*Spec.js --check-leaks --colors",
     "flow": "flow",

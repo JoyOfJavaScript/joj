@@ -1,30 +1,24 @@
-import crypto from 'crypto'
-import SecureHandler from '../../common/SecureHandler'
 import Maybe from '@joj/adt/maybe'
+import SecureHandler from '../../common/SecureHandler'
+import crypto from 'crypto'
 
 const ENCODING_HEX = 'hex'
 const SIGN_ALGO = 'RSA-SHA256'
 
 export const Signature = (state, keys) => ({
-  generateSignature(privateKeyPath) {
+  generateSignature (privateKeyPath) {
     return (state.signature = signInput(
       privateKeyPath,
-      keys
-        .map(k => state[k])
-        .filter(prop => !!prop)
-        .join('')
+      keys.map(k => state[k]).filter(prop => !!prop).join('')
     ))
   },
-  verifySignature() {
+  verifySignature () {
     return signatureVerifier(
       state.sender || state.recipient,
-      keys
-        .map(k => state[k])
-        .filter(prop => !!prop)
-        .join(''),
+      keys.map(k => state[k]).filter(prop => !!prop).join(''),
       state.signature
     )
-  },
+  }
 })
 
 /**
@@ -44,7 +38,7 @@ const signInput = (privateKey, input) =>
     )
     .ap(Maybe.fromNullable(input))
     .map(pem => ({
-      key: pem,
+      key: pem
     }))
     .map(credentials => {
       const sign = crypto.createSign(SIGN_ALGO)

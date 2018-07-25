@@ -1,27 +1,37 @@
 class BlockHeader {
-  constructor(previousHash) {
+  previousHash = undefined
+  timestamp = Date.now()
+  hash = ''
+  nonce = 0
+  difficulty = 2
+  version = '1.0'
+
+  constructor (previousHash) {
     this.previousHash = previousHash
-    this.timestamp = Date.now()
-    this.hash = ''
-    this.nonce = 0
-    this.difficulty = 2
-    this.version = '1.0'
   }
 
-  get hash() {
+  get hash () {
     return this.hash
   }
 
-  get previousHash() {
+  get previousHash () {
     return this.previousHash
   }
 
-  get timestamp() {
+  get timestamp () {
     return this.timestamp
   }
 
-  get nonce() {
+  get nonce () {
     return this.nonce
+  }
+
+  get difficulty () {
+    return this.difficulty
+  }
+
+  toString () {
+    return `[BlockHeader] {hash: ${this.hash || 'TBD'}, previousHash: ${this.previousHash || 'TBD'}, timestamp: ${this.timestamp}}`
   }
 }
 

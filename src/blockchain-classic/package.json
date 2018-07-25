@@ -5,7 +5,7 @@
   "devDependencies": {
     "@babel/cli": "^7.0.0-beta.49",
     "@babel/core": "^7.0.0-beta.49",
-    "@babel/plugin-proposal-class-properties": "^7.0.0-beta.53",
+    "@babel/plugin-proposal-class-properties": "^7.0.0-beta.54",
     "@babel/preset-env": "^7.0.0-beta.49",
     "@babel/preset-flow": "^7.0.0-beta.49",
     "@babel/register": "^7.0.0-beta.49",
@@ -29,8 +29,8 @@
     "lint-fix": "eslint src/ --fix",
     "build": "rm -rf dist && babel src --out-dir dist",
     "start": "babel-node src/main.js",
-    "test": "mocha --recursive --require @babel/register --require @babel/polyfill test/",
-    "test-dev": "nodemon --watch src/ --watch test/ --exec 'mocha --recursive --require babel-register --require babel-polyfill test/ || true'",
+    "test": "mocha --recursive --require test/testSetup.js test/**/*Spec.js --check-leaks --colors",
+    "test-dev": "nodemon --watch src/ --watch test/ --exec 'mocha --recursive --require test/testSetup test/**/*Spec.js --check-leaks --colors || true'",
     "flow": "flow",
     "flow-init": "flow init",
     "flow-status": "flow status"
