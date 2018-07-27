@@ -1,13 +1,13 @@
-import fs from 'fs'
-import path from 'path'
 import BlockService from './BlockService'
 import Blockchain from '../data/Blockchain'
+import Combinators from '@joj/adt/combinators'
 import Money from '../data/Money'
+import Pair from '@joj/adt/pair'
 import Transaction from '../data/Transaction'
 import TransactionalBlock from '../data/TransactionalBlock'
 import Wallet from '../data/Wallet'
-import Combinators from '@joj/adt/combinators'
-import Pair from '@joj/adt/pair'
+import fs from 'fs'
+import path from 'path'
 
 // As of writing, current mining reward
 const MINING_REWARD = Money('₿', 12.5)
@@ -31,7 +31,7 @@ const newBlockchain = () => Blockchain.init()
  * @param {Blockchain} blockchain Chain to add block to
  * @param {Block}      newBlock   New block to add into the chain
  */
-const addBlockTo = curry((blockchain, newBlock) => {
+const addBlock = curry((blockchain, newBlock) => {
   newBlock.previousHash = blockchain.last().hash
   newBlock.calculateHash()
   blockchain.push(newBlock)
@@ -46,7 +46,7 @@ const addBlockTo = curry((blockchain, newBlock) => {
  * @param {Blockchain}  blockchain Chain to add block to
  * @param {DataBlock}   newBlock   New block to add into the chain
  */
-const mineBlockTo = curry(async (blockchain, newBlock) => {
+const mineBlock = curry(async (blockchain, newBlock) => {
   newBlock.previousHash = blockchain.last().hash
   newBlock = await BlockService.mineBlock(newBlock.difficulty, newBlock)
   blockchain.push(newBlock)
@@ -60,7 +60,7 @@ const mineBlockTo = curry(async (blockchain, newBlock) => {
  * @param {Blockchain} blockchain Chain to calculate balance from
  * @param {string}     address    Address to send reward to
  */
-const calculateBalanceOfAddress = curry((blockchain, address) =>
+const calculateBalanceOfWallet = curry((blockchain, address) =>
   blockchain
     .toArray()
     // Ignore Genesis block as this won't ever have any pending transactions
@@ -82,7 +82,7 @@ const calculateBalanceOfAddress = curry((blockchain, address) =>
     .reduce(Money.add, Money.zero())
 )
 
-//-- IMPERATIVE VERSION OF calculateBalanceOfAddress --
+// -- IMPERATIVE VERSION OF calculateBalanceOfAddress --
 //
 // const calculateBalanceOfAddress = curry((blockchain, address) => {
 //   let balance = Money.nothing()
@@ -106,7 +106,10 @@ const minePendingTransactions = curry(async (txBlockchain, address) =>
   // Mine block and pass it all pending transactions in the chain
   // In reality, blocks are not to exceed 1MB, so not all tx are sent to all blocks
   // We keep transactions immutable by substracting similar transactions for the fee
-  mineBlockTo(txBlockchain, TransactionalBlock(txBlockchain.pendingTransactions)).then(block => {
+  mineBlock(
+    txBlockchain,
+    TransactionalBlock(txBlockchain.pendingTransactions)
+  ).then(block => {
     // Reward is bigger when there are more transactions to process
     const fee =
       Math.abs(
@@ -121,7 +124,11 @@ const minePendingTransactions = curry(async (txBlockchain, address) =>
     // Reset pending transactions for this blockchain
     // Put fee transaction into the chain for next mining operation
     // Network will reward the first miner to mine the block with the transaction fee
-    const tx = Transaction(NETWORK.address, address, Money.add(Money('₿', fee), MINING_REWARD))
+    const tx = Transaction(
+      NETWORK.address,
+      address,
+      Money.add(Money('₿', fee), MINING_REWARD)
+    )
     tx.generateSignature(NETWORK.privateKey)
 
     // After the transactions have been added to a block, reset them with the reward for the next miner
@@ -167,19 +174,20 @@ const isChainValid = (blockchain, checkTransactions = false) =>
         // 4. Check is hash is solved
         (checkTransactions
           ? current.hash.substring(0, current.difficulty) ===
-              Array(current.difficulty)
-                .fill(0)
-                .join('') &&
-            // 5. Verify Transaction signatures
-            current.pendingTransactions.every(tx => tx.verifySignature())
+              Array(current.difficulty).fill(0).join('') &&
+              // 5. Verify Transaction signatures
+              current.pendingTransactions.every(tx => tx.verifySignature())
           : true)
       )
     })
 
 // eslint-disable-next-line max-statements
-const transferFundsBetween = (txBlockchain, walletA, walletB, funds) => {
+const transferFunds = (txBlockchain, walletA, walletB, funds) => {
   // Check for enough funds
-  const balanceA = BlockchainService.calculateBalanceOfAddress(txBlockchain, walletA.address)
+  const balanceA = BlockchainService.calculateBalanceOfWallet(
+    txBlockchain,
+    walletA.address
+  )
 
   if (Money.compare(balanceA, funds) < 0) {
     throw new RangeError('Insufficient funds!')
@@ -201,13 +209,13 @@ const transferFundsBetween = (txBlockchain, walletA, walletB, funds) => {
  * Exported BlockchainService interface
  */
 const BlockchainService = {
-  addBlockTo,
-  /* async */ mineBlockTo,
+  addBlock,
+  mineBlock,
   isChainValid,
-  /* async */ minePendingTransactions,
-  calculateBalanceOfAddress,
-  transferFundsBetween,
+  minePendingTransactions,
+  calculateBalanceOfWallet,
+  transferFunds,
   newBlockchain
 }
 export default BlockchainService
-module.exports = BlockchainService //TODO: using export default will result in default: {} object within the import
+module.exports = BlockchainService // TODO: using export default will result in default: {} object within the import

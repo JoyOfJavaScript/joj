@@ -15,7 +15,7 @@
 
   "plugins": ["fp", "flowtype"],
 
-  "extends": ["eslint:recommended", "plugin:flowtype/recommended", "plugin:fp/recommended"],
+  "extends": ["eslint:recommended", "plugin:flowtype/recommended"],
 
   "rules": {
     "no-duplicate-imports": "error",

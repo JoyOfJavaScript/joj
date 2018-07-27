@@ -1,14 +1,14 @@
-import assert from 'assert'
-import BlockchainService from '../src/service/BlockchainService'
-import Money from '../src/data/Money'
-import DataBlock from '../src/data/DataBlock'
 import BlockChain from '../src/data/Blockchain'
+import BlockchainService from '../src/service/BlockchainService'
+import DataBlock from '../src/data/DataBlock'
+import Money from '../src/data/Money'
+import assert from 'assert'
 
 // Create blockchain
 const coin = BlockChain.init()
 
 // Adder functions
-const addCoin = BlockchainService.addBlockTo(coin)
+const addCoin = BlockchainService.addBlock(coin)
 
 // Add coins
 const fourDollars = addCoin(DataBlock(Money('USD', 4)))

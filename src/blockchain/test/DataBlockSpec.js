@@ -1,5 +1,5 @@
-import assert from 'assert'
 import DataBlock from '../src/data/DataBlock'
+import assert from 'assert'
 
 describe('Block object', () => {
   it('Should create genesis block', () => {

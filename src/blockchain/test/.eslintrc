@@ -2,5 +2,8 @@
   "rules": {
     "max-params": [1, { "max": 5 }],
     "max-statements": 0
+  },
+  "env": {
+    "mocha": true
   }
 }

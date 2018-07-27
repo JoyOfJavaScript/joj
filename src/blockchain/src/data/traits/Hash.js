@@ -18,12 +18,12 @@ const ENCODING_HEX = 'hex'
  * @return {string} Return a string hash of the block
  */
 export const Hash = (state, keys) => ({
-  calculateHash() {
+  calculateHash () {
     return (state.hash = computeCipher(keys.map(k => state[k])))
   },
-  get hash() {
+  get hash () {
     return Maybe.fromEmpty(state.hash).getOrElse(this.calculateHash())
-  },
+  }
 })
 
 /**
@@ -41,10 +41,7 @@ const formatData = (...pieces) => pieces.map(JSON.stringify).join('')
  * @param {String} data      Data to use as seed for the hash
  */
 const createDigest = curry((algorithm, encoding, data) =>
-  crypto
-    .createHash(algorithm)
-    .update(data)
-    .digest(encoding)
+  crypto.createHash(algorithm).update(data).digest(encoding)
 )
 
 /**
@@ -60,8 +57,8 @@ const computeCipher = compose(
 
 Hash.calculateHash = (state, fields) => computeCipher(fields.map(k => state[k]))
 Hash.init = (...args) =>
-  process.env.LOG
+  (process.env.LOG
     ? new Proxy(Hash(...args), LoggerHandler('hash'))
-    : Hash(...args)
+    : Hash(...args))
 
 export default Hash

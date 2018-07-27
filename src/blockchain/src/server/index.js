@@ -1,7 +1,7 @@
+import * as Actions from './actions'
+import { BlockchainService } from '../service/BlockChainService'
 import WebSocket from 'websocket'
 import http from 'http'
-import { BlockchainService } from '@joj/blockchain'
-import * as Actions from '../shared/actions'
 
 const { server: WebSocketServer } = WebSocket
 
@@ -12,11 +12,12 @@ const server = http.createServer((request, response) => {
   response.writeHead(404)
   response.end()
 })
-server.listen(1337, function() {})
+
+server.listen(1337, function () {})
 
 // create the server
 const wsServer = new WebSocketServer({
-  httpServer: server,
+  httpServer: server
 })
 
 // WebSocket server
@@ -29,7 +30,7 @@ wsServer.on('request', request => {
     if (message.type === 'utf8') {
       processRequest(JSON.parse(message.utf8Data), connection)
       // process WebSocket message
-      //console.log('Connection opened with server!', action)
+      // console.log('Connection opened with server!', action)
     }
   })
 
@@ -42,7 +43,7 @@ wsServer.on('request', request => {
 // Move this into a global store
 let chain = null
 
-function processRequest(req, connection) {
+function processRequest (req, connection) {
   console.log(`Action received ${req.action}`)
   switch (req.action) {
     case Actions.NEW:
@@ -52,7 +53,7 @@ function processRequest(req, connection) {
         JSON.stringify({
           status: 'Success',
           action: Actions.ADD_GENESIS,
-          payload: {},
+          payload: {}
         })
       )
       break
@@ -62,8 +63,8 @@ function processRequest(req, connection) {
           status: 'Success',
           action: Actions.VALIDATE_BC,
           payload: {
-            result: BlockchainService.isChainValid(chain) ? true : false,
-          },
+            result: !!BlockchainService.isChainValid(chain)
+          }
         })
       )
       break
@@ -74,9 +75,10 @@ function processRequest(req, connection) {
         JSON.stringify({
           status: 'Warning',
           action: Actions.DISPLAY_ERROR,
-          payload: { message: msg },
+          payload: { message: msg }
         })
       )
     }
   }
 }
+console.log('Websocket server listening...')

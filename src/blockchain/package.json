@@ -2,12 +2,12 @@
   "name": "@joj/blockchain",
   "version": "0.1.0",
   "private": true,
-  "main": "./dist/index.js",
+  "main": "index.js",
   "description": "Simple blockchain primitives",
   "devDependencies": {
     "@babel/cli": "^7.0.0-beta.49",
     "@babel/core": "^7.0.0-beta.49",
-    "@babel/node": "^7.0.0-beta.51",
+    "@babel/node": "^7.0.0-beta.54",
     "@babel/preset-env": "^7.0.0-beta.49",
     "@babel/preset-flow": "^7.0.0-beta.49",
     "@babel/register": "^7.0.0-beta.49",
@@ -23,17 +23,19 @@
     "standard": "^11.0.1"
   },
   "dependencies": {
-    "@joj/adt": "file:../adt/dist"
+    "@joj/adt": "file:../adt/dist",
+    "websocket": "^1.0.26"
   },
   "scripts": {
     "lint": "eslint src",
     "lint-fix": "eslint src --fix",
-    "build": "babel src --out-dir dist --source-maps",
+    "build": "rm -rf dist && babel src --out-dir dist && cp -f package.json dist",
     "test": "mocha --recursive --require test/testSetup.js test/**/*Spec.js --check-leaks --colors",
     "test-dev": "nodemon --watch src/ --watch test/ --exec 'mocha --recursive --require test/testSetup test/**/*Spec.js test/ --colors || true'",
     "test-debug": "LOG=trace mocha --recursive --require test/testSetup test/**/*Spec.js --check-leaks --colors",
     "flow": "flow",
     "flow-init": "flow init",
-    "flow-status": "flow status"
+    "flow-status": "flow status",
+    "start": "babel-node src/server/index.js"
   }
 }

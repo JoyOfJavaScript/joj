@@ -21,7 +21,7 @@
     "mocha": "^4.0.1",
     "nodemon": "^1.11.0",
     "prettier": "1.13.5"
-  },
+  },  
   "scripts": {
     "lint": "eslint src/",
     "lint-fix": "eslint src/ --fix",
