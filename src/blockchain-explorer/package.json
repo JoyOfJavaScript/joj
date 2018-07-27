@@ -27,6 +27,7 @@
     "lint": "eslint src/",
     "lint-fix": "eslint src/ --fix",
     "bundle": "webpack",
-    "start": "babel-node src/client/index.js"
+    "start-debug": "babel-node --inspect-brk src/client/index.js",
+    "start": "babel-node src/client/index.js" 
   }
 }

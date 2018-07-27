@@ -12,24 +12,25 @@ import { client as WebSocketClient } from 'websocket'
 const client = new WebSocketClient()
 
 client.on('connect', function (connection) {
-  console.log('WebSocket Client Connected')
-  connection.on('error', function (error) {
-    console.log('Connection Error: ' + error.toString())
-  })
-  connection.on('close', function () {
-    console.log('echo-protocol Connection Closed')
-  })
+  console.log('Client Connected')
+
   connection.on('message', function (message) {
     if (message.type === 'utf8') {
       console.log("Received: '" + message.utf8Data + "'")
     }
   })
 
+  connection.on('error', function (error) {
+    console.log('Connection Error: ' + error.toString())
+  })
+  connection.on('close', function () {
+    console.log('echo-protocol Connection Closed')
+  })
+
   function sendNumber () {
     if (connection.connected) {
       var number = Math.round(Math.random() * 0xffffff)
       connection.sendUTF(number.toString())
-      setTimeout(sendNumber, 1000)
     }
   }
   sendNumber()

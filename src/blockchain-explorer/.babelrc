@@ -11,5 +11,6 @@
       }
     ]
   ],
-  "sourceMaps": "inline"
+  "sourceMaps": "inline",
+  "retainLines": true
 }
