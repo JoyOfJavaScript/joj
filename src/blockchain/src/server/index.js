@@ -1,4 +1,5 @@
 import * as Actions from './actions'
+import * as Codes from './codes'
 import { BlockchainService } from '../service/BlockChainService'
 import WebSocket from 'websocket'
 import http from 'http'
@@ -69,13 +70,13 @@ function processRequest (req, connection) {
       )
       break
     default: {
-      const msg = `Unrecognized action ${req.action}`
+      const msg = `Unspecified action ${req.action}`
       console.log(msg)
       connection.sendUTF(
         JSON.stringify({
-          status: 'Warning',
-          action: Actions.DISPLAY_ERROR,
-          payload: { message: msg }
+          status: Codes.SUCCESS,
+          action: req.action,
+          payload: { actions: Object.keys(Actions) }
         })
       )
     }

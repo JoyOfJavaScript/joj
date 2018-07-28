@@ -14,7 +14,7 @@
     "eslint": "^4.18.0",
     "live-server": "^1.2.0",
     "mocha": "^4.0.1",
-    "nodemon": "^1.17.2",
+    "nodemon": "^1.18.3",
     "npm-run-all": "^4.1.2",
     "webpack": "^4.1.1",
     "webpack-cli": "^2.0.12"
@@ -28,6 +28,7 @@
     "lint-fix": "eslint src/ --fix",
     "bundle": "webpack",
     "start-debug": "babel-node --inspect-brk src/client/index.js",
-    "start": "babel-node src/client/index.js" 
+    "start-dev": "nodemon --watch src/ --exec 'babel-node src/client/index.js'",
+    "start": "babel-node src/client/index.js"
   }
 }

@@ -36,6 +36,6 @@
     "flow": "flow",
     "flow-init": "flow init",
     "flow-status": "flow status",
-    "start": "babel-node src/server/index.js"
+    "start": "nodemon --exec babel-node -- ./src/server/index.js"
   }
 }

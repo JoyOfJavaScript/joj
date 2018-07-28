@@ -8,6 +8,9 @@
  * ...
  */
 import { client as WebSocketClient } from 'websocket'
+import readline from 'readline'
+import { cursorUp, cursorDown } from './ansi'
+import { isUpKey, isDownKey, isKillSequence } from './keyboard'
 
 const client = new WebSocketClient()
 
@@ -17,6 +20,12 @@ client.on('connect', function (connection) {
   connection.on('message', function (message) {
     if (message.type === 'utf8') {
       console.log("Received: '" + message.utf8Data + "'")
+      const messageObj = JSON.parse(message.utf8Data)
+      if (messageObj.payload.actions) {
+        const actions = messageObj.payload.actions
+        console.log('List of actions:')
+        setUpCliInterface(actions)
+      }
     }
   })
 
@@ -27,16 +36,48 @@ client.on('connect', function (connection) {
     console.log('echo-protocol Connection Closed')
   })
 
-  function sendNumber () {
-    if (connection.connected) {
-      var number = Math.round(Math.random() * 0xffffff)
-      connection.sendUTF(number.toString())
-    }
-  }
-  sendNumber()
+  listActions(connection)
 })
 
 client.connect('ws://localhost:1337')
+
+function listActions (connection) {
+  connection.sendUTF(JSON.stringify({ actions: '*' }))
+}
+
+function setUpCliInterface (actions) {
+  const rl = readline.createInterface({
+    terminal: true,
+    input: process.stdin,
+    output: process.stdout
+  })
+
+  rl.question(menu`Pick your actions ${actions}`, answer => {
+    console.log(`Your selection is: ${answer}`)
+
+    rl.close()
+  })
+  rl.output.write(cursorUp(actions.length))
+
+  readline.emitKeypressEvents(process.stdin)
+  if (process.stdin.isTTY) {
+    // Support scroll up and down using the keyboard
+    process.stdin.setRawMode(true)
+    rl.input.on('keypress', (value, key) => {
+      if (isKillSequence(key)) {
+        process.exit()
+      } else {
+        if (isUpKey(key)) {
+          rl.output.write(cursorUp(1))
+        } else if (isDownKey(key)) {
+          rl.output.write(cursorDown(1))
+        }
+      }
+    })
+  } else {
+    // Handle numerical values
+  }
+}
 
 // client.onerror = function (event) {
 //   // an error occurred when sending/receiving data
@@ -62,6 +103,11 @@ client.connect('ws://localhost:1337')
 //   }
 //   // handle incoming message
 // }
+
+function menu (header, actionsExp) {
+  // We can even return a string built using a template literal
+  return `${header[0].trim()}:\n${actionsExp.map(a => `-> ${a}\n`).join('')}`
+}
 
 function processResponse (message) {
   console.log(message)

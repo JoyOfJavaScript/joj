@@ -1,4 +1,4 @@
-import Logger from '../common/Logger'
+import Logger from './Logger'
 
 const SecureHandler = maxAttempts => {
   const attemptsRegistry = []

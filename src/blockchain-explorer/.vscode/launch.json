@@ -2,6 +2,7 @@
   // Use IntelliSense to learn about possible attributes.
   // Hover to view descriptions of existing attributes.
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  //                              https://code.visualstudio.com/docs/nodejs/nodejs-debugging#_attaching-to-nodejs
   "version": "0.2.0",
   "configurations": [    
     {
@@ -11,6 +12,10 @@
       "port": 9229,      
       "cwd": "${workspaceRoot}",      
       "stopOnEntry": false,
+      "skipFiles": [
+        "${workspaceRoot}/node_modules/**/*.js",
+        "<node_internals>/**/*.js"
+      ]
     }    
   ]
 }

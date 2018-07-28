@@ -1,5 +1,5 @@
 import DataBlock from './DataBlock'
-import HasBlocks from '../data/traits/HasBlocks'
+import HasBlocks from './traits/HasBlocks'
 
 // Alternate solution: http://2ality.com/2013/03/subclassing-builtins-es6.html
 
