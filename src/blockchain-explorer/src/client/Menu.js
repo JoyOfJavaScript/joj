@@ -1,5 +1,6 @@
 import readline from 'readline'
-import { resolve } from 'url'
+import { cursorUp, cursorDown } from './ansi'
+import { isUpKey, isDownKey, isKillSequence } from './keyboard'
 
 class Menu {
   actions = []
@@ -9,7 +10,7 @@ class Menu {
     this.actions = actions
     this.itemsCount = actions.length
     this.actions.forEach((a, i) => {
-      this.actionMap.set(i, a)
+      this.actionsMap.set(i, a)
     })
     this.rl = readline.createInterface({
       terminal: true,
@@ -66,6 +67,14 @@ class Menu {
       }
     })
   }
+}
+
+// Private
+function menu (header, actionsExp) {
+  // We can even return a string built using a template literal
+  return `${header[0].trim()}:\n${actionsExp
+    .map((a, i) => `${i + 1}-> ${a}\n`)
+    .join('')}`
 }
 
 export default Menu

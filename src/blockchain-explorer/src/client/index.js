@@ -8,9 +8,6 @@
  * ...
  */
 import { client as WebSocketClient } from 'websocket'
-import readline from 'readline'
-import { cursorUp, cursorDown } from './ansi'
-import { isUpKey, isDownKey, isKillSequence } from './keyboard'
 import Menu from './Menu'
 
 const client = new WebSocketClient()
@@ -19,17 +16,12 @@ client.on('connect', function (connection) {
   console.log('Client Connected')
 
   connection.on('message', function (message) {
-    if (message.type === 'utf8') {
-      console.log("Received: '" + message.utf8Data + "'")
-      const messageObj = JSON.parse(message.utf8Data)
-      if (messageObj.payload.actions) {
-        const actions = messageObj.payload.actions
-        console.log('List of actions:')
-        const menu = new Menu(actions)
-        menu.display().then(selection => {
-          console.log(`Your selection is ${selection}`)
-        })
-      }
+    const { type, utf8Data } = message
+    if (type === 'utf8') {
+      console.log("Received: '" + utf8Data + "'")
+      handleIncomingMessages(utf8Data)
+    } else {
+      console.error(`Unable to handle message type ${type}`)
     }
   })
 
@@ -44,6 +36,21 @@ client.on('connect', function (connection) {
 })
 
 client.connect('ws://localhost:1337')
+
+function handleIncomingMessages (data) {
+  const messageObj = JSON.parse(data)
+  if (messageObj.payload.actions) {
+    handleActionListing(messageObj.payload.actions)
+  }
+}
+
+function handleActionListing (actions) {
+  console.log('List of actions:')
+  const menu = new Menu(actions)
+  menu.display().then(selection => {
+    console.log(`Your selection is ${selection}`)
+  })
+}
 
 function listActions (connection) {
   connection.sendUTF(JSON.stringify({ actions: '*' }))
@@ -73,13 +80,6 @@ function listActions (connection) {
 //   }
 //   // handle incoming message
 // }
-
-function menu (header, actionsExp) {
-  // We can even return a string built using a template literal
-  return `${header[0].trim()}:\n${actionsExp
-    .map((a, i) => `${i + 1}-> ${a}\n`)
-    .join('')}`
-}
 
 function processResponse (message) {
   console.log(message)
