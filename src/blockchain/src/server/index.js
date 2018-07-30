@@ -1,8 +1,10 @@
 import * as Actions from './actions'
 import * as Codes from './codes'
-import { BlockchainService } from '../service/BlockChainService'
+import BlockchainService from '../service/BlockChainService'
 import WebSocket from 'websocket'
 import http from 'http'
+
+process.title = 'blockchain'
 
 const { server: WebSocketServer } = WebSocket
 
@@ -29,7 +31,7 @@ wsServer.on('request', request => {
   // all messages from users here.
   connection.on('message', message => {
     if (message.type === 'utf8') {
-      processRequest(JSON.parse(message.utf8Data), connection)
+      processRequest(connection, JSON.parse(message.utf8Data))
       // process WebSocket message
       // console.log('Connection opened with server!', action)
     }
@@ -44,17 +46,16 @@ wsServer.on('request', request => {
 // Move this into a global store
 let chain = null
 
-function processRequest (req, connection) {
+function processRequest (connection, req) {
   console.log(`Action received ${req.action}`)
   switch (req.action) {
     case Actions.NEW:
-      console.log('Requesting new blockchain')
+      console.log('Creating a new blockchain...')
       chain = BlockchainService.newBlockchain()
       connection.sendUTF(
         JSON.stringify({
           status: 'Success',
-          action: Actions.ADD_GENESIS,
-          payload: {}
+          payload: { actions: [Actions.MINE_BLOCK, Actions.VALIDATE_BC] }
         })
       )
       break

@@ -10,16 +10,19 @@
 import { client as WebSocketClient } from 'websocket'
 import Menu from './Menu'
 
+process.title = 'blockchain-explorer'
+
 const client = new WebSocketClient()
 
-client.on('connect', function (connection) {
+client.on('connect', connection => {
   console.log('Client Connected')
 
-  connection.on('message', function (message) {
+  connection.on('message', async message => {
     const { type, utf8Data } = message
     if (type === 'utf8') {
       console.log("Received: '" + utf8Data + "'")
-      handleIncomingMessages(utf8Data)
+      const action = await handleIncomingMessages(utf8Data)
+      sendAction(connection, action)
     } else {
       console.error(`Unable to handle message type ${type}`)
     }
@@ -32,28 +35,32 @@ client.on('connect', function (connection) {
     console.log('echo-protocol Connection Closed')
   })
 
-  listActions(connection)
+  connection.sendUTF(JSON.stringify({ action: '*' }))
 })
 
 client.connect('ws://localhost:1337')
 
-function handleIncomingMessages (data) {
+async function handleIncomingMessages (data) {
   const messageObj = JSON.parse(data)
   if (messageObj.payload.actions) {
-    handleActionListing(messageObj.payload.actions)
+    return handleActionListing(messageObj.payload.actions)
   }
 }
 
-function handleActionListing (actions) {
+async function handleActionListing (actions) {
   console.log('List of actions:')
   const menu = new Menu(actions)
-  menu.display().then(selection => {
+  return menu.display().then(selection => {
     console.log(`Your selection is ${selection}`)
+    return selection
   })
 }
 
-function listActions (connection) {
-  connection.sendUTF(JSON.stringify({ actions: '*' }))
+function listActions (connection) {}
+
+function sendAction (connection, action) {
+  console.log(`Sending action ${action}`)
+  connection.sendUTF(JSON.stringify({ action }))
 }
 
 // client.onerror = function (event) {
