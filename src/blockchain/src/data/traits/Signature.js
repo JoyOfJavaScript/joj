@@ -31,15 +31,10 @@ export const Signature = (state, keys) => ({
  */
 const signInput = (privateKey, input) =>
   Maybe.of(k => i => k)
-    .ap(
-      Maybe.fromNullable(privateKey).orElseThrow(
-        new Error(`Unable to fetch key from path ${privateKey}`)
-      )
-    )
+    .ap(Maybe.fromNullable(privateKey))
     .ap(Maybe.fromNullable(input))
-    .map(pem => ({
-      key: pem
-    }))
+    .map(String)
+    .map(key => ({ key }))
     .map(credentials => {
       const sign = crypto.createSign(SIGN_ALGO)
       sign.update(input)
@@ -53,7 +48,7 @@ const signInput = (privateKey, input) =>
 
 const verifySignatureInput = (publicKey, data, signature) =>
   Maybe.of(k => d => s => [k, d, s])
-    .ap(Maybe.fromNullable(publicKey))
+    .ap(Maybe.fromNullable(publicKey).map(String))
     .ap(Maybe.fromNullable(data))
     .ap(Maybe.fromNullable(signature))
     .map(([pem, input, sign]) => {

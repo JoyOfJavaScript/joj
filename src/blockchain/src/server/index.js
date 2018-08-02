@@ -59,6 +59,9 @@ function processRequest (connection, req) {
         })
       )
       break
+    case Actions.MINE_BLOCK:
+      console.log('Mining new block')
+      BlockchainService.break
     case Actions.VALIDATE_BC:
       connection.sendUTF(
         JSON.stringify({

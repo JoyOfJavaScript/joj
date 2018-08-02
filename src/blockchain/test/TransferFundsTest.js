@@ -1,34 +1,22 @@
-import { assert } from 'chai'
-import Wallet from '../src/data/Wallet'
 import BlockchainService from '../src/service/BlockchainService'
-import Blockchain from '../src/data/Blockchain'
+import Key from '../src/data/Key'
 import Money from '../src/data/Money'
 import Transaction from '../src/data/Transaction'
-import path from 'path'
-import fs from 'fs'
+import Wallet from '../src/data/Wallet'
+import { assert } from 'chai'
 
 describe('Transfer Funds', () => {
   it('Should transfer funds from one wallet to the next', async () => {
-    const base = path.join(__dirname, '../..', 'blockchain-wallets')
     // Luke's digital wallet
-    const luke = Wallet(
-      fs.readFileSync(path.join(base, 'luke-public.pem'), 'utf8'),
-      fs.readFileSync(path.join(base, 'luke-private.pem'), 'utf8')
-    )
+    const luke = Wallet(Key('luke-public.pem'), Key('luke-private.pem'))
 
     // Ana's digital wallet
-    const ana = Wallet(
-      fs.readFileSync(path.join(base, 'ana-public.pem'), 'utf8'),
-      fs.readFileSync(path.join(base, 'ana-private.pem'), 'utf8')
-    )
+    const ana = Wallet(Key('ana-public.pem'), Key('ana-private.pem'))
 
     // Some miner
-    const miner = Wallet(
-      fs.readFileSync(path.join(base, 'miner-public.pem'), 'utf8'),
-      fs.readFileSync(path.join(base, 'miner-private.pem'), 'utf8')
-    )
+    const miner = Wallet(Key('miner-public.pem'), Key('miner-private.pem'))
 
-    const ledger = Blockchain.init()
+    const ledger = BlockchainService.newBlockchain()
 
     const first = Transaction(null, miner.address, Money('₿', 100))
     first.generateSignature(miner.privateKey)
@@ -37,7 +25,7 @@ describe('Transfer Funds', () => {
     // Mine some initial block, after mining the reward is BTC 100 for wa
     await BlockchainService.minePendingTransactions(ledger, miner.address)
 
-    const balance = BlockchainService.calculateBalanceOfAddress(
+    const balance = BlockchainService.calculateBalanceOfWallet(
       ledger,
       miner.address
     )
@@ -49,17 +37,17 @@ describe('Transfer Funds', () => {
     // Mine the next block to retrieve reward
     await BlockchainService.minePendingTransactions(ledger, miner.address)
 
-    BlockchainService.transferFundsBetween(ledger, miner, luke, Money('₿', 20))
+    BlockchainService.transferFunds(ledger, miner, luke, Money('₿', 20))
     await BlockchainService.minePendingTransactions(ledger, miner.address)
 
-    let lukeBalance = BlockchainService.calculateBalanceOfAddress(
+    let lukeBalance = BlockchainService.calculateBalanceOfWallet(
       ledger,
       luke.address
     )
     console.log("Luke's balance is", lukeBalance)
     assert.isOk(lukeBalance.equals(Money('₿', 20)))
 
-    let minerBalance = BlockchainService.calculateBalanceOfAddress(
+    let minerBalance = BlockchainService.calculateBalanceOfWallet(
       ledger,
       miner.address
     )
@@ -69,15 +57,15 @@ describe('Transfer Funds', () => {
     )
 
     // Transfer funds between Luke and Ana
-    BlockchainService.transferFundsBetween(ledger, luke, ana, Money('₿', 10))
+    BlockchainService.transferFunds(ledger, luke, ana, Money('₿', 10))
     await BlockchainService.minePendingTransactions(ledger, miner.address)
 
-    let anaBalance = BlockchainService.calculateBalanceOfAddress(
+    let anaBalance = BlockchainService.calculateBalanceOfWallet(
       ledger,
       ana.address
     )
 
-    lukeBalance = BlockchainService.calculateBalanceOfAddress(
+    lukeBalance = BlockchainService.calculateBalanceOfWallet(
       ledger,
       luke.address
     )
@@ -92,15 +80,12 @@ describe('Transfer Funds', () => {
     )
 
     // Both wallets currently have about 10 BTC
-    BlockchainService.transferFundsBetween(ledger, luke, ana, Money('₿', 5))
+    BlockchainService.transferFunds(ledger, luke, ana, Money('₿', 5))
     await BlockchainService.minePendingTransactions(ledger, miner.address)
 
-    anaBalance = BlockchainService.calculateBalanceOfAddress(
-      ledger,
-      ana.address
-    )
+    anaBalance = BlockchainService.calculateBalanceOfWallet(ledger, ana.address)
 
-    lukeBalance = BlockchainService.calculateBalanceOfAddress(
+    lukeBalance = BlockchainService.calculateBalanceOfWallet(
       ledger,
       luke.address
     )
@@ -116,16 +101,13 @@ describe('Transfer Funds', () => {
     )
 
     // Ana sends Luke some BTC 5, then Luke returns 3
-    BlockchainService.transferFundsBetween(ledger, ana, luke, Money('₿', 5))
-    BlockchainService.transferFundsBetween(ledger, luke, ana, Money('₿', 3))
+    BlockchainService.transferFunds(ledger, ana, luke, Money('₿', 5))
+    BlockchainService.transferFunds(ledger, luke, ana, Money('₿', 3))
     await BlockchainService.minePendingTransactions(ledger, miner.address)
 
-    anaBalance = BlockchainService.calculateBalanceOfAddress(
-      ledger,
-      ana.address
-    )
+    anaBalance = BlockchainService.calculateBalanceOfWallet(ledger, ana.address)
 
-    lukeBalance = BlockchainService.calculateBalanceOfAddress(
+    lukeBalance = BlockchainService.calculateBalanceOfWallet(
       ledger,
       luke.address
     )
@@ -142,17 +124,11 @@ describe('Transfer Funds', () => {
 
     // No funds left to transfer!
     assert.throws(
-      () =>
-        BlockchainService.transferFundsBetween(
-          ledger,
-          luke,
-          ana,
-          Money('₿', 30)
-        ),
+      () => BlockchainService.transferFunds(ledger, luke, ana, Money('₿', 30)),
       RangeError
     )
 
-    minerBalance = BlockchainService.calculateBalanceOfAddress(
+    minerBalance = BlockchainService.calculateBalanceOfWallet(
       ledger,
       miner.address
     )
@@ -163,7 +139,7 @@ describe('Transfer Funds', () => {
 
     // Print ledger
     // TODO:  Use ES7 String padding to format this output
-    //console.log(ledger.map(x => x.inspect()))
+    // console.log(ledger.map(x => x.inspect()))
 
     assert.isOk(
       BlockchainService.isChainValid(ledger, true),

@@ -7,6 +7,7 @@ import Transaction from '../data/Transaction'
 import TransactionalBlock from '../data/TransactionalBlock'
 import Wallet from '../data/Wallet'
 import fs from 'fs'
+import helpers from '../common/helpers'
 import path from 'path'
 
 // As of writing, current mining reward

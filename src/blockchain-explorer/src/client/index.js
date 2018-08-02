@@ -9,41 +9,27 @@
  */
 import { client as WebSocketClient } from 'websocket'
 import Menu from './Menu'
-import util from 'util'
 
 process.title = 'blockchain-explorer'
+const { log, error } = console
 
-const client = new WebSocketClient()
+const client = new WebSocketClient() // Can't promisify this API nor the socket.io API since they follow non-standard callbacks
 
-const connect = util.promisify(client.on.bind(client, 'connect'))
+client.on('connect', connection => {
+  log('Client Connected')
 
-connect().then(
-  err => {
-    console.log(`Major error ${err.message}`)
-  },
-  connection => {
-    console.log('Client Connected')
-    connection.on('message', async message => {
-      const { type, utf8Data } = message
-      if (type === 'utf8') {
-        console.log("Received: '" + utf8Data + "'")
-        const action = await handleIncomingMessages(utf8Data)
-        sendAction(connection, action)
-      } else {
-        console.error(`Unable to handle message type ${type}`)
-      }
-    })
+  // Handles messages from server
+  handleNewMessage(connection)
 
-    connection.on('error', function (error) {
-      console.log('Connection Error: ' + error.toString())
-    })
-    connection.on('close', function () {
-      console.log('echo-protocol Connection Closed')
-    })
+  // Handles connection errors
+  handleConnectionError(connection)
 
-    connection.sendUTF(JSON.stringify({ action: '*' }))
-  }
-)
+  // Handles connection closed from server
+  handleConnectionClosed(connection)
+
+  // Initiates conversation
+  connection.sendUTF(JSON.stringify({ action: '*' }))
+})
 
 client.connect('ws://localhost:1337')
 
@@ -55,17 +41,41 @@ async function handleIncomingMessages (data) {
 }
 
 async function handleActionListing (actions) {
-  console.log('List of actions:')
+  log('List of actions:')
   const menu = new Menu(actions)
   return menu.display().then(selection => {
-    console.log(`Your selection is ${selection}`)
+    log(`Your selection is ${selection}`)
     return selection
   })
 }
 
 function sendAction (connection, action) {
-  console.log(`Sending action ${action}`)
+  log(`Sending action ${action}`)
   connection.sendUTF(JSON.stringify({ action }))
+}
+
+function handleConnectionClosed (connection) {
+  connection.on('close', function () {
+    log('echo-protocol Connection Closed')
+  })
+}
+
+function handleConnectionError (connection) {
+  connection.on('error', function (error) {
+    log('Connection Error: ' + error.toString())
+  })
+}
+
+function handleNewMessage (connection) {
+  connection.on('message', async message => {
+    const { type, utf8Data } = message
+    if (type === 'utf8') {
+      log("Received: '" + utf8Data + "'")
+      sendAction(connection, await handleIncomingMessages(utf8Data))
+    } else {
+      error(`Unable to handle message type ${type}`)
+    }
+  })
 }
 
 /*
