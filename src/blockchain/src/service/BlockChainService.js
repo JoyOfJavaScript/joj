@@ -162,25 +162,24 @@ const isChainValid = (blockchain, checkTransactions = false) =>
       Pair(Object, Object)(currentBlock, blockchain.blockAt(currentIndex))
     )
     // Validate every pair of blocks is valid
-    .every(pair => {
-      const current = pair.left
-      const previous = pair.right
-      return (
-        // 1 Hashed can't be tampered with
-        current.hash === current.calculateHash() &&
-        // 2. Blocks form a chain
-        current.previousHash === previous.hash &&
-        // 3. Check timestamps
-        current.timestamp >= previous.timestamp &&
-        // 4. Check is hash is solved
-        (checkTransactions
-          ? current.hash.substring(0, current.difficulty) ===
-              Array(current.difficulty).fill(0).join('') &&
-              // 5. Verify Transaction signatures
-              current.pendingTransactions.every(tx => tx.verifySignature())
-          : true)
-      )
-    })
+    .every(([current, previous]) =>
+      checkPairs(checkTransactions, current, previous)
+    )
+
+const checkPairs = (checkTransactions, current, previous) =>
+  // 1 Hashed can't be tampered with
+  current.hash === current.calculateHash() &&
+  // 2. Blocks form a chain
+  current.previousHash === previous.hash &&
+  // 3. Check timestamps
+  current.timestamp >= previous.timestamp &&
+  // 4. Check is hash is solved
+  (checkTransactions
+    ? current.hash.substring(0, current.difficulty) ===
+        Array(current.difficulty).fill(0).join('') &&
+        // 5. Verify Transaction signatures
+        current.pendingTransactions.every(tx => tx.verifySignature())
+    : true)
 
 // eslint-disable-next-line max-statements
 const transferFunds = (txBlockchain, walletA, walletB, funds) => {

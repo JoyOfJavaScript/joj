@@ -1,10 +1,10 @@
 import * as Actions from './actions'
 import * as Codes from './codes'
 import BlockchainService from '../service/BlockChainService'
-import Transaction from '../data/Transaction'
-import Money from '../data/Money'
-import Wallet from '../data/Wallet'
 import Key from '../data/Key'
+import Money from '../data/Money'
+import Transaction from '../data/Transaction'
+import Wallet from '../data/Wallet'
 import WebSocket from 'websocket'
 import http from 'http'
 
@@ -33,7 +33,7 @@ wsServer.on('request', request => {
   console.log('Connection opened with server!')
   // This is the most important callback for us, we'll handle
   // all messages from users here.
-  connection.on('message', message => {
+  connection.on('message', async message => {
     if (message.type === 'utf8') {
       processRequest(connection, JSON.parse(message.utf8Data))
       // process WebSocket message
@@ -50,7 +50,7 @@ wsServer.on('request', request => {
 // Move this into a global store
 let chain = null
 
-function processRequest (connection, req) {
+async function processRequest (connection, req) {
   switch (req.action) {
     case Actions.NEW:
       console.log('Creating a new blockchain...')
@@ -66,11 +66,23 @@ function processRequest (connection, req) {
       console.log('Mining new block')
       const miner = Wallet(Key('miner-public.pem'), Key('miner-private.pem'))
       const first = Transaction(null, miner.address, Money('₿', 100))
-      first.generateSignature(miner.privateKey)
+      first.signature = first.generateSignature(miner.privateKey)
       chain.pendingTransactions = [first]
 
       // Mine some initial block, after mining the reward is BTC 100 for wa
-      BlockchainService.minePendingTransactions(chain, miner.address)
+      const block = await BlockchainService.minePendingTransactions(
+        chain,
+        miner.address
+      )
+      connection.sendUTF(
+        JSON.stringify({
+          status: 'Success',
+          payload: {
+            block: block.hash,
+            actions: [Actions.VALIDATE_BC]
+          }
+        })
+      )
       break
     }
     case Actions.VALIDATE_BC:

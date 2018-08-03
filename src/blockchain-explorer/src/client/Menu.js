@@ -25,6 +25,12 @@ class Menu {
     return this._instance
   }
 
+  static close () {
+    if (this._instance) {
+      this._instance.rl.close()
+    }
+  }
+
   _reset (cursorPos, actions) {
     this.cursorPos = cursorPos
     this.actions = actions

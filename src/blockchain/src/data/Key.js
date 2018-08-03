@@ -7,7 +7,6 @@ const Key = name => {
   if (!k || k.length === 0) {
     throw new Error(`Key file is empty ${name}`)
   }
-  console.log('Key length is ' + k.length)
   return {
     toString: () => k,
     [Symbol.toPrimitive]: () => k

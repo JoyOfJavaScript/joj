@@ -35,6 +35,7 @@ client.connect('ws://localhost:1337')
 
 client.on('connectFailed', err => {
   log(`Client was not able to connect. ${err}`)
+  Menu.close()
 })
 
 async function handleIncomingMessages (data) {
@@ -58,7 +59,8 @@ function sendAction (connection, action) {
 
 function handleConnectionClosed (connection) {
   connection.on('close', function () {
-    log('echo-protocol Connection Closed')
+    log('Connection Closed')
+    Menu.close()
   })
 }
 

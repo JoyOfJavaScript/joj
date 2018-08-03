@@ -1,4 +1,4 @@
-/*eslint fp/no-mutation:0,fp/no-throw:0*/
+/* eslint fp/no-mutation:0,fp/no-throw:0 */
 import { curry, identity } from '../combinators'
 
 /**
@@ -8,12 +8,15 @@ import { curry, identity } from '../combinators'
  * @param {Object} val   Any value
  * @return {boolean} True or false whether the value's type constructor matches
  */
-export const is = ctor => val => (val != null && val.constructor === ctor) || val instanceof ctor
+export const is = ctor => val =>
+  (val != null && val.constructor === ctor) || val instanceof ctor
 
 const fork = (join, func1, func2) => val => join(func1(val), func2(val))
 
 const type = val =>
-  val === null ? 'Null' : !val ? 'Undefined' : Object.prototype.toString.call(val).slice(8, -1)
+  (val === null
+    ? 'Null'
+    : !val ? 'Undefined' : Object.prototype.toString.call(val).slice(8, -1))
 
 const tap = fn => x => {
   fn(x)
@@ -39,7 +42,7 @@ export const Pair = (A, B) => (l, r) =>
     left,
     right,
     constructor: Pair,
-    [Symbol.iterator]: function*() {
+    [Symbol.iterator]: function * () {
       yield left
       yield right
     },
@@ -59,16 +62,24 @@ export const Pair = (A, B) => (l, r) =>
       right
     }),
     [Symbol.toPrimitive]: hint =>
-      console.log('As primitive', hint) + hint === 'string'
+      (console.log('As primitive', hint) + hint === 'string'
         ? `Pair [${left}, ${right}]`
-        : [left, right]
+        : [left, right])
   }))(
     // Check that objects passed into this tuple are the right type
     typeOf(A)(l),
     typeOf(B)(r)
   )
 
-Pair['@@implements'] = ['mergeMap', 'bimap', 'chain', 'merge', 'foldL', 'foldR', 'equals']
+Pair['@@implements'] = [
+  'mergeMap',
+  'bimap',
+  'chain',
+  'merge',
+  'foldL',
+  'foldR',
+  'equals'
+]
 
 Pair.TYPE = Pair(String, String)('', '')
 Pair['@@type'] = 'Pair'
