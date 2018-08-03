@@ -43,7 +43,7 @@ wsServer.on('request', request => {
 
   connection.on('close', connection => {
     // close user connection
-    console.log('Connection closed!')
+    console.log('Connection closed by client!')
   })
 })
 
@@ -54,7 +54,7 @@ async function processRequest (connection, req) {
   switch (req.action) {
     case Actions.NEW:
       console.log('Creating a new blockchain...')
-      chain = BlockchainService.newBlockchain()
+      chain = await BlockchainService.newBlockchain()
       connection.sendUTF(
         JSON.stringify({
           status: 'Success',
@@ -85,18 +85,20 @@ async function processRequest (connection, req) {
       )
       break
     }
-    case Actions.VALIDATE_BC:
+    case Actions.VALIDATE_BC: {
       console.log(`Validating blockchain with ${chain.length()} blocks`)
+      const isValid = await BlockchainService.isChainValid(chain)
       connection.sendUTF(
         JSON.stringify({
           status: 'Success',
           payload: {
-            result: !!BlockchainService.isChainValid(chain),
+            result: !!isValid,
             actions: [Actions.MINE_BLOCK, Actions.VALIDATE_BC]
           }
         })
       )
       break
+    }
     default: {
       const msg = `Unspecified action ${req.action}`
       console.log(msg)

@@ -81,6 +81,8 @@ Pair['@@implements'] = [
   'equals'
 ]
 
+Pair.split = (predA, predB, arr) =>
+  Pair(Array, Array)(arr.filter(predA), arr.filter(predB))
 Pair.TYPE = Pair(String, String)('', '')
 Pair['@@type'] = 'Pair'
 

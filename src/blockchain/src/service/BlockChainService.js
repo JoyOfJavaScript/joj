@@ -48,10 +48,11 @@ const addBlock = curry((blockchain, newBlock) => {
  * @param {DataBlock}   newBlock   New block to add into the chain
  */
 const mineBlock = curry(async (blockchain, newBlock) => {
-  newBlock.previousHash = blockchain.last().hash
-  newBlock = await BlockService.mineBlock(newBlock.difficulty, newBlock)
-  blockchain.push(newBlock)
-  return newBlock
+  let block = newBlock
+  block.previousHash = blockchain.last().hash
+  block = await BlockService.mineBlock(block.difficulty, block)
+  blockchain.push(block)
+  return block
 })
 
 /**
@@ -61,27 +62,34 @@ const mineBlock = curry(async (blockchain, newBlock) => {
  * @param {Blockchain} blockchain Chain to calculate balance from
  * @param {string}     address    Address to send reward to
  */
-const calculateBalanceOfWallet = curry((blockchain, address) =>
-  blockchain
+const calculateBalanceOfWallet = curry((blockchain, address) => {
+  const transactions = blockchain
     .toArray()
     // Ignore Genesis block as this won't ever have any pending transactions
     .filter(b => !b.isGenesis())
     // Retrieve all pending transactions
     .flatMap(txBlock => txBlock.pendingTransactions)
-    // Separate the transactions into 2 groups:
-    //    1: Matches the fromAddress
-    //    2: Matches the toAddress
-    .split(tx => tx.sender === address, tx => tx.recipient === address)
-    // Now apply a function to each group to extract the amount to add/subtract as money
-    .bimap(Array, Array)(
-      arrA => arrA.map(tx => Money(tx.funds.currency, -tx.funds.amount)),
-      arrB => arrB.map(tx => Money(tx.funds.currency, tx.funds.amount))
+
+  // Separate the transactions into 2 groups:
+  //    1: Matches the fromAddress
+  //    2: Matches the toAddress
+  return (
+    Pair.split(
+      tx => tx.sender === address,
+      tx => tx.recipient === address,
+      transactions
     )
-    .merge((a, b) => [...a, ...b])
-    // Finally, add across all the values to compute sum
-    // Money is monoidal over Money.add and Money.nothing
-    .reduce(Money.add, Money.zero())
-)
+      // Now apply a function to each group to extract the amount to add/subtract as money
+      .bimap(Array, Array)(
+        arrA => arrA.map(tx => Money(tx.funds.currency, -tx.funds.amount)),
+        arrB => arrB.map(tx => Money(tx.funds.currency, tx.funds.amount))
+      )
+      .merge((a, b) => [...a, ...b])
+      // Finally, add across all the values to compute sum
+      // Money is monoidal over Money.add and Money.nothing
+      .reduce(Money.add, Money.zero())
+  )
+})
 
 // -- IMPERATIVE VERSION OF calculateBalanceOfAddress --
 //
