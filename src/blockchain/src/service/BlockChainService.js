@@ -34,7 +34,7 @@ const newBlockchain = () => Blockchain.init()
  */
 const addBlock = curry((blockchain, newBlock) => {
   newBlock.previousHash = blockchain.last().hash
-  newBlock.calculateHash()
+  newBlock.hash = newBlock.calculateHash()
   blockchain.push(newBlock)
   return newBlock
 })
@@ -130,7 +130,7 @@ const minePendingTransactions = curry(async (txBlockchain, address) =>
       address,
       Money.add(Money('₿', fee), MINING_REWARD)
     )
-    tx.generateSignature(NETWORK.privateKey)
+    tx.signature = tx.generateSignature(NETWORK.privateKey)
 
     // After the transactions have been added to a block, reset them with the reward for the next miner
     txBlockchain.pendingTransactions = [tx]
@@ -195,11 +195,11 @@ const transferFunds = (txBlockchain, walletA, walletB, funds) => {
   }
   const fee = Money.multiply(funds, Money('₿', 0.02))
   const transfer = Transaction(walletA.address, walletB.address, funds)
-  transfer.generateSignature(walletA.privateKey)
+  transfer.signature = transfer.generateSignature(walletA.privateKey)
 
   // Sender pays the fee
   const txFee = Transaction(null, walletA.address, fee.asNegative())
-  txFee.generateSignature(walletA.privateKey)
+  txFee.signature = txFee.generateSignature(walletA.privateKey)
 
   // Create new transactions in the blockchain representing the transfer and the fee
   txBlockchain.pendingTransactions.push(transfer, txFee)

@@ -48,7 +48,10 @@ class Menu {
       stdin.setRawMode(true)
       stdin.on('keypress', (_, key) => {
         if (isKillSequence(key)) {
-          process.exit()
+          stdout.write(cursorUp(this.cursorPos))
+          readline.clearScreenDown(stdout)
+          stdout.write('Have a great day!\n')
+          process.exit(0)
         } else {
           if (isUpKey(key)) {
             if (this.cursorPos > 0) {
@@ -57,7 +60,7 @@ class Menu {
             }
           } else if (isDownKey(key)) {
             if (this.cursorPos < this.itemsCount - 1) {
-              process.stdout.write(cursorDown(1))
+              stdout.write(cursorDown(1))
               this.cursorPos++
             }
           }
@@ -65,14 +68,13 @@ class Menu {
       })
     } else {
       // Handle numerical values at the bottom of the menu
-      this.rl.output.write(cursorDown(this.itemsCount))
+      stdout.write(cursorDown(this.itemsCount))
     }
   }
 
   async ask () {
     return new Promise(resolve => {
       this.rl.question(menu`Pick your actions ${this.actions}`, answer => {
-        readline.clearLine()
         if (!answer || answer.length === 0) {
           // Move cursor to the bottom
           this.rl.output.write(cursorDown(this.itemsCount - this.cursorPos))

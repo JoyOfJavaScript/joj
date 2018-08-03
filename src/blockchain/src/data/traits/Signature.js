@@ -7,10 +7,13 @@ const SIGN_ALGO = 'RSA-SHA256'
 
 export const Signature = (state, keys) => ({
   generateSignature (privateKeyPath) {
-    return (state.signature = signInput(
+    return signInput(
       privateKeyPath,
       keys.map(k => state[k]).filter(prop => !!prop).join('')
-    ))
+    )
+  },
+  set signature (s) {
+    state.signature = s
   },
   verifySignature () {
     return signatureVerifier(

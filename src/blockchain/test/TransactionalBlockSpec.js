@@ -1,5 +1,5 @@
-import assert from 'assert'
 import TransactionalBlock from '../src/data/TransactionalBlock'
+import assert from 'assert'
 
 describe('Transactional Block object', () => {
   it('Should init a new trasactional block', () => {
@@ -13,7 +13,7 @@ describe('Transactional Block object', () => {
     const currentHash = b.hash
     assert.ok(currentHash.length > 0)
     b.nonce = 99
-    b.calculateHash()
+    b.hash = b.calculateHash()
     assert.ok(b.hash.length > 0)
     assert.notEqual(currentHash, b.hash)
   })

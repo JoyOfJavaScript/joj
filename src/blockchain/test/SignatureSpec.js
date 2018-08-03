@@ -20,6 +20,7 @@ describe('Signature', () => {
 
     let signature = Signature(state, ['sender', 'recipient'])
     const sign = signature.generateSignature(privateKey)
+    signature.signature = sign
     assert.isNotEmpty(sign)
 
     // Assert 4 successful attempts
@@ -31,7 +32,7 @@ describe('Signature', () => {
     process.env.SECURE_ATTEMPTS = 1
     signature = Signature(state, ['sender', 'recipient'])
     const otherPrivateKey = fs.readFileSync(lukePrivateKeyPath, 'utf8')
-    signature.generateSignature(otherPrivateKey)
+    signature.signature = signature.generateSignature(otherPrivateKey)
 
     for (const i in [1, 2]) {
       assert.isNotOk(signature.verifySignature())

@@ -17,9 +17,9 @@ const Transaction = (sender, recipient, funds) => {
     recipient,
     funds,
     nonce: 0,
-    get id() {
+    get id () {
       return this.calculateHash()
-    },
+    }
   }
   return Object.assign(
     state,
@@ -29,5 +29,5 @@ const Transaction = (sender, recipient, funds) => {
 }
 export default Transaction
 
-//https://medium.com/programmers-blockchain/creating-your-first-blockchain-with-java-part-2-transactions-2cdac335e0ce
-//https://nodejs.org/api/crypto.html#crypto_class_sign
+// https://medium.com/programmers-blockchain/creating-your-first-blockchain-with-java-part-2-transactions-2cdac335e0ce
+// https://nodejs.org/api/crypto.html#crypto_class_sign

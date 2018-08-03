@@ -1,7 +1,7 @@
 import BlockHeader from './BlockHeader'
 import Genesis from './traits/Genesis'
 import Hash from './traits/Hash'
-import PendingTransaction from './traits/PendingTransaction'
+import PendingTransactions from './traits/PendingTransactions'
 import TxView from './traits/TxView'
 /**
  * Transactional blocks contain the set of all pending transactions in the chain
@@ -16,15 +16,13 @@ import TxView from './traits/TxView'
 const TransactionalBlock = (pendingTransactions = [], previousHash = '') => {
   // TODO: change order of args
   const state = {
-    constructor: TransactionalBlock,
-    [Symbol.hasInstance]: i => i.constructor.name === 'TransactionalBlock',
     pendingTransactions
   }
   return Object.assign(
     state,
     BlockHeader(previousHash),
     Hash.init(state, ['timestamp', 'previousHash', 'nonce']),
-    PendingTransaction(state),
+    PendingTransactions(state),
     TxView(state),
     Genesis(state)
   )

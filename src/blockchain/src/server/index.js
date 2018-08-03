@@ -1,6 +1,10 @@
 import * as Actions from './actions'
 import * as Codes from './codes'
 import BlockchainService from '../service/BlockChainService'
+import Transaction from '../data/Transaction'
+import Money from '../data/Money'
+import Wallet from '../data/Wallet'
+import Key from '../data/Key'
 import WebSocket from 'websocket'
 import http from 'http'
 
@@ -47,7 +51,6 @@ wsServer.on('request', request => {
 let chain = null
 
 function processRequest (connection, req) {
-  console.log(`Action received ${req.action}`)
   switch (req.action) {
     case Actions.NEW:
       console.log('Creating a new blockchain...')
@@ -59,16 +62,25 @@ function processRequest (connection, req) {
         })
       )
       break
-    case Actions.MINE_BLOCK:
+    case Actions.MINE_BLOCK: {
       console.log('Mining new block')
-      BlockchainService.break
+      const miner = Wallet(Key('miner-public.pem'), Key('miner-private.pem'))
+      const first = Transaction(null, miner.address, Money('₿', 100))
+      first.generateSignature(miner.privateKey)
+      chain.pendingTransactions = [first]
+
+      // Mine some initial block, after mining the reward is BTC 100 for wa
+      BlockchainService.minePendingTransactions(chain, miner.address)
+      break
+    }
     case Actions.VALIDATE_BC:
+      console.log(`Validating blockchain with ${chain.length()} blocks`)
       connection.sendUTF(
         JSON.stringify({
           status: 'Success',
-          action: Actions.VALIDATE_BC,
           payload: {
-            result: !!BlockchainService.isChainValid(chain)
+            result: !!BlockchainService.isChainValid(chain),
+            actions: [Actions.MINE_BLOCK, Actions.VALIDATE_BC]
           }
         })
       )

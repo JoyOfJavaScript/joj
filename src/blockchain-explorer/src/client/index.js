@@ -72,6 +72,7 @@ function handleNewMessage (connection) {
   connection.on('message', async message => {
     const { type, utf8Data } = message
     if (type === 'utf8') {
+      log('Server response: ', utf8Data)
       sendAction(connection, await handleIncomingMessages(utf8Data))
     } else {
       error(`Unable to handle message type ${type}`)

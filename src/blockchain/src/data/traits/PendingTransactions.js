@@ -6,19 +6,19 @@
  * @param {Object} state Instance data
  * @return {Object} An object containing methods to manage the state of pending transactions
  */
-const PendingTransaction = state => ({
-  get pendingTransactions() {
+const pendingTransactions = state => ({
+  get pendingTransactions () {
     return state.pendingTransactions
   },
-  addPendingTransaction(tx) {
+  addPendingTransaction (tx) {
     state.pendingTransactions.push(tx)
   },
-  pendingTransactionsToString() {
+  pendingTransactionsToString () {
     return state.pendingTransactions.map(JSON.stringify).join(' ')
   },
-  countPendingTransactions() {
+  countPendingTransactions () {
     return state.pendingTransactions.length
-  },
+  }
 })
 
-export default PendingTransaction
+export default pendingTransactions

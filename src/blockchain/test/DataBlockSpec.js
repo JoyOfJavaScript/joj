@@ -18,7 +18,7 @@ describe('Block object', () => {
     assert.equal(b.timestamp, 'tomorrow')
     const currentHash = b.hash
     b.nonce = 99
-    b.calculateHash()
+    b.hash = b.calculateHash()
     assert.notEqual(currentHash, b.hash)
   })
 })

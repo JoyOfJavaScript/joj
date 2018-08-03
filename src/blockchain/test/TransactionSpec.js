@@ -1,8 +1,8 @@
-import { assert } from 'chai'
-import Transaction from '../src/data/Transaction'
 import Money from '../src/data/Money'
-import path from 'path'
+import Transaction from '../src/data/Transaction'
+import { assert } from 'chai'
 import fs from 'fs'
+import path from 'path'
 
 describe('Transaction', () => {
   it('Should create a valid transaction', () => {
@@ -29,6 +29,7 @@ describe('Signature', () => {
     const signature = transaction.generateSignature(privateKey, 'coinbase')
     console.log('Signed data', signature)
     assert.isNotEmpty(signature)
+    transaction.signature = signature
 
     const result = transaction.verifySignature()
     assert.isOk(result)
@@ -48,6 +49,7 @@ describe('Signature', () => {
     const transaction = Transaction(null, publicKey, Money('USD', 30))
     assert.isNotEmpty(transaction.id)
     const signature = transaction.generateSignature(privateKey, 'coinbase')
+    transaction.signature = signature
     console.log('Signed data', signature)
     assert.isNotEmpty(signature)
     const result = transaction.verifySignature()

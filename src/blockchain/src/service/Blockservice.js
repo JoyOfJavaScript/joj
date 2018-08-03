@@ -10,25 +10,25 @@ const compareHashUntil = (block, hashPrefix, nonce = 1) => {
   }
   // Continue to compute the hash again with higher nonce value
   block.nonce = nonce
-  block.calculateHash()
+  block.hash = block.calculateHash()
   return compareHashUntil(block, hashPrefix, nonce + 1)
 }
 
 const handler = {
-  apply(target, thisArg, ...args) {
+  apply (target, thisArg, ...args) {
     const newBlock = Reflect.apply(target, thisArg, ...args)
     return newBlock.then(b => {
       Logger.trace(`New block mined! ${b.hash}`)
       return b
     })
-  },
+  }
 }
 
 /**
  * Exported BlockLogic interface
  */
 const BlockLogic = {
-  mineBlock: process.env.LOG ? new Proxy(mineBlock, handler) : mineBlock,
+  mineBlock: process.env.LOG ? new Proxy(mineBlock, handler) : mineBlock
 }
 
 export default BlockLogic
