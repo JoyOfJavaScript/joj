@@ -6,26 +6,77 @@ class Menu {
   actions = []
   itemsCount = 0
   actionsMap = new Map()
+  rl
+  cursorPos = 0
+  itemsCount = 0
+  static _instance
+
   constructor (actions) {
+    this._createInterface()
+    this._reset(0, actions)
+  }
+
+  static show (actions) {
+    if (!this._instance) {
+      this._instance = new Menu(actions)
+    } else {
+      this._instance._reset(0, actions)
+    }
+    return this._instance
+  }
+
+  _reset (cursorPos, actions) {
+    this.cursorPos = cursorPos
     this.actions = actions
     this.itemsCount = actions.length
     this.actions.forEach((a, i) => {
       this.actionsMap.set(i, a)
     })
+  }
+
+  _createInterface () {
     this.rl = readline.createInterface({
       terminal: true,
       input: process.stdin,
       output: process.stdout
     })
+    const stdin = this.rl.input
+    const stdout = this.rl.output
+    readline.emitKeypressEvents(stdin)
+    if (stdin.isTTY) {
+      // Support scroll up and down using the keyboard
+      stdin.setRawMode(true)
+      stdin.on('keypress', (_, key) => {
+        if (isKillSequence(key)) {
+          process.exit()
+        } else {
+          if (isUpKey(key)) {
+            if (this.cursorPos > 0) {
+              stdout.write(cursorUp(1))
+              this.cursorPos--
+            }
+          } else if (isDownKey(key)) {
+            if (this.cursorPos < this.itemsCount - 1) {
+              process.stdout.write(cursorDown(1))
+              this.cursorPos++
+            }
+          }
+        }
+      })
+    } else {
+      // Handle numerical values at the bottom of the menu
+      this.rl.output.write(cursorDown(this.itemsCount))
+    }
   }
-  async display () {
+
+  async ask () {
     return new Promise(resolve => {
-      let cursporPos = 0 // keeps position of cursor on menu items
       this.rl.question(menu`Pick your actions ${this.actions}`, answer => {
+        readline.clearLine()
         if (!answer || answer.length === 0) {
           // Move cursor to the bottom
-          this.rl.output.write(cursorDown(this.itemsCount - cursporPos))
-          resolve(this.actionsMap.get(cursporPos))
+          this.rl.output.write(cursorDown(this.itemsCount - this.cursorPos))
+          resolve(this.actionsMap.get(this.cursorPos))
         } else {
           console.log(`Your selection is: ${answer}`)
           const index = parseInt(answer)
@@ -35,36 +86,8 @@ class Menu {
               : this.actionsMap.get(0)
           )
         }
-        readline.clearScreenDown()
-        this.rl.close()
       })
       this.rl.output.write(cursorUp(this.itemsCount))
-
-      readline.emitKeypressEvents(process.stdin)
-      if (process.stdin.isTTY) {
-        // Support scroll up and down using the keyboard
-        process.stdin.setRawMode(true)
-        this.rl.input.on('keypress', (value, key) => {
-          if (isKillSequence(key)) {
-            process.exit()
-          } else {
-            if (isUpKey(key)) {
-              if (cursporPos > 0) {
-                this.rl.output.write(cursorUp(1))
-                cursporPos--
-              }
-            } else if (isDownKey(key)) {
-              if (cursporPos < this.itemsCount - 1) {
-                this.rl.output.write(cursorDown(1))
-                cursporPos++
-              }
-            }
-          }
-        })
-      } else {
-        // Handle numerical values at the bottom of the menu
-        this.rl.output.write(cursorDown(this.itemsCount))
-      }
     })
   }
 }

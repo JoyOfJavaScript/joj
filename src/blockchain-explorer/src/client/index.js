@@ -33,6 +33,10 @@ client.on('connect', connection => {
 
 client.connect('ws://localhost:1337')
 
+client.on('connectFailed', err => {
+  log(`Client was not able to connect. ${err}`)
+})
+
 async function handleIncomingMessages (data) {
   const messageObj = JSON.parse(data)
   if (messageObj.payload.actions) {
@@ -41,9 +45,7 @@ async function handleIncomingMessages (data) {
 }
 
 async function handleActionListing (actions) {
-  log('List of actions:')
-  const menu = new Menu(actions)
-  return menu.display().then(selection => {
+  return Menu.show(actions).ask().then(selection => {
     log(`Your selection is ${selection}`)
     return selection
   })
@@ -70,7 +72,6 @@ function handleNewMessage (connection) {
   connection.on('message', async message => {
     const { type, utf8Data } = message
     if (type === 'utf8') {
-      log("Received: '" + utf8Data + "'")
       sendAction(connection, await handleIncomingMessages(utf8Data))
     } else {
       error(`Unable to handle message type ${type}`)

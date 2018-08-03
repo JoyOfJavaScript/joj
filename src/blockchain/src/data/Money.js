@@ -1,4 +1,4 @@
-import Validation from '../../../adt/dist/validation'
+import Validation from '@joj/adt/validation'
 
 const ZERO = 0
 

@@ -1,4 +1,4 @@
-import Maybe from '../../../../adt/dist/maybe'
+import Maybe from '@joj/adt/maybe'
 import SecureHandler from '../../common/SecureHandler'
 import crypto from 'crypto'
 
