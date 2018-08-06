@@ -7,7 +7,10 @@
  * ...
  * ...
  */
-import { client as WebSocketClient, WebSocketConnection } from 'websocket'
+import {
+  client as WebSocketClient,
+  connection as WebSocketConnection
+} from 'websocket'
 import { compose } from '@joj/adt/combinators'
 import * as Rx from './reactive-extensions'
 import Menu from './Menu'
@@ -51,7 +54,7 @@ client.on('connect', connection => {
         Menu.close()
       },
       complete: () => {
-        console.log('Thanks!')
+        console.log('Connection terminated by server!')
         Menu.close()
       }
     })
