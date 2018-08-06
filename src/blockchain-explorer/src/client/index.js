@@ -12,7 +12,7 @@ import {
   connection as WebSocketConnection
 } from 'websocket'
 import './reactive-extensions'
-import Menu from './Menu'
+import Menu from './menu'
 
 process.title = 'blockchain-explorer'
 const { log, error } = console
