@@ -1,5 +1,3 @@
-import Pair from '@joj/adt/pair'
-
 /**
  * Freeze an object (making it immutable) as well as any nested object
  * in this object's graph
@@ -17,16 +15,3 @@ export const deepFreeze = obj => {
 
 // Insert polyfill
 Object.deepFreeze = Object.deepFreeze || deepFreeze
-
-if (!Array.prototype.split) {
-
-  /**
-   * Splits the chain using two predicate functions
-   * @param {Function} predA First split criteria
-   * @param {Function} predB Second split criteria
-   * @return {Pair} Split arrays
-   */
-  Array.prototype.split = function(predA, predB) {
-    return Pair(Array, Array)(this.filter(predA), this.filter(predB))
-  }
-}

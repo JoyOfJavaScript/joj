@@ -1,6 +1,6 @@
-import { Combinators } from '@joj/adt'
+import { curry } from '../../../adt/dist/combinators'
 
-export const listen$ = Combinators.curry((eventName, element) => {
+export const listen$ = curry((eventName, element) => {
   return new Observable(observer => {
     // Create an event handler which sends data to the sink
     const handler = event => observer.next(event)
@@ -13,12 +13,12 @@ export const listen$ = Combinators.curry((eventName, element) => {
   })
 })
 
-export const throttle$ = Combinators.curry((limit, stream) => {
+export const throttle$ = curry((limit, stream) => {
   let lastRan = 0
   let lastInterval = 0
   return new Observable(observer => {
     const subs = stream.subscribe({
-      next(value) {
+      next (value) {
         if (!lastRan) {
           observer.next(value)
           lastRan = Date.now()
@@ -32,51 +32,60 @@ export const throttle$ = Combinators.curry((limit, stream) => {
           }, limit - (Date.now() - lastRan))
         }
       },
-      error(e) {
+      error (e) {
         observer.error(e)
       },
-      complete(a) {
+      complete (a) {
         observer.complete(a)
-      },
+      }
     })
     return _ => subs.unsubscribe()
   })
 })
 
-export const map$ = Combinators.curry(
+export const map$ = curry(
   (fn, stream) =>
     new Observable(observer => {
       const subs = stream.subscribe({
-        next(value) {
+        next (value) {
           observer.next(fn(value))
         },
-        error(e) {
+        error (e) {
           observer.error(e)
         },
-        complete(a) {
+        complete (a) {
           observer.complete(a)
-        },
+        }
       })
       return _ => subs.unsubscribe()
     })
 )
 
-export const filter$ = Combinators.curry(
+export const filter$ = curry(
   (predicate, stream) =>
     new Observable(observer => {
       const subs = stream.subscribe({
-        next(value) {
+        next (value) {
           if (predicate(value)) {
             observer.next(value)
           }
         },
-        error(e) {
+        error (e) {
           observer.error(e)
         },
-        complete(a) {
+        complete (a) {
           observer.complete(a)
-        },
+        }
       })
       return _ => subs.unsubscribe()
     })
 )
+
+// Extend native Observable object
+Observable.prototype.filter = function (predicate) {
+  return filter$(predicate, this)
+}
+
+Observable.prototype.map = function (fn) {
+  return map$(fn, this)
+}

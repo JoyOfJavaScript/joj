@@ -1,7 +1,7 @@
-import { assert } from 'chai'
 import Signature from '../src/data/traits/Signature'
-import path from 'path'
+import { assert } from 'chai'
 import fs from 'fs'
+import path from 'path'
 
 describe('Signature', () => {
   it('Should return on verify after 3 attempts', () => {
@@ -34,7 +34,7 @@ describe('Signature', () => {
     const otherPrivateKey = fs.readFileSync(lukePrivateKeyPath, 'utf8')
     signature.signature = signature.generateSignature(otherPrivateKey)
 
-    for (const i in [1, 2]) {
+    for (const i in [1, 2, 3]) {
       assert.isNotOk(signature.verifySignature())
     }
 

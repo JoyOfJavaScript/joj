@@ -7,7 +7,9 @@
  * ...
  * ...
  */
-import { client as WebSocketClient } from 'websocket'
+import { client as WebSocketClient, WebSocketConnection } from 'websocket'
+import { compose } from '@joj/adt/combinators'
+import * as Rx from './reactive-extensions'
 import Menu from './Menu'
 
 process.title = 'blockchain-explorer'
@@ -15,28 +17,50 @@ const { log, error } = console
 
 const client = new WebSocketClient() // Can't promisify this API nor the socket.io API since they follow non-standard callbacks
 
+const streamify = connection =>
+  new Observable(observer => {
+    // Handle incoming messages
+    connection.on('message', message => observer.next(message))
+
+    // Handler errors cases
+    const errorHandler = error => observer.error(new Error(error))
+    connection.on('error', errorHandler)
+    connection.on('connectFailed', errorHandler)
+
+    // Handle when the server stops sending data
+    connection.on('close', () => observer.complete())
+
+    return () => {
+      // Gracefully close the connection
+      connection.close(WebSocketConnection.CLOSE_REASON_NORMAL)
+    }
+  })
+
 client.on('connect', connection => {
   log('Client Connected')
 
-  // Handles messages from server
-  handleNewMessage(connection)
-
-  // Handles connection errors
-  handleConnectionError(connection)
-
-  // Handles connection closed from server
-  handleConnectionClosed(connection)
+  streamify(connection)
+    .filter(({ type }) => type === 'utf8')
+    .map(({ utf8Data }) => utf8Data)
+    .subscribe({
+      next: async message =>
+        console.log('next', message) +
+        sendAction(connection, await handleIncomingMessages(message)),
+      error: error => {
+        console.log(error.message)
+        Menu.close()
+      },
+      complete: () => {
+        console.log('Thanks!')
+        Menu.close()
+      }
+    })
 
   // Initiates conversation
   connection.sendUTF(JSON.stringify({ action: '*' }))
 })
 
 client.connect('ws://localhost:1337')
-
-client.on('connectFailed', err => {
-  log(`Client was not able to connect. ${err}`)
-  Menu.close()
-})
 
 async function handleIncomingMessages (data) {
   const messageObj = JSON.parse(data)
@@ -55,31 +79,6 @@ async function handleActionListing (actions) {
 function sendAction (connection, action) {
   log(`Sending action ${action}`)
   connection.sendUTF(JSON.stringify({ action }))
-}
-
-function handleConnectionClosed (connection) {
-  connection.on('close', function () {
-    log('Connection Closed')
-    Menu.close()
-  })
-}
-
-function handleConnectionError (connection) {
-  connection.on('error', function (error) {
-    log('Connection Error: ' + error.toString())
-  })
-}
-
-function handleNewMessage (connection) {
-  connection.on('message', async message => {
-    const { type, utf8Data } = message
-    if (type === 'utf8') {
-      log('Server response: ', utf8Data)
-      sendAction(connection, await handleIncomingMessages(utf8Data))
-    } else {
-      error(`Unable to handle message type ${type}`)
-    }
-  })
 }
 
 /*

@@ -32,7 +32,7 @@
     "lint-fix": "eslint src --fix",
     "build": "rm -rf dist && babel src --out-dir dist && cp -f package.json dist",
     "test": "mocha --recursive --require test/testSetup.js --check-leaks --colors",
-    "test-dev": "nodemon --watch src/ --watch test/ --exec 'mocha --recursive --require test/testSetup test/**/*Spec.js test/ --colors || true'",
+    "test-dev": "nodemon --watch src/ --watch test/ --exec 'mocha --recursive --require test/testSetup --colors || true'",
     "test-debug": "LOG=trace mocha --recursive --require test/testSetup test/**/*Spec.js --check-leaks --colors",
     "flow": "flow",
     "flow-init": "flow init",
