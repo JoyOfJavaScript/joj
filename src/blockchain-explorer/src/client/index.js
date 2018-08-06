@@ -11,8 +11,7 @@ import {
   client as WebSocketClient,
   connection as WebSocketConnection
 } from 'websocket'
-import { compose } from '@joj/adt/combinators'
-import * as Rx from './reactive-extensions'
+import './reactive-extensions'
 import Menu from './Menu'
 
 process.title = 'blockchain-explorer'
