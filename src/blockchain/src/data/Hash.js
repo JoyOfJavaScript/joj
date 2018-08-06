@@ -1,11 +1,6 @@
-import Combinators from '@joj/adt/combinators'
 import LoggerHandler from '../common/LoggerHandler'
 import Maybe from '@joj/adt/maybe'
-import crypto from 'crypto'
-
-const { curry, compose } = Combinators
-const ALGO_SHA256 = 'sha256' // hashcash-SHA256^2 (bitcoin)
-const ENCODING_HEX = 'hex'
+import { compose } from '@joj/adt/combinators'
 
 /**
  * Hashes constitute the digital fingerprint of a block
@@ -13,13 +8,14 @@ const ENCODING_HEX = 'hex'
  * Blocks are immutable with respect to their hash, if the hash of a block
  * changes, it's a different block
  *
+ * @param {CryptoHasher} hasher Hasher used to generate hashes
  * @param {Object} state  Entire state object of the block
  * @param {Array}  keys   List of attribute names used for hashing
  * @return {string} Return a string hash of the block
  */
-export const Hash = (state, keys) => ({
+export const Hash = ({ hasher, state, keys }) => ({
   calculateHash () {
-    return computeCipher(keys.map(k => state[k]))
+    return computeCipher(hasher)(keys.map(k => state[k]))
   },
   set hash (h) {
     state.hash = h
@@ -38,25 +34,13 @@ export const Hash = (state, keys) => ({
 const formatData = (...pieces) => pieces.map(JSON.stringify).join('')
 
 /**
- * Create a SHA256 digest from a given data string
- *
- * @param {String} algorithm Algorithm to use (e.g. sha256)
- * @param {String} data      Data to use as seed for the hash
- */
-const createDigest = curry((algorithm, encoding, data) =>
-  crypto.createHash(algorithm).update(data).digest(encoding)
-)
-
-/**
  * Calculates a hash from given block data pieces
  *
+ * @param {CryptoHasher} hasher Hasher to use
  * @param {Array} pieces Pieces of data to join together into a single string
  * @return {String} Computed cipher
  */
-const computeCipher = compose(
-  createDigest(ALGO_SHA256, ENCODING_HEX),
-  formatData
-)
+const computeCipher = hasher => compose(hasher.digest, formatData)
 
 Hash.calculateHash = (state, fields) => computeCipher(fields.map(k => state[k]))
 Hash.init = (...args) =>

@@ -1,4 +1,5 @@
 import BlockHeader from './BlockHeader'
+import CryptoHasher from './CryptoHasher'
 import Genesis from './Genesis'
 import Hash from './Hash'
 
@@ -12,7 +13,7 @@ import Hash from './Hash'
  * @return {Block} Newly created block with its own computed hash
  * @augments BlockHeader
  */
-const DataBlock = (data = {}, previousHash = '') => {
+const DataBlock = (data = {}, previousHash = '', hasher = CryptoHasher()) => {
   // Public interface
   const state = {
     constructor: DataBlock,
@@ -29,7 +30,11 @@ const DataBlock = (data = {}, previousHash = '') => {
     // analyze why rest param does't work
     state,
     BlockHeader(previousHash),
-    Hash(state, ['timestamp', 'data', 'previousHash', 'nonce']),
+    Hash({
+      hasher,
+      state,
+      keys: ['timestamp', 'data', 'previousHash', 'nonce']
+    }),
     Genesis(state)
   )
 }

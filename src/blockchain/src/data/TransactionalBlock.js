@@ -2,6 +2,7 @@ import BlockHeader from './BlockHeader'
 import Genesis from './Genesis'
 import Hash from './Hash'
 import PendingTransactions from './PendingTransactions'
+import CryptoHasher from './CryptoHasher'
 /**
  * Transactional blocks contain the set of all pending transactions in the chain
  * These are used to move/transfer assets around within transactions
@@ -12,7 +13,11 @@ import PendingTransactions from './PendingTransactions'
  * @return {TransactionalBlock} Newly created block with its own computed hash
  * @augments Block
  */
-const TransactionalBlock = (pendingTransactions = [], previousHash = '') => {
+const TransactionalBlock = (
+  pendingTransactions = [],
+  previousHash = '',
+  hasher = CryptoHasher()
+) => {
   // TODO: change order of args
   const state = {
     pendingTransactions,
@@ -26,7 +31,7 @@ const TransactionalBlock = (pendingTransactions = [], previousHash = '') => {
   return Object.assign(
     state,
     BlockHeader(previousHash),
-    Hash.init(state, ['timestamp', 'previousHash', 'nonce']),
+    Hash({ hasher, state, keys: ['timestamp', 'previousHash', 'nonce'] }),
     PendingTransactions(state),
     Genesis(state)
   )

@@ -1,3 +1,4 @@
+import CryptoHasher from './CryptoHasher'
 import CryptoSigner from './CryptoSigner'
 import Hash from './Hash'
 import Signature from './Signature'
@@ -10,10 +11,17 @@ import Signature from './Signature'
  * @param {Key} sender       Origin of transaction (public key of sender)
  * @param {Key} recipient    Destination of transaction (public of the receiver)
  * @param {Money}  funds        Amount to transfer
+ * @param {CryptoHasher} hasher Hasher to use for transactions
  * @param {CryptoSigner} signer Signer to use for transactions
  * @return {Transaction} Newly created transaction
  */
-const Transaction = (sender, recipient, funds, signer = CryptoSigner()) => {
+const Transaction = (
+  sender,
+  recipient,
+  funds,
+  hasher = CryptoHasher(),
+  signer = CryptoSigner()
+) => {
   const state = {
     sender,
     recipient,
@@ -23,7 +31,11 @@ const Transaction = (sender, recipient, funds, signer = CryptoSigner()) => {
 
   return Object.assign(
     state,
-    Hash(state, ['sender', 'recipient', 'funds', 'nonce']),
+    Hash({
+      hasher,
+      state,
+      keys: ['sender', 'recipient', 'funds', 'nonce']
+    }),
     Signature({
       signer,
       state,

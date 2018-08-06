@@ -4,7 +4,7 @@ import { curry } from '@joj/adt/combinators'
 const DEFAULT_ENCODING_HEX = 'hex'
 const DEAFAILT_SIGN_ALGO = 'RSA-SHA256'
 
-const CryptoHelper = (
+const CryptoSigner = (
   options = {
     algorithm: DEAFAILT_SIGN_ALGO,
     encoding: DEFAULT_ENCODING_HEX
@@ -22,4 +22,4 @@ const CryptoHelper = (
   })
 })
 
-export default CryptoHelper
+export default CryptoSigner
