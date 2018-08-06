@@ -10,6 +10,7 @@ import Hash from './Hash'
  *
  * @param {Object} data         Data associated with this block
  * @param {string} previousHash Reference to the previous block in the chain
+ * @param {CryptoHasher} hasher Hasher used to hash this block and its data
  * @return {Block} Newly created block with its own computed hash
  * @augments BlockHeader
  */
