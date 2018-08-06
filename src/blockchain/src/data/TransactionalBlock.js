@@ -1,8 +1,9 @@
 import BlockHeader from './BlockHeader'
+import CryptoHasher from './CryptoHasher'
 import Genesis from './Genesis'
 import Hash from './Hash'
 import PendingTransactions from './PendingTransactions'
-import CryptoHasher from './CryptoHasher'
+
 /**
  * Transactional blocks contain the set of all pending transactions in the chain
  * These are used to move/transfer assets around within transactions
@@ -10,6 +11,7 @@ import CryptoHasher from './CryptoHasher'
  *
  * @param {Array}  pendingTransactions Array of pending transactions from the chain
  * @param {string} previousHash        Reference to the previous block in the chain
+ * @param {CryptoHasher} hasher Hasher to use to hash transactional blocks
  * @return {TransactionalBlock} Newly created block with its own computed hash
  * @augments Block
  */

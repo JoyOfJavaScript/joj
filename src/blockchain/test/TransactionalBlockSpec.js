@@ -14,6 +14,7 @@ describe('Transactional Block object', () => {
     assert.ok(currentHash.length > 0)
     b.nonce = 99
     b.hash = b.calculateHash()
+    console.log('Hash: ', b.hash)
     assert.ok(b.hash.length > 0)
     assert.notEqual(currentHash, b.hash)
   })
