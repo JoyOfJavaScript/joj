@@ -1,7 +1,13 @@
-import Signature from '../src/data/traits/Signature'
+import CryptoSigner from '../src/data/CryptoSigner'
+import Signature from '../src/data/Signature'
 import { assert } from 'chai'
 import fs from 'fs'
 import path from 'path'
+
+const ENCODING_HEX = 'hex'
+const SIGN_ALGO = 'RSA-SHA256'
+
+const signer = CryptoSigner({ algorithm: SIGN_ALGO, encoding: ENCODING_HEX })
 
 describe('Signature', () => {
   it('Should return on verify after 3 attempts', () => {
@@ -18,7 +24,7 @@ describe('Signature', () => {
       recipient: fs.readFileSync(lukePublicKeyPath, 'utf8')
     }
 
-    let signature = Signature(state, ['sender', 'recipient'])
+    let signature = Signature({ state, keys: ['sender', 'recipient'], signer })
     const sign = signature.generateSignature(privateKey)
     signature.signature = sign
     assert.isNotEmpty(sign)
@@ -30,7 +36,11 @@ describe('Signature', () => {
 
     // Create another signature (it will have its own attempts counter)
     process.env.SECURE_ATTEMPTS = 1
-    signature = Signature(state, ['sender', 'recipient'])
+    signature = Signature({
+      state,
+      keys: ['sender', 'recipient'],
+      signer
+    })
     const otherPrivateKey = fs.readFileSync(lukePrivateKeyPath, 'utf8')
     signature.signature = signature.generateSignature(otherPrivateKey)
 

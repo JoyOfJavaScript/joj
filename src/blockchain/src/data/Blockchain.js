@@ -1,5 +1,5 @@
 import DataBlock from './DataBlock'
-import PendingTransactions from './traits/PendingTransactions'
+import PendingTransactions from './PendingTransactions'
 
 // Alternate solution: http://2ality.com/2013/03/subclassing-builtins-es6.html
 

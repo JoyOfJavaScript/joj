@@ -1,5 +1,5 @@
 import Combinators from '@joj/adt/combinators'
-import LoggerHandler from '../../common/LoggerHandler'
+import LoggerHandler from '../common/LoggerHandler'
 import Maybe from '@joj/adt/maybe'
 import crypto from 'crypto'
 

@@ -3,15 +3,17 @@ import { cursorUp, cursorDown } from './ansi'
 import { isUpKey, isDownKey, isKillSequence } from './keyboard'
 
 class Menu {
-  actions = []
-  itemsCount = 0
-  actionsMap = new Map()
+  actions
+  actionsMap
   rl
+  itemsCount = 0
   cursorPos = 0
   itemsCount = 0
   static _instance
 
   constructor (actions) {
+    this.actions = []
+    this.actionsMap = new Map()
     this._createInterface()
     this._reset(0, actions)
   }

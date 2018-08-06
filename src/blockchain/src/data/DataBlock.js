@@ -1,6 +1,6 @@
 import BlockHeader from './BlockHeader'
-import Genesis from './traits/Genesis'
-import Hash from './traits/Hash'
+import Genesis from './Genesis'
+import Hash from './Hash'
 
 /**
  * Represents a single block in the chain. By default, the block

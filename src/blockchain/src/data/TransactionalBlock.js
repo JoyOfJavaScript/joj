@@ -1,8 +1,7 @@
 import BlockHeader from './BlockHeader'
-import Genesis from './traits/Genesis'
-import Hash from './traits/Hash'
-import PendingTransactions from './traits/PendingTransactions'
-import TxView from './traits/TxView'
+import Genesis from './Genesis'
+import Hash from './Hash'
+import PendingTransactions from './PendingTransactions'
 /**
  * Transactional blocks contain the set of all pending transactions in the chain
  * These are used to move/transfer assets around within transactions
@@ -16,14 +15,19 @@ import TxView from './traits/TxView'
 const TransactionalBlock = (pendingTransactions = [], previousHash = '') => {
   // TODO: change order of args
   const state = {
-    pendingTransactions
+    pendingTransactions,
+    inspect: () => {
+      const { timestamp, hash, nonce } = state
+      return `TxBlock { ts: ${timestamp},\
+                        ptx: ${JSON.stringify(pendingTransactions)},\
+                        ph: ${previousHash}, h: ${hash}}, n: ${nonce} }`
+    }
   }
   return Object.assign(
     state,
     BlockHeader(previousHash),
     Hash.init(state, ['timestamp', 'previousHash', 'nonce']),
     PendingTransactions(state),
-    TxView(state),
     Genesis(state)
   )
 }
