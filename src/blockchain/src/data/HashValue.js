@@ -15,6 +15,11 @@ const isValid = h =>
     ? Validation.Success(h)
     : Validation.Failure([`Invalid hash value ${h}`]))
 
+/**
+ * Wrap a hash into a domain primitive hash value
+ * @param {String} h String hash
+ * @return {Object} wrapped hash
+ */
 const HashValue = compose(
   getOrElseThrow(
     'Invalid hash found. Check that the hash value is not empty and meets the required length'

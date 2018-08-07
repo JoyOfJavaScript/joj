@@ -180,13 +180,13 @@ const checkBlocks = (checkTransactions, current, previous) =>
   current.previousHash.equals(previous.hash) &&
   // 3. Check timestamps
   current.timestamp >= previous.timestamp &&
-  // 4. Check is hash is solved
-  (checkTransactions
-    ? current.hash.toString().substring(0, current.difficulty) ===
-        Array(current.difficulty).fill(0).join('') &&
-        // 5. Verify Transaction signatures
-        current.pendingTransactions.every(tx => tx.verifySignature())
-    : true)
+  // 4. Verify Transaction signatures
+  (checkTransactions ? checkBlockTransactions(current) : true)
+
+const checkBlockTransactions = block =>
+  block.hash.toString().substring(0, block.difficulty) ===
+    Array(block.difficulty).fill(0).join('') &&
+  block.pendingTransactions.every(tx => tx.verifySignature())
 
 // eslint-disable-next-line max-statements
 const transferFunds = (txBlockchain, walletA, walletB, funds) => {
