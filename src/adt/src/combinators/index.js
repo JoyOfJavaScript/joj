@@ -5,17 +5,18 @@ export const compose2 = (f, g) => (...args) => f(g(...args))
 export const compose = (...fns) => fns.reduce(compose2)
 export const pipe = (...fns) => fns.reduceRight(compose2)
 export const curry = fn => (...args1) =>
-  args1.length === fn.length
+  (args1.length === fn.length
     ? fn(...args1)
     : (...args2) => {
-        const args = [...args1, ...args2]
-        return args.length >= fn.length ? fn(...args) : curry(fn)(...args)
-      }
+      const args = [...args1, ...args2]
+      return args.length >= fn.length ? fn(...args) : curry(fn)(...args)
+    })
 
 // ADT helpers
 export const map = curry((f, M) => M.map(f))
 export const flatMap = curry((f, M) => M.flatMap(f))
 export const fold = curry((f, M) => M.fold(f))
+export const getOrElseThrow = curry((e, M) => M.getOrElseThrow(e))
 
 export default {
   identity,
@@ -27,4 +28,5 @@ export default {
   map,
   flatMap,
   fold,
+  getOrElseThrow
 }

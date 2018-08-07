@@ -170,19 +170,19 @@ const isChainValid = (blockchain, checkTransactions = false) =>
     )
     // Validate every pair of blocks is valid
     .every(([current, previous]) =>
-      checkPairs(checkTransactions, current, previous)
+      checkBlocks(checkTransactions, current, previous)
     )
 
-const checkPairs = (checkTransactions, current, previous) =>
-  // 1 Hashed can't be tampered with
-  current.hash === current.calculateHash() &&
-  // 2. Blocks form a chain
-  current.previousHash === previous.hash &&
+const checkBlocks = (checkTransactions, current, previous) =>
+  // 1 Check hash tampering
+  current.hash.equals(current.calculateHash()) &&
+  // 2. Check blocks form a properly linked chain using hashes
+  current.previousHash.equals(previous.hash) &&
   // 3. Check timestamps
   current.timestamp >= previous.timestamp &&
   // 4. Check is hash is solved
   (checkTransactions
-    ? current.hash.substring(0, current.difficulty) ===
+    ? current.hash.toString().substring(0, current.difficulty) ===
         Array(current.difficulty).fill(0).join('') &&
         // 5. Verify Transaction signatures
         current.pendingTransactions.every(tx => tx.verifySignature())

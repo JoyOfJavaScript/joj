@@ -16,6 +16,7 @@ export const Just = (Maybe.Just = a =>
       isJust: () => true,
       isNothing: () => false,
       fold: (fn = identity) => fn(a),
+      filter: (fn = identity) => fn(a) ? Just(a) : Nothing(),
       map: fn => Maybe.fromNullable(fn(a)),
       flatMap: fn => Maybe.fromNullable(fn(a).merge()),
       ap: Ma =>

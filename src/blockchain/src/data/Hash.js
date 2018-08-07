@@ -1,3 +1,4 @@
+import HashValue from './HashValue'
 import LoggerHandler from '../common/LoggerHandler'
 import Maybe from '@joj/adt/maybe'
 import { compose } from '@joj/adt/combinators'
@@ -14,8 +15,12 @@ import { compose } from '@joj/adt/combinators'
  * @return {string} Return a string hash of the block
  */
 export const Hash = ({ hasher, state, keys }) => ({
+  /**
+   * Calculates a hashed value from the values of provided state marked by keys
+   * @return {HashValue} A wrapped hash value
+   */
   calculateHash () {
-    return computeCipher(hasher)(keys.map(k => state[k]))
+    return HashValue(computeCipher(hasher)(keys.map(k => state[k])))
   },
   set hash (h) {
     state.hash = h
