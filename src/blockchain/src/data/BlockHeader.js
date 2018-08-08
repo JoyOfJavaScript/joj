@@ -15,8 +15,7 @@ const BlockHeader = (previousHash = '') => {
     version: '1.0',
     previousHash,
     timestamp: Date.now(),
-    hash: '',
-    nonce: 0
+    hash: ''
   }
 }
 

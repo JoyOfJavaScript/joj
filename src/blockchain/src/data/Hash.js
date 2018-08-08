@@ -14,7 +14,8 @@ import { compose } from '@joj/adt/combinators'
  * @param {Array}  keys   List of attribute names used for hashing
  * @return {string} Return a string hash of the block
  */
-export const Hash = ({ hasher, state, keys }) => ({
+const Hash = ({ hasher, state, keys }) => ({
+  nonce: 0,
   /**
    * Calculates a hashed value from the values of provided state marked by keys
    * @return {HashValue} A wrapped hash value

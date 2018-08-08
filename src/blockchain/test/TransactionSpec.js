@@ -1,8 +1,7 @@
+import Key from '../src/data/Key'
 import Money from '../src/data/Money'
 import Transaction from '../src/data/Transaction'
 import { assert } from 'chai'
-import fs from 'fs'
-import path from 'path'
 
 describe('Transaction', () => {
   it('Should create a valid transaction', () => {
@@ -14,16 +13,9 @@ describe('Transaction', () => {
 
 describe('Signature', () => {
   it('Should Sign Data using a private key', () => {
-    const base = path.join(__dirname, '../..', 'blockchain-wallets')
-    const privateKey = fs.readFileSync(
-      path.join(base, 'coinbase-private.pem'),
-      'utf8'
-    )
-    const coinbase = fs.readFileSync(
-      path.join(base, 'coinbase-public.pem'),
-      'utf8'
-    )
-    const luke = fs.readFileSync(path.join(base, 'luke-public.pem'), 'utf8')
+    const privateKey = Key('coinbase-private.pem')
+    const coinbase = Key('coinbase-public.pem')
+    const luke = Key('luke-public.pem')
 
     const transaction = Transaction(coinbase, luke, Money('USD', 30))
     const signature = transaction.generateSignature(privateKey, 'coinbase')
@@ -36,15 +28,8 @@ describe('Signature', () => {
   })
 
   it('Should sign transaction with null recipient', () => {
-    const base = path.join(__dirname, '../..', 'blockchain-wallets')
-    const privateKey = fs.readFileSync(
-      path.join(base, 'coinbase-private.pem'),
-      'utf8'
-    )
-    const publicKey = fs.readFileSync(
-      path.join(base, 'coinbase-public.pem'),
-      'utf8'
-    )
+    const privateKey = Key('coinbase-private.pem')
+    const publicKey = Key('coinbase-public.pem')
 
     const transaction = Transaction(null, publicKey, Money('USD', 30))
     assert.isNotEmpty(transaction.hash)

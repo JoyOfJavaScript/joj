@@ -25,8 +25,7 @@ const Transaction = (
   const state = {
     sender,
     recipient,
-    funds,
-    nonce: 0
+    funds
   }
 
   return Object.assign(
