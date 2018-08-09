@@ -1,6 +1,7 @@
 import { compose, flatMap, getOrElseThrow, map } from '@joj/adt/combinators'
 import Validation from '@joj/adt/validation'
 
+// Hashes always have a fixed length
 const HASH_LENGTH = 64
 
 const wrap = h => ({

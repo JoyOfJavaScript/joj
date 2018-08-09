@@ -12,5 +12,5 @@
     ],
     "@babel/preset-flow"
   ],
-  "sourceMaps": "inline"
+  "retainLines": true
 }

@@ -5,6 +5,7 @@
   "devDependencies": {
     "@babel/cli": "^7.0.0-beta.49",
     "@babel/core": "^7.0.0-beta.49",
+    "@babel/node": "^7.0.0-beta.56",
     "@babel/plugin-proposal-object-rest-spread": "^7.0.0-beta.49",
     "@babel/plugin-transform-regenerator": "^7.0.0-beta.49",
     "@babel/preset-env": "^7.0.0-beta.49",
@@ -22,14 +23,14 @@
     "nodemon": "^1.17.4"
   },
   "dependencies": {
-    "@joj/adt": "file:../adt/dist",
-    "rxjs": "5.2.0"
+    "@joj/adt": "file:../adt/dist"
   },
   "scripts": {
     "lint": "eslint src/",
     "lint-fix": "eslint src/ --fix",
     "flow": "flow",
-    "test": "flow && mocha --recursive --require src/testSetup.js --check-leaks",
+    "build": "rm -rf dist && babel src --out-dir dist",
+    "test": "mocha --recursive --require src/testSetup.js --check-leaks",
     "test-dev": "nodemon --watch src/ --exec 'flow && mocha --recursive --require src/testSetup.js --check-leaks src || true'",
     "test-debug": "mocha --recursive --debug-brk --require babel-register",
     "flow-init": "flow init",
