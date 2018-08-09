@@ -3,13 +3,28 @@ import { assert, expect } from 'chai'
 describe('Traditional JavaScript domain modeling', () => {
   it('Should create a simple Person/Student model', () => {
     function Person (name) {
+      if (!(this instanceof Person)) {
+        return new Person(name)
+      }
       this.name = name
     }
     Person.prototype.holler = function () {
       console.log('MY NAME IS ' + this.name.toUpperCase() + '!!')
     }
 
+    const p = new Person('luis')
+    const p2 = Person('luke') // oops forgot to use 'new'
+    p.holler()
+    p2.holler()
+    assert.isOk(p instanceof Person)
+    assert.isOk(Object.getPrototypeOf(p) === Person.prototype)
+    assert.isOk(p2 instanceof Person)
+    assert.isOk(Object.getPrototypeOf(p2) === Person.prototype)
+
     function Student (name, major) {
+      if (!(this instanceof Student)) {
+        return new Student(name, major)
+      }
       Person.call(this, name)
       this.major = major
     }
@@ -29,18 +44,23 @@ describe('Traditional JavaScript domain modeling', () => {
       console.log("I'm studying", this.major)
     }
     const me = new Student('luis', 'compsci')
+    const me2 = Student('luke', 'compsci')
     me.holler()
     me.study()
     assert.isOk(me instanceof Student)
+    assert.isOk(me2 instanceof Student)
     assert.isOk(me instanceof Person)
     assert.isOk(Student.prototype instanceof Person)
     assert.notOk(Student.prototype instanceof Student)
     assert.isOk(Student.prototype.isPrototypeOf(me))
+    assert.isOk(Student.prototype.isPrototypeOf(me2))
     assert.isOk(Person.prototype.isPrototypeOf(me))
     assert.isOk(Person.prototype.isPrototypeOf(Student.prototype))
     assert.isOk(Object.getPrototypeOf(me) === Student.prototype)
+    assert.isOk(Object.getPrototypeOf(me2) === Student.prototype)
     assert.isOk(Object.getPrototypeOf(Student.prototype) === Person.prototype)
     assert.isOk(me.constructor.name === 'Student') // *
+    assert.isOk(me2.constructor.name === 'Student') // *
     // __proto__ = Points to the object which was used as prototype when the object was instantiated.
     // use Object.getPrototypeOf() instead
   })

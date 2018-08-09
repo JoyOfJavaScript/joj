@@ -22,10 +22,19 @@ const Transaction = (
   hasher = CryptoHasher(),
   signer = CryptoSigner()
 ) => {
+  // private state
+  const _state = {
+    version: '1.0'
+  }
+
+  // public state
   const state = {
     sender,
     recipient,
-    funds
+    funds,
+    get version () {
+      return _state.version
+    }
   }
 
   return Object.assign(

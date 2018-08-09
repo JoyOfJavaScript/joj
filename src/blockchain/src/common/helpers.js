@@ -15,3 +15,7 @@ export const deepFreeze = obj => {
 
 // Insert polyfill
 Object.deepFreeze = Object.deepFreeze || deepFreeze
+
+export default {
+  deepFreeze
+}

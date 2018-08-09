@@ -29,6 +29,7 @@ describe('Traditional JavaScript domain modeling', () => {
     me.holler()
     me.study()
 
+    // `instanceof` lies so it's probably these checks are not allowed
     // assert.isOk(me instanceof Student) Can't do this since this is no longer a function
     // assert.isOk(me instanceof Person)  Can't do this since this is no longer a functionc
     // assert.isOk(Student.prototype instanceof Person) Can't do this since this is no longer a function

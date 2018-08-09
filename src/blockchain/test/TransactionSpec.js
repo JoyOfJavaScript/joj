@@ -8,6 +8,10 @@ describe('Transaction', () => {
     const tx = Transaction('sally', 'luke', Money('₿', 0.1))
     console.log('Transaction Hash: ', tx.hash)
     assert.isNotEmpty(tx.hash)
+    assert.equal(tx.version, '1.0')
+    assert.throws(() => {
+      tx.version = '2.0'
+    }, TypeError)
   })
 })
 
