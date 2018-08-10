@@ -1,6 +1,5 @@
 import HashValue from './HashValue'
 import LoggerHandler from '../common/LoggerHandler'
-import Maybe from '@joj/adt/maybe'
 import { compose } from '@joj/adt/combinators'
 
 /**
@@ -24,7 +23,7 @@ const Hash = ({ hasher, state, keys }) => ({
     return HashValue(computeCipher(hasher)(keys.map(k => state[k])))
   },
   set hash (h) {
-    state.hash = h
+    return { ...state, hash: h }
   },
   get hash () {
     return state.hash

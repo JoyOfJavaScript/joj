@@ -145,5 +145,13 @@ describe('Transfer Funds', () => {
       BlockchainService.isChainValid(ledger, true),
       'Is ledger valid?'
     )
+
+    console.table(
+      ledger.toArray().map(({ hash, previousHash, data }) => ({
+        previousHash: previousHash.toString(),
+        hash: hash.toString(),
+        data: JSON.stringify(data)
+      }))
+    )
   })
 })
