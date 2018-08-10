@@ -27,7 +27,7 @@ const Hash = ({ hasher, state, keys }) => ({
     state.hash = h
   },
   get hash () {
-    return Maybe.fromEmpty(state.hash).getOrElse(this.calculateHash())
+    return state.hash
   }
 })
 

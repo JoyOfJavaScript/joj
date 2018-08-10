@@ -22,13 +22,13 @@ const Transaction = (
   hasher = CryptoHasher(),
   signer = CryptoSigner()
 ) => {
-  // private state
   const _state = {
+    // private state
     version: '1.0'
   }
 
-  // public state
   const state = {
+    // public state
     sender,
     recipient,
     funds,

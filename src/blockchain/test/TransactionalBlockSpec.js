@@ -10,6 +10,7 @@ describe('Transactional Block object', () => {
   })
   it('Should validate core properties', () => {
     const b = TransactionalBlock(['1', '2', '3'], '123')
+    b.hash = b.calculateHash()
     const currentHash = b.hash
     assert.ok(currentHash.length > 0)
     b.nonce = 99

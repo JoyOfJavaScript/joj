@@ -75,7 +75,9 @@ const Blockchain = (...blocks) => {
 }
 
 Blockchain.init = () => {
-  return Blockchain(DataBlock.genesis())
+  const g = DataBlock.genesis()
+  g.hash = g.calculateHash()
+  return Blockchain(g)
 }
 
 export default Blockchain

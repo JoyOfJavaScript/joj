@@ -6,6 +6,7 @@ import { assert } from 'chai'
 describe('Transaction', () => {
   it('Should create a valid transaction', () => {
     const tx = Transaction('sally', 'luke', Money('₿', 0.1))
+    tx.hash = tx.calculateHash()
     console.log('Transaction Hash: ', tx.hash)
     assert.isNotEmpty(tx.hash)
     assert.equal(tx.version, '1.0')
@@ -36,6 +37,7 @@ describe('Signature', () => {
     const publicKey = Key('coinbase-public.pem')
 
     const transaction = Transaction(null, publicKey, Money('USD', 30))
+    transaction.hash = transaction.calculateHash()
     assert.isNotEmpty(transaction.hash)
     const signature = transaction.generateSignature(privateKey, 'coinbase')
     transaction.signature = signature
