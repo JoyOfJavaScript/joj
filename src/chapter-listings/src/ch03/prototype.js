@@ -1,66 +1,148 @@
 import { assert, expect } from 'chai'
 
 describe('Traditional JavaScript domain modeling', () => {
-  it('Should create a simple Person/Student model', () => {
-    function Person (name) {
-      if (!(this instanceof Person)) {
-        return new Person(name)
-      }
+  it('Studies the behavior of new', () => {
+    function Transaction (from, to) {
+      this.from = from
+      this.to = to
+    }
+
+    const instance = new Transaction('luis', 'luke')
+    assert.isNotNull(instance)
+    assert.isOk(instance instanceof Transaction)
+    assert.isOk(Object.getPrototypeOf(instance) === Transaction.prototype)
+    assert.isOk(Transaction.prototype.isPrototypeOf(instance))
+
+    assert.throws(() => {
+      Transaction('luis', 'luke')
+    }, TypeError)
+
+    function NamedTransaction (name, from, to) {
+      Transaction.call(this, from, to)
       this.name = name
     }
-    Person.prototype.holler = function () {
-      console.log('MY NAME IS ' + this.name.toUpperCase() + '!!')
+    NamedTransaction.prototype = Object.create(Transaction) // bug forgot to use .prototype
+
+    assert.throws(() => {
+      new NamedTransaction('name', ' from', 'to')
+    }, TypeError)
+  })
+
+  it('Studies the behavior of util.inherits', () => {
+    function Transaction (from, to) {
+      this.from = from
+      this.to = to
     }
 
-    const p = new Person('luis')
-    const p2 = Person('luke') // oops forgot to use 'new'
-    p.holler()
-    p2.holler()
-    assert.isOk(p instanceof Person)
-    assert.isOk(Object.getPrototypeOf(p) === Person.prototype)
-    assert.isOk(p2 instanceof Person)
-    assert.isOk(Object.getPrototypeOf(p2) === Person.prototype)
+    function NamedTransaction (name, from, to) {
+      Transaction.call(this, from, to)
+      this.name = name
+    }
 
-    function Student (name, major) {
-      if (!(this instanceof Student)) {
-        return new Student(name, major)
+    require('util').inherits(NamedTransaction, Transaction)
+
+    const instance = new NamedTransaction('Transfer', 'Luis', 'Luke')
+    assert.equal(instance.name, 'Transfer')
+    assert.equal(instance.from, 'Luis')
+
+    assert.isOk(instance instanceof Transaction)
+    assert.isOk(instance instanceof NamedTransaction)
+    assert.isOk(Object.getPrototypeOf(instance) === NamedTransaction.prototype)
+    assert.isOk(Transaction.prototype.isPrototypeOf(NamedTransaction.prototype))
+  })
+
+  it('Studies Object.create', () => {
+    const transaction = {
+      from: 'Luis',
+      to: 'Luke'
+    }
+
+    const moneyTransaction = Object.create(transaction)
+
+    moneyTransaction.addFunds = function (money) {
+      this.funds = money
+    }
+    console.log('Object prototype: ', Object.prototype)
+    assert.isOk(Object.getPrototypeOf(transaction) === Object.prototype)
+    assert.isOk(Object.getPrototypeOf(moneyTransaction) === transaction)
+    assert.deepEqual(Object.getPrototypeOf(transaction), {})
+    assert.equal(moneyTransaction.from, 'Luis')
+    moneyTransaction.addFunds(10)
+    assert.equal(moneyTransaction.funds, 10)
+
+    const cryptoTransaction = Object.create(moneyTransaction)
+    cryptoTransaction.generateHash = function () {
+      const data = [this.from, this.to, this.funds].join('')
+      let hash = 0, i = 0
+      const len = data.length
+      while (i < len) {
+        hash = ((hash << 5) - hash + data.charCodeAt(i++)) << 0
       }
-      Person.call(this, name)
-      this.major = major
+      return hash
     }
+    assert.equal(cryptoTransaction.funds, 10)
+    assert.isOk(cryptoTransaction.generateHash() > 0)
+  })
+
+  it('Should create a simple Person/Student model', () => {
+    function Transaction (from, to) {
+      if (!(this instanceof Transaction)) {
+        return new Transaction(from, to) // be careful about this.name and using new
+      }
+      this.from = from
+      this.to = to
+    }
+
+    const p = new Transaction('luis', 'luke')
+    const p2 = Transaction('luis', 'luke') // oops forgot to use 'new'
+
+    assert.isOk(p instanceof Transaction)
+    assert.isOk(Object.getPrototypeOf(p) === Transaction.prototype)
+    assert.isOk(p2 instanceof Transaction)
+    assert.isOk(Object.getPrototypeOf(p2) === Transaction.prototype)
+
+    function MoneyTransaction (from, to, funds = 0) {
+      if (!(this instanceof MoneyTransaction)) {
+        return new MoneyTransaction(from, to)
+      }
+      Transaction.call(this, from, to)
+      this.funds = funds
+    }
+
     // It's very important to use Person.prototype here; otherwise you will not be able to extend Person and reassign to
     // this.name which is a function non-writable property. Length would have the same issue
 
     // Instead of passing .prototype, you can make Person an object literal, and then it will work
     console.log(
-      'Person.name descriptor: ',
-      Object.getOwnPropertyDescriptor(Person, 'name')
+      'Transaction.name descriptor: ',
+      Object.getOwnPropertyDescriptor(Transaction, 'name')
     )
-    Student.prototype = Object.create(Person.prototype) // need to 'extend' the prototype of Person
+    MoneyTransaction.prototype = Object.create(Transaction.prototype) // need to 'extend' the prototype of Transaction
+    MoneyTransaction.prototype.constructor = MoneyTransaction // "fixes" the delegated `constructor` reference *
 
-    Student.prototype.constructor = Student // "fixes" the delegated `constructor` reference *
-
-    Student.prototype.study = function () {
-      console.log("I'm studying", this.major)
+    MoneyTransaction.prototype.addFunds = function (funds) {
+      this.funds = funds
     }
-    const me = new Student('luis', 'compsci')
-    const me2 = Student('luke', 'compsci')
-    me.holler()
-    me.study()
-    assert.isOk(me instanceof Student)
-    assert.isOk(me2 instanceof Student)
-    assert.isOk(me instanceof Person)
-    assert.isOk(Student.prototype instanceof Person)
-    assert.notOk(Student.prototype instanceof Student)
-    assert.isOk(Student.prototype.isPrototypeOf(me))
-    assert.isOk(Student.prototype.isPrototypeOf(me2))
-    assert.isOk(Person.prototype.isPrototypeOf(me))
-    assert.isOk(Person.prototype.isPrototypeOf(Student.prototype))
-    assert.isOk(Object.getPrototypeOf(me) === Student.prototype)
-    assert.isOk(Object.getPrototypeOf(me2) === Student.prototype)
-    assert.isOk(Object.getPrototypeOf(Student.prototype) === Person.prototype)
-    assert.isOk(me.constructor.name === 'Student') // *
-    assert.isOk(me2.constructor.name === 'Student') // *
+    const mtx = new MoneyTransaction('luis', 'luke')
+    const mtx2 = MoneyTransaction('luis', 'luke')
+    mtx.addFunds(10)
+    assert.isOk(mtx instanceof MoneyTransaction)
+    assert.isOk(mtx2 instanceof MoneyTransaction)
+    assert.isOk(mtx instanceof Transaction)
+    assert.isOk(MoneyTransaction.prototype instanceof Transaction)
+    assert.notOk(MoneyTransaction.prototype instanceof MoneyTransaction)
+    assert.isOk(MoneyTransaction.prototype.isPrototypeOf(mtx))
+    assert.isOk(MoneyTransaction.prototype.isPrototypeOf(mtx2))
+    assert.isOk(Transaction.prototype.isPrototypeOf(mtx))
+    assert.isOk(Transaction.prototype.isPrototypeOf(MoneyTransaction.prototype))
+    assert.isOk(Object.getPrototypeOf(mtx) === MoneyTransaction.prototype)
+    assert.isOk(Object.getPrototypeOf(mtx2) === MoneyTransaction.prototype)
+    assert.isOk(
+      Object.getPrototypeOf(MoneyTransaction.prototype) ===
+        Transaction.prototype
+    )
+    assert.isOk(mtx.constructor.name === 'MoneyTransaction') // *
+    assert.isOk(mtx2.constructor.name === 'MoneyTransaction') // *
     // __proto__ = Points to the object which was used as prototype when the object was instantiated.
     // use Object.getPrototypeOf() instead
   })

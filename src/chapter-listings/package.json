@@ -31,7 +31,8 @@
     "flow": "flow",
     "build": "rm -rf dist && babel src --out-dir dist",
     "test": "mocha --recursive --require src/testSetup.js --check-leaks",
-    "test-dev": "nodemon --watch src/ --exec 'flow && mocha --recursive --require src/testSetup.js --check-leaks src || true'",
+    "test-docker": "nodemon --watch src/ --exec mocha --recursive --require src/testSetup.js --check-leaks src || true",
+    "test-dev": "nodemon --watch src/ --exec mocha --recursive --require src/testSetup.js --check-leaks",
     "test-debug": "mocha --recursive --debug-brk --require babel-register",
     "flow-init": "flow init",
     "flow-status": "flow status"
