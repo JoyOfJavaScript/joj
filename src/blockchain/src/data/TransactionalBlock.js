@@ -20,15 +20,8 @@ const TransactionalBlock = (
   previousHash = '',
   hasher = CryptoHasher()
 ) => {
-  // TODO: change order of args
   const state = {
     pendingTransactions
-    // inspect: () => {
-    //   const { timestamp, hash, nonce } = state
-    //   return `TxBlock { ts: ${timestamp},\
-    //                     ptx: ${JSON.stringify(pendingTransactions)},\
-    //                     ph: ${previousHash}, h: ${hash}}, n: ${nonce} }`
-    // }
   }
   return Object.assign(
     state,

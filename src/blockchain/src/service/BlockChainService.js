@@ -174,10 +174,10 @@ const isChainValid = (blockchain, checkTransactions = false) =>
     )
 
 const checkBlocks = (checkTransactions, current, previous) =>
-  // 0 Check hash valid
+  // 0. Check hash valid
   current.hash.length > 0 &&
   previous.hash.length > 0 &&
-  // 1 Check hash tampering
+  // 1. Check hash tampering
   current.hash.equals(current.calculateHash()) &&
   // 2. Check blocks form a properly linked chain using hashes
   current.previousHash.equals(previous.hash) &&

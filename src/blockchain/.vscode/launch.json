@@ -20,7 +20,11 @@
       ],
       "runtimeArgs": ["--nolazy"],      
       "console": "integratedTerminal",
-      "internalConsoleOptions": "neverOpen"
+      "internalConsoleOptions": "neverOpen",
+      "skipFiles": [
+        "${workspaceRoot}/node_modules/**/*.js",
+        "<node_internals>/**/*.js"
+      ]
     },
     {
         "type": "node",
@@ -35,7 +39,11 @@
             "${file}"
         ],
         "console": "integratedTerminal",
-        "internalConsoleOptions": "neverOpen"
+        "internalConsoleOptions": "neverOpen",
+        "skipFiles": [
+          "${workspaceRoot}/node_modules/**/*.js",
+          "<node_internals>/**/*.js"
+        ]
     }
   ]
 }

@@ -3,6 +3,8 @@ import CryptoSigner from './CryptoSigner'
 import Hash from './Hash'
 import Signature from './Signature'
 
+const VERSION = '1.0'
+
 /**
  * A transaction holds information (keys) identifying who is making the payment
  * or relinquishing an asset, the monetary value being transacted and to whom is sent to.
@@ -22,18 +24,12 @@ const Transaction = (
   hasher = CryptoHasher(),
   signer = CryptoSigner()
 ) => {
-  const _state = {
-    // private state
-    version: '1.0'
-  }
-
   const state = {
-    // public state
     sender,
     recipient,
     funds,
     get version () {
-      return _state.version
+      return VERSION
     }
   }
 
