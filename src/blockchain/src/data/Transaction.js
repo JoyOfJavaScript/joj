@@ -28,6 +28,7 @@ const Transaction = (
     sender,
     recipient,
     funds,
+    signature: '',
     get version () {
       return VERSION
     }

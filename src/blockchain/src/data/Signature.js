@@ -2,12 +2,6 @@ import Maybe from '@joj/adt/maybe'
 import SecureHandler from '../common/SecureHandler'
 
 export const Signature = ({ signer, state, keys }) => ({
-  get signature () {
-    return state.signature
-  },
-  set signature (s) {
-    state.signature = s
-  },
   generateSignature (privateKeyPath) {
     return signInput(
       signer,
