@@ -3,10 +3,11 @@ import LoggerHandler from '../common/LoggerHandler'
 import { compose } from '@joj/adt/combinators'
 
 /**
- * Hashes constitute the digital fingerprint of a block
- * They are calcualted using all of the properties of such block
- * Blocks are immutable with respect to their hash, if the hash of a block
- * changes, it's a different block
+ * Hash mixin.
+ * A hash algorithm turns an arbitrarily-large amount of data into a fixed-length hash.
+ * The same hash will always result from the same data, but modifying the data by even
+ * one bit will completely change the hash. Like all computer data, hashes are large numbers,
+ * and are usually written as hexadecimal.
  *
  * @param {CryptoHasher} hasher Hasher used to generate hashes
  * @param {Object} state  Entire state object of the block

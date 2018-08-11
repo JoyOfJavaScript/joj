@@ -13,3 +13,5 @@ const Key = name => {
   }
 }
 export default Key
+
+// TODO: Hash the key values and use those as addresses
