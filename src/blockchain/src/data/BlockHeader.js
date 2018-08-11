@@ -18,9 +18,10 @@ const BlockHeader = (previousHash = '') => {
 
   return {
     difficulty: 2,
-    previousHash,
     timestamp: Date.now(),
+    previousHash,
     hash: '',
+    nonce: 0,
     get version () {
       return _state.version
     }

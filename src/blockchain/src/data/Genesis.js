@@ -7,8 +7,8 @@
  */
 export const Genesis = state => ({
   isGenesis: () => {
-    const { data: d, previousHash } = state
-    return previousHash === '-1' || (d && d.includes('Genesis'))
+    const { data, previousHash } = state
+    return previousHash === '-1' || (data && data.includes('Genesis'))
   }
 })
 

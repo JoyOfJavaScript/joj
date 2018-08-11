@@ -14,19 +14,12 @@ import { compose } from '@joj/adt/combinators'
  * @return {string} Return a string hash of the block
  */
 const Hash = ({ hasher, state, keys }) => ({
-  nonce: 0,
   /**
    * Calculates a hashed value from the values of provided state marked by keys
    * @return {HashValue} A wrapped hash value
    */
   calculateHash () {
     return HashValue(computeCipher(hasher)(keys.map(k => state[k])))
-  },
-  set hash (h) {
-    return { ...state, hash: h }
-  },
-  get hash () {
-    return state.hash
   }
 })
 
