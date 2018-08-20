@@ -3,8 +3,6 @@ import CryptoSigner from './CryptoSigner'
 import Hash from './Hash'
 import Signature from './Signature'
 
-const VERSION = '1.0'
-
 /**
  * A transaction holds information (keys) identifying who is making the payment
  * or relinquishing an asset, the monetary value being transacted and to whom is sent to.
@@ -24,26 +22,23 @@ const Transaction = (
   hasher = CryptoHasher(),
   signer = CryptoSigner()
 ) => {
+  // public space
   const state = {
     sender,
     recipient,
     funds,
-    signature: '',
-    get version () {
-      return VERSION
-    }
+    timestamp: Date.now(),
+    [Symbol.for('version')]: '1.0'
   }
 
-  return Object.assign(
+  return Object.concat(
     state,
     Hash({
       hasher,
-      state,
       keys: ['sender', 'recipient', 'funds', 'nonce']
     }),
     Signature({
       signer,
-      state,
       keys: ['sender', 'recipient', 'funds']
     })
   )

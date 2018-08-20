@@ -1,5 +1,3 @@
-const VERSION = '1.0'
-
 /**
  * Base Block type from which other blocks derive. While you can build a naive
  * simple blockchain with these blocks, it won't be much use since it can't
@@ -12,19 +10,15 @@ const VERSION = '1.0'
 const BlockHeader = (previousHash = '') => {
   // Separate difficuly, version, and timestamp into BlockMeta (make it immutable and extend BlockHeader)
   // tampering with timestamp breaks block chain validation
-  const _state = {
-    version: VERSION
-  }
 
+  // public space
   return {
     difficulty: 2,
-    timestamp: Date.now(),
     previousHash,
     hash: '',
     nonce: 0,
-    get version () {
-      return _state.version
-    }
+    timestamp: Date.now(),
+    [Symbol.for('version')]: '1.0'
   }
 }
 

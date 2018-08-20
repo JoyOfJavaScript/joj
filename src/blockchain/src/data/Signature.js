@@ -1,20 +1,20 @@
 import Maybe from '@joj/adt/maybe'
 import SecureHandler from '../common/SecureHandler'
 
-export const Signature = ({ signer, state, keys }) => ({
+export const Signature = ({ signer, keys }) => ({
   generateSignature (privateKeyPath) {
     return signInput(
       signer,
       privateKeyPath,
-      keys.map(k => state[k]).filter(prop => !!prop).join('')
+      keys.map(k => this[k]).filter(prop => !!prop).join('')
     )
   },
   verifySignature () {
     return signatureVerifier(
       signer,
-      state.sender || state.recipient,
-      keys.map(k => state[k]).filter(prop => !!prop).join(''),
-      state.signature
+      this.sender || this.recipient,
+      keys.map(k => this[k]).filter(prop => !!prop).join(''),
+      this.signature
     )
   }
 })
@@ -36,9 +36,7 @@ const signInput = (signer, privateKey, input) =>
     .map(key => ({ key }))
     .map(signer.sign(input))
     .getOrElseThrow(
-      new RangeError(
-        'Please provide valid arguments for [privateKey] and [input]'
-      )
+      new Error('Please provide valid arguments for [privateKey] and [input]')
     )
 
 const verifySignatureInput = (signer, publicKey, data, signature) =>
@@ -48,7 +46,7 @@ const verifySignatureInput = (signer, publicKey, data, signature) =>
     .ap(Maybe.fromNullable(data))
     .map(fields => signer.verify(...fields))
     .getOrElseThrow(
-      new RangeError(
+      new Error(
         `Please provide valid arguments for publicKey: [${publicKey}], data: [${data}], and signature: [${signature}]`
       )
     )

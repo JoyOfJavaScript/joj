@@ -1,3 +1,4 @@
+import '../lang/object'
 import BlockHeader from './BlockHeader'
 import CryptoHasher from './CryptoHasher'
 import Genesis from './Genesis'
@@ -25,12 +26,13 @@ const TransactionalBlock = (
   hasher = CryptoHasher()
 ) => {
   const state = {
-    pendingTransactions
+    pendingTransactions,
+    nonce: 0
   }
-  return Object.assign(
-    state,
+  return Object.concat(
     BlockHeader(previousHash),
-    Hash({ hasher, state, keys: ['timestamp', 'previousHash', 'nonce'] }),
+    state,
+    Hash({ hasher, keys: ['timestamp', 'previousHash', 'nonce'] }),
     PendingTransactions(state),
     Genesis(state)
   )

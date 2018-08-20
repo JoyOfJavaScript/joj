@@ -1,3 +1,4 @@
+import '../src/lang/object'
 import CryptoSigner from '../src/data/CryptoSigner'
 import Signature from '../src/data/Signature'
 import { assert } from 'chai'
@@ -19,14 +20,20 @@ describe('Signature', () => {
 
     const privateKey = fs.readFileSync(coinbaseprivateKeyPath, 'utf8')
 
-    const state = {
-      sender: fs.readFileSync(coinbasepublicKeyPath, 'utf8'),
-      recipient: fs.readFileSync(lukePublicKeyPath, 'utf8')
-    }
+    const signature = Object.concat(
+      {
+        sender: fs.readFileSync(coinbasepublicKeyPath, 'utf8'),
+        recipient: fs.readFileSync(lukePublicKeyPath, 'utf8')
+      },
+      Signature({
+        signer,
+        keys: ['sender', 'recipient']
+      })
+    )
 
-    let signature = Signature({ state, keys: ['sender', 'recipient'], signer })
+    console.log(signature)
     const sign = signature.generateSignature(privateKey)
-    state.signature = sign
+    signature.signature = sign
     assert.isNotEmpty(sign)
 
     // Assert 4 successful attempts
@@ -36,13 +43,8 @@ describe('Signature', () => {
 
     // Create another signature (it will have its own attempts counter)
     process.env.SECURE_ATTEMPTS = 1
-    signature = Signature({
-      state,
-      keys: ['sender', 'recipient'],
-      signer
-    })
     const otherPrivateKey = fs.readFileSync(lukePrivateKeyPath, 'utf8')
-    state.signature = signature.generateSignature(otherPrivateKey)
+    signature.signature = signature.generateSignature(otherPrivateKey)
 
     for (const i in [1, 2, 3]) {
       assert.isNotOk(signature.verifySignature())

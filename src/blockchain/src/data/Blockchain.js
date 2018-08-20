@@ -15,6 +15,9 @@ import PendingTransactions from './PendingTransactions'
 // http://exploringjs.com/es6/ch_classes.html#sec_species-pattern
 
 const Blockchain = (...blocks) => {
+  const version = '1.0'
+  const timestamp = new Date()
+
   const state = {
     pendingTransactions: [],
 
@@ -69,6 +72,10 @@ const Blockchain = (...blocks) => {
    */
     toArray () {
       return [...blocks]
+    },
+
+    get timestamp () {
+      return timestamp
     }
   }
   return Object.assign(state, PendingTransactions(state))

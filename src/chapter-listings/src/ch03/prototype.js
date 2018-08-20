@@ -1,6 +1,34 @@
 import { assert, expect } from 'chai'
 
 describe('Traditional JavaScript domain modeling', () => {
+  it('Studies the behavior of prototype object', () => {
+    function Transaction (from, to) {
+      this.from = from
+      this.to = to
+    }
+
+    function NamedTransaction (name, from, to) {
+      Transaction.call(this, from, to)
+      this.name = name
+    }
+    NamedTransaction.prototype = Object.create(Transaction.prototype)
+
+    const ins1 = new NamedTransaction('Transfer', 'Luis', 'Luke')
+    const ins2 = new NamedTransaction('Transfer2', 'Luke', 'Ana')
+    assert.equal(ins1.from, 'Luis')
+    assert.equal(ins2.from, 'Luke')
+
+    Object.getPrototypeOf(ins1).printName = function () {
+      console.log('My name is: ', this.name)
+    }
+    ins1.printName()
+
+    ins1.__proto__.from = 'Ana'
+    assert.equal(ins1.from, 'Luis')
+    assert.equal(ins1.__proto__.from, 'Ana')
+    assert.equal(ins2.__proto__.from, 'Ana') // also changed ins2's prototype
+  })
+
   it('Studies the behavior of new', () => {
     function Transaction (from, to) {
       this.from = from
@@ -12,6 +40,7 @@ describe('Traditional JavaScript domain modeling', () => {
     assert.isOk(instance instanceof Transaction)
     assert.isOk(Object.getPrototypeOf(instance) === Transaction.prototype)
     assert.isOk(Transaction.prototype.isPrototypeOf(instance))
+    assert.isOk(instance instanceof Object)
 
     assert.throws(() => {
       Transaction('luis', 'luke')
@@ -66,12 +95,13 @@ describe('Traditional JavaScript domain modeling', () => {
     assert.isOk(Object.getPrototypeOf(transaction) === Object.prototype)
     assert.isOk(Object.getPrototypeOf(moneyTransaction) === transaction)
     assert.deepEqual(Object.getPrototypeOf(transaction), {})
+    assert.isOk(transaction instanceof Object)
     assert.equal(moneyTransaction.from, 'Luis')
     moneyTransaction.addFunds(10)
     assert.equal(moneyTransaction.funds, 10)
 
     const cryptoTransaction = Object.create(moneyTransaction)
-    cryptoTransaction.generateHash = function () {
+    cryptoTransaction.calculateHash = function () {
       const data = [this.from, this.to, this.funds].join('')
       let hash = 0, i = 0
       const len = data.length
@@ -81,7 +111,7 @@ describe('Traditional JavaScript domain modeling', () => {
       return hash
     }
     assert.equal(cryptoTransaction.funds, 10)
-    assert.isOk(cryptoTransaction.generateHash() > 0)
+    assert.isOk(cryptoTransaction.calculateHash() > 0)
   })
 
   it('Should create a simple Person/Student model', () => {
@@ -100,6 +130,8 @@ describe('Traditional JavaScript domain modeling', () => {
     assert.isOk(Object.getPrototypeOf(p) === Transaction.prototype)
     assert.isOk(p2 instanceof Transaction)
     assert.isOk(Object.getPrototypeOf(p2) === Transaction.prototype)
+    assert.isOk(p instanceof Object)
+    assert.isOk(p2 instanceof Object)
 
     function MoneyTransaction (from, to, funds = 0) {
       if (!(this instanceof MoneyTransaction)) {
