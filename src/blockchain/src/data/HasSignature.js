@@ -1,7 +1,7 @@
-import Maybe from '@joj/adt/maybe'
+import Maybe from '../../../adt/dist/maybe'
 import SecureHandler from '../common/SecureHandler'
 
-export const Signature = ({ signer, keys }) => ({
+export const HasSignature = ({ signer, keys }) => ({
   generateSignature (privateKeyPath) {
     return signInput(
       signer,
@@ -58,4 +58,4 @@ const signatureVerifier = !process.env.SECURE
     )
   : verifySignatureInput
 
-export default Signature
+export default HasSignature

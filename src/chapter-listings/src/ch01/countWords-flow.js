@@ -1,4 +1,4 @@
-//@flow
+// @flow
 declare var describe: any
 declare var it: any
 import { expect } from 'chai'
@@ -8,7 +8,7 @@ import { Combinators, Result } from '@joj/adt'
 import type { _Result } from '@joj/adt/_types'
 
 const decode = (buffer: buffer$Encoding): string =>
-  !buffer ? '' : buffer.toString()
+  (!buffer ? '' : buffer.toString())
 
 const tokenize = (str: string): Array<string> => (str || '').split(/\s+/)
 
@@ -33,7 +33,7 @@ describe('Composition with types', () => {
   it('Should read the contensts of a file into Result', () => {
     const { Ok, Error } = Result
 
-    function read(name: string): _Result {
+    function read (name: string): _Result {
       return fs.existsSync(name)
         ? Ok(fs.readFileSync(name))
         : Error('File does not exist!')

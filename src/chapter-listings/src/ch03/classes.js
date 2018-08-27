@@ -25,36 +25,62 @@ describe('Class-based JavaScript domain modeling', () => {
     }
 
     class Transaction {
-      from = ''
-      to = ''
+      fromEmail = ''
+      toEmail = ''
       validateEmail = email => util.emailValidator(email)
 
-      constructor (from, to) {
-        this.from = this.validateEmail(from)
-        this.to = this.validateEmail(to)
+      constructor (fromEmail, toEmail) {
+        this.fromEmail = this.validateEmail(fromEmail)
+        this.toEmail = this.validateEmail(toEmail)
       }
     }
 
     class NamedTransaction extends Transaction {
-      name = 'Generic'
+      transactionName = 'Generic'
       validateName = name => util.nameValidator(name)
 
-      constructor (name, from, to) {
-        super(from, to)
-        this.name = this.validateName(name)
+      constructor (transactionName, fromEmail, toEmail) {
+        super(fromEmail, toEmail)
+        this.transactionName = this.validateName(transactionName)
       }
     }
 
     class MoneyTransaction extends NamedTransaction {
       funds = 0.0
       feePercent = 0.6
+      transactionId = ''
 
-      addFunds (funds) {
+      constructor (transactionName, fromEmail, toEmail, funds = 0.0) {
+        super(transactionName, fromEmail, toEmail)
+        this.transactionId = this.calculateHash()
         this.funds = funds
       }
 
-      get total () {
-        return this.funds * this.feePercent
+      addFunds (amount) {
+        this.funds += amount
+      }
+
+      subtractFunds (amount) {
+        this.funds -= amount
+      }
+
+      get totalAfterFee () {
+        return this.precisionRound(this.funds * this.feePercent, 2)
+      }
+
+      precisionRound (number, precision) {
+        const factor = Math.pow(10, precision)
+        return Math.round(number * factor) / factor
+      }
+
+      calculateHash () {
+        const data = [this.fromEmail, this.toEmail, this.funds].join('')
+        let hash = 0, i = 0
+        const len = data.length
+        while (i < len) {
+          hash = ((hash << 5) - hash + data.charCodeAt(i++)) << 0
+        }
+        return hash
       }
     }
 
@@ -64,75 +90,67 @@ describe('Class-based JavaScript domain modeling', () => {
       'luis@joj.com'
     )
     inst1.addFunds(10)
-    assert.equal(inst1.total, 6)
+    assert.equal(inst1.totalAfterFee, 6)
 
-    class SecureTransaction extends MoneyTransaction {
-      calculateHash () {
-        const data = [this.from, this.to, this.funds].join('')
-        let hash = 0, i = 0
-        const len = data.length
-        while (i < len) {
-          hash = ((hash << 5) + hash + data.charCodeAt(i++)) << 0
-        }
-        return hash
-      }
-    }
+    const tx1 = new MoneyTransaction('Transfer', 'luis@joj.com', 'luke@joj.com')
+    tx1.addFunds(10)
+    assert.isOk(tx1.calculateHash() < 0)
 
-    const secureTx = new SecureTransaction(
-      'Transfer',
-      'luis@joj.com',
-      'luke@joj.com'
+    assert.isOk(Object.getPrototypeOf(tx1) === MoneyTransaction.prototype)
+    assert.isOk(tx1 instanceof MoneyTransaction)
+    assert.isOk(tx1 instanceof MoneyTransaction)
+    assert.isOk(tx1 instanceof Transaction)
+    assert.isOk(tx1 instanceof Object)
+    assert.equal(tx1.fromEmail, 'luis@joj.com')
+
+    const tx2 = new MoneyTransaction(
+      'Online item',
+      'luke@joj.com',
+      'ana@joj.com'
     )
-    assert.isOk(secureTx.calculateHash() > 0)
+    tx2.addFunds(20)
 
-    assert.isOk(Object.getPrototypeOf(secureTx) === SecureTransaction.prototype)
-    assert.isOk(secureTx instanceof SecureTransaction)
-    assert.isOk(secureTx instanceof MoneyTransaction)
-    assert.isOk(secureTx instanceof Transaction)
-    assert.isOk(secureTx instanceof Object)
-    assert.equal(secureTx.from, 'luis@joj.com')
+    const tx3 = new MoneyTransaction('Coffee', 'ana@joj.com', 'luis@joj.com')
+    tx3.addFunds(5.50)
 
-    class CryptoSigner {
-      algorithm = 'RSA-SHA256'
-      encoding = 'hex'
-      constructor (algorithm, encoding) {
-        this.algorithm = algorithm
-        this.encoding = encoding
-      }
+    console.table(
+      [
+        tx1,
+        tx2,
+        tx3
+      ].map(
+        ({
+          fromEmail: from,
+          toEmail: to,
+          transactionName: type,
+          totalAfterFee: net_total
+        }) => ({
+          from,
+          to,
+          type,
+          net_total
+        })
+      )
+    )
 
-      sign () {}
-
-      verify () {}
-    }
-
-    class SignedTransaction extends SecureTransaction {
+    class SecureMoneyTransaction extends MoneyTransaction {
       senderKey
       receiverKey
-      signer = new CryptoSigner('RSA-SHA256', 'hex')
       constructor (name, senderKey, receiverKey) {
         super(name, 'anonymous@joj.com', 'anonymous@joj.com')
         this.senderKey = this.verifySignature(senderKey)
         this.receiverKey = this.verifySignature(receiverKey)
-      } // continue researching gorilla banana problem
+      }
 
       verifySignature (k) {
         return k
       }
 
       calculateHash () {
-        this.from = this.senderKey.toString()
-        this.to = this.receiverKey.toString()
+        this.fromEmail = this.senderKey.toString()
+        this.toEmail = this.receiverKey.toString()
         return super.calculateHash()
       }
     }
-
-    const signedTx = new SignedTransaction(
-      'Signed Transfer',
-      'luis@joj.com',
-      'luke@joj.com'
-    )
-    signedTx.addFunds(10)
-    assert.isOk(signedTx.calculateHash() > 0)
-    assert.equal(signedTx.funds, 10)
   })
 })

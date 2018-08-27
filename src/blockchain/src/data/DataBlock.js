@@ -1,7 +1,7 @@
 import BlockHeader from './BlockHeader'
 import CryptoHasher from './CryptoHasher'
 import Genesis from './Genesis'
-import Hash from './Hash'
+import HasHash from './HasHash'
 
 /**
  * Represents a single block in the chain. By default, the block
@@ -31,7 +31,7 @@ const DataBlock = (data = {}, previousHash = '', hasher = CryptoHasher()) => {
     // analyze why rest param does't work
     state,
     BlockHeader(previousHash),
-    Hash({
+    HasHash({
       hasher,
       state,
       keys: ['timestamp', 'data', 'previousHash', 'nonce']

@@ -91,12 +91,13 @@ describe('Language extensions test', () => {
     assert.isOk(Object.getPrototypeOf(p) === person)
     assert.isOk(Object.getPrototypeOf(p2) === person)
     assert.isOk(p instanceof Object)
+    assert.isOk(p2 instanceof Object)
     assert.equal(p.name, 'Luis')
     assert.equal(p2.name, 'Luis')
 
     assert.isNotOk(p === p2)
 
-    // // Prototype change should not affect derived types
+    // Prototype change DOES affect derived types (fragile base class)
     person.name = 'Luke'
 
     assert.equal(p.name, 'Luke')

@@ -2,8 +2,8 @@ import '../lang/object'
 import BlockHeader from './BlockHeader'
 import CryptoHasher from './CryptoHasher'
 import Genesis from './Genesis'
-import Hash from './Hash'
-import PendingTransactions from './PendingTransactions'
+import HasHash from './HasHash'
+import HasPendingTransactions from './HasPendingTransactions'
 
 /**
  * Transactional blocks contain the set of all pending transactions in the chain
@@ -25,16 +25,16 @@ const TransactionalBlock = (
   previousHash = '',
   hasher = CryptoHasher()
 ) => {
-  const state = {
+  const props = {
     pendingTransactions,
     nonce: 0
   }
   return Object.concat(
     BlockHeader(previousHash),
-    state,
-    Hash({ hasher, keys: ['timestamp', 'previousHash', 'nonce'] }),
-    PendingTransactions(state),
-    Genesis(state)
+    props,
+    HasHash({ hasher, keys: ['timestamp', 'previousHash', 'nonce'] }),
+    HasPendingTransactions(props),
+    Genesis(props)
   )
 }
 export default TransactionalBlock

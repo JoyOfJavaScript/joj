@@ -6,7 +6,7 @@
  * @param {Object} state Instance data
  * @return {Object} An object containing methods to manage the state of pending transactions
  */
-const PendingTransactions = state => ({
+const HasSignature = state => ({
   get pendingTransactions () {
     return state.pendingTransactions
   },
@@ -21,4 +21,4 @@ const PendingTransactions = state => ({
   }
 })
 
-export default PendingTransactions
+export default HasSignature

@@ -1,5 +1,10 @@
-import { compose, flatMap, getOrElseThrow, map } from '@joj/adt/combinators'
-import Validation from '@joj/adt/validation'
+import {
+  compose,
+  flatMap,
+  getOrElseThrow,
+  map
+} from '../../../adt/dist/combinators'
+import Validation from '../../../adt/dist/validation'
 
 // Hashes always have a fixed length
 const HASH_LENGTH = 64

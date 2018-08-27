@@ -1,6 +1,6 @@
 import HashValue from './HashValue'
 import LoggerHandler from '../common/LoggerHandler'
-import { compose } from '@joj/adt/combinators'
+import { compose } from '../../../adt/dist/combinators'
 
 /**
  * Hash mixin.
@@ -13,7 +13,7 @@ import { compose } from '@joj/adt/combinators'
  * @param {Array}  keys         List of attribute names used for hashing
  * @return {string} Return a string hash of the block
  */
-const Hash = ({ hasher, keys }) => ({
+const HasHash = ({ hasher, keys }) => ({
   /**
    * Calculates a hashed value from the values of provided state marked by keys
    * @return {HashValue} A wrapped hash value
@@ -40,10 +40,11 @@ const formatData = (...pieces) => pieces.map(JSON.stringify).join('')
  */
 const computeCipher = hasher => compose(hasher.digest, formatData)
 
-Hash.calculateHash = (state, fields) => computeCipher(fields.map(k => state[k]))
-Hash.init = (...args) =>
+HasHash.calculateHash = (state, fields) =>
+  computeCipher(fields.map(k => state[k]))
+HasHash.init = (...args) =>
   (process.env.LOG
-    ? new Proxy(Hash(...args), LoggerHandler('hash'))
-    : Hash(...args))
+    ? new Proxy(HasHash(...args), LoggerHandler('hash'))
+    : HasHash(...args))
 
-export default Hash
+export default HasHash

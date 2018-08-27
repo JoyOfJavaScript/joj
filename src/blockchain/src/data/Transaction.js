@@ -1,7 +1,7 @@
 import CryptoHasher from './CryptoHasher'
 import CryptoSigner from './CryptoSigner'
-import Hash from './Hash'
-import Signature from './Signature'
+import HasHash from './HasHash'
+import HasSignature from './HasSignature'
 
 /**
  * A transaction holds information (keys) identifying who is making the payment
@@ -23,7 +23,7 @@ const Transaction = (
   signer = CryptoSigner()
 ) => {
   // public space
-  const state = {
+  const props = {
     sender,
     recipient,
     funds,
@@ -32,12 +32,12 @@ const Transaction = (
   }
 
   return Object.concat(
-    state,
-    Hash({
+    props,
+    HasHash({
       hasher,
       keys: ['sender', 'recipient', 'funds', 'nonce']
     }),
-    Signature({
+    HasSignature({
       signer,
       keys: ['sender', 'recipient', 'funds']
     })

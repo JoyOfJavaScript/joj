@@ -1,6 +1,6 @@
 import '../src/lang/object'
 import CryptoSigner from '../src/data/CryptoSigner'
-import Signature from '../src/data/Signature'
+import HasSignature from '../src/data/HasSignature'
 import { assert } from 'chai'
 import fs from 'fs'
 import path from 'path'
@@ -25,7 +25,7 @@ describe('Signature', () => {
         sender: fs.readFileSync(coinbasepublicKeyPath, 'utf8'),
         recipient: fs.readFileSync(lukePublicKeyPath, 'utf8')
       },
-      Signature({
+      HasSignature({
         signer,
         keys: ['sender', 'recipient']
       })

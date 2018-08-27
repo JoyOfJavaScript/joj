@@ -1,5 +1,5 @@
 import crypto from 'crypto'
-import { curry } from '@joj/adt/combinators'
+import { curry } from '../../../adt/dist/combinators'
 
 const DEFAULT_ENCODING_HEX = 'hex'
 const DEAFAILT_SIGN_ALGO = 'RSA-SHA256'
