@@ -2,11 +2,11 @@ import crypto from 'crypto'
 import { curry } from '../../../adt/dist/combinators'
 
 const DEFAULT_ENCODING_HEX = 'hex'
-const DEAFAILT_SIGN_ALGO = 'RSA-SHA256'
+const DEFAULT_SIGN_ALGO = 'RSA-SHA256'
 
 const CryptoSigner = (
   options = {
-    algorithm: DEAFAILT_SIGN_ALGO,
+    algorithm: DEFAULT_SIGN_ALGO,
     encoding: DEFAULT_ENCODING_HEX
   }
 ) => ({

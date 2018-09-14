@@ -2,6 +2,26 @@ import '../src/lang/object'
 import { assert } from 'chai'
 
 describe('Language extensions test', () => {
+  it('Object.concat with function constructor', () => {
+    function Car (make) {
+      this.make = make
+      this[Symbol.for('base')] = true
+    }
+    const mixin = {
+      moveFast: function () {
+        return `${this.make} is moving fast`
+      },
+      moveSlow: function () {
+        return `${this.make} is moving slowly`
+      }
+    }
+    const newCar = Object.concat(new Car('nissan'), mixin)
+    assert.equal(newCar.make, 'nissan')
+    assert.equal(newCar.moveFast(), `nissan is moving fast`)
+    assert.isOk(newCar instanceof Car)
+    assert.equal(Object.getPrototypeOf(newCar).constructor.name, 'Car')
+  })
+
   it('Object.concat with null', () => {
     const p = Object.concat(
       null,
@@ -88,6 +108,7 @@ describe('Language extensions test', () => {
     console.log(p)
     assert.isOk(p.print)
     assert.isOk(p.log)
+    console.log('In person', Object.getPrototypeOf(p))
     assert.isOk(Object.getPrototypeOf(p) === person)
     assert.isOk(Object.getPrototypeOf(p2) === person)
     assert.isOk(p instanceof Object)

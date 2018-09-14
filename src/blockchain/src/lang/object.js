@@ -5,17 +5,22 @@ if (typeof Object.concat !== 'function') {
   // - configurable: true
   Object.defineProperty(Object, 'concat', {
     value: function concatExtend (base, ...mixins) {
+      base = Object(base)
+      if (!Object.isExtensible(base)) {
+        throw new TypeError(
+          'Unable to concatenate mixins into base object. Object is not extensible'
+        )
+      }
       // Check if base object is intended to be used as prototype
-      const to = Object.getOwnPropertySymbols(Object(base)).includes(
-        Symbol.for('base')
-      )
+      const to = Object.getOwnPropertySymbols(base).includes(Symbol.for('base'))
         ? // Link prototype
-          Object.create(Object(base))
+          Object.create(base)
         : // Create copy of object
-          { ...Object(base) }
+          { ...base }
 
       // Mixin object delegates
-      return Object.assign(to, mixins.reduce((a, b) => ({ ...a, ...b }), {}))
+      // return Object.assign(to, mixins.reduce((a, b) => ({ ...a, ...b }), {}))
+      return Object.assign(to, ...mixins)
     },
     writable: true,
     configurable: true

@@ -3,8 +3,9 @@ import LoggerHandler from '../common/LoggerHandler'
 import { compose } from '../../../adt/dist/combinators'
 
 /**
- * Hash mixin.
- * A hash algorithm turns an arbitrarily-large amount of data into a fixed-length hash.
+ * HasHash mixin.
+ *
+ * A hash algorithm turns an arbitrarily-sized amount of data into a fixed-length hash.
  * The same hash will always result from the same data, but modifying the data by even
  * one bit will completely change the hash. Like all computer data, hashes are large numbers,
  * and are usually written as hexadecimal.

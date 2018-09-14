@@ -1,6 +1,43 @@
 import { assert } from 'chai'
 
 describe('Traditional JavaScript domain modeling', () => {
+  it('Basic prototype', () => {
+    const transaction = {
+      // #A
+      from: 'Luis',
+      to: 'Luke'
+    }
+
+    const moneyTransaction = Object.create(transaction) // #B
+
+    moneyTransaction.addFunds = function (money) {
+      // #C
+      this.funds = money
+    }
+
+    assert.isOk(Object.getPrototypeOf(moneyTransaction) === transaction)
+    assert.equal(moneyTransaction.from, 'Luis')
+    moneyTransaction.addFunds(10)
+    assert.equal(moneyTransaction.funds, 10)
+
+    const hashedTransaction = Object.create(moneyTransaction) // #A
+    hashedTransaction.calculateHash = function () {
+      // #B
+      const data = [this.from, this.to, this.funds].join('') // #C
+      let hash = 0, i = 0
+      const len = data.length
+      while (i < len) {
+        hash = ((hash << 5) - hash + data.charCodeAt(i++)) << 0
+      }
+      return hash
+    }
+    assert.isOk(Object.getPrototypeOf(hashedTransaction) === moneyTransaction)
+    assert.equal(hashedTransaction.from, 'Luis')
+    hashedTransaction.addFunds(10)
+    assert.equal(hashedTransaction.funds, 10)
+    console.log(hashedTransaction.calculateHash()) // 808421493
+    assert.isOk(hashedTransaction.calculateHash() > 0)
+  })
   it('Studies the behavior of prototype object', () => {
     function Transaction (from, to) {
       this.from = from

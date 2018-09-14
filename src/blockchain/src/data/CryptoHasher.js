@@ -1,6 +1,6 @@
 import crypto from 'crypto'
 
-const DEFAULT_ALGO_SHA256 = 'sha256' // hashcash-SHA256^2 (bitcoin)
+const DEFAULT_ALGO_SHA256 = 'SHA256' // hashcash-SHA256^2 (bitcoin)
 const DEFAULT_ENCODING_HEX = 'hex'
 
 const CryptoHasher = (
