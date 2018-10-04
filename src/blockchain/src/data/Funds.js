@@ -10,7 +10,8 @@ import { composeM } from '../../../adt/dist/combinators'
  * @return {Funds} Returns a Funds object
  */
 export const Funds = money => ({
-  funds: validateAmount(money.amount).getOrElseThrow()
+  funds: validateAmount(money.amount).getOrElseThrow(),
+  currency: money.currency
 })
 
 const notNaN = num =>

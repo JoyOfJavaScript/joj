@@ -10,7 +10,7 @@ import HasSignature from './HasSignature'
  *
  * @param {Key} sender       Origin of transaction (public key of sender)
  * @param {Key} recipient    Destination of transaction (public of the receiver)
- * @param {Money}  funds        Amount to transfer
+ * @param {Funds} funds      Amount to transfer
  * @param {CryptoHasher} hasher Hasher to use for transactions
  * @param {CryptoSigner} signer Signer to use for transactions
  * @return {Transaction} Newly created transaction
@@ -26,7 +26,8 @@ const Transaction = (
   const props = {
     sender,
     recipient,
-    funds,
+    amount: funds.amount,
+    currency: funds.currency,
     timestamp: Date.now(),
     [Symbol.for('version')]: '1.0'
   }
@@ -35,11 +36,11 @@ const Transaction = (
     props,
     HasHash({
       hasher,
-      keys: ['sender', 'recipient', 'funds', 'nonce']
+      keys: ['sender', 'recipient', 'amount', 'currency', 'nonce']
     }),
     HasSignature({
       signer,
-      keys: ['sender', 'recipient', 'funds']
+      keys: ['sender', 'recipient', 'amount', 'currency']
     })
   )
 }

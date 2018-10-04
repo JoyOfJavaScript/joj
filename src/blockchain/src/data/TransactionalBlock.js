@@ -27,7 +27,8 @@ const TransactionalBlock = (
 ) => {
   const props = {
     pendingTransactions,
-    nonce: 0
+    nonce: 0,
+    mine
   }
   return Object.concat(
     BlockHeader(previousHash),
@@ -37,4 +38,24 @@ const TransactionalBlock = (
     Genesis(props)
   )
 }
+
+/**
+ * Execute proof of work algorithm to mine block
+ * @return {Promise<Block>} Mined block
+ */
+async function mine () {
+  return Promise.resolve(proofOfWork(this, ''.padStart(this.difficulty, '0')))
+}
+
+// TODO: use trampolining to simulate TCO in order to reach mining difficulty 4
+const proofOfWork = (block, hashPrefix, nonce = 1) => {
+  if (block.hash.toString().startsWith(hashPrefix)) {
+    return block
+  }
+  // Continue to compute the hash again with higher nonce value
+  block.nonce = nonce
+  block.hash = block.calculateHash()
+  return proofOfWork(block, hashPrefix, nonce + 1)
+}
+
 export default TransactionalBlock

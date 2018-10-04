@@ -46,7 +46,8 @@ const Blockchain = genesis => {
    * @return {Number} Returns the number of blocks
    */
       push (newBlock) {
-        return blocks.push(newBlock)
+        blocks.push(newBlock)
+        return newBlock
       },
 
       /**

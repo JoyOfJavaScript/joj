@@ -1,5 +1,5 @@
-import "core-js/fn/array/flat-map";
-import BlockService from './BlockService'
+import 'core-js/fn/array/flat-map'
+import { MINING_REWARD } from '../settings'
 import Blockchain from '../data/Blockchain'
 import Combinators from '@joj/adt/combinators'
 import Money from '../data/Money'
@@ -10,9 +10,6 @@ import Wallet from '../data/Wallet'
 import fs from 'fs'
 import path from 'path'
 
-// As of writing, current mining reward
-const MINING_REWARD = Money('₿', 12.5)
-
 const { curry } = Combinators
 
 const BASE = path.join(__dirname, '../../..', 'blockchain-wallets')
@@ -21,8 +18,6 @@ const NETWORK = Wallet(
   fs.readFileSync(path.join(BASE, 'bitcoin-private.pem'), 'utf8'),
   'bitcoin'
 )
-
-const newBlockchain = () => Blockchain.init()
 
 /**
  * Adds a new data block to the chain. It involves:
@@ -48,11 +43,9 @@ const addBlock = curry((blockchain, newBlock) => {
  * @param {DataBlock}   newBlock   New block to add into the chain
  */
 const mineBlock = curry(async (blockchain, newBlock) => {
-  let block = newBlock
+  const block = newBlock
   block.previousHash = blockchain.last().hash
-  block = await BlockService.mineBlock(block.difficulty, block)
-  blockchain.push(block)
-  return block
+  return blockchain.push(await block.mine())
 })
 
 /**
@@ -81,8 +74,8 @@ const calculateBalanceOfWallet = curry((blockchain, address) => {
     )
       // Now apply a function to each group to extract the amount to add/subtract as money
       .bimap(Array, Array)(
-        arrA => arrA.map(tx => Money(tx.funds.currency, -tx.funds.amount)),
-        arrB => arrB.map(tx => Money(tx.funds.currency, tx.funds.amount))
+        arrA => arrA.map(tx => Money(tx.currency, -tx.amount)),
+        arrB => arrB.map(tx => Money(tx.currency, tx.amount))
       )
       .merge((a, b) => [...a, ...b])
       // Finally, add across all the values to compute sum
@@ -123,8 +116,8 @@ const minePendingTransactions = curry(async (txBlockchain, address) =>
     const fee =
       Math.abs(
         txBlockchain.pendingTransactions
-          .filter(tx => tx.funds.amount < 0)
-          .map(tx => tx.funds.amount)
+          .filter(tx => tx.amount < 0)
+          .map(tx => tx.amount)
           .reduce((a, b) => a + b, 0)
       ) *
       txBlockchain.pendingTransactions.length *
@@ -144,7 +137,7 @@ const minePendingTransactions = curry(async (txBlockchain, address) =>
     txBlockchain.pendingTransactions = [tx]
 
     // Validate the entire chain
-    BlockchainService.isChainValid(txBlockchain, true)
+    BitcoinService.isChainValid(txBlockchain, true)
 
     return block
   })
@@ -195,7 +188,7 @@ const checkBlockTransactions = block =>
 // eslint-disable-next-line max-statements
 const transferFunds = (txBlockchain, walletA, walletB, funds) => {
   // Check for enough funds
-  const balanceA = BlockchainService.calculateBalanceOfWallet(
+  const balanceA = BitcoinService.calculateBalanceOfWallet(
     txBlockchain,
     walletA.address
   )
@@ -217,16 +210,15 @@ const transferFunds = (txBlockchain, walletA, walletB, funds) => {
 }
 
 /**
- * Exported BlockchainService interface
+ * Exported BitcoinService interface
  */
-const BlockchainService = {
+const BitcoinService = {
   addBlock,
   mineBlock,
   isChainValid,
   minePendingTransactions,
   calculateBalanceOfWallet,
-  transferFunds,
-  newBlockchain
+  transferFunds
 }
-export default BlockchainService
-module.exports = BlockchainService // TODO: using export default will result in default: {} object within the import
+export default BitcoinService
+module.exports = BitcoinService // TODO: using export default will result in default: {} object within the import

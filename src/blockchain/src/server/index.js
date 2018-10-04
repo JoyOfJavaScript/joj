@@ -1,6 +1,8 @@
 import * as Actions from './actions'
 import * as Codes from './codes'
-import BlockchainService from '../service/BlockChainService'
+import Blockchain from '../data/Blockchain'
+import BitcoinService from '../service/BitcoinService'
+import Funds from '../data/Funds'
 import Key from '../data/Key'
 import Money from '../data/Money'
 import Transaction from '../data/Transaction'
@@ -21,7 +23,7 @@ const httpServer = http.createServer((request, response) => {
   response.end()
 })
 
-httpServer.listen(1337, function () {})
+httpServer.listen(1337)
 
 // create the server
 const wsServer = new WebSocketServer({ httpServer })
@@ -47,21 +49,26 @@ wsServer.on('request', request => {
 })
 
 // Collect all transactions in blockchain and mine them into a new block
-function nextTick (blockchain) {
+async function nextTick (blockchain) {
   console.log(`Begin: Blockchain has ${blockchain.height()} blocks`)
 
+  // Mine some initial block, after mining the reward is BTC 100 for wa
+  const block = await BitcoinService.minePendingTransactions(
+    LEDGER,
+    miner.address
+  )
   console.log(`End: Blockchain has ${blockchain.height()} blocks`)
 }
 
+// Create new chain
+const LEDGER = Blockchain.init()
+
+// Start the sync loop
+sync(LEDGER).subscribe(nextTick)
+
 async function processRequest (connection, req) {
   switch (req.action) {
-    case Actions.NEW: {
-      console.log('Creating a new blockchain with its genesis block...')
-      // Create new chain
-      const chain = await BlockchainService.newBlockchain()
-      // Start the sync loop
-      sync(chain).subscribe(nextTick)
-      // Send respond
+    case Actions.START: {
       connection.sendUTF(
         JSON.stringify({
           status: 'Success',
@@ -80,29 +87,28 @@ async function processRequest (connection, req) {
         Key(`${req.to}-public.pem`),
         Key(`${req.to}-private.pem`)
       )
-      const tx = Transaction(from.address, to.address, Money('₿', req.amount))
-      first.signature = first.generateSignature(miner.privateKey)
-      chain.pendingTransactions = [first]
-
-      // Mine some initial block, after mining the reward is BTC 100 for wa
-      const block = await BlockchainService.minePendingTransactions(
-        chain,
-        miner.address
+      const tx = Transaction(
+        from.address,
+        to.address,
+        Funds(Money('₿', req.amount))
       )
+      tx.signature = tx.generateSignature(from.privateKey)
+      LEDGER.addPendingTransaction(tx)
+
       connection.sendUTF(
         JSON.stringify({
           status: 'Success',
           payload: {
-            block: block.hash,
-            actions: [Actions.VALIDATE_BC]
+            tx: tx.calculateHash(),
+            actions: [Actions.VALIDATE_BC, Actions.NEW_TRANSACTION]
           }
         })
       )
       break
     }
     case Actions.VALIDATE_BC: {
-      console.log(`Validating blockchain with ${chain.length()} blocks`)
-      const isValid = await BlockchainService.isChainValid(chain)
+      console.log(`Validating blockchain with ${LEDGER.length()} blocks`)
+      const isValid = await BitcoinService.isChainValid(LEDGER)
       connection.sendUTF(
         JSON.stringify({
           status: 'Success',
