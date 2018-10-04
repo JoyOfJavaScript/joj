@@ -104,23 +104,23 @@ const calculateBalanceOfWallet = curry((blockchain, address) => {
 // })
 
 // Proof of Work
-const minePendingTransactions = curry(async (txBlockchain, address) =>
+const minePendingTransactions = curry(async (ledger, address) =>
   // Mine block and pass it all pending transactions in the chain
   // In reality, blocks are not to exceed 1MB, so not all tx are sent to all blocks
   // We keep transactions immutable by substracting similar transactions for the fee
   mineBlock(
-    txBlockchain,
-    TransactionalBlock(txBlockchain.pendingTransactions)
+    ledger,
+    TransactionalBlock(ledger.pendingTransactions)
   ).then(block => {
     // Reward is bigger when there are more transactions to process
     const fee =
       Math.abs(
-        txBlockchain.pendingTransactions
+        ledger.pendingTransactions
           .filter(tx => tx.amount < 0)
           .map(tx => tx.amount)
           .reduce((a, b) => a + b, 0)
       ) *
-      txBlockchain.pendingTransactions.length *
+      ledger.pendingTransactions.length *
       0.02
 
     // Reset pending transactions for this blockchain
@@ -134,10 +134,10 @@ const minePendingTransactions = curry(async (txBlockchain, address) =>
     tx.signature = tx.generateSignature(NETWORK.privateKey)
 
     // After the transactions have been added to a block, reset them with the reward for the next miner
-    txBlockchain.pendingTransactions = [tx]
+    ledger.pendingTransactions = [tx]
 
     // Validate the entire chain
-    BitcoinService.isChainValid(txBlockchain, true)
+    BitcoinService.isChainValid(ledger, true)
 
     return block
   })

@@ -19,6 +19,7 @@ const Transaction = (
   sender,
   recipient,
   funds,
+  description = 'Generic',
   hasher = CryptoHasher(),
   signer = CryptoSigner()
 ) => {
@@ -26,6 +27,7 @@ const Transaction = (
   const props = {
     sender,
     recipient,
+    description,
     amount: funds.amount,
     currency: funds.currency,
     timestamp: Date.now(),

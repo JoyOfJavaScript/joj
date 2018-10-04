@@ -36,10 +36,11 @@ const Blockchain = genesis => {
           throw new Error(`Block with hash ${hash} not found!`)
         })()),
     toArray: () => [...blocks.values()],
+    pendingTransactions: [],
     timestamp
   }
 
-  return Object.concat(props, HasPendingTransactions({}))
+  return Object.concat(props, HasPendingTransactions(props))
 }
 
 Blockchain.init = () => {

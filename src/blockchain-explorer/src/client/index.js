@@ -59,7 +59,7 @@ client.on('connect', connection => {
     })
 
   // Initiates conversation
-  connection.sendUTF(JSON.stringify({ action: '*' }))
+  connection.sendUTF(JSON.stringify({ action: 'START' }))
 })
 
 client.connect('ws://localhost:1337')

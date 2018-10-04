@@ -8,6 +8,7 @@ import Money from '../data/Money'
 import Transaction from '../data/Transaction'
 import Wallet from '../data/Wallet'
 import WebSocket from 'websocket'
+import canned_transactions from './canned_transactions'
 import http from 'http'
 import sync from './sync'
 
@@ -31,7 +32,7 @@ const wsServer = new WebSocketServer({ httpServer })
 // WebSocket server
 wsServer.on('request', request => {
   const connection = request.accept(null, request.origin)
-  console.log('Connection opened with server!')
+  console.log('Connection opened with blockchain explorer!')
   // This is the most important callback for us, we'll handle
   // all messages from users here.
   connection.on('message', async message => {
@@ -49,8 +50,14 @@ wsServer.on('request', request => {
 })
 
 // Collect all transactions in blockchain and mine them into a new block
-async function nextTick (ledger) {
-  console.log(`Begin: Bitcoin Ledger has ${ledger.height()} blocks`)
+async function mineBlocks (ledger) {
+  if (ledger.countPendingTransactions() === 0) {
+    console.log(`No pending transactions have been created`)
+    return null
+  }
+  console.log(
+    `Begin mining blocks: Bitcoin Ledger has ${ledger.height()} blocks`
+  )
 
   // Emulate a miner node performing the work
   const miner = Wallet(Key('miner-public.pem'), Key('miner-private.pem'))
@@ -61,14 +68,17 @@ async function nextTick (ledger) {
     miner.address
   )
   console.log('New block mined' + newBlock.hash)
-  console.log(`End: Blockchain has ${ledger.height()} blocks`)
+  console.log(
+    `End block mining period: Blockchain has ${ledger.height()} blocks`
+  )
+  return newBlock
 }
 
 // Create new chain
 const LEDGER = Blockchain.init()
 
 // Start the sync loop
-sync(LEDGER).subscribe(nextTick)
+sync(LEDGER).subscribe(mineBlocks)
 
 async function processRequest (connection, req) {
   switch (req.action) {
@@ -76,25 +86,30 @@ async function processRequest (connection, req) {
       connection.sendUTF(
         JSON.stringify({
           status: 'Success',
-          payload: { actions: [Actions.MINE_BLOCK, Actions.VALIDATE_BC] }
+          payload: { actions: [Actions.NEW_TRANSACTION, Actions.VALIDATE_BC] }
         })
       )
       break
     }
     case Actions.NEW_TRANSACTION: {
-      console.log('Creating a new transaction')
+      console.log('Simulating new random transaction')
+      const details =
+        canned_transactions[
+          Math.floor(Math.random() * canned_transactions.length)
+        ]
+      displayTransaction(details)
       const from = Wallet(
-        Key(`${req.from}-public.pem`),
-        Key(`${req.from}-private.pem`)
+        Key(`${details.from}-public.pem`),
+        Key(`${details.from}-private.pem`)
       )
       const to = Wallet(
-        Key(`${req.to}-public.pem`),
-        Key(`${req.to}-private.pem`)
+        Key(`${details.to}-public.pem`),
+        Key(`${details.to}-private.pem`)
       )
       const tx = Transaction(
         from.address,
         to.address,
-        Funds(Money('₿', req.amount))
+        Funds(Money('₿', details.amount))
       )
       tx.signature = tx.generateSignature(from.privateKey)
       LEDGER.addPendingTransaction(tx)
@@ -104,7 +119,7 @@ async function processRequest (connection, req) {
           status: 'Success',
           payload: {
             tx: tx.calculateHash(),
-            actions: [Actions.VALIDATE_BC, Actions.NEW_TRANSACTION]
+            actions: [Actions.NEW_TRANSACTION, Actions.VALIDATE_BC]
           }
         })
       )
@@ -136,4 +151,8 @@ async function processRequest (connection, req) {
       )
     }
   }
+}
+
+function displayTransaction ({ from, to, amount }) {
+  console.log(`Transaction from: ${from} to: ${to} with amount: ${amount}`)
 }
