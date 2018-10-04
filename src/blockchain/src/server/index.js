@@ -49,15 +49,19 @@ wsServer.on('request', request => {
 })
 
 // Collect all transactions in blockchain and mine them into a new block
-async function nextTick (blockchain) {
-  console.log(`Begin: Blockchain has ${blockchain.height()} blocks`)
+async function nextTick (ledger) {
+  console.log(`Begin: Bitcoin Ledger has ${ledger.height()} blocks`)
 
-  // Mine some initial block, after mining the reward is BTC 100 for wa
-  const block = await BitcoinService.minePendingTransactions(
-    LEDGER,
+  // Emulate a miner node performing the work
+  const miner = Wallet(Key('miner-public.pem'), Key('miner-private.pem'))
+
+  // Mine a block with all pending transactions, after mining the reward is BTC 100 for next miner
+  const newBlock = await BitcoinService.minePendingTransactions(
+    ledger,
     miner.address
   )
-  console.log(`End: Blockchain has ${blockchain.height()} blocks`)
+  console.log('New block mined' + newBlock.hash)
+  console.log(`End: Blockchain has ${ledger.height()} blocks`)
 }
 
 // Create new chain
@@ -107,14 +111,14 @@ async function processRequest (connection, req) {
       break
     }
     case Actions.VALIDATE_BC: {
-      console.log(`Validating blockchain with ${LEDGER.length()} blocks`)
+      console.log(`Validating blockchain with ${LEDGER.height()} blocks`)
       const isValid = await BitcoinService.isChainValid(LEDGER)
       connection.sendUTF(
         JSON.stringify({
           status: 'Success',
           payload: {
             result: !!isValid,
-            actions: [Actions.MINE_BLOCK, Actions.VALIDATE_BC]
+            actions: [Actions.NEW_TRANSACTION, Actions.VALIDATE_BC]
           }
         })
       )
@@ -133,4 +137,3 @@ async function processRequest (connection, req) {
     }
   }
 }
-console.log('Websocket server listening...')

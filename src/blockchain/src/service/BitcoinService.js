@@ -159,8 +159,11 @@ const isChainValid = (blockchain, checkTransactions = false) =>
     // Skip the first one (the array will be off-by-one with respect to the blockchain)
     .slice(1)
     // Convert the resulting array into pairs of blocks Pair(current, previous)
-    .map((currentBlock, currentIndex) =>
-      Pair(Object, Object)(currentBlock, blockchain.blockAt(currentIndex))
+    .map(currentBlock =>
+      Pair(Object, Object)(
+        currentBlock,
+        blockchain.lookUp(currentBlock.previousHash)
+      )
     )
     // Validate every pair of blocks is valid
     .every(([current, previous]) =>

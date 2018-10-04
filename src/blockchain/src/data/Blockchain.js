@@ -3,6 +3,10 @@ import HasPendingTransactions from './HasPendingTransactions'
 
 // Alternate solution: http://2ality.com/2013/03/subclassing-builtins-es6.html
 
+// TODO
+// implement block as a linked list
+// store blockchain to file db
+
 /**
  * Untamperable blockchain. You may initialize the chain with an existing
  * chain. But the most common thing to do is initialize with an empty Chain
@@ -17,71 +21,25 @@ import HasPendingTransactions from './HasPendingTransactions'
 const Blockchain = genesis => {
   const version = '1.0'
   const timestamp = new Date()
-  const blocks = [genesis]
+  const blocks = new Map([[genesis.hash, genesis]])
 
-  return Object.concat(
-    {
-      [Symbol.for('version')]: version,
-      /**
-   * Returns Genesis (first block) in the chain
-   *
-   * @return {DataBlock} First block
-   */
-      genesis () {
-        return blocks[0]
-      },
+  const props = {
+    [Symbol.for('version')]: version,
+    genesis,
+    last: () => [...blocks.values()].pop(),
+    push: newBlock => blocks.set(newBlock.hash, newBlock).get(newBlock.hash),
+    height: () => blocks.size,
+    lookUp: hash =>
+      (blocks.has(hash)
+        ? blocks.get(hash)
+        : (() => {
+          throw new Error(`Block with hash ${hash} not found!`)
+        })()),
+    toArray: () => [...blocks.values()],
+    timestamp
+  }
 
-      /**
-   * Returns last block in the chain
-   *
-   * @return {DataBlock} Last block
-   */
-      last () {
-        return blocks[blocks.length - 1]
-      },
-
-      /**
-   * Push a new block into the chain
-   * @param {DataBlock} newBlock New block to insert
-   * @return {Number} Returns the number of blocks
-   */
-      push (newBlock) {
-        blocks.push(newBlock)
-        return newBlock
-      },
-
-      /**
-   * Computes the height (similar to length) of the chain
-   *
-   * @return {Number} Length
-   */
-      height () {
-        return blocks.length
-      },
-
-      /**
-   * Retrieve block at a certain location
-   * @param {Number} index Location of block
-   * @return {DataBlock} Block at this position/index in the chain
-   */
-      blockAt (index) {
-        return blocks[index]
-      },
-
-      /**
-   * Return an (new) array representation of this blockchain
-   * @return {Array} Blockchain as an array
-   */
-      toArray () {
-        return [...blocks]
-      },
-
-      get timestamp () {
-        return timestamp
-      }
-    },
-    HasPendingTransactions({})
-  )
+  return Object.concat(props, HasPendingTransactions({}))
 }
 
 Blockchain.init = () => {
