@@ -14,6 +14,8 @@ export const curry = fn => (...args1) =>
 
 // ADT helpers
 export const map = curry((f, M) => M.map(f))
+export const composeM2 = (f, g) => (...args) => g(...args).flatMap(f)
+export const composeM = (...Ms) => Ms.reduce(composeM2)
 export const flatMap = curry((f, M) => M.flatMap(f))
 export const fold = curry((f, M) => M.fold(f))
 export const getOrElseThrow = curry((e, M) => M.getOrElseThrow(e))
@@ -23,6 +25,8 @@ export default {
   isFunction,
   compose,
   compose2,
+  composeM2,
+  composeM,
   pipe,
   curry,
   map,

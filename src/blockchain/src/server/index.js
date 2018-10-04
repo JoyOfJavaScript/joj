@@ -7,12 +7,13 @@ import Transaction from '../data/Transaction'
 import Wallet from '../data/Wallet'
 import WebSocket from 'websocket'
 import http from 'http'
+import sync from './sync'
 
-process.title = 'blockchain'
+process.title = 'blockchain-server'
 
 const { server: WebSocketServer } = WebSocket
 
-const server = http.createServer((request, response) => {
+const httpServer = http.createServer((request, response) => {
   // process HTTP request. Since we're writing just WebSockets
   // server we don't have to implement anything.
   console.log(new Date() + ' Received request for ' + request.url)
@@ -20,12 +21,10 @@ const server = http.createServer((request, response) => {
   response.end()
 })
 
-server.listen(1337, function () {})
+httpServer.listen(1337, function () {})
 
 // create the server
-const wsServer = new WebSocketServer({
-  httpServer: server
-})
+const wsServer = new WebSocketServer({ httpServer })
 
 // WebSocket server
 wsServer.on('request', request => {
@@ -47,14 +46,22 @@ wsServer.on('request', request => {
   })
 })
 
-// Move this into a global store
-let chain = null
+// Collect all transactions in blockchain and mine them into a new block
+function nextTick (blockchain) {
+  console.log(`Begin: Blockchain has ${blockchain.height()} blocks`)
+
+  console.log(`End: Blockchain has ${blockchain.height()} blocks`)
+}
 
 async function processRequest (connection, req) {
   switch (req.action) {
-    case Actions.NEW:
-      console.log('Creating a new blockchain...')
-      chain = await BlockchainService.newBlockchain()
+    case Actions.NEW: {
+      console.log('Creating a new blockchain with its genesis block...')
+      // Create new chain
+      const chain = await BlockchainService.newBlockchain()
+      // Start the sync loop
+      sync(chain).subscribe(nextTick)
+      // Send respond
       connection.sendUTF(
         JSON.stringify({
           status: 'Success',
@@ -62,10 +69,18 @@ async function processRequest (connection, req) {
         })
       )
       break
-    case Actions.MINE_BLOCK: {
-      console.log('Mining new block')
-      const miner = Wallet(Key('miner-public.pem'), Key('miner-private.pem'))
-      const first = Transaction(null, miner.address, Money('₿', 100))
+    }
+    case Actions.NEW_TRANSACTION: {
+      console.log('Creating a new transaction')
+      const from = Wallet(
+        Key(`${req.from}-public.pem`),
+        Key(`${req.from}-private.pem`)
+      )
+      const to = Wallet(
+        Key(`${req.to}-public.pem`),
+        Key(`${req.to}-private.pem`)
+      )
+      const tx = Transaction(from.address, to.address, Money('₿', req.amount))
       first.signature = first.generateSignature(miner.privateKey)
       chain.pendingTransactions = [first]
 

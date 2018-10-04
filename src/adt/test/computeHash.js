@@ -1,10 +1,10 @@
-import { curry, compose } from '../src/combinators'
+import { compose, curry } from '../src/combinators'
 import crypto from 'crypto'
 
 const ALGO_SHA256 = 'sha256'
 const ENCODING_HEX = 'hex'
 
-function computeCipherUntil(hashPrefix, obj = {}, entropy = 1) {
+function computeCipherUntil (hashPrefix, obj = {}, entropy = 1) {
   try {
     const hash = computeCipher(Object.assign({ entropy }, obj))
     if (hash.startsWith(hashPrefix)) {
@@ -25,10 +25,7 @@ const pad = num => ''.padStart(num, '0')
  * @param {String} data      Data to use as seed for the hash
  */
 const createDigest = curry((algorithm, encoding, data) =>
-  crypto
-    .createHash(algorithm)
-    .update(data)
-    .digest(encoding)
+  crypto.createHash(algorithm).update(data).digest(encoding)
 )
 
 /**
@@ -43,7 +40,7 @@ const computeCipher = compose(
 )
 
 // With curry, can't use defautl args
-export default curry(async function computeHash(difficulty, obj) {
+export default curry(async function computeHash (difficulty, obj) {
   // If used with an await expression, it will convered to a resolved Promise automatically
   return Promise.resolve(computeCipherUntil(pad(difficulty || 1), obj || {}))
 })

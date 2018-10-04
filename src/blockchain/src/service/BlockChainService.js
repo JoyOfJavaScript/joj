@@ -1,3 +1,4 @@
+import "core-js/fn/array/flat-map";
 import BlockService from './BlockService'
 import Blockchain from '../data/Blockchain'
 import Combinators from '@joj/adt/combinators'

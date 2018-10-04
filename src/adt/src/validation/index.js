@@ -18,7 +18,7 @@ export const Success = (Validation.Success = a =>
       fold: (fn = identity) => fn(a),
       foldOrElse: (fn = identity) => fn(a),
       map: fn => Validation.fromNullable(fn(a), ['Value is null']),
-      flatMap: fn => Validation.fromNullable(fn(a).merge()),
+      flatMap: fnM => fnM(a),
       ap: Va =>
         (Va.isFailure()
           ? Va
@@ -28,11 +28,13 @@ export const Success = (Validation.Success = a =>
                 )
               : a ? Success(Va.fold().call(Va, a)) : Failure()),
       concat: Va => Va,
-      bifold: (successTransform, _) => successTransform(a),
+      bifold: successTransform => successTransform(a),
       // This what makes Validation not a real monad (also not a real disjunction)
-      bimap: (successTransform, _) => Success(successTransform(a)),
+      bimap: successTransform => Success(successTransform(a)),
       merge: () => a,
+      // eslint-disable-next-line no-unused-vars
       getOrElse: defaultValue => a,
+      // eslint-disable-next-line no-unused-vars
       getOrElseThrow: error => a,
       toMaybe: () => Just(a),
       toString: () => `Validation#Success (${a})`,
@@ -50,8 +52,8 @@ export const Failure = (Validation.Failure = b =>
       [Symbol.for('maybe')]: () => Nothing(),
       isSuccess: () => false,
       isFailure: () => true,
-      map: _ => Failure(b),
-      flatMap: _ => Failure(b),
+      map: () => Failure(b),
+      flatMap: () => Failure(b),
       ap: Va => (Va.isFailure() ? Failure(b.concat(Va.merge())) : Failure(b)),
       foldOrElse: (_, defaultValue) => defaultValue,
       concat: Va =>
@@ -59,10 +61,15 @@ export const Failure = (Validation.Failure = b =>
       bifold: (_, failTransform) => failTransform(b),
       // This what makes Validation not a real monad (also not a real disjunction)
       bimap: (_, failTransform) => Failure(failTransform(b)),
-      fold: _ => errorWith('Unable to fold from a Validate.Failure'),
+      fold: () => errorWith('Unable to fold from a Validate.Failure'),
       merge: () => b,
       getOrElse: defaultValue => defaultValue,
-      getOrElseThrow: error => {
+      // eslint-disable-next-line fp/no-nil
+      getOrElseThrow: () => {
+        throw new Error('Error due to: ' + b.join('. '))
+      },
+      // eslint-disable-next-line fp/no-nil
+      getOrElseThrowCustom: error => {
         if (isError(error)) {
           throw error
         }
@@ -79,9 +86,10 @@ export const Failure = (Validation.Failure = b =>
   ))
 
 function isError (e) {
-  return e.constructor.name.includes('Error')
+  return e && e.constructor.name.includes('Error')
 }
 
+// eslint-disable-next-line fp/no-nil
 function errorWith (str) {
   // This will become more concise with throw expressions (https://github.com/tc39/proposal-throw-expressions)
   throw new TypeError(str)

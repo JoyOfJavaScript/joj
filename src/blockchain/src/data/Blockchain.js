@@ -50,11 +50,11 @@ const Blockchain = genesis => {
       },
 
       /**
-   * Computes the length of the chain
+   * Computes the height (similar to length) of the chain
    *
    * @return {Number} Length
    */
-      length () {
+      height () {
         return blocks.length
       },
 
@@ -68,7 +68,7 @@ const Blockchain = genesis => {
       },
 
       /**
-   * Return an array representation of this blockchain
+   * Return an (new) array representation of this blockchain
    * @return {Array} Blockchain as an array
    */
       toArray () {

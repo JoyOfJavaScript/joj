@@ -5,27 +5,27 @@
   "main": "index.js",
   "description": "Simple blockchain primitives",
   "devDependencies": {
-    "@babel/cli": "^7.0.0-beta.49",
-    "@babel/core": "^7.0.0-beta.49",
-    "@babel/node": "^7.0.0-beta.54",
-    "@babel/preset-env": "^7.0.0-beta.49",
-    "@babel/preset-flow": "^7.0.0-beta.49",
-    "@babel/register": "^7.0.0-beta.49",
-    "babel-eslint": "^8.2.3",
+    "@babel/cli": "^7.1.2",
+    "@babel/core": "^7.1.2",
+    "@babel/node": "^7.0.0",
+    "@babel/preset-env": "^7.1.0",
+    "@babel/preset-flow": "^7.0.0",
+    "@babel/register": "^7.0.0",
+    "babel-eslint": "^8.2.6",
     "chai": "4.1.0",
     "eslint": "^4.18.0",
-    "eslint-plugin-flowtype": "^2.49.3",
+    "eslint-plugin-flowtype": "^2.50.3",
     "eslint-plugin-flowtype-errors": "^3.3.6",
     "eslint-plugin-fp": "^2.3.0",
     "flow-bin": "^0.59.0",
     "mocha": "^5.0.5",
-    "nodemon": "^1.11.0",
+    "nodemon": "^1.18.4",
     "standard": "^11.0.1"
   },
   "dependencies": {
-    "@babel/polyfill": "^7.0.0-beta.55",
+    "@babel/polyfill": "^7.0.0",
     "@joj/adt": "file:../adt/dist",
-    "websocket": "^1.0.26"
+    "websocket": "^1.0.28"
   },
   "scripts": {
     "lint": "eslint src",

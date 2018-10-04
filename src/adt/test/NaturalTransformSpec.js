@@ -20,7 +20,7 @@ describe('Natural Transformation: Maybe => Promise', () => {
 
     const hash = safeHash({
       name: 'UXDevSummit',
-      year: 2018,
+      year: 2018
     })
     assert.isOk(hash.isJust())
 
@@ -44,14 +44,14 @@ describe('Natural Transformation: Maybe => Promise', () => {
 
     let hash = safeHash({
       name: 'UXDevSummit',
-      year: 2018,
+      year: 2018
     })
     assert.isOk(hash.isJust())
 
     const processHash = compose(asyncMap(v => v + 'test'), safeHash)
     hash = await processHash({
       name: 'UXDevSummit',
-      year: 2018,
+      year: 2018
     }).getOrElse('other')
     assert.isOk(hash.endsWith('test'))
 
@@ -63,14 +63,11 @@ describe('Natural Transformation: Maybe => Promise', () => {
 describe('Combine Maybe with Validation', () => {
   it('Add null validation through Maybe', () => {
     const notEmpty = str =>
-      str && str.length > 0 ? Success(str) : Failure(['String is empty'])
+      (str && str.length > 0 ? Success(str) : Failure(['String is empty']))
 
-    const emptyVal = Validation.of('')
-      .flatMap(notEmpty)
-      .toMaybe()
-      .merge()
+    const emptyVal = Validation.of('a').flatMap(notEmpty).toMaybe().merge()
 
-    const emptyVal1 = Maybe.fromNullable('')
+    const emptyVal1 = Maybe.fromNullable('a')
       .toValidation()
       .flatMap(notEmpty)
       .merge()
@@ -91,10 +88,10 @@ describe('Combine Maybe with Validation', () => {
 
     assert.deepEqual(validateArg(null).merge(), [
       'Expected non-null argument',
-      'String is empty',
+      'String is empty'
     ])
     assert.equal(validateArg(null).getOrElse('other'), 'other')
   })
 })
 
-//describe('Combine Maybe with Either', () => {})
+// describe('Combine Maybe with Either', () => {})

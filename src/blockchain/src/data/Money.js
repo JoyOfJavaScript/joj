@@ -1,8 +1,6 @@
 import Validation from '../../../adt/dist/validation'
 
-const ZERO = 0
-
-// TODO: look into using: https://github.com/tc39/proposal-bigint
+export const BITCOIN = '₿'
 
 /**
  * Money value object
@@ -11,7 +9,7 @@ const ZERO = 0
  * @param {string} amount   Amount represented
  * @return {Money} Returns a money object
  */
-const Money = (currency = '₿', amount = ZERO) => ({
+const Money = (currency = BITCOIN, amount = 0) => ({
   amount,
   currency,
   constructor: Money,
@@ -42,7 +40,10 @@ const precisionRound = (number, precision) => {
 }
 
 // Zero
-Money.zero = currency => Money(currency, ZERO)
+Money.zero = currency => Money(currency, 0)
+Money.Currencies = {
+  Bitcoin: BITCOIN
+}
 
 // Compare money objects
 Money.compare = (m1, m2) =>
