@@ -4,7 +4,7 @@ import EventEmitter from 'events'
 const Sync = (blockchain, every = SYNC_TIMER) => {
   const loop = new EventEmitter().setMaxListeners(MAX_LISTENERS)
   // Emit an event every SYNC_TIMER minutes
-  const LOOP_ID = setTimeout(() => {
+  const LOOP_ID = setInterval(() => {
     loop.emit(EVENT, blockchain)
   }, every)
   return {

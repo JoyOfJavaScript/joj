@@ -7,8 +7,11 @@
  * @return {Object} An object containing methods to manage the state of pending transactions
  */
 const HasSignature = state => ({
+  set pendingTransactions (pt = []) {
+    return (state.pendingTransactions = pt)
+  },
   get pendingTransactions () {
-    return state.pendingTransactions
+    return [...state.pendingTransactions]
   },
   addPendingTransaction (tx) {
     if (!state.pendingTransactions) {

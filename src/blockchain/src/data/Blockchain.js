@@ -24,8 +24,16 @@ const Blockchain = genesis => {
   const blocks = new Map([[genesis.hash, genesis]])
 
   const props = {
-    [Symbol.for('version')]: version,
-    genesis,
+    // meta properties
+    [Symbol.for('version')]: () => version,
+    [Symbol.iterator]: () => {
+      const iter = blocks.values()
+      iter.next() // skip the genesis block
+      return iter
+    },
+    [Symbol.toStringTag]: () => 'Blockchain',
+
+    // instance properties
     last: () => [...blocks.values()].pop(),
     push: newBlock => blocks.set(newBlock.hash, newBlock).get(newBlock.hash),
     height: () => blocks.size,

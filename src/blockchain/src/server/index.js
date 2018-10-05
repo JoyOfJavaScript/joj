@@ -78,8 +78,10 @@ async function mineBlocks (ledger) {
 const LEDGER = Blockchain.init()
 
 // Start the sync loop
-sync(LEDGER).subscribe(mineBlocks)
+const mainLoop = sync(LEDGER)
+mainLoop.subscribe(mineBlocks)
 
+// eslint-disable-next-line complexity
 async function processRequest (connection, req) {
   switch (req.action) {
     case Actions.START: {
@@ -133,7 +135,36 @@ async function processRequest (connection, req) {
           status: 'Success',
           payload: {
             result: !!isValid,
-            actions: [Actions.NEW_TRANSACTION, Actions.VALIDATE_BC]
+            actions: [
+              Actions.NEW_TRANSACTION,
+              Actions.VALIDATE_BC,
+              Actions.PRINT_LEDGER
+            ]
+          }
+        })
+      )
+      break
+    }
+    case Actions.PRINT_LEDGER: {
+      const summary = []
+      for (const block of LEDGER) {
+        summary.push({
+          previousHash: block.previousHash.toString(),
+          hash: block.hash.toString(),
+          confirmedTransactions: block.countPendingTransactions()
+        })
+      }
+      connection.sendUTF(
+        JSON.stringify({
+          status: 'Success',
+          action: req.action,
+          payload: {
+            result: JSON.stringify(summary),
+            actions: [
+              Actions.NEW_TRANSACTION,
+              Actions.VALIDATE_BC,
+              Actions.STOP
+            ]
           }
         })
       )
@@ -142,6 +173,9 @@ async function processRequest (connection, req) {
     default: {
       const msg = `Unspecified action ${req.action}`
       console.log(msg)
+      // Stop main loop
+      mainLoop.unsubscribe()
+
       connection.sendUTF(
         JSON.stringify({
           status: Codes.SUCCESS,

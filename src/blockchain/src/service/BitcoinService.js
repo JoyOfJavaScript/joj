@@ -44,6 +44,9 @@ const addBlock = curry((blockchain, newBlock) => {
  */
 const mineBlock = curry(async (blockchain, newBlock) => {
   const block = newBlock
+  console.log(
+    `Found ${block.countPendingTransactions()} pending transactions in block`
+  )
   block.previousHash = blockchain.last().hash
   return blockchain.push(await block.mine())
 })

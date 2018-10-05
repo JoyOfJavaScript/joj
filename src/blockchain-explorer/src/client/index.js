@@ -46,7 +46,6 @@ client.on('connect', connection => {
     .map(({ utf8Data }) => utf8Data)
     .subscribe({
       next: async message =>
-        console.log('next', message) +
         sendAction(connection, await handleIncomingMessages(message)),
       error: error => {
         console.log(error.message)
@@ -66,6 +65,7 @@ client.connect('ws://localhost:1337')
 
 async function handleIncomingMessages (data) {
   const messageObj = JSON.parse(data)
+  handleMessage(messageObj)
   if (messageObj.payload.actions) {
     return handleActionListing(messageObj.payload.actions)
   }
@@ -76,6 +76,12 @@ async function handleActionListing (actions) {
     log(`Your selection is ${selection}`)
     return selection
   })
+}
+
+function handleMessage (messageObj) {
+  if (messageObj.action === 'PRINT_LEDGER') {
+    console.table(JSON.parse(messageObj.payload.result))
+  }
 }
 
 function sendAction (connection, action) {
