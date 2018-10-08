@@ -2,8 +2,8 @@ import 'core-js/fn/array/flat-map'
 import { MINING_REWARD } from '../settings'
 import Blockchain from '../data/Blockchain'
 import Combinators from '@joj/adt/combinators'
+import Funds from '../data/Funds'
 import Money from '../data/Money'
-import Pair from '@joj/adt/pair'
 import Transaction from '../data/Transaction'
 import TransactionalBlock from '../data/TransactionalBlock'
 import Wallet from '../data/Wallet'
@@ -28,7 +28,7 @@ const NETWORK = Wallet(
  * @param {Block}      newBlock   New block to add into the chain
  */
 const addBlock = curry((blockchain, newBlock) => {
-  newBlock.previousHash = blockchain.last().hash
+  newBlock.previousHash = blockchain.top().hash
   newBlock.hash = newBlock.calculateHash()
   blockchain.push(newBlock)
   return newBlock
@@ -47,7 +47,7 @@ const mineBlock = curry(async (blockchain, newBlock) => {
   console.log(
     `Found ${block.countPendingTransactions()} pending transactions in block`
   )
-  block.previousHash = blockchain.last().hash
+  block.previousHash = blockchain.top().hash
   return blockchain.push(await block.mine())
 })
 
@@ -59,52 +59,21 @@ const mineBlock = curry(async (blockchain, newBlock) => {
  * @param {string}     address    Address to send reward to
  */
 const calculateBalanceOfWallet = curry((blockchain, address) => {
-  const transactions = blockchain
-    .toArray()
-    // Ignore Genesis block as this won't ever have any pending transactions
-    .filter(b => !b.isGenesis())
-    // Retrieve all pending transactions
-    .flatMap(txBlock => txBlock.pendingTransactions)
-
-  // Separate the transactions into 2 groups:
-  //    1: Matches the fromAddress
-  //    2: Matches the toAddress
-  return (
-    Pair.split(
-      tx => tx.sender === address,
-      tx => tx.recipient === address,
-      transactions
-    )
-      // Now apply a function to each group to extract the amount to add/subtract as money
-      .bimap(Array, Array)(
-        arrA => arrA.map(tx => Money(tx.currency, -tx.amount)),
-        arrB => arrB.map(tx => Money(tx.currency, tx.amount))
-      )
-      .merge((a, b) => [...a, ...b])
-      // Finally, add across all the values to compute sum
-      // Money is monoidal over Money.add and Money.nothing
-      .reduce(Money.add, Money.zero())
-  )
+  let balance = Money.zero()
+  for (const block of blockchain) {
+    if (!block.isGenesis()) {
+      for (const trans of block.pendingTransactions) {
+        if (trans.sender === address) {
+          balance = balance.minus(trans.money)
+        }
+        if (trans.recipient === address) {
+          balance = balance.plus(trans.money)
+        }
+      }
+    }
+  }
+  return balance.round()
 })
-
-// -- IMPERATIVE VERSION OF calculateBalanceOfAddress --
-//
-// const calculateBalanceOfAddress = curry((blockchain, address) => {
-//   let balance = Money.nothing()
-//   for (const block of blockchain.blocks()) {
-//     if (!block.isGenesis()) {
-//       for (const trans of block.pendingTransactions) {
-//         if (trans.fromAddress === address) {
-//           balance = balance.minus(trans.money)
-//         }
-//         if (trans.toAddress === address) {
-//           balance = balance.plus(trans.money)
-//         }
-//       }
-//     }
-//   }
-//   return balance
-// })
 
 // Proof of Work
 const minePendingTransactions = curry(async (ledger, address) =>
@@ -132,7 +101,8 @@ const minePendingTransactions = curry(async (ledger, address) =>
     const tx = Transaction(
       NETWORK.address,
       address,
-      Money.add(Money('₿', fee), MINING_REWARD)
+      Funds(Money.add(Money('₿', fee), MINING_REWARD)),
+      'Mining Reward'
     )
     tx.signature = tx.generateSignature(NETWORK.privateKey)
 
@@ -156,24 +126,30 @@ const minePendingTransactions = curry(async (ledger, address) =>
  * @param {boolean} checkTransactions Whether to check for transactions as well
  * @return {boolean} Whether the chain is valid
  */
+// TODO: Use an iterator to check all blocks instead of toArray. Delete toArray method and use ...blockchain to invoke the iterator
+// TODO: You can use generators to run a simulation
 const isChainValid = (blockchain, checkTransactions = false) =>
-  blockchain
-    .toArray()
-    // Skip the first one (the array will be off-by-one with respect to the blockchain)
-    .slice(1)
-    // Convert the resulting array into pairs of blocks Pair(current, previous)
-    .map(currentBlock =>
-      Pair(Object, Object)(
-        currentBlock,
-        blockchain.lookUp(currentBlock.previousHash)
-      )
-    )
-    // Validate every pair of blocks is valid
-    .every(([current, previous]) =>
-      checkBlocks(checkTransactions, current, previous)
-    )
+  [...validateBlockchain(blockchain, checkTransactions)].reduce(
+    (a, b) => a && b
+  )
 
-const checkBlocks = (checkTransactions, current, previous) =>
+const validateBlockchain = (blockchain, alsoCheckTransactions) => {
+  return {
+    [Symbol.iterator]: function * () {
+      for (const currentBlock of blockchain) {
+        if (currentBlock.isGenesis()) {
+          yield true
+        } else {
+          // Compare each block with its previous
+          const previousBlock = blockchain.lookUp(currentBlock.previousHash)
+          yield checkBlocks(currentBlock, previousBlock, alsoCheckTransactions)
+        }
+      }
+    }
+  }
+}
+
+const checkBlocks = (current, previous, checkTransactions) =>
   // 0. Check hash valid
   current.hash.length > 0 &&
   previous.hash.length > 0 &&
@@ -203,14 +179,14 @@ const transferFunds = (txBlockchain, walletA, walletB, funds) => {
     throw new RangeError('Insufficient funds!')
   }
   const fee = Money.multiply(funds, Money('₿', 0.02))
-  const transfer = Transaction(walletA.address, walletB.address, funds)
+  const transfer = Transaction(walletA.address, walletB.address, Funds(funds))
   transfer.signature = transfer.generateSignature(walletA.privateKey)
 
   // Sender pays the fee
-  const txFee = Transaction(null, walletA.address, fee.asNegative())
+  const txFee = Transaction(walletA.address, NETWORK.address, Funds(fee))
   txFee.signature = txFee.generateSignature(walletA.privateKey)
 
-  // Create new transactions in the blockchain representing the transfer and the fee
+  // Add new pending transactions in the blockchain representing the transfer and the fee
   txBlockchain.pendingTransactions.push(transfer, txFee)
   return transfer
 }

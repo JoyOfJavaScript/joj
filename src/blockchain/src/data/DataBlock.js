@@ -46,7 +46,8 @@ const DataBlock = (data = {}, previousHash = '', hasher = CryptoHasher()) => {
  * @param  {Object} data Misc block data to store
  * @return {Block} New genesis block
  */
-DataBlock.genesis = data => DataBlock(data || { data: 'Genesis Block' }, '-1')
+DataBlock.genesis = data => DataBlock(data || { data: 'Genesis Block' }, null)
+
 DataBlock.calculateHash = (
   block,
   fields = ['timestamp', 'data', 'previousHash', 'nonce']

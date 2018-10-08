@@ -11,7 +11,8 @@ import { composeM } from '../../../adt/dist/combinators'
  */
 export const Funds = money => ({
   funds: validateAmount(money.amount).getOrElseThrow(),
-  currency: money.currency
+  currency: money.currency,
+  toMoney: () => money
 })
 
 const notNaN = num =>

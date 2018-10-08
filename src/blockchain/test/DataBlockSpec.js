@@ -1,13 +1,13 @@
 import DataBlock from '../src/data/DataBlock'
-import assert from 'assert'
+import { assert } from 'chai'
 
 describe('Block object', () => {
   it('Should create genesis block', () => {
     const b = DataBlock.genesis()
     assert.deepEqual(b.data, { data: 'Genesis Block' })
-    assert.equal(b.previousHash, '-1')
+    assert.isNull(b.previousHash)
     assert.equal('DataBlock', b.constructor.name)
-    assert.ok(b instanceof DataBlock())
+    assert.isOk(b instanceof DataBlock())
   })
 
   it('Should init a new block', () => {

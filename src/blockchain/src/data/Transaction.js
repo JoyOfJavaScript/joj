@@ -30,6 +30,7 @@ const Transaction = (
     description,
     amount: funds.amount,
     currency: funds.currency,
+    money: funds.toMoney(),
     timestamp: Date.now(),
     [Symbol.for('version')]: '1.0'
   }

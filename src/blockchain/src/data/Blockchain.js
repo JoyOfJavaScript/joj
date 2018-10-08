@@ -26,15 +26,12 @@ const Blockchain = genesis => {
   const props = {
     // meta properties
     [Symbol.for('version')]: () => version,
-    [Symbol.iterator]: () => {
-      const iter = blocks.values()
-      iter.next() // skip the genesis block
-      return iter
-    },
+    // TODO: in chapter on symbols, create a symbol for [Symbol.observable] then show validating blockchain using it
+    [Symbol.iterator]: () => blocks.values(),
     [Symbol.toStringTag]: () => 'Blockchain',
 
     // instance properties
-    last: () => [...blocks.values()].pop(),
+    top: () => [...blocks.values()].pop(),
     push: newBlock => blocks.set(newBlock.hash, newBlock).get(newBlock.hash),
     height: () => blocks.size,
     lookUp: hash =>

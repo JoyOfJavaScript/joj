@@ -1,5 +1,5 @@
 import TransactionalBlock from '../src/data/TransactionalBlock'
-import assert from 'assert'
+import { assert } from 'chai'
 
 describe('Transactional Block object', () => {
   it('Should init a new trasactional block', () => {

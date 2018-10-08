@@ -1,5 +1,6 @@
 import Blockchain from '../src/data/Blockchain'
 import BitcoinService from '../src/service/BitcoinService'
+import Funds from '../src/data/Funds'
 import Key from '../src/data/Key'
 import Money from '../src/data/Money'
 import Transaction from '../src/data/Transaction'
@@ -19,9 +20,9 @@ describe('Transfer Funds', () => {
 
     const ledger = Blockchain.init()
 
-    const first = Transaction(null, miner.address, Money('₿', 100))
+    const first = Transaction(null, miner.address, Funds(Money('₿', 100)))
     first.signature = first.generateSignature(miner.privateKey)
-    ledger.pendingTransactions = [first]
+    ledger.addPendingTransaction(first)
 
     // Mine some initial block, after mining the reward is BTC 100 for wa
     await BitcoinService.minePendingTransactions(ledger, miner.address)
@@ -66,10 +67,7 @@ describe('Transfer Funds', () => {
       ana.address
     )
 
-    lukeBalance = BitcoinService.calculateBalanceOfWallet(
-      ledger,
-      luke.address
-    )
+    lukeBalance = BitcoinService.calculateBalanceOfWallet(ledger, luke.address)
 
     assert.isOk(
       anaBalance.equals(Money('₿', 10)),
@@ -86,10 +84,7 @@ describe('Transfer Funds', () => {
 
     anaBalance = BitcoinService.calculateBalanceOfWallet(ledger, ana.address)
 
-    lukeBalance = BitcoinService.calculateBalanceOfWallet(
-      ledger,
-      luke.address
-    )
+    lukeBalance = BitcoinService.calculateBalanceOfWallet(ledger, luke.address)
 
     // Assert Ana has BTC 70 and Luke has BTC 30
     assert.isOk(
@@ -108,10 +103,7 @@ describe('Transfer Funds', () => {
 
     anaBalance = BitcoinService.calculateBalanceOfWallet(ledger, ana.address)
 
-    lukeBalance = BitcoinService.calculateBalanceOfWallet(
-      ledger,
-      luke.address
-    )
+    lukeBalance = BitcoinService.calculateBalanceOfWallet(ledger, luke.address)
 
     // Assert Ana has BTC 80 and Luke has BTC 20
     assert.isOk(
@@ -119,7 +111,7 @@ describe('Transfer Funds', () => {
       `Ana's balance should be ₿17.00 and was ${anaBalance}`
     )
     assert.isOk(
-      lukeBalance.round().equals(Money('₿', 6.64)),
+      lukeBalance.equals(Money('₿', 6.64)),
       `Luke's balance should be ₿6.64 and was ${lukeBalance}`
     )
 
@@ -134,7 +126,7 @@ describe('Transfer Funds', () => {
       miner.address
     )
     assert.isOk(
-      minerBalance.round().equals(Money('₿', 142.14)),
+      minerBalance.equals(Money('₿', 142.1)),
       `Miner's balance is ${minerBalance}`
     )
 
@@ -142,14 +134,11 @@ describe('Transfer Funds', () => {
     // TODO:  Use ES7 String padding to format this output
     // console.log(ledger.map(x => x.inspect()))
 
-    assert.isOk(
-      BitcoinService.isChainValid(ledger, true),
-      'Is ledger valid?'
-    )
+    assert.isOk(BitcoinService.isChainValid(ledger, true), 'Is ledger valid?')
 
     console.table(
       ledger.toArray().map(({ hash, previousHash, data }) => ({
-        previousHash: previousHash.toString(),
+        previousHash: previousHash ? previousHash.toString() : 'N/A',
         hash: hash.toString(),
         data: JSON.stringify(data)
       }))

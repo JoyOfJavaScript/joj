@@ -11,12 +11,9 @@ const HasSignature = state => ({
     return (state.pendingTransactions = pt)
   },
   get pendingTransactions () {
-    return [...state.pendingTransactions]
+    return state.pendingTransactions
   },
   addPendingTransaction (tx) {
-    if (!state.pendingTransactions) {
-      state.pendingTransactions = []
-    }
     state.pendingTransactions.push(tx)
   },
   pendingTransactionsToString () {
