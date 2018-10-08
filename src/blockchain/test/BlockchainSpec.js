@@ -1,5 +1,5 @@
-import BlockChain from '../src/data/Blockchain'
 import BitcoinService from '../src/service/BitcoinService'
+import BlockChain from '../src/data/Blockchain'
 import DataBlock from '../src/data/DataBlock'
 import Money from '../src/data/Money'
 import { assert } from 'chai'
