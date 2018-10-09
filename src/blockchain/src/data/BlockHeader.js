@@ -16,7 +16,7 @@ const BlockHeader = (previousHash = '') => {
     difficulty: 2,
     previousHash,
     hash: '',
-    nonce: 0,
+    nonce: 0, // TODO: The nonce is also a hash
     timestamp: Date.now(),
     [Symbol.for('version')]: '1.0'
   }

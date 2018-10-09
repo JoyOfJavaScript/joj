@@ -10,7 +10,7 @@ import Wallet from '../data/Wallet'
 import WebSocket from 'websocket'
 import canned_transactions from './canned_transactions'
 import http from 'http'
-import sync from './sync'
+import network from './network'
 
 process.title = 'blockchain-server'
 
@@ -78,7 +78,7 @@ async function mineBlocks (ledger) {
 const LEDGER = Blockchain.init()
 
 // Start the sync loop
-const mainLoop = sync(LEDGER)
+const mainLoop = network(LEDGER)
 mainLoop.subscribe(mineBlocks)
 
 // eslint-disable-next-line complexity

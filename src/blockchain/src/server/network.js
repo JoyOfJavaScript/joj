@@ -1,7 +1,7 @@
 import { EVENT, MAX_LISTENERS, SYNC_TIMER } from '../settings'
 import EventEmitter from 'events'
 
-const Sync = (blockchain, every = SYNC_TIMER) => {
+const Network = (blockchain, every = SYNC_TIMER) => {
   const loop = new EventEmitter().setMaxListeners(MAX_LISTENERS)
   // Emit an event every SYNC_TIMER minutes
   const LOOP_ID = setInterval(() => {
@@ -21,4 +21,4 @@ const Sync = (blockchain, every = SYNC_TIMER) => {
     }
   }
 }
-export default Sync
+export default Network
