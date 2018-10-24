@@ -13,7 +13,7 @@ describe('Create a valid Blockchain data structure', () => {
     assert.isOk(ledger.toArray() instanceof Array)
     const [g, ...blocks] = ledger.toArray()
     assert.isOk(blocks.length === 0)
-    assert.equal(g.previousHash.valueOf, '-1')
+    assert.equal(g.previousHash, '-1')
     assert.isOk(BitcoinService.isLedgerValid(ledger))
   })
 })

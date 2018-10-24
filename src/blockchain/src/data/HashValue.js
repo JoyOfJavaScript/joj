@@ -11,7 +11,7 @@ import Validation from '../../../adt/dist/validation'
 const HASH_LENGTH = 64
 
 const wrap = value => ({
-  valueOf: value,
+  valueOf: () => value,
   length: value.length,
   toString: () => value,
   equals: o => value === o.toString(),

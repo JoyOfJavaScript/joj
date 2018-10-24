@@ -22,7 +22,7 @@ import HashValue from './HashValue'
 const Blockchain = (genesis = createGenesis()) => {
   const version = '1.0'
   const timestamp = new Date()
-  const blocks = new Map([[genesis.hash.valueOf, genesis]])
+  const blocks = new Map([[genesis.hash.valueOf(), genesis]])
 
   let top = genesis
 
@@ -40,16 +40,16 @@ const Blockchain = (genesis = createGenesis()) => {
     timestamp: () => timestamp,
     top: () => top,
     push: newBlock => {
-      blocks.set(newBlock.hash.valueOf, newBlock)
+      blocks.set(newBlock.hash.valueOf(), newBlock)
       top = newBlock
       return newBlock
     },
     height: () => blocks.size,
     lookUp: hash =>
-      (blocks.has(hash.valueOf)
-        ? blocks.get(hash.valueOf)
+      (blocks.has(hash.valueOf())
+        ? blocks.get(hash.valueOf())
         : (() => {
-          throw new Error(`Block with hash ${hash.valueOf} not found!`)
+          throw new Error(`Block with hash ${hash.valueOf()} not found!`)
         })()),
     toArray: () => [...blocks.values()]
   }

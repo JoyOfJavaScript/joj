@@ -174,7 +174,7 @@ const checkBlockTransactions = block =>
   block.pendingTransactions.every(tx => tx.verifySignature())
 
 // eslint-disable-next-line max-statements
-const transferFunds = (txBlockchain, walletA, walletB, funds) => {
+const transferFunds = (txBlockchain, walletA, walletB, funds, description) => {
   // Check for enough funds
   const balanceA = BitcoinService.calculateBalanceOfWallet(
     txBlockchain,
@@ -185,7 +185,12 @@ const transferFunds = (txBlockchain, walletA, walletB, funds) => {
     throw new RangeError('Insufficient funds!')
   }
   const fee = Money.multiply(funds, Money('₿', 0.02))
-  const transfer = Transaction(walletA.address, walletB.address, Funds(funds))
+  const transfer = Transaction(
+    walletA.address,
+    walletB.address,
+    Funds(funds),
+    description
+  )
   transfer.signature = transfer.generateSignature(walletA.privateKey)
 
   // Sender pays the fee

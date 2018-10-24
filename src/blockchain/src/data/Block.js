@@ -50,7 +50,7 @@ const Block = (
          * @return {Boolean} Whether this is a genesis block
          */
         isGenesis () {
-          return this.previousHash.valueOf === '-1'
+          return this.previousHash.valueOf() === '-1'
         }
       }
     },
