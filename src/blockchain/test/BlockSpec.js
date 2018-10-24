@@ -35,5 +35,7 @@ describe('Block Spec', () => {
     console.log('Hash: ', b.hash)
     assert.ok(b.hash.length > 0)
     assert.notEqual(currentHash, b.hash)
+    assert.ok(b.toJSON().previousHash)
+    assert.notOk(b.toJSON().difficulty)
   })
 })

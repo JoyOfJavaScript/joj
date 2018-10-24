@@ -14,6 +14,7 @@ const wrap = value => ({
   valueOf: () => value,
   length: value.length,
   toString: () => value,
+  toJSON: () => ({ value, length: value.length }),
   equals: o => value === o.toString(),
   [Symbol.toPrimitive]: () => value
 })

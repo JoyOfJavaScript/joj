@@ -27,6 +27,7 @@ describe('Transfer Funds Test suite', () => {
       'First transaction'
     )
     first.signature = first.generateSignature(miner.privateKey)
+    first.hash = first.calculateHash()
     ledger.addPendingTransaction(first)
 
     // Mine some initial block, after mining the reward is BTC 100 for wa

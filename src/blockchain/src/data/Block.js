@@ -49,6 +49,19 @@ const Block = (
          */
         isGenesis () {
           return this.previousHash.valueOf() === '-1'
+        },
+        /**
+         * Returns the minimal JSON representation of this object
+         * @return {Object} JSON object
+         */
+        toJSON () {
+          return {
+            previousHash: this.previousHash,
+            hash: this.hash,
+            nonce: this.nonce,
+            timestamp: this.timestamp,
+            pendingTransactions: this.pendingTransactionsToString()
+          }
         }
       }
     },

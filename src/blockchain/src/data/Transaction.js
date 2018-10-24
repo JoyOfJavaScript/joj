@@ -49,7 +49,15 @@ const Transaction = (
          * Gets the funds as a Money object
          * @return {Money} Funds wrapped as Money object
          */
-        money: () => funds.toMoney()
+        money: () => funds.toMoney(),
+        /**
+         * Returns a minimal JSON represetation of this object
+         */
+        toJSON () {
+          return {
+            hash: this.hash.valueOf()
+          }
+        }
       }
     },
     HasHash({

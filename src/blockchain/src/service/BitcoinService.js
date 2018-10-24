@@ -94,16 +94,17 @@ const minePendingTransactions = curry(async (ledger, address) =>
     // Reset pending transactions for this blockchain
     // Put fee transaction into the chain for next mining operation
     // Network will reward the first miner to mine the block with the transaction fee
-    const tx = Transaction(
+    const reward = Transaction(
       NETWORK.address,
       address,
       Funds(Money.add(Money('₿', fee), MINING_REWARD)),
       'Mining Reward'
     )
-    tx.signature = tx.generateSignature(NETWORK.privateKey)
+    reward.signature = reward.generateSignature(NETWORK.privateKey)
+    reward.hash = reward.calculateHash()
 
     // After the transactions have been added to a block, reset them with the reward for the next miner
-    ledger.pendingTransactions = [tx]
+    ledger.pendingTransactions = [reward]
 
     // Validate the entire chain
     BitcoinService.isLedgerValid(ledger, true)
@@ -188,10 +189,11 @@ const transferFunds = (txBlockchain, walletA, walletB, funds, description) => {
     description
   )
   transfer.signature = transfer.generateSignature(walletA.privateKey)
-
+  transfer.hash = transfer.calculateHash()
   // Sender pays the fee
   const txFee = Transaction(walletA.address, NETWORK.address, Funds(fee))
   txFee.signature = txFee.generateSignature(walletA.privateKey)
+  txFee.hash = txFee.calculateHash()
 
   // Add new pending transactions in the blockchain representing the transfer and the fee
   txBlockchain.pendingTransactions.push(transfer, txFee)
