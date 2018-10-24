@@ -1,5 +1,5 @@
-import Blockchain from '../src/data/Blockchain'
 import BitcoinService from '../src/service/BitcoinService'
+import Blockchain from '../src/data/Blockchain'
 import Funds from '../src/data/Funds'
 import Key from '../src/data/Key'
 import Money from '../src/data/Money'
@@ -179,6 +179,7 @@ describe('Transfer Funds Test suite', () => {
 
     console.table(
       ledger.toArray().map(block => ({
+        genesis: block.isGenesis() ? '\u2714' : false,
         previousHash: block.previousHash.valueOf(),
         hash: block.hash.valueOf(),
         count: block.countPendingTransactions()

@@ -1,7 +1,6 @@
 import 'core-js/fn/array/flat-map'
 import { MINING_REWARD } from '../settings'
 import Block from '../data/Block'
-import Blockchain from '../data/Blockchain'
 import Combinators from '@joj/adt/combinators'
 import Funds from '../data/Funds'
 import Money from '../data/Money'
@@ -27,10 +26,10 @@ const NETWORK = Wallet(
  * @param {Blockchain} blockchain Chain to add block to
  * @param {Block}      newBlock   New block to add into the chain
  */
-const addBlock = curry((blockchain, newBlock) => {
-  newBlock.previousHash = blockchain.top().hash
+const addBlock = curry((ledger, newBlock) => {
+  newBlock.previousHash = ledger.top().hash
   newBlock.hash = newBlock.calculateHash(newBlock.pendingTransactionsToString())
-  blockchain.push(newBlock)
+  ledger.push(newBlock)
   return newBlock
 })
 
@@ -171,10 +170,10 @@ const checkBlockTransactions = block =>
   block.pendingTransactions.every(tx => tx.verifySignature())
 
 // eslint-disable-next-line max-statements
-const transferFunds = (txBlockchain, walletA, walletB, funds, description) => {
+const transferFunds = (ledger, walletA, walletB, funds, description) => {
   // Check for enough funds
   const balanceA = BitcoinService.calculateBalanceOfWallet(
-    txBlockchain,
+    ledger,
     walletA.address
   )
 
@@ -196,7 +195,7 @@ const transferFunds = (txBlockchain, walletA, walletB, funds, description) => {
   txFee.hash = txFee.calculateHash()
 
   // Add new pending transactions in the blockchain representing the transfer and the fee
-  txBlockchain.pendingTransactions.push(transfer, txFee)
+  ledger.pendingTransactions.push(transfer, txFee)
   return transfer
 }
 
