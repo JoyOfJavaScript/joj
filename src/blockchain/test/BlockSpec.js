@@ -17,12 +17,14 @@ describe('Block Spec', () => {
     b.hash = b.calculateHash()
     assert.notEqual(currentHash, b.hash)
   })
+
   it('Should init a new trasactional block', () => {
     const b = Block(['1', '2', '3'], '123')
     assert.deepEqual(b.pendingTransactions, ['1', '2', '3'])
     assert.equal(b.previousHash, '123')
     assert.equal(b.nonce, 0)
   })
+
   it('Should validate core properties', () => {
     const b = Block(['1', '2', '3'], '123')
     b.hash = b.calculateHash()

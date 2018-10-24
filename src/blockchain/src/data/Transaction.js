@@ -8,9 +8,10 @@ import HasSignature from './HasSignature'
  * or relinquishing an asset, the monetary value being transacted and to whom is sent to.
  * Ownership of an asset (like money) is transfered via transactions.
  *
- * @param {Key} sender       Origin of transaction (public key of sender)
- * @param {Key} recipient    Destination of transaction (public of the receiver)
- * @param {Funds} funds      Amount to transfer
+ * @param {Key}   sender        Origin of transaction (public key of sender)
+ * @param {Key}   recipient     Destination of transaction (public of the receiver)
+ * @param {Funds} funds         Amount to transfer
+ * @param {String} description  Description of the transaction
  * @param {CryptoHasher} hasher Hasher to use for transactions
  * @param {CryptoSigner} signer Signer to use for transactions
  * @return {Transaction} Newly created transaction
@@ -28,7 +29,7 @@ const Transaction = (
     sender,
     recipient,
     description,
-    amount: funds.amount,
+    amount: funds.funds,
     currency: funds.currency,
     money: funds.toMoney(),
     timestamp: Date.now(),
@@ -37,11 +38,11 @@ const Transaction = (
 
   return Object.concat(
     props,
-    HasHash.call(this, {
+    HasHash({
       hasher,
       keys: ['sender', 'recipient', 'amount', 'currency', 'nonce']
     }),
-    HasSignature.call(this, {
+    HasSignature({
       signer,
       keys: ['sender', 'recipient', 'amount', 'currency']
     })

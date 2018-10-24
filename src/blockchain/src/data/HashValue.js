@@ -1,5 +1,6 @@
 import {
   compose,
+  curry,
   flatMap,
   getOrElseThrow,
   map
@@ -9,30 +10,34 @@ import Validation from '../../../adt/dist/validation'
 // Hashes always have a fixed length
 const HASH_LENGTH = 64
 
-const wrap = h => ({
-  toString: () => h,
-  [Symbol.toPrimitive]: () => h,
-  length: h.length,
-  equals: o => h === o.toString()
+const wrap = value => ({
+  valueOf: value,
+  length: value.length,
+  toString: () => value,
+  equals: o => value === o.toString(),
+  [Symbol.toPrimitive]: () => value
 })
 
-const isValid = h =>
-  (h && h.length === HASH_LENGTH
-    ? Validation.Success(h)
-    : Validation.Failure([`Invalid hash value ${h}`]))
+const isValid = curry(
+  (skip, h) =>
+    (skip || (h && h.length === HASH_LENGTH)
+      ? Validation.Success(h)
+      : Validation.Failure([`Invalid hash value ${h}`]))
+)
 
 /**
  * Wrap a hash into a domain primitive hash value
  * @param {String} h String hash
  * @return {Object} wrapped hash
  */
-const HashValue = compose(
-  getOrElseThrow(
-    'Invalid hash found. Check that the hash value is not empty and meets the required length'
-  ),
-  map(wrap),
-  flatMap(isValid),
-  Validation.fromNullable
-)
+const HashValue = (value, isGenesisHash = false) =>
+  compose(
+    getOrElseThrow(
+      'Invalid hash found. Check that the hash value is not empty and meets the required length'
+    ),
+    map(wrap),
+    flatMap(isValid(isGenesisHash)),
+    Validation.fromNullable
+  )(value)
 
 export default HashValue

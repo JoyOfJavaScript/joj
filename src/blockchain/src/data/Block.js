@@ -1,9 +1,8 @@
 import '../lang/object'
-import BlockHeader from './BlockHeader'
 import CryptoHasher from './CryptoHasher'
-import Genesis from './Genesis'
 import HasHash from './HasHash'
 import HasPendingTransactions from './HasPendingTransactions'
+import HashValue from './HashValue'
 
 /**
  * Transactional blocks contain the set of all pending transactions in the chain
@@ -26,15 +25,22 @@ const Block = (
   hasher = CryptoHasher()
 ) => {
   const props = {
+    [Symbol.for('version')]: '1.0',
+    difficulty: 2,
+    previousHash,
+    hash: undefined,
+    nonce: 0, // TODO: The nonce is also a hash
+    timestamp: Date.now(),
     pendingTransactions,
-    mine
+    mine,
+    isGenesis () {
+      return this.previousHash.valueOf === '-1'
+    }
   }
   return Object.concat(
-    BlockHeader(previousHash),
     props,
     HasHash({ hasher, keys: ['timestamp', 'previousHash', 'nonce'] }),
-    HasPendingTransactions(props),
-    Genesis(props)
+    HasPendingTransactions(props)
   )
 }
 
@@ -48,7 +54,7 @@ async function mine () {
 
 // TODO: use trampolining to simulate TCO in order to reach mining difficulty 4
 const proofOfWork = (block, hashPrefix, nonce = 1) => {
-  if (block.hash.toString().startsWith(hashPrefix)) {
+  if (block.hash && block.hash.toString().startsWith(hashPrefix)) {
     return block
   }
   // Continue to compute the hash again with higher nonce value

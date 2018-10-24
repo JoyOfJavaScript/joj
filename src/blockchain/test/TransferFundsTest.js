@@ -20,7 +20,12 @@ describe('Transfer Funds', () => {
 
     const ledger = Blockchain()
 
-    const first = Transaction(null, miner.address, Funds(Money('₿', 100)))
+    const first = Transaction(
+      null,
+      miner.address,
+      Funds(Money('₿', 100)),
+      'First transaction'
+    )
     first.signature = first.generateSignature(miner.privateKey)
     ledger.addPendingTransaction(first)
 

@@ -48,8 +48,7 @@ const addBlock = curry((blockchain, newBlock) => {
  * @param {Blockchain}  blockchain Chain to add block to
  * @param {DataBlock}   newBlock   New block to add into the chain
  */
-const mineBlock = curry(async (blockchain, newBlock) => {
-  const block = newBlock
+const mineBlock = curry(async (blockchain, block) => {
   console.log(
     `Found ${block.countPendingTransactions()} pending transactions in block`
   )
