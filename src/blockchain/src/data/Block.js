@@ -2,7 +2,6 @@ import '../lang/object'
 import CryptoHasher from './CryptoHasher'
 import HasHash from './HasHash'
 import HasPendingTransactions from './HasPendingTransactions'
-import HashValue from './HashValue'
 
 /**
  * Transactional blocks contain the set of all pending transactions in the chain
@@ -13,11 +12,10 @@ import HashValue from './HashValue'
  * properties of such block. Blocks are immutable with respect to their hash, if the hash of a block
  * changes, it's a different block
  *
- * @param {Array}  pendingTransactions Array of pending transactions from the chain
- * @param {string} previousHash        Reference to the previous block in the chain
+ * @param {Array}     pendingTransactions Array of pending transactions from the chain
+ * @param {HashValue} previousHash        Reference to the previous block in the chain
  * @param {CryptoHasher} hasher Hasher to use to hash transactional blocks
  * @return {Block} Newly created block with its own computed hash
- * @augments Block
  */
 const Block = (
   pendingTransactions = [],
@@ -31,7 +29,7 @@ const Block = (
         difficulty: 2,
         previousHash,
         hash: undefined,
-        nonce: 0, // TODO: The nonce is also a hash
+        nonce: 0,
         timestamp: Date.now(),
         pendingTransactions
       },
@@ -66,7 +64,7 @@ const proofOfWork = (block, hashPrefix, nonce = 1) => {
   }
   // Continue to compute the hash again with higher nonce value
   block.nonce = nonce
-  block.hash = block.calculateHash()
+  block.hash = block.calculateHash(block.pendingTransactionsToString())
   return proofOfWork(block, hashPrefix, nonce + 1)
 }
 

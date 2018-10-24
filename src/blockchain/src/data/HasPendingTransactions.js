@@ -5,7 +5,7 @@
  *
  * @return {Object} An object containing methods to manage the state of pending transactions
  */
-const HasSignature = () => ({
+const HasPendingTransactions = () => ({
   addPendingTransaction (tx) {
     this.pendingTransactions.push(tx)
   },
@@ -17,4 +17,4 @@ const HasSignature = () => ({
   }
 })
 
-export default HasSignature
+export default HasPendingTransactions

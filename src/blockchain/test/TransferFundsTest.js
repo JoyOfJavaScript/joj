@@ -176,8 +176,6 @@ describe('Transfer Funds Test suite', () => {
     // TODO:  Use ES7 String padding to format this output
     // console.log(ledger.map(x => x.inspect()))
 
-    assert.isOk(BitcoinService.isLedgerValid(ledger, true), 'Is ledger valid?')
-
     console.table(
       ledger.toArray().map(block => ({
         previousHash: block.previousHash.valueOf(),
@@ -185,5 +183,7 @@ describe('Transfer Funds Test suite', () => {
         count: block.countPendingTransactions()
       }))
     )
+
+    assert.isOk(BitcoinService.isLedgerValid(ledger, true), 'Is ledger valid?')
   })
 })

@@ -30,12 +30,25 @@ const Transaction = (
         sender,
         recipient,
         description,
+        nonce: 0,
         timestamp: Date.now(),
         [Symbol.for('version')]: '1.0'
       },
       methods: {
+        /**
+         * Gets the numerical amount of the funds
+         * @return {Number} Amount number
+         */
         amount: () => funds.funds,
+        /**
+         * Gets the currency
+         * @return {String} Currency string
+         */
         currency: () => funds.currency,
+        /**
+         * Gets the funds as a Money object
+         * @return {Money} Funds wrapped as Money object
+         */
         money: () => funds.toMoney()
       }
     },

@@ -11,16 +11,19 @@ import { compose } from '../../../adt/dist/combinators'
  * and are usually written as hexadecimal.
  *
  * @param {CryptoHasher} hasher Hasher used to generate hashes
- * @param {Array}  keys         List of attribute names used for hashing
+ * @param {Array}        keys   List of property names present in this object that shall be used for hashing
  * @return {string} Return a string hash of the block
  */
 const HasHash = ({ hasher, keys }) => ({
   /**
    * Calculates a hashed value from the values of provided state marked by keys
+   * @param {String} entropy Add more entropy to the calculated hash
    * @return {HashValue} A wrapped hash value
    */
-  calculateHash () {
-    return HashValue(computeCipher(hasher)(keys.map(k => this[k])))
+  calculateHash (entropy = '') {
+    return HashValue(
+      computeCipher(hasher)(keys.map(k => this[k]).concat(entropy))
+    )
   }
 })
 

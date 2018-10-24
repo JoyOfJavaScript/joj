@@ -19,12 +19,6 @@ const NETWORK = Wallet(
   'bitcoin'
 )
 
-const initLedger = () => {
-  const g = DataBlock.genesis()
-  g.hash = g.calculateHash()
-  return Blockchain(g)
-}
-
 /**
  * Adds a new data block to the chain. It involves:
  * Recalculate new blocks hash and add the block to the chain
@@ -35,7 +29,7 @@ const initLedger = () => {
  */
 const addBlock = curry((blockchain, newBlock) => {
   newBlock.previousHash = blockchain.top().hash
-  newBlock.hash = newBlock.calculateHash()
+  newBlock.hash = newBlock.calculateHash(newBlock.pendingTransactionsToString())
   blockchain.push(newBlock)
   return newBlock
 })
@@ -160,7 +154,9 @@ const validateBlock = (current, previous, checkTransactions) =>
   current.hash.length > 0 &&
   previous.hash.length > 0 &&
   // 1. Check hash tampering
-  current.hash.equals(current.calculateHash()) &&
+  current.hash.equals(
+    current.calculateHash(current.pendingTransactionsToString())
+  ) &&
   // 2. Check blocks form a properly linked chain using hashes
   current.previousHash.equals(previous.hash) &&
   // 3. Check timestamps
@@ -206,7 +202,6 @@ const transferFunds = (txBlockchain, walletA, walletB, funds, description) => {
  * Exported BitcoinService interface
  */
 const BitcoinService = {
-  initLedger,
   addBlock,
   mineBlock,
   isLedgerValid,
