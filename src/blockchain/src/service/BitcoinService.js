@@ -63,9 +63,9 @@ const mineBlock = curry(async (blockchain, block) => {
  * @param {Blockchain} blockchain Chain to calculate balance from
  * @param {string}     address    Address to send reward to
  */
-const calculateBalanceOfWallet = curry((blockchain, address) => {
+const calculateBalanceOfWallet = curry((ledger, address) => {
   let balance = Money.zero()
-  for (const block of blockchain) {
+  for (const block of ledger) {
     if (!block.isGenesis()) {
       for (const tx of block.pendingTransactions) {
         if (tx.sender === address) {
