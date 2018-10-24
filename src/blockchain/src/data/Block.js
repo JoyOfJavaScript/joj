@@ -26,12 +26,12 @@ const Block = (
     {
       state: {
         [Symbol.for('version')]: '1.0',
-        difficulty: 2,
         previousHash,
-        hash: undefined,
+        pendingTransactions,
+        difficulty: 2,
+        hash: undefined, // Gets computed later
         nonce: 0,
-        timestamp: Date.now(),
-        pendingTransactions
+        timestamp: Date.now()
       },
       methods: {
         /**

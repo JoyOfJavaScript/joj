@@ -52,6 +52,7 @@ const Transaction = (
         money: () => funds.toMoney(),
         /**
          * Returns a minimal JSON represetation of this object
+         * @return {Object} JSON object
          */
         toJSON () {
           return {

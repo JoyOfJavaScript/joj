@@ -7,7 +7,7 @@ if (typeof Object.mixin !== 'function') {
     value: function concatExtend (descriptor, ...mixins) {
       let base = Object(descriptor)
       if (isDescriptor(descriptor)) {
-        base = { ...base.state, ...base.methods }
+        base = { ...base.state, ...base.methods, ...base.interop }
       }
 
       if (!Object.isExtensible(base)) {
