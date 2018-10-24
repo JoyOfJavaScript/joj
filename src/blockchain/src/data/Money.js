@@ -60,6 +60,21 @@ Money.subtract = (m1, m2) =>
 Money.multiply = (m1, m2) =>
   Validation.of(x => m1.times(m2)).ap(currencyMatch(m1, m2)).merge()
 
+// Language extension for Number.prototype
+if (typeof Number.prototype.btc !== 'function') {
+  // Must be:
+  // - writable: false
+  // - enumerable: false
+  // - configurable: false
+  Object.defineProperty(Number.prototype, 'btc', {
+    value: function toBitcoin () {
+      return Money(BITCOIN, this)
+    },
+    writable: false,
+    configurable: false
+  })
+}
+
 /**
  * Check that currency matches
  * @param  {Money} m1 First instance

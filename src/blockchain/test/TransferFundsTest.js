@@ -23,7 +23,7 @@ describe('Transfer Funds Test suite', () => {
     const first = Transaction(
       null,
       miner.address,
-      Funds(Money('₿', 100)),
+      Funds((100).btc()),
       'First transaction'
     )
     first.signature = first.generateSignature(miner.privateKey)
@@ -40,7 +40,7 @@ describe('Transfer Funds Test suite', () => {
 
     // Balance is zero because the reward has not been mined in the blockchain
     console.log('Miner starts out with', balance)
-    assert.isOk(balance.equals(Money('₿', 100)))
+    assert.isOk(balance.equals((100).btc()))
 
     // Mine the next block to retrieve reward
     await BitcoinService.minePendingTransactions(ledger, miner.address)
@@ -59,14 +59,14 @@ describe('Transfer Funds Test suite', () => {
       luke.address
     )
     console.log("Luke's balance is", lukeBalance)
-    assert.isOk(lukeBalance.equals(Money('₿', 20)))
+    assert.isOk(lukeBalance.equals((20).btc()))
 
     let minerBalance = BitcoinService.calculateBalanceOfWallet(
       ledger,
       miner.address
     )
     assert.isOk(
-      minerBalance.equals(Money('₿', 104.6)),
+      minerBalance.equals((104.6).btc()),
       `Miner's balance is ${minerBalance}`
     )
 
@@ -88,12 +88,12 @@ describe('Transfer Funds Test suite', () => {
     lukeBalance = BitcoinService.calculateBalanceOfWallet(ledger, luke.address)
 
     assert.isOk(
-      anaBalance.equals(Money('₿', 10)),
+      anaBalance.equals((10).btc()),
       `Ana's balance should be ₿10.00 and was ${anaBalance}`
     )
     assert.isOk(
-      lukeBalance.equals(Money('₿', 9.8)),
-      `Luke's balance should be ₿10.00 and was ${lukeBalance}`
+      lukeBalance.equals((9.8).btc()),
+      `Luke's balance should be ₿9.8 and was ${lukeBalance}`
     )
 
     // Both wallets currently have about 10 BTC
@@ -101,7 +101,7 @@ describe('Transfer Funds Test suite', () => {
       ledger,
       luke,
       ana,
-      Money('₿', 5),
+      (5).btc(),
       'Transfer ₿5 from Luke to Ana'
     )
     await BitcoinService.minePendingTransactions(ledger, miner.address)
@@ -112,11 +112,11 @@ describe('Transfer Funds Test suite', () => {
 
     // Assert Ana has BTC 70 and Luke has BTC 30
     assert.isOk(
-      anaBalance.equals(Money('₿', 15)),
+      anaBalance.equals((15).btc()),
       `Ana's balance should be ₿15.00 and was ${anaBalance}`
     )
     assert.isOk(
-      lukeBalance.equals(Money('₿', 4.7)),
+      lukeBalance.equals((4.7).btc()),
       `Luke's balance should be ₿4.7 and was ${lukeBalance}`
     )
 
@@ -143,11 +143,11 @@ describe('Transfer Funds Test suite', () => {
 
     // Assert Ana has BTC 80 and Luke has BTC 20
     assert.isOk(
-      anaBalance.equals(Money('₿', 12.9)),
+      anaBalance.equals((12.9).btc()),
       `Ana's balance should be ₿17.00 and was ${anaBalance}`
     )
     assert.isOk(
-      lukeBalance.equals(Money('₿', 6.64)),
+      lukeBalance.equals((6.64).btc()),
       `Luke's balance should be ₿6.64 and was ${lukeBalance}`
     )
 
@@ -158,7 +158,7 @@ describe('Transfer Funds Test suite', () => {
           ledger,
           luke,
           ana,
-          Money('₿', 30),
+          (30).btc(),
           'Transfer ₿30 from Luke to Ana'
         ),
       RangeError
@@ -169,7 +169,7 @@ describe('Transfer Funds Test suite', () => {
       miner.address
     )
     assert.isOk(
-      minerBalance.equals(Money('₿', 142.1)),
+      minerBalance.equals((142.1).btc()),
       `Miner's balance is ${minerBalance}`
     )
 

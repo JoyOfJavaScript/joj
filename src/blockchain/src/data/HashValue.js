@@ -19,12 +19,10 @@ const wrap = value => ({
   [Symbol.toPrimitive]: () => value
 })
 
-const isValid = curry(
-  (skip, h) =>
-    (skip || (h && h.length === HASH_LENGTH)
-      ? Validation.Success(h)
-      : Validation.Failure([`Invalid hash value ${h}`]))
-)
+const isValid = h =>
+  (h && h.length === HASH_LENGTH
+    ? Validation.Success(h)
+    : Validation.Failure([`Invalid hash value ${h}`]))
 
 /**
  * Wrap a hash into a domain primitive hash value
@@ -32,13 +30,13 @@ const isValid = curry(
  * @param {Boolean} isGenesisHash Indicates whether the hash will be used for a Genesis Block so that proper validation may be skipped
  * @return {Object} wrapped hash
  */
-const HashValue = (value, isGenesisHash = false) =>
+const HashValue = value =>
   compose(
     getOrElseThrow(
       'Invalid hash found. Check that the hash value is not empty and meets the required length'
     ),
     map(wrap),
-    flatMap(isValid(isGenesisHash)),
+    flatMap(isValid),
     Validation.fromNullable
   )(value)
 

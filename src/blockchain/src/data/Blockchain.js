@@ -64,7 +64,7 @@ const Blockchain = (genesis = createGenesis()) => {
 
 function createGenesis () {
   const pendingTransactions = [] // Could contain a first transaction like a starting reward
-  const previousHash = HashValue('-1', true)
+  const previousHash = HashValue('0'.repeat(64))
   const genesis = Block(pendingTransactions, previousHash)
   genesis.hash = genesis.calculateHash()
   return genesis

@@ -48,7 +48,7 @@ const Block = (
          * @return {Boolean} Whether this is a genesis block
          */
         isGenesis () {
-          return this.previousHash.valueOf() === '-1'
+          return this.previousHash.valueOf() === '0'.repeat(64)
         },
         /**
          * Returns the minimal JSON representation of this object
