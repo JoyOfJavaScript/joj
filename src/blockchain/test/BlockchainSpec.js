@@ -1,27 +1,26 @@
 import BitcoinService from '../src/service/BitcoinService'
+import Block from '../src/data/Block'
 import BlockChain from '../src/data/Blockchain'
-import DataBlock from '../src/data/DataBlock'
-import Money from '../src/data/Money'
 import { assert } from 'chai'
 
 // Create blockchain
-const coin = BlockChain.init()
+const coin = BlockChain()
 
 // Adder functions
 const addCoin = BitcoinService.addBlock(coin)
 
 // Add coins
-const fourDollars = addCoin(DataBlock(Money('USD', 4)))
+const fourDollars = addCoin(Block([]))
 
 console.log('Height: ', coin.height())
-console.log(coin.toArray().map(x => x.inspect()))
+console.log(coin.toArray().map(console.log))
 
 describe('Create a valid Blockchain data structure', () => {
   it('Should create a block chain and assert if valid', () => {
     assert.isOk(coin.toArray() instanceof Array)
     const [g, ...blocks] = coin.toArray()
-    assert.isNull(g.previousHash)
-    assert.isOk(blocks[0].data.equals(fourDollars.data))
-    assert.isOk(BitcoinService.isChainValid(coin))
+    assert.equal(g.previousHash, '-1')
+    assert.isOk(g.hash === '0')
+    assert.isOk(BitcoinService.isLedgerValid(coin))
   })
 })

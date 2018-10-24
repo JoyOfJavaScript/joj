@@ -37,11 +37,11 @@ const Transaction = (
 
   return Object.concat(
     props,
-    HasHash({
+    HasHash.call(this, {
       hasher,
       keys: ['sender', 'recipient', 'amount', 'currency', 'nonce']
     }),
-    HasSignature({
+    HasSignature.call(this, {
       signer,
       keys: ['sender', 'recipient', 'amount', 'currency']
     })

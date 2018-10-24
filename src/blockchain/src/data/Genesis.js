@@ -7,8 +7,8 @@
  */
 export const Genesis = state => ({
   isGenesis: () => {
-    const { data, previousHash } = state
-    return previousHash === null || data === 'Genesis Block'
+    const { previousHash, hash } = state
+    return previousHash === '-1' || hash === '0'
   }
 })
 

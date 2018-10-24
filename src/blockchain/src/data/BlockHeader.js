@@ -7,7 +7,7 @@
  * @param {string} previousHash Reference to the previous block in the chain
  * @return {BlockHeader} Newly created block with its own computed hash
  */
-const BlockHeader = (previousHash = '') => {
+const BlockHeader = previousHash => {
   // Separate difficuly, version, and timestamp into BlockMeta (make it immutable and extend BlockHeader)
   // tampering with timestamp breaks block chain validation
 

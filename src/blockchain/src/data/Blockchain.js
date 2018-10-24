@@ -1,4 +1,4 @@
-import DataBlock from './DataBlock'
+import Block from './Block'
 import HasPendingTransactions from './HasPendingTransactions'
 
 // Alternate solution: http://2ality.com/2013/03/subclassing-builtins-es6.html
@@ -18,10 +18,12 @@ import HasPendingTransactions from './HasPendingTransactions'
 // Talk about species and the species pattern
 // http://exploringjs.com/es6/ch_classes.html#sec_species-pattern
 
-const Blockchain = genesis => {
+const Blockchain = (genesis = createGenesis()) => {
   const version = '1.0'
   const timestamp = new Date()
   const blocks = new Map([[genesis.hash, genesis]])
+
+  let top = genesis
 
   const props = {
     // meta properties
@@ -31,8 +33,16 @@ const Blockchain = genesis => {
     [Symbol.toStringTag]: () => 'Blockchain',
 
     // instance properties
-    top: () => [...blocks.values()].pop(),
-    push: newBlock => blocks.set(newBlock.hash, newBlock).get(newBlock.hash),
+    pendingTransactions: [],
+
+    // instance methods
+    timestamp: () => timestamp,
+    top: () => top,
+    push: newBlock => {
+      blocks.set(newBlock.hash, newBlock)
+      top = newBlock
+      return newBlock
+    },
     height: () => blocks.size,
     lookUp: hash =>
       (blocks.has(hash)
@@ -40,18 +50,16 @@ const Blockchain = genesis => {
         : (() => {
           throw new Error(`Block with hash ${hash} not found!`)
         })()),
-    toArray: () => [...blocks.values()],
-    pendingTransactions: [],
-    timestamp
+    toArray: () => [...blocks.values()]
   }
-
   return Object.concat(props, HasPendingTransactions(props))
 }
 
-Blockchain.init = () => {
-  const g = DataBlock.genesis()
-  g.hash = g.calculateHash()
-  return Blockchain(g)
+function createGenesis () {
+  const pendingTransactions = [], previousHash = '-1', hash = '0'
+  const genesis = Block(pendingTransactions, previousHash)
+  genesis.hash = hash
+  return genesis
 }
 
 export default Blockchain

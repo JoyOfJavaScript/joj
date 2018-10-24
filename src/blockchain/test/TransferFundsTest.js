@@ -18,7 +18,7 @@ describe('Transfer Funds', () => {
     // Some miner
     const miner = Wallet(Key('miner-public.pem'), Key('miner-private.pem'))
 
-    const ledger = Blockchain.init()
+    const ledger = Blockchain()
 
     const first = Transaction(null, miner.address, Funds(Money('₿', 100)))
     first.signature = first.generateSignature(miner.privateKey)
@@ -134,7 +134,7 @@ describe('Transfer Funds', () => {
     // TODO:  Use ES7 String padding to format this output
     // console.log(ledger.map(x => x.inspect()))
 
-    assert.isOk(BitcoinService.isChainValid(ledger, true), 'Is ledger valid?')
+    assert.isOk(BitcoinService.isLedgerValid(ledger, true), 'Is ledger valid?')
 
     console.table(
       ledger.toArray().map(({ hash, previousHash, data }) => ({

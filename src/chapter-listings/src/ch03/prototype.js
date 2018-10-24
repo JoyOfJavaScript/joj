@@ -236,6 +236,8 @@ describe('Traditional JavaScript domain modeling', () => {
       console.log('Hello, ' + this.identify() + '.')
     }
 
+    console.log('Bar with speak', Bar.prototype)
+
     const b1 = new Bar('b1')
     const b2 = new Bar('b2')
 

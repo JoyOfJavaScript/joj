@@ -17,17 +17,16 @@ import HasPendingTransactions from './HasPendingTransactions'
  * @param {Array}  pendingTransactions Array of pending transactions from the chain
  * @param {string} previousHash        Reference to the previous block in the chain
  * @param {CryptoHasher} hasher Hasher to use to hash transactional blocks
- * @return {TransactionalBlock} Newly created block with its own computed hash
+ * @return {Block} Newly created block with its own computed hash
  * @augments Block
  */
-const TransactionalBlock = (
+const Block = (
   pendingTransactions = [],
-  previousHash = '',
+  previousHash,
   hasher = CryptoHasher()
 ) => {
   const props = {
     pendingTransactions,
-    nonce: 0,
     mine
   }
   return Object.concat(
@@ -58,4 +57,4 @@ const proofOfWork = (block, hashPrefix, nonce = 1) => {
   return proofOfWork(block, hashPrefix, nonce + 1)
 }
 
-export default TransactionalBlock
+export default Block

@@ -1,11 +1,11 @@
 import 'core-js/fn/array/flat-map'
 import { MINING_REWARD } from '../settings'
+import Block from '../data/Block'
 import Blockchain from '../data/Blockchain'
 import Combinators from '@joj/adt/combinators'
 import Funds from '../data/Funds'
 import Money from '../data/Money'
 import Transaction from '../data/Transaction'
-import TransactionalBlock from '../data/TransactionalBlock'
 import Wallet from '../data/Wallet'
 import fs from 'fs'
 import path from 'path'
@@ -18,6 +18,12 @@ const NETWORK = Wallet(
   fs.readFileSync(path.join(BASE, 'bitcoin-private.pem'), 'utf8'),
   'bitcoin'
 )
+
+const initLedger = () => {
+  const g = DataBlock.genesis()
+  g.hash = g.calculateHash()
+  return Blockchain(g)
+}
 
 /**
  * Adds a new data block to the chain. It involves:
@@ -80,10 +86,7 @@ const minePendingTransactions = curry(async (ledger, address) =>
   // Mine block and pass it all pending transactions in the chain
   // In reality, blocks are not to exceed 1MB, so not all tx are sent to all blocks
   // We keep transactions immutable by substracting similar transactions for the fee
-  mineBlock(
-    ledger,
-    TransactionalBlock(ledger.pendingTransactions)
-  ).then(block => {
+  mineBlock(ledger, Block(ledger.pendingTransactions)).then(block => {
     // Reward is bigger when there are more transactions to process
     const fee =
       Math.abs(
@@ -110,7 +113,7 @@ const minePendingTransactions = curry(async (ledger, address) =>
     ledger.pendingTransactions = [tx]
 
     // Validate the entire chain
-    BitcoinService.isChainValid(ledger, true)
+    BitcoinService.isLedgerValid(ledger, true)
 
     return block
   })
@@ -128,7 +131,7 @@ const minePendingTransactions = curry(async (ledger, address) =>
  */
 // TODO: Use an iterator to check all blocks instead of toArray. Delete toArray method and use ...blockchain to invoke the iterator
 // TODO: You can use generators to run a simulation
-const isChainValid = (blockchain, checkTransactions = false) =>
+const isLedgerValid = (blockchain, checkTransactions = false) =>
   [...validateBlockchain(blockchain, checkTransactions)].reduce(
     (a, b) => a && b
   )
@@ -142,14 +145,18 @@ const validateBlockchain = (blockchain, alsoCheckTransactions) => {
         } else {
           // Compare each block with its previous
           const previousBlock = blockchain.lookUp(currentBlock.previousHash)
-          yield checkBlocks(currentBlock, previousBlock, alsoCheckTransactions)
+          yield validateBlock(
+            currentBlock,
+            previousBlock,
+            alsoCheckTransactions
+          )
         }
       }
     }
   }
 }
 
-const checkBlocks = (current, previous, checkTransactions) =>
+const validateBlock = (current, previous, checkTransactions) =>
   // 0. Check hash valid
   current.hash.length > 0 &&
   previous.hash.length > 0 &&
@@ -195,9 +202,10 @@ const transferFunds = (txBlockchain, walletA, walletB, funds) => {
  * Exported BitcoinService interface
  */
 const BitcoinService = {
+  initLedger,
   addBlock,
   mineBlock,
-  isChainValid,
+  isLedgerValid,
   minePendingTransactions,
   calculateBalanceOfWallet,
   transferFunds
