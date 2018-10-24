@@ -7,7 +7,7 @@ import Transaction from '../src/data/Transaction'
 import Wallet from '../src/data/Wallet'
 import { assert } from 'chai'
 
-describe('Transfer Funds', () => {
+describe('Transfer Funds Test suite', () => {
   it('Should transfer funds from one wallet to the next', async () => {
     // Luke's digital wallet
     const luke = Wallet(Key('luke-public.pem'), Key('luke-private.pem'))

@@ -67,12 +67,12 @@ const calculateBalanceOfWallet = curry((blockchain, address) => {
   let balance = Money.zero()
   for (const block of blockchain) {
     if (!block.isGenesis()) {
-      for (const trans of block.pendingTransactions) {
-        if (trans.sender === address) {
-          balance = balance.minus(trans.money)
+      for (const tx of block.pendingTransactions) {
+        if (tx.sender === address) {
+          balance = balance.minus(tx.money())
         }
-        if (trans.recipient === address) {
-          balance = balance.plus(trans.money)
+        if (tx.recipient === address) {
+          balance = balance.plus(tx.money())
         }
       }
     }
@@ -90,8 +90,8 @@ const minePendingTransactions = curry(async (ledger, address) =>
     const fee =
       Math.abs(
         ledger.pendingTransactions
-          .filter(tx => tx.amount < 0)
-          .map(tx => tx.amount)
+          .filter(tx => tx.amount() < 0)
+          .map(tx => tx.amount())
           .reduce((a, b) => a + b, 0)
       ) *
       ledger.pendingTransactions.length *

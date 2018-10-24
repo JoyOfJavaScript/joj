@@ -53,7 +53,7 @@ const Blockchain = (genesis = createGenesis()) => {
         })()),
     toArray: () => [...blocks.values()]
   }
-  return Object.concat(props, HasPendingTransactions(props))
+  return Object.mixin(props, HasPendingTransactions(props))
 }
 
 function createGenesis () {

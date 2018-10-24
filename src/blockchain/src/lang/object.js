@@ -1,11 +1,15 @@
-if (typeof Object.concat !== 'function') {
+if (typeof Object.mixin !== 'function') {
   // Must be:
   // - writable: true
   // - enumerable: false
   // - configurable: true
-  Object.defineProperty(Object, 'concat', {
-    value: function concatExtend (base, ...mixins) {
-      base = Object(base)
+  Object.defineProperty(Object, 'mixin', {
+    value: function concatExtend (descriptor, ...mixins) {
+      let base = Object(descriptor)
+      if (isDescriptor(descriptor)) {
+        base = { ...base.state, ...base.methods }
+      }
+
       if (!Object.isExtensible(base)) {
         throw new TypeError(
           'Unable to concatenate mixins into base object. Object is not extensible'
@@ -22,9 +26,13 @@ if (typeof Object.concat !== 'function') {
       // return Object.assign(to, mixins.reduce((a, b) => ({ ...a, ...b }), {}))
       return Object.assign(to, ...mixins)
     },
-    writable: true,
-    configurable: true
+    writable: false,
+    configurable: false
   })
+}
+
+function isDescriptor (obj) {
+  return obj && (obj['state'] || obj['methods'])
 }
 
 /**

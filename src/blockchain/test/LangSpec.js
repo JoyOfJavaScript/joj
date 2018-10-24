@@ -15,7 +15,7 @@ describe('Language extensions test', () => {
         return `${this.make} is moving slowly`
       }
     }
-    const newCar = Object.concat(new Car('nissan'), mixin)
+    const newCar = Object.mixin(new Car('nissan'), mixin)
     assert.equal(newCar.make, 'nissan')
     assert.equal(newCar.moveFast(), `nissan is moving fast`)
     assert.isOk(newCar instanceof Car)
@@ -23,7 +23,7 @@ describe('Language extensions test', () => {
   })
 
   it('Object.concat with null', () => {
-    const p = Object.concat(
+    const p = Object.mixin(
       null,
       {
         get name () {
@@ -46,7 +46,7 @@ describe('Language extensions test', () => {
       name: 'Luis'
     }
 
-    const p = Object.concat(
+    const p = Object.mixin(
       person,
       {
         print () {
@@ -60,7 +60,7 @@ describe('Language extensions test', () => {
       }
     )
 
-    const p2 = Object.concat(person, {
+    const p2 = Object.mixin(person, {
       print () {
         console.log('P2 name: ' + this.name)
       }
@@ -86,7 +86,7 @@ describe('Language extensions test', () => {
       name: 'Luis'
     }
 
-    const p = Object.concat(
+    const p = Object.mixin(
       person,
       {
         print () {
@@ -100,7 +100,7 @@ describe('Language extensions test', () => {
       }
     )
 
-    const p2 = Object.concat(person, {
+    const p2 = Object.mixin(person, {
       print () {
         console.log('P2 name: ' + this.name)
       }

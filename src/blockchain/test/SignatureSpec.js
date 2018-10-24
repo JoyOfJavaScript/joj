@@ -20,7 +20,7 @@ describe('Signature', () => {
 
     const privateKey = fs.readFileSync(coinbaseprivateKeyPath, 'utf8')
 
-    const signature = Object.concat(
+    const signature = Object.mixin(
       {
         sender: fs.readFileSync(coinbasepublicKeyPath, 'utf8'),
         recipient: fs.readFileSync(lukePublicKeyPath, 'utf8')

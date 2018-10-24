@@ -24,20 +24,21 @@ const Transaction = (
   hasher = CryptoHasher(),
   signer = CryptoSigner()
 ) => {
-  // public space
-  const props = {
-    sender,
-    recipient,
-    description,
-    amount: funds.funds,
-    currency: funds.currency,
-    money: funds.toMoney(),
-    timestamp: Date.now(),
-    [Symbol.for('version')]: '1.0'
-  }
-
-  return Object.concat(
-    props,
+  return Object.mixin(
+    {
+      state: {
+        sender,
+        recipient,
+        description,
+        timestamp: Date.now(),
+        [Symbol.for('version')]: '1.0'
+      },
+      methods: {
+        amount: () => funds.funds,
+        currency: () => funds.currency,
+        money: () => funds.toMoney()
+      }
+    },
     HasHash({
       hasher,
       keys: ['sender', 'recipient', 'amount', 'currency', 'nonce']

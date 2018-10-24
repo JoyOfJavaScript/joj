@@ -3,24 +3,17 @@
  * are part of. In reality, blocks would not store all transactions, this is just a
  * contrived example. This behavior may be applied to either a block or a blockchain
  *
- * @param {Object} state Instance data
  * @return {Object} An object containing methods to manage the state of pending transactions
  */
-const HasSignature = state => ({
-  set pendingTransactions (pt = []) {
-    return (state.pendingTransactions = pt)
-  },
-  get pendingTransactions () {
-    return state.pendingTransactions
-  },
+const HasSignature = () => ({
   addPendingTransaction (tx) {
-    state.pendingTransactions.push(tx)
+    this.pendingTransactions.push(tx)
   },
   pendingTransactionsToString () {
-    return state.pendingTransactions.map(JSON.stringify).join(' ')
+    return this.pendingTransactions.map(JSON.stringify).join(' ')
   },
   countPendingTransactions () {
-    return state.pendingTransactions.length
+    return this.pendingTransactions.length
   }
 })
 

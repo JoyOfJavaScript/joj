@@ -27,7 +27,8 @@ const isValid = curry(
 
 /**
  * Wrap a hash into a domain primitive hash value
- * @param {String} h String hash
+ * @param {String}  value         String hash value
+ * @param {Boolean} isGenesisHash Indicates whether the hash will be used for a Genesis Block so that proper validation may be skipped
  * @return {Object} wrapped hash
  */
 const HashValue = (value, isGenesisHash = false) =>

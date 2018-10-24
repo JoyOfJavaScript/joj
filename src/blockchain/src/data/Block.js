@@ -24,32 +24,39 @@ const Block = (
   previousHash,
   hasher = CryptoHasher()
 ) => {
-  const props = {
-    [Symbol.for('version')]: '1.0',
-    difficulty: 2,
-    previousHash,
-    hash: undefined,
-    nonce: 0, // TODO: The nonce is also a hash
-    timestamp: Date.now(),
-    pendingTransactions,
-    mine,
-    isGenesis () {
-      return this.previousHash.valueOf === '-1'
-    }
-  }
-  return Object.concat(
-    props,
+  return Object.mixin(
+    {
+      state: {
+        [Symbol.for('version')]: '1.0',
+        difficulty: 2,
+        previousHash,
+        hash: undefined,
+        nonce: 0, // TODO: The nonce is also a hash
+        timestamp: Date.now(),
+        pendingTransactions
+      },
+      methods: {
+        /**
+         * Execute proof of work algorithm to mine block
+         * @return {Promise<Block>} Mined block
+         */
+        mine: async function () {
+          return Promise.resolve(
+            proofOfWork(this, ''.padStart(this.difficulty, '0'))
+          )
+        },
+        /**
+         * Check whether this block is a genesis block (first block in a any chain)
+         * @return {Boolean} Whether this is a genesis block
+         */
+        isGenesis () {
+          return this.previousHash.valueOf === '-1'
+        }
+      }
+    },
     HasHash({ hasher, keys: ['timestamp', 'previousHash', 'nonce'] }),
-    HasPendingTransactions(props)
+    HasPendingTransactions()
   )
-}
-
-/**
- * Execute proof of work algorithm to mine block
- * @return {Promise<Block>} Mined block
- */
-async function mine () {
-  return Promise.resolve(proofOfWork(this, ''.padStart(this.difficulty, '0')))
 }
 
 // TODO: use trampolining to simulate TCO in order to reach mining difficulty 4
