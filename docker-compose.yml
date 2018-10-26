@@ -23,8 +23,18 @@ services:
         - ./src:/home/joj/src
     command: "npm --prefix /home/joj/src/chapter-listings run test-dev"
 
+  blockchain_tests:
+      image: "node:10.2.1-slim"
+      user: "node"
+      working_dir: /home/joj/src
+      environment:
+        - NODE_ENV=dev
+        - NPM_CONFIG_LOGLEVEL=info
+      volumes:
+        - ./src:/home/joj/src
+      command: "npm --prefix /home/joj/src/blockchain run test-dev"
 
-  # blockchain:
+  # blockchain_peers:
   #     image: "node:10.2.1-slim"
   #     user: "node"
   #     working_dir: /home/joj/src
@@ -35,7 +45,7 @@ services:
   #       - ./src:/home/joj/src
   #     command: "npm --prefix /home/joj/src/blockchain run test-dev"
 
-  # ui:
+  # api:
   #     image: "node:9"
   #     user: "node"
   #     working_dir: /home/joj/src
