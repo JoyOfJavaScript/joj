@@ -1,8 +1,8 @@
 if (typeof Object.mixin !== 'function') {
   // Must be:
-  // - writable: true
+  // - writable: false
   // - enumerable: false
-  // - configurable: true
+  // - configurable: false
   Object.defineProperty(Object, 'mixin', {
     value: function concatExtend (descriptor, ...mixins) {
       let base = Object(descriptor)

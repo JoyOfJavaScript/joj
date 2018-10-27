@@ -1,3 +1,4 @@
+import { MethodCounter, TraceLog } from '../src/common/proxies'
 import BitcoinService from '../src/service/BitcoinService'
 import Blockchain from '../src/data/Blockchain'
 import Funds from '../src/data/Funds'
@@ -6,6 +7,7 @@ import Money from '../src/data/Money'
 import Transaction from '../src/data/Transaction'
 import Wallet from '../src/data/Wallet'
 import { assert } from 'chai'
+import { compose } from '../../adt/dist/combinators'
 
 describe('Transfer Funds Test suite', () => {
   it('Should transfer funds from one wallet to the next', async () => {
@@ -26,11 +28,13 @@ describe('Transfer Funds Test suite', () => {
     )
     first.signature = first.generateSignature(miner.privateKey)
     first.hash = first.calculateHash()
-
-    const ledger = Blockchain()
+    const applyProxies = compose(TraceLog, MethodCounter('lookUp'))
+    const ledger = applyProxies(Blockchain())
     ledger.addPendingTransaction(first)
 
-    const bitcoinService = new BitcoinService(ledger)
+    const bitcoinService = MethodCounter('isLedgerValid')(
+      new BitcoinService(ledger)
+    )
 
     // Mine some initial block, after mining the reward is BTC 100 for wa
     await bitcoinService.minePendingTransactions(miner.address)
@@ -168,5 +172,12 @@ describe('Transfer Funds Test suite', () => {
     )
 
     assert.isOk(bitcoinService.isLedgerValid(true), 'Is ledger valid?')
+    assert.isAbove(ledger.lookUp.invocations, 0)
+    assert.isAbove(bitcoinService.isLedgerValid.invocations, 0)
+    console.log('Number of lookUps made: ', ledger.lookUp.invocations)
+    console.log(
+      'Number of ledger validations made: ',
+      bitcoinService.isLedgerValid.invocations
+    )
   })
 })

@@ -18,6 +18,7 @@ const Peer = {
     return this
   },
   addPeer (peer) {
+    console.log(`Adding new peer ${peer}`)
     this.peers.push(peer)
     return this
   },
@@ -26,6 +27,11 @@ const Peer = {
   },
   resetPeers () {
     this.peers = []
+  },
+  removePeer (peer) {
+    console.log(`Removing peer ${peer}`)
+    this.peers = this.peers.filter(p => p !== peer)
+    return this
   }
 }
 

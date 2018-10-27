@@ -40,8 +40,12 @@ PeerClient.discoverPeers = async function () {
               resolve(peer)
             }
           })
-          this.client.on('connectFailed', function (error) {
+          this.client.on('connectFailed', error => {
             console.log('connect failed', error.message)
+            const match = /ECONNREFUSED 127.0.0.1:(\d+)?/.exec(error.message)
+            if (match) {
+              this.removePeer(match[1])
+            }
             resolve(false)
           })
           this.client.connect(`ws://localhost:${peer}`)
