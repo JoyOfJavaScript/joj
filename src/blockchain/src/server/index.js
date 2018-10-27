@@ -75,7 +75,7 @@ async function mineBlocks (ledger) {
 }
 
 // Create new chain
-const LEDGER = Blockchain.init()
+const LEDGER = Blockchain()
 
 // Start the sync loop
 const mainLoop = network(LEDGER)

@@ -29,6 +29,7 @@ const Block = (
         previousHash,
         pendingTransactions,
         difficulty: 2,
+        index: 0,
         hash: undefined, // Gets computed later
         nonce: 0,
         timestamp: Date.now()
@@ -60,6 +61,7 @@ const Block = (
             hash: this.hash,
             nonce: this.nonce,
             timestamp: this.timestamp,
+            index: this.index,
             pendingTransactions: this.pendingTransactionsToString()
           }
         }
