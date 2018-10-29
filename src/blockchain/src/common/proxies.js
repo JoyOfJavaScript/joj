@@ -8,13 +8,13 @@ const accessorLogHandler = {
   }
 }
 
-const methodCountHandler = name => ({
+const methodCountHandler = names => ({
   get (target, key) {
-    if (key === name) {
-      if (!target[name].invocations) {
-        target[name].invocations = 0
+    if (names.includes(key)) {
+      if (!target[key].invocations) {
+        target[key].invocations = 0
       }
-      target[name].invocations += 1
+      target[key].invocations += 1
     }
     return Reflect.get(target, key)
   }
@@ -26,4 +26,4 @@ const weave = curry((handler, target) => {
 
 // Module
 export const TraceLog = weave(accessorLogHandler)
-export const MethodCounter = name => weave(methodCountHandler(name))
+export const MethodCounter = (...names) => weave(methodCountHandler(names))

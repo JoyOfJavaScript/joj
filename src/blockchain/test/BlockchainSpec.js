@@ -1,4 +1,3 @@
-import BitcoinService from '../src/service/BitcoinService'
 import BlockChain from '../src/data/Blockchain'
 import { assert } from 'chai'
 
@@ -14,6 +13,6 @@ describe('Create a valid Blockchain data structure', () => {
     const [g, ...blocks] = ledger.toArray()
     assert.isOk(blocks.length === 0)
     assert.equal(g.previousHash, '0'.repeat(64))
-    assert.isOk(new BitcoinService(ledger).isLedgerValid())
+    assert.isOk(ledger.isValid())
   })
 })

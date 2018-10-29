@@ -28,22 +28,6 @@ class BitcoinService {
       'bitcoin'
     )
   }
-  /**
-   * Adds a new data block to the chain. It involves:
-   * Recalculate new blocks hash and add the block to the chain
-   * Point new block's previous to current
-   *
-   * @param {Block}      newBlock   New block to add into the chain
-   * @return {Block} Returns the new block added
-   */
-  addBlock (newBlock) {
-    newBlock.previousHash = this.ledger.top().hash
-    newBlock.hash = newBlock.calculateHash(
-      newBlock.pendingTransactionsToString()
-    )
-    this.ledger.push(newBlock)
-    return newBlock
-  }
 
   /**
    * Mines a new block into the chain. It involves:
@@ -120,27 +104,10 @@ class BitcoinService {
       this.ledger.pendingTransactions = [reward]
 
       // Validate the entire chain
-      this.isLedgerValid(true)
+      this.ledger.isValid(true)
 
       return block
     })
-  }
-
-  /**
-   * Determines if the chain is valid by asserting the properties of a blockchain.
-   * Namely:
-   * 1. Every hash is unique and hasn't been tampered with
-   * 2. Every block properly points to the previous block
-   *
-   * @param {boolean} checkTransactions Whether to check for transactions as well
-   * @return {boolean} Whether the chain is valid
-   */
-  // TODO: Use an iterator to check all blocks instead of toArray. Delete toArray method and use ...blockchain to invoke the iterator
-  // TODO: You can use generators to run a simulation
-  isLedgerValid (checkTransactions = false) {
-    return [...validateBlockchain(this.ledger, checkTransactions)].reduce(
-      (a, b) => a && b
-    )
   }
 
   // eslint-disable-next-line max-statements
@@ -170,39 +137,4 @@ class BitcoinService {
     return transfer
   }
 }
-
-const validateBlockchain = (blockchain, alsoCheckTransactions) => ({
-  [Symbol.iterator]: function * () {
-    for (const currentBlock of blockchain) {
-      if (currentBlock.isGenesis()) {
-        yield true
-      } else {
-        // Compare each block with its previous
-        const previousBlock = blockchain.lookUp(currentBlock.previousHash)
-        yield validateBlock(currentBlock, previousBlock, alsoCheckTransactions)
-      }
-    }
-  }
-})
-
-const validateBlock = (current, previous, checkTransactions) =>
-  // 0. Check hash valid
-  current.hash.length > 0 &&
-  previous.hash.length > 0 &&
-  // 1. Check hash tampering
-  current.hash.equals(
-    current.calculateHash(current.pendingTransactionsToString())
-  ) &&
-  // 2. Check blocks form a properly linked chain using hashes
-  current.previousHash.equals(previous.hash) &&
-  // 3. Check timestamps
-  current.timestamp >= previous.timestamp &&
-  // 4. Verify Transaction signatures
-  (checkTransactions ? checkBlockTransactions(current) : true)
-
-const checkBlockTransactions = block =>
-  block.hash.toString().substring(0, block.difficulty) ===
-    Array(block.difficulty).fill(0).join('') &&
-  block.pendingTransactions.every(tx => tx.verifySignature())
-
 export default BitcoinService

@@ -42,13 +42,30 @@ const Blockchain = (genesis = createGenesis()) => {
           return blocks.size
         },
         lookUp (hash) {
-          if (blocks.has(hash.valueOf())) {
-            return blocks.get(hash.valueOf())
+          const h = hash.valueOf()
+          if (blocks.has(h)) {
+            return blocks.get(h)
           }
-          throw new Error(`Block with hash ${hash.valueOf()} not found!`)
+          throw new Error(`Block with hash ${f} not found!`)
         },
         toArray () {
           return [...blocks.values()]
+        },
+        /**
+         * Determines if the chain is valid by asserting the properties of a blockchain.
+         * Namely:
+         * 1. Every hash is unique and hasn't been tampered with
+         * 2. Every block properly points to the previous block
+         *
+         * @param {boolean} checkTransactions Whether to check for transactions as well
+         * @return {boolean} Whether the chain is valid
+         */
+        // TODO: Use an iterator to check all blocks instead of toArray. Delete toArray method and use ...blockchain to invoke the iterator
+        // TODO: You can use generators to run a simulation
+        isValid (checkTransactions = false) {
+          return [...validateBlockchain(this, checkTransactions)].reduce(
+            (a, b) => a && b
+          )
         }
       },
       interop: {
@@ -69,5 +86,39 @@ function createGenesis () {
   genesis.hash = genesis.calculateHash()
   return genesis
 }
+
+const validateBlockchain = (blockchain, alsoCheckTransactions) => ({
+  [Symbol.iterator]: function * () {
+    for (const currentBlock of blockchain) {
+      if (currentBlock.isGenesis()) {
+        yield true
+      } else {
+        // Compare each block with its previous
+        const previousBlock = blockchain.lookUp(currentBlock.previousHash)
+        yield validateBlock(currentBlock, previousBlock, alsoCheckTransactions)
+      }
+    }
+  }
+})
+
+const validateBlock = (current, previous, checkTransactions) =>
+  // 0. Check hash valid
+  current.hash.length > 0 &&
+  previous.hash.length > 0 &&
+  // 1. Check hash tampering
+  current.hash.equals(
+    current.calculateHash(current.pendingTransactionsToString())
+  ) &&
+  // 2. Check blocks form a properly linked chain using hashes
+  current.previousHash.equals(previous.hash) &&
+  // 3. Check timestamps
+  current.timestamp >= previous.timestamp &&
+  // 4. Verify Transaction signatures
+  (checkTransactions ? checkBlockTransactions(current) : true)
+
+const checkBlockTransactions = block =>
+  block.hash.toString().substring(0, block.difficulty) ===
+    Array(block.difficulty).fill(0).join('') &&
+  block.pendingTransactions.every(tx => tx.verifySignature())
 
 export default Blockchain

@@ -28,13 +28,11 @@ describe('Transfer Funds Test suite', () => {
     )
     first.signature = first.generateSignature(miner.privateKey)
     first.hash = first.calculateHash()
-    const applyProxies = compose(TraceLog, MethodCounter('lookUp'))
+    const applyProxies = compose(TraceLog, MethodCounter('lookUp', 'isValid'))
     const ledger = applyProxies(Blockchain())
     ledger.addPendingTransaction(first)
 
-    const bitcoinService = MethodCounter('isLedgerValid')(
-      new BitcoinService(ledger)
-    )
+    const bitcoinService = new BitcoinService(ledger)
 
     // Mine some initial block, after mining the reward is BTC 100 for wa
     await bitcoinService.minePendingTransactions(miner.address)
@@ -171,13 +169,13 @@ describe('Transfer Funds Test suite', () => {
       }))
     )
 
-    assert.isOk(bitcoinService.isLedgerValid(true), 'Is ledger valid?')
+    assert.isOk(ledger.isValid(true), 'Is ledger valid?')
     assert.isAbove(ledger.lookUp.invocations, 0)
-    assert.isAbove(bitcoinService.isLedgerValid.invocations, 0)
+    assert.isAbove(ledger.isValid.invocations, 0)
     console.log('Number of lookUps made: ', ledger.lookUp.invocations)
     console.log(
       'Number of ledger validations made: ',
-      bitcoinService.isLedgerValid.invocations
+      ledger.isValid.invocations
     )
   })
 })
