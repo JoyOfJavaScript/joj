@@ -36,7 +36,7 @@ const Blockchain = (genesis = createGenesis()) => {
         push (newBlock) {
           blocks.set(newBlock.hash.valueOf(), newBlock)
           top = newBlock
-          return newBlock
+          return top
         },
         height () {
           return blocks.size

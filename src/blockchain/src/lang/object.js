@@ -1,3 +1,5 @@
+import 'core-js/fn/array/flat-map'
+
 if (typeof Object.mixin !== 'function') {
   // Must be:
   // - writable: false
@@ -10,26 +12,39 @@ if (typeof Object.mixin !== 'function') {
         base = { ...base.state, ...base.methods, ...base.interop }
       }
 
-      if (!Object.isExtensible(base)) {
+      detectCollision(base, ...mixins)
+
+      if (!Object.isExtensible(base) || Object.isSealed(base)) {
         throw new TypeError(
-          'Unable to concatenate mixins into base object. Object is not extensible'
+          'Unable to concatenate mixins into base object. Object is either not extensible or has been sealed'
         )
       }
-      // Check if base object is intended to be used as prototype
-      const to = Object.getOwnPropertySymbols(base).includes(Symbol.for('base'))
-        ? // Link prototype
-          Object.create(base)
-        : // Create copy of object
-          { ...base }
-
       // Mixin object delegates
       // return Object.assign(to, mixins.reduce((a, b) => ({ ...a, ...b }), {}))
-      return Object.assign(to, ...mixins)
+      return Object.assign({ ...base }, ...mixins)
     },
+    enumerable: false,
     writable: false,
     configurable: false
   })
 }
+
+const detectCollision = (...descriptors) =>
+  descriptors
+    .flatMap(Object.keys)
+    .reduce(sortReducer, [])
+    .reduce(collisionReducer, [])
+    .forEach(c => console.log(`[WARN] Collission found: ${c}`))
+
+const sortReducer = (accumulator, value) => {
+  const nextIndex = accumulator.findIndex(i => value < i)
+  const index = nextIndex > -1 ? nextIndex : accumulator.length
+  accumulator.splice(index, 0, value)
+  return accumulator
+}
+
+const collisionReducer = (accumulator, value, index, arr) =>
+  (value === arr[index + 1] ? [...accumulator, value] : accumulator)
 
 function isDescriptor (obj) {
   return obj && (obj['state'] || obj['methods'])

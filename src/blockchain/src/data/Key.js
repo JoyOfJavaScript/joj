@@ -8,6 +8,7 @@ const Key = name => {
     throw new Error(`Key file is empty ${name}`)
   }
   return {
+    valueOf: () => k,
     toString: () => k,
     [Symbol.toPrimitive]: () => k
   }

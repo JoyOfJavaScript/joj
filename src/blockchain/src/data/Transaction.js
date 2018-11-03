@@ -24,43 +24,57 @@ const Transaction = (
   hasher = CryptoHasher(),
   signer = CryptoSigner()
 ) => {
-  return Object.mixin(
-    {
-      state: {
-        sender,
-        recipient,
-        description,
-        nonce: 0,
-        timestamp: Date.now(),
-        [Symbol.for('version')]: '1.0'
+  const props = {
+    state: {
+      sender,
+      recipient,
+      description,
+      nonce: 0,
+      timestamp: Date.now(),
+      [Symbol.for('version')]: '1.0'
+    },
+    methods: {
+      /**
+       * Gets the numerical amount of the funds
+       * @return {Number} Amount number
+       */
+      amount () {
+        return funds.funds
       },
-      methods: {
-        /**
-         * Gets the numerical amount of the funds
-         * @return {Number} Amount number
-         */
-        amount: () => funds.funds,
-        /**
-         * Gets the currency
-         * @return {String} Currency string
-         */
-        currency: () => funds.currency,
-        /**
-         * Gets the funds as a Money object
-         * @return {Money} Funds wrapped as Money object
-         */
-        money: () => funds.toMoney(),
-        /**
-         * Returns a minimal JSON represetation of this object
-         * @return {Object} JSON object
-         */
-        toJSON () {
-          return {
-            hash: this.hash.valueOf()
-          }
+      /**
+       * Gets the currency
+       * @return {String} Currency string
+       */
+      currency () {
+        return funds.currency
+      },
+      /**
+       * Gets the funds as a Money object
+       * @return {Money} Funds wrapped as Money object
+       */
+      money () {
+        return funds.toMoney()
+      },
+      /**
+       * Displays a friendly description of this transaction for reporting purposes
+       * @return {{String}} A friendly string representation
+       */
+      displayTransaction () {
+        return `Transaction ${description} from ${sender} to ${recipient} for ${this.money().toString()}`
+      },
+      /**
+       * Returns a minimal JSON represetation of this object
+       * @return {Object} JSON object
+       */
+      toJSON () {
+        return {
+          hash: this.hash.valueOf()
         }
       }
-    },
+    }
+  }
+  return Object.assign(
+    { ...props.state, ...props.methods },
     HasHash({
       hasher,
       keys: ['sender', 'recipient', 'amount', 'currency', 'nonce']

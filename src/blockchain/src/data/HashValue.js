@@ -1,6 +1,5 @@
 import {
   compose,
-  curry,
   flatMap,
   getOrElseThrow,
   map
