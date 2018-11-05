@@ -145,10 +145,11 @@ describe('Traditional JavaScript domain modeling', () => {
       while (i < len) {
         hash = ((hash << 5) - hash + data.charCodeAt(i++)) << 0
       }
-      return hash
+      return hash ** 2
     }
     assert.equal(cryptoTransaction.funds, 10)
     assert.isOk(cryptoTransaction.calculateHash() > 0)
+    assert.equal(cryptoTransaction.calculateHash(), 653545310344349000)
   })
 
   it('Should create a simple Person/Student model', () => {

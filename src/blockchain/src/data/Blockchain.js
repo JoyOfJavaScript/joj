@@ -23,58 +23,63 @@ const Blockchain = (genesis = createGenesis()) => {
   const version = '1.0'
   const blocks = new Map([[genesis.hash.valueOf(), genesis]])
   let top = genesis
-  return Object.mixin(
-    {
-      state: {
-        timestamp: Date.now(),
-        pendingTransactions: []
+  const props = {
+    state: {
+      timestamp: Date.now(),
+      pendingTransactions: []
+    },
+    methods: {
+      top () {
+        return top
       },
-      methods: {
-        top () {
-          return top
-        },
-        push (newBlock) {
-          blocks.set(newBlock.hash.valueOf(), newBlock)
-          top = newBlock
-          return top
-        },
-        height () {
-          return blocks.size
-        },
-        lookUp (hash) {
-          const h = hash.valueOf()
-          if (blocks.has(h)) {
-            return blocks.get(h)
-          }
-          throw new Error(`Block with hash ${f} not found!`)
-        },
-        toArray () {
-          return [...blocks.values()]
-        },
-        /**
-         * Determines if the chain is valid by asserting the properties of a blockchain.
-         * Namely:
-         * 1. Every hash is unique and hasn't been tampered with
-         * 2. Every block properly points to the previous block
-         *
-         * @param {boolean} checkTransactions Whether to check for transactions as well
-         * @return {boolean} Whether the chain is valid
-         */
-        // TODO: Use an iterator to check all blocks instead of toArray. Delete toArray method and use ...blockchain to invoke the iterator
-        // TODO: You can use generators to run a simulation
-        isValid (checkTransactions = false) {
-          return [...validateBlockchain(this, checkTransactions)].reduce(
-            (a, b) => a && b
-          )
+      push (newBlock) {
+        blocks.set(newBlock.hash.valueOf(), newBlock)
+        top = newBlock
+        return top
+      },
+      height () {
+        return blocks.size
+      },
+      lookUp (hash) {
+        const h = hash.valueOf()
+        if (blocks.has(h)) {
+          return blocks.get(h)
         }
+        throw new Error(`Block with hash ${h} not found!`)
       },
-      interop: {
-        [Symbol.for('version')]: () => version,
-        // TODO: in chapter on symbols, create a symbol for [Symbol.observable] then show validating blockchain using it
-        [Symbol.iterator]: () => blocks.values(),
-        [Symbol.toStringTag]: () => 'Blockchain'
+      /**
+       * Helps troubleshooting and testing
+       * @return {Array} An array version of all blocks
+       */
+      toArray () {
+        return [...blocks.values()]
+      },
+      /**
+       * Determines if the chain is valid by asserting the properties of a blockchain.
+       * Namely:
+       * 1. Every hash is unique and hasn't been tampered with
+       * 2. Every block properly points to the previous block
+       *
+       * @param {boolean} checkTransactions Whether to check for transactions as well
+       * @return {boolean} Whether the chain is valid
+       */
+      // TODO: Use an iterator to check all blocks instead of toArray. Delete toArray method and use ...blockchain to invoke the iterator
+      // TODO: You can use generators to run a simulation
+      isValid (checkTransactions = false) {
+        return [...validateBlockchain(this, checkTransactions)].reduce(
+          (a, b) => a && b
+        )
       }
     },
+    interop: {
+      [Symbol.for('version')]: () => version,
+      // TODO: in chapter on symbols, create a symbol for [Symbol.observable] then show validating blockchain using it
+      [Symbol.iterator]: () => blocks.values(),
+      [Symbol.toStringTag]: () => 'Blockchain'
+    }
+  }
+  return Object.assign(
+    { ...props.state, ...props.methods, ...props.interop },
     HasPendingTransactions()
   )
 }

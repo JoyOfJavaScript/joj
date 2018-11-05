@@ -14,6 +14,9 @@ const HasPendingTransactions = () => ({
   },
   countPendingTransactions () {
     return this.pendingTransactions.length
+  },
+  deletePendingTransactions () {
+    this.pendingTransactions = []
   }
 })
 

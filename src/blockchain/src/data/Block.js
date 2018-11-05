@@ -22,51 +22,52 @@ const Block = (
   previousHash,
   hasher = CryptoHasher()
 ) => {
-  return Object.mixin(
-    {
-      state: {
-        [Symbol.for('version')]: '1.0',
-        previousHash,
-        pendingTransactions,
-        difficulty: 2,
-        index: 0,
-        hash: undefined, // Gets computed later
-        nonce: 0,
-        timestamp: Date.now()
+  const props = {
+    state: {
+      [Symbol.for('version')]: '1.0',
+      previousHash,
+      pendingTransactions,
+      difficulty: 2,
+      index: 0,
+      hash: undefined, // Gets computed later
+      nonce: 0,
+      timestamp: Date.now()
+    },
+    methods: {
+      /**
+       * Execute proof of work algorithm to mine block
+       * @return {Promise<Block>} Mined block
+       */
+      mine: async function () {
+        return Promise.resolve(
+          proofOfWork(this, ''.padStart(this.difficulty, '0'))
+        )
       },
-      methods: {
-        /**
-         * Execute proof of work algorithm to mine block
-         * @return {Promise<Block>} Mined block
-         */
-        mine: async function () {
-          return Promise.resolve(
-            proofOfWork(this, ''.padStart(this.difficulty, '0'))
-          )
-        },
-        /**
-         * Check whether this block is a genesis block (first block in a any chain)
-         * @return {Boolean} Whether this is a genesis block
-         */
-        isGenesis () {
-          return this.previousHash.valueOf() === '0'.repeat(64)
-        },
-        /**
-         * Returns the minimal JSON representation of this object
-         * @return {Object} JSON object
-         */
-        toJSON () {
-          return {
-            previousHash: this.previousHash,
-            hash: this.hash,
-            nonce: this.nonce,
-            timestamp: this.timestamp,
-            index: this.index,
-            pendingTransactions: this.pendingTransactionsToString()
-          }
+      /**
+       * Check whether this block is a genesis block (first block in a any chain)
+       * @return {Boolean} Whether this is a genesis block
+       */
+      isGenesis () {
+        return this.previousHash.valueOf() === '0'.repeat(64)
+      },
+      /**
+       * Returns the minimal JSON representation of this object
+       * @return {Object} JSON object
+       */
+      toJSON () {
+        return {
+          previousHash: this.previousHash,
+          hash: this.hash,
+          nonce: this.nonce,
+          timestamp: this.timestamp,
+          index: this.index,
+          pendingTransactions: this.pendingTransactionsToString()
         }
       }
-    },
+    }
+  }
+  return Object.assign(
+    { ...props.state, ...props.methods },
     HasHash({ hasher, keys: ['timestamp', 'previousHash', 'nonce'] }),
     HasPendingTransactions()
   )

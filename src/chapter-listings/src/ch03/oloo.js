@@ -78,7 +78,7 @@ describe('OLOO domain modeling', () => {
       while (i < len) {
         hash = ((hash << 5) - hash + data.charCodeAt(i++)) << 0
       }
-      return hash
+      return hash ** 2
     }
 
     const inst1 = Object.create(MoneyTransaction).init(
@@ -95,7 +95,7 @@ describe('OLOO domain modeling', () => {
       'luke@joj.com'
     )
     tx1.addFunds(10)
-    assert.isOk(tx1.calculateHash() < 0)
+    assert.isOk(tx1.calculateHash() > 0)
 
     assert.isOk(MoneyTransaction.isPrototypeOf(inst1))
     assert.isOk(Transaction.isPrototypeOf(inst1))

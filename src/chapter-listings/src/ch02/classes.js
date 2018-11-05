@@ -86,7 +86,7 @@ describe('Class-based JavaScript domain modeling', () => {
         while (i < len) {
           hash = ((hash << 5) - hash + data.charCodeAt(i++)) << 0;
         }
-        return hash;
+        return hash ** 2;
       }
     }
 
@@ -104,7 +104,8 @@ describe('Class-based JavaScript domain modeling', () => {
       'luke@joj.com'
     );
     tx1.addFunds(10);
-    assert.isOk(tx1.calculateHash() < 0);
+    assert.isOk(tx1.calculateHash() > 0);
+    assert.equal(tx1.calculateHash(), 197994095955825630);
 
     assert.isOk(Object.getPrototypeOf(tx1) === MoneyTransaction.prototype);
     assert.isOk(tx1 instanceof MoneyTransaction);
