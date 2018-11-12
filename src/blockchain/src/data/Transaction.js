@@ -2,6 +2,8 @@ import CryptoHasher from './CryptoHasher'
 import CryptoSigner from './CryptoSigner'
 import HasHash from './HasHash'
 import HasSignature from './HasSignature'
+import HasValidation from './HasValidation'
+import { Failure, Success } from '../../../adt/dist/validation'
 
 /**
  * A transaction holds information (keys) identifying who is making the payment
@@ -62,6 +64,17 @@ const Transaction = (
       displayTransaction () {
         return `Transaction ${description} from ${sender} to ${recipient} for ${this.money().toString()}`
       },
+      isValid () {
+        const isDataValid = this.hash !== undefined
+        const isSignatureValid = this.verifySignature()
+        if (isDataValid && isSignatureValid) {
+          return Success(true)
+        } else {
+          return isDataValid
+            ? Failure([`Failed transaction signature check: ${this.hash}`])
+            : Failure([`Invalid transaction: ${this.sender}`])
+        }
+      },
       /**
        * Returns a minimal JSON represetation of this object
        * @return {Object} JSON object
@@ -71,10 +84,16 @@ const Transaction = (
           hash: this.hash.valueOf()
         }
       }
+    },
+    interop: {
+      // Empty iterator
+      [Symbol.iterator]: () => ({
+        next: () => ({ done: true })
+      })
     }
   }
   return Object.assign(
-    { ...props.state, ...props.methods },
+    { ...props.state, ...props.methods, ...props.interop },
     HasHash({
       hasher,
       keys: ['sender', 'recipient', 'amount', 'currency', 'nonce']
@@ -82,7 +101,8 @@ const Transaction = (
     HasSignature({
       signer,
       keys: ['sender', 'recipient', 'amount', 'currency']
-    })
+    }),
+    HasValidation()
   )
 }
 export default Transaction

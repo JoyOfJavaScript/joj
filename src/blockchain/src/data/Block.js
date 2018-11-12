@@ -2,6 +2,8 @@ import '../lang/object'
 import CryptoHasher from './CryptoHasher'
 import HasHash from './HasHash'
 import HasPendingTransactions from './HasPendingTransactions'
+import HasValidation from './HasValidation'
+import { Failure, Success } from '../../../adt/dist/validation'
 
 /**
  * Transactional blocks contain the set of all pending transactions in the chain
@@ -24,7 +26,6 @@ const Block = (
 ) => {
   const props = {
     state: {
-      [Symbol.for('version')]: '1.0',
       previousHash,
       pendingTransactions,
       difficulty: 2,
@@ -34,6 +35,22 @@ const Block = (
       timestamp: Date.now()
     },
     methods: {
+      /**
+       * Set the blockchain container this block is part of
+       * @param {Blockchain} chain Blockchain object
+       * @return {Block} This block's reference
+       */
+      set blockchain (chain) {
+        this.chain = chain
+        return this
+      },
+      /**
+       * Get the blockchain container this block is part of
+       * @return {Blockchain} This block's reference
+       */
+      get blockchain () {
+        return this.chain
+      },
       /**
        * Execute proof of work algorithm to mine block
        * @return {Promise<Block>} Mined block
@@ -50,6 +67,32 @@ const Block = (
       isGenesis () {
         return this.previousHash.valueOf() === '0'.repeat(64)
       },
+      isValid () {
+        if (this.isGenesis()) {
+          return Success(true)
+        } else {
+          // Compare each block with its previous
+          const previous = this.blockchain.lookUp(this.previousHash)
+          const result =
+            // 1. Check hash length
+            this.hash.length === 64 &&
+            // 2. Check hash tampering
+            this.hash.equals(
+              this.calculateHash(this.pendingTransactionsToString())
+            ) &&
+            // 3. Check difficulty was met
+            this.hash.toString().substring(0, this.difficulty) ===
+              Array(this.difficulty).fill(0).join('') &&
+            // 4. Check blocks form a properly linked chain using hashes
+            this.previousHash.equals(previous.hash) &&
+            // 5. Check timestamps
+            this.timestamp >= previous.timestamp
+
+          return result
+            ? Success(true)
+            : Failure([`Validation failed for block ${this.hash}`])
+        }
+      },
       /**
        * Returns the minimal JSON representation of this object
        * @return {Object} JSON object
@@ -64,12 +107,19 @@ const Block = (
           pendingTransactions: this.pendingTransactionsToString()
         }
       }
+    },
+    interop: {
+      [Symbol.for('version')]: () => '1.0',
+      // TODO: in chapter on symbols, create a symbol for [Symbol.observable] then show validating blockchain using it
+      [Symbol.iterator]: () => pendingTransactions[Symbol.iterator](),
+      [Symbol.toStringTag]: () => 'Block'
     }
   }
   return Object.assign(
-    { ...props.state, ...props.methods },
+    { ...props.state, ...props.methods, ...props.interop },
     HasHash({ hasher, keys: ['timestamp', 'previousHash', 'nonce'] }),
-    HasPendingTransactions()
+    HasPendingTransactions(),
+    HasValidation()
   )
 }
 

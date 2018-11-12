@@ -129,7 +129,7 @@ async function processRequest (connection, req) {
     }
     case Actions.VALIDATE_BC: {
       console.log(`Validating blockchain with ${LEDGER.height()} blocks`)
-      const isValid = await LEDGER.isValid()
+      const isValid = await LEDGER.validate()
       connection.sendUTF(
         JSON.stringify({
           status: 'Success',

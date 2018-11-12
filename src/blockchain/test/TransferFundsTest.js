@@ -169,7 +169,9 @@ describe('Transfer Funds Test suite', () => {
       }))
     )
 
-    assert.isOk(ledger.isValid(true), 'Is ledger valid?')
+    const isLedgerValid = ledger.validate()
+    console.log(isLedgerValid.merge())
+    assert.isOk(isLedgerValid.isSuccess(), 'Is ledger valid?')
     assert.isAbove(ledger.lookUp.invocations, 0)
     assert.isAbove(ledger.isValid.invocations, 0)
     console.log('Number of lookUps made: ', ledger.lookUp.invocations)

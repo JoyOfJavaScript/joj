@@ -24,8 +24,7 @@ class BitcoinService {
       fs.readFileSync(
         path.join(BitcoinService.BASE, 'bitcoin-private.pem'),
         'utf8'
-      ),
-      'bitcoin'
+      )
     )
   }
 
@@ -104,7 +103,7 @@ class BitcoinService {
       this.ledger.pendingTransactions = [reward]
 
       // Validate the entire chain
-      this.ledger.isValid(true)
+      this.ledger.validate()
 
       return block
     })
