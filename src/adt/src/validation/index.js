@@ -27,7 +27,6 @@ export const Success = (Validation.Success = a =>
                   isFunction(Va.fold()) ? Va.fold().call(Va, a) : a(Va.fold())
                 )
               : a ? Success(Va.fold().call(Va, a)) : Failure()),
-      concat: Va => Va,
       bifold: successTransform => successTransform(a),
       // This what makes Validation not a real monad (also not a real disjunction)
       bimap: successTransform => Success(successTransform(a)),
