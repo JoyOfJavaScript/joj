@@ -16,6 +16,7 @@
     "eslint-plugin-flowtype": "^2.50.3",
     "eslint-plugin-flowtype-errors": "^3.6.0",
     "eslint-plugin-fp": "^2.3.0",
+    "flow": "^0.2.3",
     "flow-bin": "^0.59.0",
     "flow-typed": "^2.5.1",
     "mocha": "^4.0.1",

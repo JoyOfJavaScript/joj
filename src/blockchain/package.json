@@ -42,6 +42,6 @@
     "start-app": "nodemon --exec babel-node -- src/app.js",
     "start-peer0": "nodemon --exec babel-node -- src/p2p/node.js 3000",
     "start-peer1": "nodemon --exec babel-node -- src/p2p/node.js 3001",
-    "start-peer2": "nodemon --exec babel-node -- src/p2p/node.js 3002"    
+    "start-peer2": "nodemon --exec babel-node -- src/p2p/node.js 3002"
   }
 }

@@ -2,7 +2,7 @@
 version: "2"
 services:
   adt:
-      image: "node:10.2.1-slim"
+      image: "node:10.13.0-slim"
       user: "node"
       working_dir: /home/joj/src
       environment:
@@ -10,10 +10,10 @@ services:
         - NPM_CONFIG_LOGLEVEL=info
       volumes:
         - ./src:/home/joj/src
-      command: "npm --prefix /home/joj/src/adt run build"
+      command: bash -c "npm install ; npm --prefix /home/joj/src/adt run build"
   
   chapter_listings:
-    image: "node:10.2.1-slim"
+    image: "node:10.13.0-slim"
     user: "node"
     working_dir: /home/joj/src
     environment:
@@ -21,10 +21,10 @@ services:
       - NPM_CONFIG_LOGLEVEL=info
     volumes:
         - ./src:/home/joj/src
-    command: "npm --prefix /home/joj/src/chapter-listings run test-dev"
+    command: bash -c  "npm install ; npm --prefix /home/joj/src/chapter-listings run test src/"
 
   blockchain_tests:
-      image: "node:10.2.1-slim"
+      image: "node:10.13.0-slim"
       user: "node"
       working_dir: /home/joj/src
       environment:
@@ -32,18 +32,7 @@ services:
         - NPM_CONFIG_LOGLEVEL=info
       volumes:
         - ./src:/home/joj/src
-      command: "npm --prefix /home/joj/src/blockchain run test-dev"
-
-  # blockchain_peers:
-  #     image: "node:10.2.1-slim"
-  #     user: "node"
-  #     working_dir: /home/joj/src
-  #     environment:
-  #       - NODE_ENV=dev
-  #       - NPM_CONFIG_LOGLEVEL=info
-  #     volumes:
-  #       - ./src:/home/joj/src
-  #     command: "npm --prefix /home/joj/src/blockchain run test-dev"
+      command: bash -c  "npm install ; npm --prefix /home/joj/src/blockchain run test test"
 
   # api:
   #     image: "node:9"
