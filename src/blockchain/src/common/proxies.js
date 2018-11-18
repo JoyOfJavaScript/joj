@@ -20,6 +20,22 @@ const methodCountHandler = names => ({
   }
 })
 
+// TODO: enhance it to keep an internal map with all counters instead of printing it to the screen
+const perfCountHandler = names => {
+  return {
+    get (target, key) {
+      if (names.includes(key)) {
+        const start = process.hrtime()
+        const result = Reflect.get(target, key)
+        const end = process.hrtime(start)
+        console.info('Execution time: %ds %dms', end[0], end[1] / 1000000)
+        return result
+      }
+      return Reflect.get(target, key)
+    }
+  }
+}
+
 const weave = curry((handler, target) => {
   return new Proxy(target, handler)
 })
@@ -27,3 +43,4 @@ const weave = curry((handler, target) => {
 // Module
 export const TraceLog = weave(accessorLogHandler)
 export const MethodCounter = (...names) => weave(methodCountHandler(names))
+export const PerfCount = (...names) => weave(perfCountHandler(names))

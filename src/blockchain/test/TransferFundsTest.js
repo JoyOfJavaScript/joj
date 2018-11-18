@@ -28,7 +28,7 @@ describe('Transfer Funds Test suite', () => {
     )
     first.signature = first.generateSignature(miner.privateKey)
     first.hash = first.calculateHash()
-    const applyProxies = compose(TraceLog, MethodCounter('lookUp', 'isValid'))
+    const applyProxies = compose(TraceLog, MethodCounter('lookUp', 'validate'))
     const ledger = applyProxies(Blockchain())
     ledger.addPendingTransaction(first)
 
@@ -173,11 +173,11 @@ describe('Transfer Funds Test suite', () => {
     console.log(isLedgerValid.merge())
     assert.isOk(isLedgerValid.isSuccess(), 'Is ledger valid?')
     assert.isAbove(ledger.lookUp.invocations, 0)
-    assert.isAbove(ledger.isValid.invocations, 0)
+    assert.isAbove(ledger.validate.invocations, 0)
     console.log('Number of lookUps made: ', ledger.lookUp.invocations)
     console.log(
       'Number of ledger validations made: ',
-      ledger.isValid.invocations
+      ledger.validate.invocations
     )
   })
 })

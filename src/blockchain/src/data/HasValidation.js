@@ -1,4 +1,4 @@
-import Validation, { Success } from '../../../adt/dist/validation'
+import { Success } from '../../../adt/dist/validation'
 
 /**
  * HasValidation mixin.
@@ -18,6 +18,7 @@ const HasValidation = () => ({
   validate () {
     // Invokes the object's [Symbol.iterator] to enumerate its state through the spread operator
     return this.isValid().flatMap(() =>
+      // The spread operator invokes [Symbol.iterator]
       [...this].reduce(
         (v, item) => v.flatMap(() => item.validate()),
         Success(true)
