@@ -1,5 +1,4 @@
 import '../lang/object'
-import CryptoHasher from './CryptoHasher'
 import HasHash from './HasHash'
 import HasPendingTransactions from './HasPendingTransactions'
 import HasValidation from './HasValidation'
@@ -15,15 +14,10 @@ import { Failure, Success } from '../../../adt/dist/validation'
  * changes, it's a different block
  *
  * @param {Array}     pendingTransactions Array of pending transactions from the chain
- * @param {HashValue} previousHash        Reference to the previous block in the chain
- * @param {CryptoHasher} hasher Hasher to use to hash transactional blocks
+ * @param {String} previousHash        Reference to the previous block in the chain
  * @return {Block} Newly created block with its own computed hash
  */
-const Block = (
-  pendingTransactions = [],
-  previousHash,
-  hasher = CryptoHasher()
-) => {
+const Block = (pendingTransactions = [], previousHash) => {
   const props = {
     state: {
       previousHash,
@@ -77,14 +71,15 @@ const Block = (
             // 1. Check hash length
             this.hash.length === 64 &&
             // 2. Check hash tampering
-            this.hash.equals(
-              this.calculateHash(this.pendingTransactionsToString())
-            ) &&
+            this.hash ===
+              this.calculateHash(this.pendingTransactionsToString()) &&
             // 3. Check difficulty was met
             this.hash.toString().substring(0, this.difficulty) ===
-              Array(this.difficulty).fill(0).join('') &&
+              Array(this.difficulty)
+                .fill(0)
+                .join('') &&
             // 4. Check blocks form a properly linked chain using hashes
-            this.previousHash.equals(previous.hash) &&
+            this.previousHash === previous.hash &&
             // 5. Check timestamps
             this.timestamp >= previous.timestamp
 
@@ -104,7 +99,7 @@ const Block = (
           nonce: this.nonce,
           timestamp: this.timestamp,
           index: this.index,
-          pendingTransactions: this.pendingTransactionsToString()
+          pendingTransactions: this.countPendingTransactions()
         }
       }
     },
@@ -117,7 +112,7 @@ const Block = (
   }
   return Object.assign(
     { ...props.state, ...props.methods, ...props.interop },
-    HasHash({ hasher, keys: ['timestamp', 'previousHash', 'nonce'] }),
+    HasHash(['timestamp', 'previousHash', 'nonce']),
     HasPendingTransactions(),
     HasValidation()
   )

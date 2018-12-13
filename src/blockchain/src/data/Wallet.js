@@ -7,13 +7,21 @@
  * @return {Wallet} A new wallet
  */
 const Wallet = (publicKey, privateKey) => {
-  return {
-    publicKey, // Public key will act as our address
-    privateKey, // Private key is used to sign our transactions
-    get address () {
-      return publicKey
+  const props = {
+    state: {
+      publicKey,
+      privateKey
+    },
+    method: {
+      get address () {
+        return publicKey
+      },
+      calculateBalance () {
+        //
+      }
     }
   }
+  return { ...props.state, ...props.method }
 }
 
 export default Wallet

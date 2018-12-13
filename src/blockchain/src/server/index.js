@@ -2,7 +2,6 @@ import * as Actions from '../p2p/actions'
 import * as Codes from './codes'
 import BitcoinService from '../service/BitcoinService'
 import Blockchain from '../data/Blockchain'
-import Funds from '../data/Funds'
 import Key from '../data/Key'
 import Money from '../data/Money'
 import Transaction from '../data/Transaction'
@@ -111,7 +110,7 @@ async function processRequest (connection, req) {
       const tx = Transaction(
         from.address,
         to.address,
-        Funds(Money('₿', details.amount))
+        Money('₿', details.amount)
       )
       tx.signature = tx.generateSignature(from.privateKey)
       LEDGER.addPendingTransaction(tx)

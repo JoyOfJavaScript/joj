@@ -1,4 +1,6 @@
 import Validation from '../../../adt/dist/validation'
+import { Failure, Success } from '../../../adt/dist/validation'
+import { composeM } from '../../../adt/dist/combinators'
 
 export const BITCOIN = '₿'
 
@@ -47,18 +49,26 @@ Money.Currencies = {
 
 // Compare money objects
 Money.compare = (m1, m2) =>
-  Validation.of(x => m1.compareTo(m2)).ap(currencyMatch(m1, m2)).merge()
+  Validation.of(x => m1.compareTo(m2))
+    .ap(currencyMatch(m1, m2))
+    .merge()
 
 // Add two money objects
 Money.add = (m1, m2) =>
-  Validation.of(x => m1.plus(m2)).ap(currencyMatch(m1, m2)).merge()
+  Validation.of(x => m1.plus(m2))
+    .ap(currencyMatch(m1, m2))
+    .merge()
 
 // Subtract two Money objects
 Money.subtract = (m1, m2) =>
-  Validation.of(x => m1.minus(m2)).ap(currencyMatch(m1, m2)).merge()
+  Validation.of(x => m1.minus(m2))
+    .ap(currencyMatch(m1, m2))
+    .merge()
 
 Money.multiply = (m1, m2) =>
-  Validation.of(x => m1.times(m2)).ap(currencyMatch(m1, m2)).merge()
+  Validation.of(x => m1.times(m2))
+    .ap(currencyMatch(m1, m2))
+    .merge()
 
 // Language extension for Number.prototype
 if (typeof Number.prototype.btc !== 'function') {
@@ -82,8 +92,21 @@ if (typeof Number.prototype.btc !== 'function') {
  * @return {Validation} Validates whether currencies match
  */
 const currencyMatch = (m1, m2) =>
-  (m1.currency === m2.currency
+  m1.currency === m2.currency
     ? Validation.Success(true)
-    : Validation.Failure(['Currency mismatch!']))
+    : Validation.Failure(['Currency mismatch!'])
+
+const notNaN = num =>
+  !isNaN(num) ? Success(num) : Failure([`Number (${num}) can't be NaN`])
+const isNumber = num =>
+  typeof num === 'number'
+    ? Success(num)
+    : Failure([`Input (${num}) is not a number`])
+const inRange = num =>
+  num >= 0
+    ? Success(num)
+    : Failure([`Number (${num}) must be greater or equal to zero`])
+
+const validateAmount = composeM(inRange, isNumber, notNaN)
 
 export default Money

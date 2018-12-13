@@ -5,7 +5,6 @@ import { Success } from '../../../adt/dist/validation'
  *
  * TODO:
  *
- * @param {CryptoHasher} hasher Hasher used to generate hashes
  * @param {Array}        keys   List of property names present in this object that shall be used for hashing
  * @return {string} Return a string hash of the block
  */

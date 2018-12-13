@@ -1,13 +1,13 @@
 import { MethodCounter, TraceLog } from '../src/common/proxies'
 import BitcoinService from '../src/service/BitcoinService'
 import Blockchain from '../src/data/Blockchain'
-import Funds from '../src/data/Funds'
 import Key from '../src/data/Key'
 import Money from '../src/data/Money'
 import Transaction from '../src/data/Transaction'
 import Wallet from '../src/data/Wallet'
 import { assert } from 'chai'
 import { compose } from '../../adt/dist/combinators'
+import path from 'path'
 
 describe('Transfer Funds Test suite', () => {
   it('Should transfer funds from one wallet to the next', async () => {
@@ -23,12 +23,15 @@ describe('Transfer Funds Test suite', () => {
     const first = Transaction(
       null,
       miner.address,
-      Funds((100).btc()),
+      (100).btc(),
       'First transaction'
     )
     first.signature = first.generateSignature(miner.privateKey)
     first.hash = first.calculateHash()
-    const applyProxies = compose(TraceLog, MethodCounter('lookUp', 'validate'))
+    const applyProxies = compose(
+      TraceLog,
+      MethodCounter('lookUp', 'validate')
+    )
     const ledger = applyProxies(Blockchain())
     ledger.addPendingTransaction(first)
 
@@ -179,5 +182,8 @@ describe('Transfer Funds Test suite', () => {
       'Number of ledger validations made: ',
       ledger.validate.invocations
     )
+
+    const file = path.join(__dirname, '../..', 'test-run.txt')
+    bitcoinService.writeLedger(file)
   })
 })

@@ -2,7 +2,6 @@ import { Failure, Success } from '../../../adt/dist/validation'
 import Block from './Block'
 import HasPendingTransactions from './HasPendingTransactions'
 import HasValidation from './HasValidation'
-import HashValue from './HashValue'
 
 // Alternate solution: http://2ality.com/2013/03/subclassing-builtins-es6.html
 
@@ -82,9 +81,9 @@ const Blockchain = (genesis = createGenesis()) => {
   )
 }
 
-function createGenesis () {
+function createGenesis (prevHash = '0'.repeat(64)) {
   const pendingTransactions = [] // Could contain a first transaction like a starting reward
-  const previousHash = HashValue('0'.repeat(64))
+  const previousHash = prevHash
   const genesis = Block(pendingTransactions, previousHash)
   genesis.hash = genesis.calculateHash()
   return genesis

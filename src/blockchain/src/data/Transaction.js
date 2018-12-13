@@ -1,4 +1,3 @@
-import CryptoHasher from './CryptoHasher'
 import CryptoSigner from './CryptoSigner'
 import HasHash from './HasHash'
 import HasSignature from './HasSignature'
@@ -12,9 +11,8 @@ import { Failure, Success } from '../../../adt/dist/validation'
  *
  * @param {Key}   sender        Origin of transaction (public key of sender)
  * @param {Key}   recipient     Destination of transaction (public of the receiver)
- * @param {Funds} funds         Amount to transfer
+ * @param {Money} funds         Amount to transfer
  * @param {String} description  Description of the transaction
- * @param {CryptoHasher} hasher Hasher to use for transactions
  * @param {CryptoSigner} signer Signer to use for transactions
  * @return {Transaction} Newly created transaction
  */
@@ -23,7 +21,6 @@ const Transaction = (
   recipient,
   funds,
   description = 'Generic',
-  hasher = CryptoHasher(),
   signer = CryptoSigner()
 ) => {
   const props = {
@@ -31,6 +28,7 @@ const Transaction = (
       sender,
       recipient,
       description,
+      funds,
       nonce: 0,
       timestamp: Date.now(),
       [Symbol.for('version')]: '1.0'
@@ -41,7 +39,7 @@ const Transaction = (
        * @return {Number} Amount number
        */
       amount () {
-        return funds.funds
+        return funds.amount
       },
       /**
        * Gets the currency
@@ -49,13 +47,6 @@ const Transaction = (
        */
       currency () {
         return funds.currency
-      },
-      /**
-       * Gets the funds as a Money object
-       * @return {Money} Funds wrapped as Money object
-       */
-      money () {
-        return funds.toMoney()
       },
       /**
        * Displays a friendly description of this transaction for reporting purposes
@@ -81,6 +72,8 @@ const Transaction = (
        */
       toJSON () {
         return {
+          from: this.sender,
+          to: this.recipient,
           hash: this.hash.valueOf()
         }
       }
@@ -94,10 +87,7 @@ const Transaction = (
   }
   return Object.assign(
     { ...props.state, ...props.methods, ...props.interop },
-    HasHash({
-      hasher,
-      keys: ['sender', 'recipient', 'amount', 'currency', 'nonce']
-    }),
+    HasHash(['sender', 'recipient', 'amount', 'currency', 'nonce']),
     HasSignature({
       signer,
       keys: ['sender', 'recipient', 'amount', 'currency']
