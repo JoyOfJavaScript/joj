@@ -1,6 +1,5 @@
 import { Failure, Success } from '../../../adt/dist/validation'
 import Block from './Block'
-import HasPendingTransactions from './HasPendingTransactions'
 import HasValidation from './HasValidation'
 
 // Alternate solution: http://2ality.com/2013/03/subclassing-builtins-es6.html
@@ -65,6 +64,9 @@ const Blockchain = (genesis = createGenesis()) => {
       // TODO: You can use generators to run a simulation
       isValid () {
         return Success(this.height > 0)
+      },
+      addPendingTransaction (tx) {
+        this.pendingTransactions.push(tx)
       }
     },
     interop: {
@@ -76,7 +78,6 @@ const Blockchain = (genesis = createGenesis()) => {
   }
   return Object.assign(
     { ...props.state, ...props.methods, ...props.interop },
-    HasPendingTransactions(),
     HasValidation()
   )
 }

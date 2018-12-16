@@ -87,10 +87,10 @@ const Transaction = (
   }
   return Object.assign(
     { ...props.state, ...props.methods, ...props.interop },
-    HasHash(['sender', 'recipient', 'amount', 'currency', 'nonce']),
+    HasHash(['sender', 'recipient', 'funds', 'nonce']),
     HasSignature({
       signer,
-      keys: ['sender', 'recipient', 'amount', 'currency']
+      keys: ['sender', 'recipient', 'funds']
     }),
     HasValidation()
   )

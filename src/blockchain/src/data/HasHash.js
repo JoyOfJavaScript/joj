@@ -26,12 +26,12 @@ const HasHash = (
    * @param {String} entropy Add more entropy to the calculated hash for this object
    * @return {String} A hash value
    */
-  calculateHash (entropy = '') {
-    return computeCipher(options)(keys.map(k => this[k]).concat(entropy))
+  calculateHash () {
+    return computeCipher(options)(keys.map(k => this[k]))
   }
 })
 
-const generateDigest = curry((options, data) =>
+export const generateDigest = curry((options, data) =>
   crypto
     .createHash(options.algorithm)
     .update(data)
@@ -44,7 +44,7 @@ const generateDigest = curry((options, data) =>
  * @param {Array} pieces Pieces of data to join together into a single string
  * @return {String} Concatenated string of all provided pieces
  */
-const assemble = (...pieces) => pieces.map(JSON.stringify).join('')
+export const assemble = (...pieces) => pieces.map(JSON.stringify).join('')
 
 /**
  * Calculates a hash from given block data pieces

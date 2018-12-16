@@ -1,6 +1,5 @@
 import '../lang/object'
 import HasHash from './HasHash'
-import HasPendingTransactions from './HasPendingTransactions'
 import HasValidation from './HasValidation'
 import { Failure, Success } from '../../../adt/dist/validation'
 
@@ -54,6 +53,9 @@ const Block = (pendingTransactions = [], previousHash) => {
           proofOfWork(this, ''.padStart(this.difficulty, '0'))
         )
       },
+      countPendingTransactions () {
+        return this.pendingTransactions.length
+      },
       /**
        * Check whether this block is a genesis block (first block in a any chain)
        * @return {Boolean} Whether this is a genesis block
@@ -71,8 +73,7 @@ const Block = (pendingTransactions = [], previousHash) => {
             // 1. Check hash length
             this.hash.length === 64 &&
             // 2. Check hash tampering
-            this.hash ===
-              this.calculateHash(this.pendingTransactionsToString()) &&
+            this.hash === this.calculateHash() &&
             // 3. Check difficulty was met
             this.hash.toString().substring(0, this.difficulty) ===
               Array(this.difficulty)
@@ -112,8 +113,7 @@ const Block = (pendingTransactions = [], previousHash) => {
   }
   return Object.assign(
     { ...props.state, ...props.methods, ...props.interop },
-    HasHash(['timestamp', 'previousHash', 'nonce']),
-    HasPendingTransactions(),
+    HasHash(['timestamp', 'previousHash', 'nonce', 'pendingTransactions']),
     HasValidation()
   )
 }
@@ -125,7 +125,7 @@ const proofOfWork = (block, hashPrefix, nonce = 1) => {
   }
   // Continue to compute the hash again with higher nonce value
   block.nonce = nonce
-  block.hash = block.calculateHash(block.pendingTransactionsToString())
+  block.hash = block.calculateHash()
   return proofOfWork(block, hashPrefix, nonce + 1)
 }
 
