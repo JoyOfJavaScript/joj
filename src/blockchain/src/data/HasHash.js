@@ -27,11 +27,17 @@ const HasHash = (
    * @return {String} A hash value
    */
   calculateHash () {
-    return computeCipher(options)(keys.map(k => this[k]))
+    return compose(
+      computeCipher(options),
+      assemble,
+      props(keys)
+    )(this)
   }
 })
 
-export const generateDigest = curry((options, data) =>
+export const props = curry((keys, obj) => keys.map(k => obj[k]))
+
+export const computeCipher = curry((options, data) =>
   crypto
     .createHash(options.algorithm)
     .update(data)
@@ -45,18 +51,6 @@ export const generateDigest = curry((options, data) =>
  * @return {String} Concatenated string of all provided pieces
  */
 export const assemble = (...pieces) => pieces.map(JSON.stringify).join('')
-
-/**
- * Calculates a hash from given block data pieces
- *
- * @param {Array} pieces Pieces of data to join together into a single string
- * @return {String} Computed cipher
- */
-const computeCipher = options =>
-  compose(
-    generateDigest(options),
-    assemble
-  )
 
 HasHash.init = (...args) =>
   process.env.LOG

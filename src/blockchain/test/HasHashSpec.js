@@ -1,5 +1,5 @@
 import { assert } from 'chai'
-import { assemble, generateDigest } from '../src/data/HasHash'
+import { assemble, computeCipher } from '../src/data/HasHash'
 
 describe('Has Hash Spec', () => {
   it('Should compute a SHA256 cicpher', () => {
@@ -9,7 +9,7 @@ describe('Has Hash Spec', () => {
       funds: 10.0
     }
     assert.equal(
-      generateDigest(
+      computeCipher(
         {
           algorithm: 'SHA256',
           encoding: 'hex'
