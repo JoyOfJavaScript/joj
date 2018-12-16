@@ -168,7 +168,7 @@ describe('Transfer Funds Test suite', () => {
         genesis: block.isGenesis() ? '\u2714' : false,
         previousHash: block.previousHash.valueOf(),
         hash: block.hash.valueOf(),
-        count: block.countPendingTransactions()
+        count: block.pendingTransactions.length
       }))
     )
 

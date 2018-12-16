@@ -38,7 +38,9 @@ class BitcoinService {
    */
   async mineBlock (newBlock) {
     console.log(
-      `Found ${newBlock.countPendingTransactions()} pending transactions in block`
+      `Found ${
+        newBlock.pendingTransactions.length
+      } pending transactions in block`
     )
     newBlock.previousHash = this.ledger.top().hash
     return this.ledger.push(await newBlock.mine())
@@ -132,7 +134,7 @@ class BitcoinService {
     txFee.hash = txFee.calculateHash()
 
     // Add new pending transactions in the blockchain representing the transfer and the fee
-    this.ledger.pendingTransactions.push(transfer, txFee)
+    this.ledger.pendingTransactions.push(transfer, txFee)    
     return transfer
   }
 

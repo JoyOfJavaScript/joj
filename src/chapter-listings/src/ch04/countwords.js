@@ -21,6 +21,11 @@ describe('Count words', () => {
     console.log('Result is: ', result)
     expect(result).to.be.equal(3)
   })
+  it('pipeline', () => {
+    // const result = 2 |> double |> (x => 3 + x) |> (x => toStringBase(2, x))
+    const result = '1 2 3' |> split |> count
+    expect(result).to.be.equal(3)
+  })
   it('Count blocks imperative', () => {
     function countWords (filename) {
       const buffer = fs.readFileSync(filename)
@@ -49,10 +54,7 @@ describe('Count words', () => {
   })
 
   it('Count blocks using compose2', () => {
-    const countWords = compose2(
-      compose2(count, split),
-      compose2(decode, read)
-    )
+    const countWords = compose2(compose2(count, split), compose2(decode, read))
 
     const result = countWords(file)
     console.log('Result is: ', result)

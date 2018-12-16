@@ -1,7 +1,7 @@
 import '../lang/object'
+import { Failure, Success } from '../../../adt/dist/validation'
 import HasHash from './HasHash'
 import HasValidation from './HasValidation'
-import { Failure, Success } from '../../../adt/dist/validation'
 
 /**
  * Transactional blocks contain the set of all pending transactions in the chain
@@ -22,7 +22,6 @@ const Block = (pendingTransactions = [], previousHash) => {
       previousHash,
       pendingTransactions,
       difficulty: 2,
-      index: 0,
       hash: undefined, // Gets computed later
       nonce: 0,
       timestamp: Date.now()
@@ -50,11 +49,8 @@ const Block = (pendingTransactions = [], previousHash) => {
        */
       mine: async function () {
         return Promise.resolve(
-          proofOfWork(this, ''.padStart(this.difficulty, '0'))
+          proofOfWork(this, ''.padStart(this.difficulty, '0'), this.nonce)
         )
-      },
-      countPendingTransactions () {
-        return this.pendingTransactions.length
       },
       /**
        * Check whether this block is a genesis block (first block in a any chain)
@@ -69,20 +65,24 @@ const Block = (pendingTransactions = [], previousHash) => {
         } else {
           // Compare each block with its previous
           const previous = this.blockchain.lookUp(this.previousHash)
-          const result =
-            // 1. Check hash length
-            this.hash.length === 64 &&
-            // 2. Check hash tampering
-            this.hash === this.calculateHash() &&
-            // 3. Check difficulty was met
+
+          const checkLength = len => () => this.hash.length === len
+          const checkNoTampering = () => this.hash === this.calculateHash()
+          const checkDifficulty = () =>
             this.hash.toString().substring(0, this.difficulty) ===
-              Array(this.difficulty)
-                .fill(0)
-                .join('') &&
-            // 4. Check blocks form a properly linked chain using hashes
-            this.previousHash === previous.hash &&
-            // 5. Check timestamps
-            this.timestamp >= previous.timestamp
+            Array(this.difficulty)
+              .fill(0)
+              .join('')
+          const checkLinkage = () => this.previousHash === previous.hash
+          const checkTimestamp = () => this.timestamp >= previous.timestamp
+
+          const result = [
+            checkLength(64),
+            checkNoTampering,
+            checkDifficulty,
+            checkLinkage,
+            checkTimestamp
+          ].reduce((a, b) => a && b)
 
           return result
             ? Success(true)
@@ -99,8 +99,7 @@ const Block = (pendingTransactions = [], previousHash) => {
           hash: this.hash,
           nonce: this.nonce,
           timestamp: this.timestamp,
-          index: this.index,
-          pendingTransactions: this.countPendingTransactions()
+          pendingTransactions: this.pendingTransactions.length
         }
       }
     },
