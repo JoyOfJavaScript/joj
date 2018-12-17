@@ -24,7 +24,7 @@ const Money = (currency = BITCOIN, amount = 0) => ({
   plus: m => Money(currency, amount + m.amount),
   times: m => Money(currency, amount * m.amount),
   compareTo: other => amount - other.amount,
-  asNegative: () => Money(currency, -amount),
+  asNegative: () => Money(currency, amount * -1),
   [Symbol.toPrimitive]: () => precisionRound(amount, 2),
   [Symbol.hasInstance]: i => i.constructor.name === 'Money'
 })
@@ -42,7 +42,7 @@ const precisionRound = (number, precision) => {
 }
 
 // Zero
-Money.zero = currency => Money(currency, 0)
+Money.zero = (currency = BITCOIN) => Money(currency, 0)
 Money.Currencies = {
   Bitcoin: BITCOIN
 }

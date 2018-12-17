@@ -1,5 +1,6 @@
 import '../lang/object'
 import { Failure, Success } from '../../../adt/dist/validation'
+import { curry } from '../../../adt/dist/combinators'
 import HasHash from './HasHash'
 import HasValidation from './HasValidation'
 
@@ -66,23 +67,23 @@ const Block = (pendingTransactions = [], previousHash) => {
           // Compare each block with its previous
           const previous = this.blockchain.lookUp(this.previousHash)
 
-          const checkLength = len => () => this.hash.length === len
-          const checkNoTampering = () => this.hash === this.calculateHash()
-          const checkDifficulty = () =>
-            this.hash.toString().substring(0, this.difficulty) ===
-            Array(this.difficulty)
-              .fill(0)
-              .join('')
-          const checkLinkage = () => this.previousHash === previous.hash
-          const checkTimestamp = () => this.timestamp >= previous.timestamp
+          const checkLength = curry((len, b) => () => b.hash.length === len)
+          const checkNoTampering = b => b.hash === b.calculateHash()
+          const checkDifficulty = curry(
+            (difficulty, b) =>
+              b.hash.substring(0, difficulty) === '0'.repeat(difficulty)
+          )
+          const checkLinkage = curry((p, b) => b.previousHash === p.hash)
+          const checkTimestamps = curry((p, b) => b.timestamp >= p.timestamp)
 
           const result = [
             checkLength(64),
             checkNoTampering,
-            checkDifficulty,
-            checkLinkage,
-            checkTimestamp
-          ].reduce((a, b) => a && b)
+            checkDifficulty(this.difficulty),
+            checkLinkage(previous),
+            checkTimestamps(previous)
+          ].every(f => f(this))
+          // .reduce((r, f) => r && f(this))
 
           return result
             ? Success(true)

@@ -40,7 +40,7 @@ describe('Transfer Funds Test suite', () => {
     // Mine some initial block, after mining the reward is BTC 100 for wa
     await bitcoinService.minePendingTransactions(miner.address)
 
-    const balance = bitcoinService.calculateBalanceOfWallet(miner.address)
+    const balance = miner.balance(ledger)
 
     // Balance is zero because the reward has not been mined in the blockchain
     console.log('Miner starts out with', balance)
@@ -57,11 +57,11 @@ describe('Transfer Funds Test suite', () => {
     )
     await bitcoinService.minePendingTransactions(miner.address)
 
-    let lukeBalance = bitcoinService.calculateBalanceOfWallet(luke.address)
+    let lukeBalance = luke.balance(ledger)
     console.log("Luke's balance is", lukeBalance)
     assert.isOk(lukeBalance.equals((20).btc()))
 
-    let minerBalance = bitcoinService.calculateBalanceOfWallet(miner.address)
+    let minerBalance = miner.balance(ledger)
     assert.isOk(
       minerBalance.equals((104.6).btc()),
       `Miner's balance is ${minerBalance}`

@@ -47,6 +47,7 @@ class BitcoinService {
   }
 
   /**
+   * (Imperative version)
    * Calculates the balance of the chain looking into all of the pending
    * transactions inside all the blocks in the chain
    *
@@ -134,7 +135,7 @@ class BitcoinService {
     txFee.hash = txFee.calculateHash()
 
     // Add new pending transactions in the blockchain representing the transfer and the fee
-    this.ledger.pendingTransactions.push(transfer, txFee)    
+    this.ledger.pendingTransactions.push(transfer, txFee)
     return transfer
   }
 
