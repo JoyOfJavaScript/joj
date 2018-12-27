@@ -13,37 +13,22 @@ import HasValidation from './HasValidation'
  * properties of such block. Blocks are immutable with respect to their hash, if the hash of a block
  * changes, it's a different block
  *
- * @param {Array}     pendingTransactions Array of pending transactions from the chain
  * @param {String} previousHash        Reference to the previous block in the chain
+ * @param {Array}  pendingTransactions Array of pending transactions from the chain
  * @return {Block} Newly created block with its own computed hash
  */
-const Block = (pendingTransactions = [], previousHash) => {
+const Block = (previousHash, pendingTransactions = []) => {
   const props = {
     state: {
       previousHash,
       pendingTransactions,
       difficulty: 2,
-      hash: undefined, // Gets computed later
       nonce: 0,
-      timestamp: Date.now()
+      timestamp: Date.now(),
+      hash: undefined, // Gets computed later
+      blockchain: undefined // Gets set after construction
     },
     methods: {
-      /**
-       * Set the blockchain container this block is part of
-       * @param {Blockchain} chain Blockchain object
-       * @return {Block} This block's reference
-       */
-      set blockchain (chain) {
-        this.chain = chain
-        return this
-      },
-      /**
-       * Get the blockchain container this block is part of
-       * @return {Blockchain} This block's reference
-       */
-      get blockchain () {
-        return this.chain
-      },
       /**
        * Execute proof of work algorithm to mine block
        * @return {Promise<Block>} Mined block
@@ -58,7 +43,7 @@ const Block = (pendingTransactions = [], previousHash) => {
        * @return {Boolean} Whether this is a genesis block
        */
       isGenesis () {
-        return this.previousHash.valueOf() === '0'.repeat(64)
+        return this.previousHash === '0'.repeat(64)
       },
       isValid () {
         if (this.isGenesis()) {
@@ -128,5 +113,7 @@ const proofOfWork = (block, hashPrefix, nonce = 1) => {
   block.hash = block.calculateHash()
   return proofOfWork(block, hashPrefix, nonce + 1)
 }
+
+Block.isGenesis = b => b.isGenesis()
 
 export default Block

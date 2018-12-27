@@ -76,7 +76,7 @@ class BitcoinService {
     // Mine block and pass it all pending transactions in the chain
     // In reality, blocks are not to exceed 1MB, so not all tx are sent to all blocks
     // We keep transactions immutable by substracting similar transactions for the fee
-    return this.mineBlock(Block(this.ledger.pendingTransactions)).then(
+    return this.mineBlock(Block(null, this.ledger.pendingTransactions)).then(
       block => {
         // Reward is bigger when there are more transactions to process
         const fee =
@@ -95,7 +95,7 @@ class BitcoinService {
         const reward = Transaction(
           this.network.address,
           address,
-          Money.add(Money('₿', fee), MINING_REWARD),
+          Money.sum(Money('₿', fee), MINING_REWARD),
           'Mining Reward'
         )
         reward.signature = reward.generateSignature(this.network.privateKey)

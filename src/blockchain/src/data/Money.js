@@ -1,6 +1,6 @@
 import Validation from '../../../adt/dist/validation'
 import { Failure, Success } from '../../../adt/dist/validation'
-import { composeM } from '../../../adt/dist/combinators'
+import { composeM, curry } from '../../../adt/dist/combinators'
 
 export const BITCOIN = '₿'
 
@@ -46,6 +46,7 @@ Money.zero = (currency = BITCOIN) => Money(currency, 0)
 Money.Currencies = {
   Bitcoin: BITCOIN
 }
+Money.round = m => m.round()
 
 // Compare money objects
 Money.compare = (m1, m2) =>
@@ -54,7 +55,7 @@ Money.compare = (m1, m2) =>
     .merge()
 
 // Add two money objects
-Money.add = (m1, m2) =>
+Money.sum = (m1, m2) =>
   Validation.of(x => m1.plus(m2))
     .ap(currencyMatch(m1, m2))
     .merge()

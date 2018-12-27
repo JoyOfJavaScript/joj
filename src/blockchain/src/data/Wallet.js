@@ -1,6 +1,17 @@
 import Money from './Money'
-import { compose, curry } from '../../../adt/dist/combinators'
+import {
+  compose,
+  curry,
+  filter,
+  flatMap,
+  flatten,
+  map,
+  not,
+  prop,
+  reduce
+} from '../../../adt/dist/combinators'
 import 'core-js/fn/array/flatten'
+import 'core-js/fn/array/flat-map'
 
 /**
  * Construct a new Wallet. The private key is used to sign the data and the
@@ -21,33 +32,74 @@ const Wallet = (publicKey, privateKey) => {
         return publicKey
       },
       balance (ledger) {
-        return computeBalance(ledger, this.publicKey)
+        return computeBalance(this.publicKey)(ledger)
       }
     }
   }
   return { ...props.state, ...props.method }
 }
 
-export function computeBalance (ledger, address) {
-  const prop = curry((name, a) => a[name] && a[name])
-  const balanceOf = curry((addr, tx) =>
-    Money.add(
-      tx.recipient === addr ? tx.funds : Money.zero(),
-      tx.sender === addr ? tx.funds.asNegative() : Money.zero()
-    )
+const balanceOf = curry((addr, tx) =>
+  Money.sum(
+    tx.recipient === addr ? tx.funds : Money.zero(),
+    tx.sender === addr ? tx.funds.asNegative() : Money.zero()
+  )
+)
+
+const computeBalance = address =>
+  compose(
+    Money.round,
+    reduce(Money.sum, Money.zero()),
+    map(balanceOf(address)),
+    flatten,
+    map(prop('pendingTransactions')),
+    filter(
+      compose(
+        not,
+        prop('isGenesis')
+      )
+    ),
+    Array.from
   )
 
-  return ledger
-    .toArray()
-    .filter(prop('isGenesis'))
-    .map(prop('pendingTransactions'))
-    .flatten()
+export function computeBalance2 (address, ledger) {
+  // return compose(
+  //   Money.round,
+  //   reduce(Money.sum, Money.zero()),
+  //   map(balanceOf(address)),
+  //   flatten,
+  //   map(prop('pendingTransactions')),
+  //   filter(compose(not, prop('isGenesis'))),
+  //   Array.from
+  // )(ledger)
+
+  // return compose(
+  //   Money.round,
+  //   reduce(Money.sum, Money.zero()),
+  //   map(balanceOf(address)),
+  //   flatMap(prop('pendingTransactions')),
+  //   filter(
+  //     compose(
+  //       not,
+  //       prop('isGenesis')
+  //     )
+  //   ),
+  //   Array.from
+  // )(ledger)
+
+  // return Array.from(ledger)
+  //   .filter(not(prop('isGenesis')))
+  //   .map(prop('pendingTransactions'))
+  //   .flatten()
+  //   .map(balanceOf(address))
+  //   .reduce(Money.sum, Money.zero())
+  //   .round()
+
+  return Array.from(ledger)
+    .filter(not(prop('isGenesis')))
+    .flatMap(prop('pendingTransactions'))
     .map(balanceOf(address))
-    .map(a => {
-      console.log(a)
-      return a
-    })
-    .reduce(Money.add, Money.zero())
+    .reduce(Money.sum, Money.zero())
     .round()
 }
 
