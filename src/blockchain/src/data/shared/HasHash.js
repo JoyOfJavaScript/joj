@@ -1,4 +1,4 @@
-import { compose, curry } from '../../../../adt/dist/combinators'
+import { compose, curry, props } from '../../../../adt/dist/combinators'
 import LoggerHandler from '../../common/LoggerHandler'
 import crypto from 'crypto'
 
@@ -34,8 +34,6 @@ const HasHash = (
     )(this)
   }
 })
-
-export const props = curry((keys, obj) => keys.map(k => obj[k]))
 
 export const computeCipher = curry((options, data) =>
   crypto
