@@ -1,6 +1,7 @@
-import { compose, curry, props } from '../../../../adt/dist/combinators'
+import { compose, props } from '../../../../adt/dist/combinators'
 import LoggerHandler from '../../common/LoggerHandler'
-import crypto from 'crypto'
+import assemble from './has_hash/assemble'
+import computeCipher from './has_hash/compute_cipher'
 
 const DEFAULT_ALGO_SHA256 = 'SHA256' // hashcash-SHA256^2 (bitcoin)
 const DEFAULT_ENCODING_HEX = 'hex'
@@ -34,21 +35,6 @@ const HasHash = (
     )(this)
   }
 })
-
-export const computeCipher = curry((options, data) =>
-  crypto
-    .createHash(options.algorithm)
-    .update(data)
-    .digest(options.encoding)
-)
-
-/**
- * Format the provided data pieces and joins them together
- *
- * @param {Array} pieces Pieces of data to join together into a single string
- * @return {String} Concatenated string of all provided pieces
- */
-export const assemble = (...pieces) => pieces.map(JSON.stringify).join('')
 
 HasHash.init = (...args) =>
   process.env.LOG
