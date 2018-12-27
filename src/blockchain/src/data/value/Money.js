@@ -1,6 +1,6 @@
-import Validation from '../../../adt/dist/validation'
-import { Failure, Success } from '../../../adt/dist/validation'
-import { composeM, curry } from '../../../adt/dist/combinators'
+import Validation from '../../../../adt/dist/validation'
+import { Failure, Success } from '../../../../adt/dist/validation'
+import { composeM, curry } from '../../../../adt/dist/combinators'
 
 export const BITCOIN = '₿'
 

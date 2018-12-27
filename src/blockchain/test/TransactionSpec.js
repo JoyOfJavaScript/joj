@@ -1,5 +1,5 @@
-import Key from '../src/data/Key'
-import Money from '../src/data/Money'
+import Key from '../src/data/value/Key'
+import Money from '../src/data/value/Money'
 import Transaction from '../src/data/Transaction'
 import { assert } from 'chai'
 

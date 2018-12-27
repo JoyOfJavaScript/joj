@@ -1,5 +1,5 @@
 import { assert } from 'chai'
-import { assemble, computeCipher } from '../src/data/HasHash'
+import { assemble, computeCipher } from '../src/data/shared/HasHash'
 
 describe('Has Hash Spec', () => {
   it('Should compute a SHA256 cicpher', () => {

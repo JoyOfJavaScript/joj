@@ -1,5 +1,5 @@
-import { compose, curry } from '../../../adt/dist/combinators'
-import LoggerHandler from '../common/LoggerHandler'
+import { compose, curry } from '../../../../adt/dist/combinators'
+import LoggerHandler from '../../common/LoggerHandler'
 import crypto from 'crypto'
 
 const DEFAULT_ALGO_SHA256 = 'SHA256' // hashcash-SHA256^2 (bitcoin)

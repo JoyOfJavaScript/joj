@@ -1,4 +1,4 @@
-import { Success } from '../../../adt/dist/validation'
+import { Success } from '../../../../adt/dist/validation'
 
 /**
  * HasValidation mixin.

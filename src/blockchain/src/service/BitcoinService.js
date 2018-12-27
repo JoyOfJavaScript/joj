@@ -1,11 +1,10 @@
 import Block from '../data/Block'
 import { MINING_REWARD } from '../settings'
-import Money from '../data/Money'
+import Money from '../data/value/Money'
 import Transaction from '../data/Transaction'
 import Wallet from '../data/Wallet'
 import fs from 'fs'
 import path from 'path'
-import { compose } from '../../../adt/dist/combinators'
 
 class BitcoinService {
   static BASE = path.join(__dirname, '../../..', 'blockchain-wallets')

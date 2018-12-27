@@ -1,14 +1,8 @@
 import '../src/lang/object'
-import CryptoSigner from '../src/data/CryptoSigner'
-import HasSignature from '../src/data/HasSignature'
+import HasSignature from '../src/data/shared/HasSignature'
 import { assert } from 'chai'
 import fs from 'fs'
 import path from 'path'
-
-const ENCODING_HEX = 'hex'
-const SIGN_ALGO = 'RSA-SHA256'
-
-const signer = CryptoSigner({ algorithm: SIGN_ALGO, encoding: ENCODING_HEX })
 
 describe('Signature', () => {
   it('Should return on verify after 3 attempts', () => {
@@ -25,10 +19,7 @@ describe('Signature', () => {
         sender: fs.readFileSync(coinbasepublicKeyPath, 'utf8'),
         recipient: fs.readFileSync(lukePublicKeyPath, 'utf8')
       },
-      HasSignature({
-        signer,
-        keys: ['sender', 'recipient']
-      })
+      HasSignature(['sender', 'recipient'])
     )
 
     console.log(signature)

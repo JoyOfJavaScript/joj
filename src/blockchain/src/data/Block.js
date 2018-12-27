@@ -1,8 +1,8 @@
 import '../lang/object'
 import { Failure, Success } from '../../../adt/dist/validation'
+import HasHash from './shared/HasHash'
+import HasValidation from './shared/HasValidation'
 import { curry } from '../../../adt/dist/combinators'
-import HasHash from './HasHash'
-import HasValidation from './HasValidation'
 
 /**
  * Transactional blocks contain the set of all pending transactions in the chain
@@ -113,7 +113,5 @@ const proofOfWork = (block, hashPrefix, nonce = 1) => {
   block.hash = block.calculateHash()
   return proofOfWork(block, hashPrefix, nonce + 1)
 }
-
-Block.isGenesis = b => b.isGenesis()
 
 export default Block

@@ -1,4 +1,4 @@
-import Money from './Money'
+import Money from './value/Money'
 import {
   compose,
   curry,

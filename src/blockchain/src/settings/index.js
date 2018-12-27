@@ -1,4 +1,4 @@
-import Money from '../data/Money'
+import Money from '../data/value/Money'
 
 export const MINING_REWARD = Money('₿', 12.5) // ₿12.5 reward for miners
 export const MAX_LISTENERS = 1 // Allow only 1 node

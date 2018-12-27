@@ -1,7 +1,6 @@
-import CryptoSigner from './CryptoSigner'
-import HasHash from './HasHash'
-import HasSignature from './HasSignature'
-import HasValidation from './HasValidation'
+import HasHash from './shared/HasHash'
+import HasSignature from './shared/HasSignature'
+import HasValidation from './shared/HasValidation'
 import { Failure, Success } from '../../../adt/dist/validation'
 
 /**
@@ -16,13 +15,7 @@ import { Failure, Success } from '../../../adt/dist/validation'
  * @param {CryptoSigner} signer Signer to use for transactions
  * @return {Transaction} Newly created transaction
  */
-const Transaction = (
-  sender,
-  recipient,
-  funds,
-  description = 'Generic',
-  signer = CryptoSigner()
-) => {
+const Transaction = (sender, recipient, funds, description = 'Generic') => {
   const props = {
     state: {
       sender,
@@ -87,11 +80,8 @@ const Transaction = (
   }
   return Object.assign(
     { ...props.state, ...props.methods, ...props.interop },
-    HasHash(['sender', 'recipient', 'funds', 'nonce']),
-    HasSignature({
-      signer,
-      keys: ['sender', 'recipient', 'funds']
-    }),
+    HasHash(['timestamp', 'sender', 'recipient', 'funds', 'nonce']),
+    HasSignature(['sender', 'recipient', 'funds']),
     HasValidation()
   )
 }
