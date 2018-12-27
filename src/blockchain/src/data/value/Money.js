@@ -1,7 +1,7 @@
 import Validation from '../../../../adt/dist/validation'
 import { Failure, Success } from '../../../../adt/dist/validation'
 import { composeM, curry } from '../../../../adt/dist/combinators'
-
+import precisionRound from './money/precision_round'
 export const BITCOIN = '₿'
 
 /**
@@ -28,18 +28,6 @@ const Money = (currency = BITCOIN, amount = 0) => ({
   [Symbol.toPrimitive]: () => precisionRound(amount, 2),
   [Symbol.hasInstance]: i => i.constructor.name === 'Money'
 })
-
-/**
- * Returns the value of a number rounded to the nearest integer precision.
- *
- * @param  {number} number     Number to round
- * @param  {number} precision  Precision to round to
- * @return {number} A round number
- */
-const precisionRound = (number, precision) => {
-  const factor = Math.pow(10, precision)
-  return Math.round(number * factor) / factor
-}
 
 // Zero
 Money.zero = (currency = BITCOIN) => Money(currency, 0)
@@ -99,10 +87,12 @@ const currencyMatch = (m1, m2) =>
 
 const notNaN = num =>
   !isNaN(num) ? Success(num) : Failure([`Number (${num}) can't be NaN`])
+
 const isNumber = num =>
   typeof num === 'number'
     ? Success(num)
     : Failure([`Input (${num}) is not a number`])
+
 const inRange = num =>
   num >= 0
     ? Success(num)
