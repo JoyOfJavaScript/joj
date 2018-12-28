@@ -129,7 +129,12 @@ class BitcoinService {
     transfer.signature = transfer.generateSignature(walletA.privateKey)
     transfer.hash = transfer.calculateHash()
     // Sender pays the fee
-    const txFee = Transaction(walletA.address, this.network.address, fee)
+    const txFee = Transaction(
+      walletA.address,
+      this.network.address,
+      fee,
+      'Transaction Fee'
+    )
     txFee.signature = txFee.generateSignature(walletA.privateKey)
     txFee.hash = txFee.calculateHash()
 

@@ -1,4 +1,5 @@
-import computeBalance from './wallet/compute_balance5'
+import computeBalance from './wallet/compute_balance'
+import { curry } from '../../../adt/dist/combinators'
 
 /**
  * Construct a new Wallet. The private key is used to sign the data and the
@@ -8,19 +9,20 @@ import computeBalance from './wallet/compute_balance5'
  * @param {Key} privateKey Private key
  * @return {Wallet} A new wallet
  */
-const Wallet = (publicKey, privateKey) => {
-  return new class Wallet {
-    constructor () {
-      this.publicKey = publicKey
-      this.privateKey = privateKey
-    }
-    get address () {
-      return publicKey
-    }
-    balance (ledger) {
-      return computeBalance(this.publicKey)(ledger)
-    }
-  }()
-}
+const Wallet = curry(
+  (publicKey, privateKey) =>
+    new class Wallet {
+      constructor () {
+        this.publicKey = publicKey
+        this.privateKey = privateKey
+      }
+      get address () {
+        return publicKey
+      }
+      balance (ledger) {
+        return computeBalance(this.publicKey)(ledger)
+      }
+    }()
+)
 
 export default Wallet

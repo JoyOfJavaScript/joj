@@ -1,7 +1,8 @@
+import { Failure, Success } from '../../../adt/dist/validation'
+import { curry } from '../../../adt/dist/combinators'
 import HasHash from './shared/HasHash'
 import HasSignature from './shared/HasSignature'
 import HasValidation from './shared/HasValidation'
-import { Failure, Success } from '../../../adt/dist/validation'
 
 /**
  * A transaction holds information (keys) identifying who is making the payment
@@ -15,13 +16,13 @@ import { Failure, Success } from '../../../adt/dist/validation'
  * @param {CryptoSigner} signer Signer to use for transactions
  * @return {Transaction} Newly created transaction
  */
-const Transaction = (sender, recipient, funds, description = 'Generic') =>
+const Transaction = curry((sender, recipient, funds, description) =>
   Object.assign(
     new class Transaction {
       constructor () {
         this.sender = sender
         this.recipient = recipient
-        this.description = description
+        this.description = description || 'Generic'
         this.funds = funds
         this.nonce = 0
         this.timestamp = Date.now()
@@ -86,6 +87,7 @@ const Transaction = (sender, recipient, funds, description = 'Generic') =>
     HasSignature(['sender', 'recipient', 'funds']),
     HasValidation()
   )
+)
 
 export default Transaction
 
