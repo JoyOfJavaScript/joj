@@ -1,8 +1,10 @@
+import { currencyMatch, isNumber, notNaN } from './money/validations'
 import Validation from '../../../../adt/dist/validation'
-import { Failure, Success } from '../../../../adt/dist/validation'
-import { composeM, curry } from '../../../../adt/dist/combinators'
+import { composeM } from '../../../../adt/dist/combinators'
 import precisionRound from './money/precision_round'
+
 export const BITCOIN = '₿'
+export const US_DOLLAR = '$'
 
 /**
  * Money value object
@@ -46,6 +48,7 @@ Money.compare = (m1, m2) =>
 Money.sum = (m1, m2) =>
   Validation.of(x => m1.plus(m2))
     .ap(currencyMatch(m1, m2))
+    .flatMap(validateAmount)
     .merge()
 
 // Subtract two Money objects
@@ -74,30 +77,6 @@ if (typeof Number.prototype.btc !== 'function') {
   })
 }
 
-/**
- * Check that currency matches
- * @param  {Money} m1 First instance
- * @param  {Money} m2 Second instance
- * @return {Validation} Validates whether currencies match
- */
-const currencyMatch = (m1, m2) =>
-  m1.currency === m2.currency
-    ? Validation.Success(true)
-    : Validation.Failure(['Currency mismatch!'])
-
-const notNaN = num =>
-  !isNaN(num) ? Success(num) : Failure([`Number (${num}) can't be NaN`])
-
-const isNumber = num =>
-  typeof num === 'number'
-    ? Success(num)
-    : Failure([`Input (${num}) is not a number`])
-
-const inRange = num =>
-  num >= 0
-    ? Success(num)
-    : Failure([`Number (${num}) must be greater or equal to zero`])
-
-const validateAmount = composeM(inRange, isNumber, notNaN)
+const validateAmount = composeM(isNumber, notNaN)
 
 export default Money
