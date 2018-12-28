@@ -1,8 +1,16 @@
 import '../lang/object'
 import { Failure, Success } from '../../../adt/dist/validation'
+import {
+  checkDifficulty,
+  checkLength,
+  checkLinkage,
+  checkNoTampering,
+  checkTimestamps
+} from './block/validations'
 import HasHash from './shared/HasHash'
 import HasValidation from './shared/HasValidation'
 import { curry } from '../../../adt/dist/combinators'
+import proofOfWork from './block/proof_of_work'
 
 /**
  * Transactional blocks contain the set of all pending transactions in the chain
@@ -17,12 +25,12 @@ import { curry } from '../../../adt/dist/combinators'
  * @param {Array}  pendingTransactions Array of pending transactions from the chain
  * @return {Block} Newly created block with its own computed hash
  */
-const Block = (previousHash, pendingTransactions = []) =>
+const Block = curry((previousHash, pendingTransactions) =>
   Object.assign(
     new class Block {
       constructor () {
         this.previousHash = previousHash
-        this.pendingTransactions = pendingTransactions
+        this.pendingTransactions = pendingTransactions || []
         this.difficulty = 2
         this.nonce = 0
         this.timestamp = Date.now()
@@ -51,15 +59,6 @@ const Block = (previousHash, pendingTransactions = []) =>
         } else {
           // Compare each block with its previous
           const previous = this.blockchain.lookUp(this.previousHash)
-
-          const checkLength = curry((len, b) => () => b.hash.length === len)
-          const checkNoTampering = b => b.hash === b.calculateHash()
-          const checkDifficulty = curry(
-            (difficulty, b) =>
-              b.hash.substring(0, difficulty) === '0'.repeat(difficulty)
-          )
-          const checkLinkage = curry((p, b) => b.previousHash === p.hash)
-          const checkTimestamps = curry((p, b) => b.timestamp >= p.timestamp)
 
           const result = [
             checkLength(64),
@@ -97,24 +96,10 @@ const Block = (previousHash, pendingTransactions = []) =>
       [Symbol.iterator] () {
         return pendingTransactions[Symbol.iterator]()
       }
-
-      get [Symbol.toStringTag] () {
-        return 'Block'
-      }
     }(),
     HasHash(['timestamp', 'previousHash', 'nonce', 'pendingTransactions']),
     HasValidation()
   )
-
-// TODO: use trampolining to simulate TCO in order to reach mining difficulty 4
-const proofOfWork = (block, hashPrefix, nonce = 1) => {
-  if (block.hash && block.hash.toString().startsWith(hashPrefix)) {
-    return block
-  }
-  // Continue to compute the hash again with higher nonce value
-  block.nonce = nonce
-  block.hash = block.calculateHash()
-  return proofOfWork(block, hashPrefix, nonce + 1)
-}
+)
 
 export default Block

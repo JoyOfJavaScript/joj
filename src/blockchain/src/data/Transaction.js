@@ -48,7 +48,7 @@ const Transaction = curry((sender, recipient, funds, description) =>
        * @return {{String}} A friendly string representation
        */
       displayTransaction () {
-        return `Transaction ${description} from ${sender} to ${recipient} for ${this.money().toString()}`
+        return `Transaction ${description} from ${sender} to ${recipient} for ${this.funds.toString()}`
       }
 
       isValid () {
