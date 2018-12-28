@@ -1,17 +1,4 @@
-import Money from './value/Money'
-import {
-  compose,
-  curry,
-  filter,
-  flatMap,
-  flatten,
-  map,
-  not,
-  prop,
-  reduce
-} from '../../../adt/dist/combinators'
-import 'core-js/fn/array/flatten'
-import 'core-js/fn/array/flat-map'
+import computeBalance from './wallet/compute_balance5'
 
 /**
  * Construct a new Wallet. The private key is used to sign the data and the
@@ -22,85 +9,18 @@ import 'core-js/fn/array/flat-map'
  * @return {Wallet} A new wallet
  */
 const Wallet = (publicKey, privateKey) => {
-  const props = {
-    state: {
-      publicKey,
-      privateKey
-    },
-    method: {
-      get address () {
-        return publicKey
-      },
-      balance (ledger) {
-        return computeBalance(this.publicKey)(ledger)
-      }
+  return new class Wallet {
+    constructor () {
+      this.publicKey = publicKey
+      this.privateKey = privateKey
     }
-  }
-  return { ...props.state, ...props.method }
-}
-
-const balanceOf = curry((addr, tx) =>
-  Money.sum(
-    tx.recipient === addr ? tx.funds : Money.zero(),
-    tx.sender === addr ? tx.funds.asNegative() : Money.zero()
-  )
-)
-
-const computeBalance = address =>
-  compose(
-    Money.round,
-    reduce(Money.sum, Money.zero()),
-    map(balanceOf(address)),
-    flatten,
-    map(prop('pendingTransactions')),
-    filter(
-      compose(
-        not,
-        prop('isGenesis')
-      )
-    ),
-    Array.from
-  )
-
-export function computeBalance2 (address, ledger) {
-  // return compose(
-  //   Money.round,
-  //   reduce(Money.sum, Money.zero()),
-  //   map(balanceOf(address)),
-  //   flatten,
-  //   map(prop('pendingTransactions')),
-  //   filter(compose(not, prop('isGenesis'))),
-  //   Array.from
-  // )(ledger)
-
-  // return compose(
-  //   Money.round,
-  //   reduce(Money.sum, Money.zero()),
-  //   map(balanceOf(address)),
-  //   flatMap(prop('pendingTransactions')),
-  //   filter(
-  //     compose(
-  //       not,
-  //       prop('isGenesis')
-  //     )
-  //   ),
-  //   Array.from
-  // )(ledger)
-
-  // return Array.from(ledger)
-  //   .filter(not(prop('isGenesis')))
-  //   .map(prop('pendingTransactions'))
-  //   .flatten()
-  //   .map(balanceOf(address))
-  //   .reduce(Money.sum, Money.zero())
-  //   .round()
-
-  return Array.from(ledger)
-    .filter(not(prop('isGenesis')))
-    .flatMap(prop('pendingTransactions'))
-    .map(balanceOf(address))
-    .reduce(Money.sum, Money.zero())
-    .round()
+    get address () {
+      return publicKey
+    }
+    balance (ledger) {
+      return computeBalance(this.publicKey)(ledger)
+    }
+  }()
 }
 
 export default Wallet

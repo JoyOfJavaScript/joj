@@ -15,39 +15,41 @@ import { Failure, Success } from '../../../adt/dist/validation'
  * @param {CryptoSigner} signer Signer to use for transactions
  * @return {Transaction} Newly created transaction
  */
-const Transaction = (sender, recipient, funds, description = 'Generic') => {
-  const props = {
-    state: {
-      sender,
-      recipient,
-      description,
-      funds,
-      nonce: 0,
-      timestamp: Date.now(),
-      [Symbol.for('version')]: '1.0'
-    },
-    methods: {
+const Transaction = (sender, recipient, funds, description = 'Generic') =>
+  Object.assign(
+    new class Transaction {
+      constructor () {
+        this.sender = sender
+        this.recipient = recipient
+        this.description = description
+        this.funds = funds
+        this.nonce = 0
+        this.timestamp = Date.now()
+      }
       /**
        * Gets the numerical amount of the funds
        * @return {Number} Amount number
        */
       amount () {
         return funds.amount
-      },
+      }
+
       /**
        * Gets the currency
        * @return {String} Currency string
        */
       currency () {
         return funds.currency
-      },
+      }
+
       /**
        * Displays a friendly description of this transaction for reporting purposes
        * @return {{String}} A friendly string representation
        */
       displayTransaction () {
         return `Transaction ${description} from ${sender} to ${recipient} for ${this.money().toString()}`
-      },
+      }
+
       isValid () {
         const isDataValid = this.hash !== undefined
         const isSignatureValid = this.verifySignature()
@@ -58,7 +60,7 @@ const Transaction = (sender, recipient, funds, description = 'Generic') => {
             ? Failure([`Failed transaction signature check: ${this.hash}`])
             : Failure([`Invalid transaction: ${this.sender}`])
         }
-      },
+      }
       /**
        * Returns a minimal JSON represetation of this object
        * @return {Object} JSON object
@@ -70,21 +72,21 @@ const Transaction = (sender, recipient, funds, description = 'Generic') => {
           hash: this.hash.valueOf()
         }
       }
-    },
-    interop: {
-      // Empty iterator
-      [Symbol.iterator]: () => ({
-        next: () => ({ done: true })
-      })
-    }
-  }
-  return Object.assign(
-    { ...props.state, ...props.methods, ...props.interop },
+
+      get [Symbol.for('version')] () {
+        return '1.0'
+      }
+      [Symbol.iterator] () {
+        return {
+          next: () => ({ done: true })
+        }
+      }
+    }(),
     HasHash(['timestamp', 'sender', 'recipient', 'funds', 'nonce']),
     HasSignature(['sender', 'recipient', 'funds']),
     HasValidation()
   )
-}
+
 export default Transaction
 
 // https://medium.com/programmers-blockchain/creating-your-first-blockchain-with-java-part-2-transactions-2cdac335e0ce

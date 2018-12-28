@@ -17,34 +17,34 @@ import { curry } from '../../../adt/dist/combinators'
  * @param {Array}  pendingTransactions Array of pending transactions from the chain
  * @return {Block} Newly created block with its own computed hash
  */
-const Block = (previousHash, pendingTransactions = []) => {
-  const props = {
-    state: {
-      previousHash,
-      pendingTransactions,
-      difficulty: 2,
-      nonce: 0,
-      timestamp: Date.now(),
-      hash: undefined, // Gets computed later
-      blockchain: undefined // Gets set after construction
-    },
-    methods: {
+const Block = (previousHash, pendingTransactions = []) =>
+  Object.assign(
+    new class Block {
+      constructor () {
+        this.previousHash = previousHash
+        this.pendingTransactions = pendingTransactions
+        this.difficulty = 2
+        this.nonce = 0
+        this.timestamp = Date.now()
+        this.hash = undefined // Gets computed later
+        this.blockchain = undefined // Gets set after construction
+      }
       /**
        * Execute proof of work algorithm to mine block
        * @return {Promise<Block>} Mined block
        */
-      mine: async function () {
+      async mine () {
         return Promise.resolve(
           proofOfWork(this, ''.padStart(this.difficulty, '0'), this.nonce)
         )
-      },
+      }
       /**
        * Check whether this block is a genesis block (first block in a any chain)
        * @return {Boolean} Whether this is a genesis block
        */
       isGenesis () {
         return this.previousHash === '0'.repeat(64)
-      },
+      }
       isValid () {
         if (this.isGenesis()) {
           return Success(true)
@@ -74,7 +74,7 @@ const Block = (previousHash, pendingTransactions = []) => {
             ? Success(true)
             : Failure([`Validation failed for block ${this.hash}`])
         }
-      },
+      }
       /**
        * Returns the minimal JSON representation of this object
        * @return {Object} JSON object
@@ -88,20 +88,23 @@ const Block = (previousHash, pendingTransactions = []) => {
           pendingTransactions: this.pendingTransactions.length
         }
       }
-    },
-    interop: {
-      [Symbol.for('version')]: () => '1.0',
+
+      get [Symbol.for('version')] () {
+        return '1.0'
+      }
+
       // TODO: in chapter on symbols, create a symbol for [Symbol.observable] then show validating blockchain using it
-      [Symbol.iterator]: () => pendingTransactions[Symbol.iterator](),
-      [Symbol.toStringTag]: () => 'Block'
-    }
-  }
-  return Object.assign(
-    { ...props.state, ...props.methods, ...props.interop },
+      [Symbol.iterator] () {
+        return pendingTransactions[Symbol.iterator]()
+      }
+
+      get [Symbol.toStringTag] () {
+        return 'Block'
+      }
+    }(),
     HasHash(['timestamp', 'previousHash', 'nonce', 'pendingTransactions']),
     HasValidation()
   )
-}
 
 // TODO: use trampolining to simulate TCO in order to reach mining difficulty 4
 const proofOfWork = (block, hashPrefix, nonce = 1) => {
