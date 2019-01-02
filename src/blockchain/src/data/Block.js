@@ -25,7 +25,7 @@ import proofOfWork from './block/proof_of_work'
  * @param {Array}  pendingTransactions Array of pending transactions from the chain
  * @return {Block} Newly created block with its own computed hash
  */
-const Block = curry((previousHash, pendingTransactions) =>
+export default curry((previousHash, pendingTransactions) =>
   Object.assign(
     new class Block {
       constructor () {
@@ -101,5 +101,3 @@ const Block = curry((previousHash, pendingTransactions) =>
     HasValidation()
   )
 )
-
-export default Block

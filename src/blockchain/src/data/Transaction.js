@@ -1,8 +1,8 @@
 import { Failure, Success } from '../../../adt/dist/validation'
-import { curry } from '../../../adt/dist/combinators'
 import HasHash from './shared/HasHash'
 import HasSignature from './shared/HasSignature'
 import HasValidation from './shared/HasValidation'
+import { curry } from '../../../adt/dist/combinators'
 
 /**
  * A transaction holds information (keys) identifying who is making the payment
@@ -16,7 +16,7 @@ import HasValidation from './shared/HasValidation'
  * @param {CryptoSigner} signer Signer to use for transactions
  * @return {Transaction} Newly created transaction
  */
-const Transaction = curry((sender, recipient, funds, description) =>
+export default curry((sender, recipient, funds, description) =>
   Object.assign(
     new class Transaction {
       constructor () {
@@ -88,8 +88,6 @@ const Transaction = curry((sender, recipient, funds, description) =>
     HasValidation()
   )
 )
-
-export default Transaction
 
 // https://medium.com/programmers-blockchain/creating-your-first-blockchain-with-java-part-2-transactions-2cdac335e0ce
 // https://nodejs.org/api/crypto.html#crypto_class_sign

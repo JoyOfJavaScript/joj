@@ -19,7 +19,7 @@ import HasValidation from './shared/HasValidation'
 // Talk about species and the species pattern
 // http://exploringjs.com/es6/ch_classes.html#sec_species-pattern
 
-const Blockchain = (genesis = createGenesisBlock()) => {
+export default (genesis = createGenesisBlock()) => {
   const version = '1.0'
   const blocks = new Map([[genesis.hash.valueOf(), genesis]])
   let top = genesis
@@ -88,5 +88,3 @@ function createGenesisBlock (previousHash = '0'.repeat(64)) {
   genesis.hash = genesis.calculateHash()
   return genesis
 }
-
-export default Blockchain

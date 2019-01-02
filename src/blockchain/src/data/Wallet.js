@@ -9,7 +9,7 @@ import { curry } from '../../../adt/dist/combinators'
  * @param {Key} privateKey Private key
  * @return {Wallet} A new wallet
  */
-const Wallet = curry(
+export default curry(
   (publicKey, privateKey) =>
     new class Wallet {
       constructor () {
@@ -24,5 +24,3 @@ const Wallet = curry(
       }
     }()
 )
-
-export default Wallet
