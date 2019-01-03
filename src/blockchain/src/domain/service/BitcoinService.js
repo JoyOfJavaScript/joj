@@ -1,5 +1,5 @@
 import Block from '../Block'
-import { MINING_REWARD } from '../../settings'
+import { MINING_REWARD } from '../../infrastructure/settings'
 import Money from '../value/Money'
 import Transaction from '../Transaction'
 import Wallet from '../Wallet'
