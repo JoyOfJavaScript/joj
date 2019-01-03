@@ -1,5 +1,5 @@
 import { MethodCounter, TraceLog } from '../src/common/proxies'
-import BitcoinService from '../src/service/BitcoinService'
+import BitcoinService from '../src/domain/service/BitcoinService'
 import Blockchain from '../src/domain/Blockchain'
 import Key from '../src/domain/value/Key'
 import Money from '../src/domain/value/Money'

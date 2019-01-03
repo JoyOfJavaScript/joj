@@ -1,13 +1,13 @@
-import Block from '../domain/Block'
-import { MINING_REWARD } from '../settings'
-import Money from '../domain/value/Money'
-import Transaction from '../domain/Transaction'
-import Wallet from '../domain/Wallet'
+import Block from '../Block'
+import { MINING_REWARD } from '../../settings'
+import Money from '../value/Money'
+import Transaction from '../Transaction'
+import Wallet from '../Wallet'
 import fs from 'fs'
 import path from 'path'
 
 class BitcoinService {
-  static BASE = path.join(__dirname, '../../..', 'blockchain-wallets')
+  static BASE = path.join(__dirname, '../../../..', 'blockchain-wallets')
 
   /**
    * Constructs a BitcoinService instance with the specified blockchain ledger
