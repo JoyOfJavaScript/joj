@@ -3,7 +3,7 @@
  */
 
 import BitcoinService from '../service/BitcoinService'
-import Blockchain from '../data/Blockchain'
+import Blockchain from '../domain/Blockchain'
 
 const Peer = {
   init (id) {

@@ -1,8 +1,8 @@
-import Block from '../data/Block'
+import Block from '../domain/Block'
 import { MINING_REWARD } from '../settings'
-import Money from '../data/value/Money'
-import Transaction from '../data/Transaction'
-import Wallet from '../data/Wallet'
+import Money from '../domain/value/Money'
+import Transaction from '../domain/Transaction'
+import Wallet from '../domain/Wallet'
 import fs from 'fs'
 import path from 'path'
 

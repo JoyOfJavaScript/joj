@@ -1,5 +1,5 @@
 import { assert } from 'chai'
-import Wallet from '../src/data/Wallet'
+import Wallet from '../src/domain/Wallet'
 import path from 'path'
 import fs from 'fs'
 

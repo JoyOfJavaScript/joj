@@ -1,4 +1,4 @@
-import Money from '../src/data/value/Money'
+import Money from '../src/domain/value/Money'
 import assert from 'assert'
 
 describe('Money Value Object', () => {

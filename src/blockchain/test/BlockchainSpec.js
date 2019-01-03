@@ -1,4 +1,4 @@
-import BlockChain from '../src/data/Blockchain'
+import BlockChain from '../src/domain/Blockchain'
 import { PerfCount } from '../src/common/proxies'
 import { assert } from 'chai'
 

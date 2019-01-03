@@ -1,4 +1,4 @@
-import Block from '../src/data/Block'
+import Block from '../src/domain/Block'
 import { assert } from 'chai'
 
 describe('Block Spec', () => {

@@ -1,5 +1,5 @@
 import '../src/lang/object'
-import HasSignature from '../src/data/shared/HasSignature'
+import HasSignature from '../src/domain/shared/HasSignature'
 import { assert } from 'chai'
 import fs from 'fs'
 import path from 'path'

@@ -1,6 +1,6 @@
-import Key from '../src/data/value/Key'
-import Money from '../src/data/value/Money'
-import Transaction from '../src/data/Transaction'
+import Key from '../src/domain/value/Key'
+import Money from '../src/domain/value/Money'
+import Transaction from '../src/domain/Transaction'
 import { assert } from 'chai'
 
 describe('Transaction', () => {

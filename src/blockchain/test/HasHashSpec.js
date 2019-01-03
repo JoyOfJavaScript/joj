@@ -1,4 +1,4 @@
-import { assemble, computeCipher } from '../src/data/shared/has_hash'
+import { assemble, computeCipher } from '../src/domain/shared/has_hash'
 import { assert } from 'chai'
 
 console.log(assemble)
