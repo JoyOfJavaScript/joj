@@ -84,7 +84,7 @@ export default (genesis = createGenesisBlock()) => {
 
 function createGenesisBlock (previousHash = '0'.repeat(64)) {
   const pendingTransactions = [] // Could contain a first transaction like a starting reward
-  const genesis = Block(previousHash, pendingTransactions)
+  const genesis = Block(1, previousHash, pendingTransactions)
   genesis.hash = genesis.calculateHash()
   return genesis
 }

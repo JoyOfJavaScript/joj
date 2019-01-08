@@ -41,7 +41,6 @@ class BitcoinService {
         newBlock.pendingTransactions.length
       } pending transactions in block`
     )
-    newBlock.previousHash = this.ledger.top().hash
     return this.ledger.push(await newBlock.mine())
   }
 
@@ -75,40 +74,42 @@ class BitcoinService {
     // Mine block and pass it all pending transactions in the chain
     // In reality, blocks are not to exceed 1MB, so not all tx are sent to all blocks
     // We keep transactions immutable by substracting similar transactions for the fee
-    return this.mineBlock(Block(null, this.ledger.pendingTransactions)).then(
-      block => {
-        // Reward is bigger when there are more transactions to process
-        const fee =
-          Math.abs(
-            this.ledger.pendingTransactions
-              .filter(tx => tx.amount() < 0)
-              .map(tx => tx.amount())
-              .reduce((a, b) => a + b, 0)
-          ) *
-          this.ledger.pendingTransactions.length *
-          0.02
+    const previousHash = this.ledger.top().hash
+    const nextId = this.ledger.height + 1
+    return this.mineBlock(
+      Block(nextId, previousHash, this.ledger.pendingTransactions)
+    ).then(block => {
+      // Reward is bigger when there are more transactions to process
+      const fee =
+        Math.abs(
+          this.ledger.pendingTransactions
+            .filter(tx => tx.amount() < 0)
+            .map(tx => tx.amount())
+            .reduce((a, b) => a + b, 0)
+        ) *
+        this.ledger.pendingTransactions.length *
+        0.02
 
-        // Reset pending transactions for this blockchain
-        // Put fee transaction into the chain for next mining operation
-        // Network will reward the first miner to mine the block with the transaction fee
-        const reward = Transaction(
-          this.network.address,
-          address,
-          Money.sum(Money('₿', fee), MINING_REWARD),
-          'Mining Reward'
-        )
-        reward.signature = reward.generateSignature(this.network.privateKey)
-        reward.hash = reward.calculateHash()
+      // Reset pending transactions for this blockchain
+      // Put fee transaction into the chain for next mining operation
+      // Network will reward the first miner to mine the block with the transaction fee
+      const reward = Transaction(
+        this.network.address,
+        address,
+        Money.sum(Money('₿', fee), MINING_REWARD),
+        'Mining Reward'
+      )
+      reward.signature = reward.generateSignature(this.network.privateKey)
+      reward.id = reward.calculateHash()
 
-        // After the transactions have been added to a block, reset them with the reward for the next miner
-        this.ledger.pendingTransactions = [reward]
+      // After the transactions have been added to a block, reset them with the reward for the next miner
+      this.ledger.pendingTransactions = [reward]
 
-        // Validate the entire chain
-        this.ledger.validate()
+      // Validate the entire chain
+      this.ledger.validate()
 
-        return block
-      }
-    )
+      return block
+    })
   }
 
   // eslint-disable-next-line max-statements
@@ -127,7 +128,7 @@ class BitcoinService {
       description
     )
     transfer.signature = transfer.generateSignature(walletA.privateKey)
-    transfer.hash = transfer.calculateHash()
+    transfer.id = transfer.calculateHash()
     // Sender pays the fee
     const txFee = Transaction(
       walletA.address,
@@ -136,7 +137,7 @@ class BitcoinService {
       'Transaction Fee'
     )
     txFee.signature = txFee.generateSignature(walletA.privateKey)
-    txFee.hash = txFee.calculateHash()
+    txFee.id = txFee.calculateHash()
 
     // Add new pending transactions in the blockchain representing the transfer and the fee
     this.ledger.pendingTransactions.push(transfer, txFee)

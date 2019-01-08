@@ -26,6 +26,7 @@ export default curry((sender, recipient, funds, description) =>
         this.funds = funds
         this.nonce = 0
         this.timestamp = Date.now()
+        this.id = undefined // Gets computed  later
       }
       /**
        * Gets the numerical amount of the funds
@@ -52,13 +53,17 @@ export default curry((sender, recipient, funds, description) =>
       }
 
       isValid () {
-        const isDataValid = this.hash !== undefined
+        const isDataValid = this.id !== undefined
         const isSignatureValid = this.verifySignature()
         if (isDataValid && isSignatureValid) {
           return Success(true)
         } else {
           return isDataValid
-            ? Failure([`Failed transaction signature check: ${this.hash}`])
+            ? Failure([
+              `Failed transaction signature check for transaction: ${
+                this.id
+              }`
+            ])
             : Failure([`Invalid transaction: ${this.sender}`])
         }
       }
@@ -70,7 +75,7 @@ export default curry((sender, recipient, funds, description) =>
         return {
           from: this.sender,
           to: this.recipient,
-          hash: this.hash.valueOf()
+          id: this.id
         }
       }
 

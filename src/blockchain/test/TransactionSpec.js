@@ -6,9 +6,9 @@ import { assert } from 'chai'
 describe('Transaction', () => {
   it('Should create a valid transaction', () => {
     const tx = Transaction('sally', 'luke', Money('₿', 0.1), null)
-    tx.hash = tx.calculateHash()
-    console.log('Transaction Hash: ', tx.hash)
-    assert.isNotEmpty(tx.hash)
+    tx.id = tx.calculateHash()
+    console.log('Transaction Hash: ', tx.id)
+    assert.isNotEmpty(tx.id)
     assert.equal(tx[Symbol.for('version')], '1.0')
     // assert.throws(() => {
     //   tx.version = '2.0'
@@ -38,8 +38,8 @@ describe('Signature', () => {
     const publicKey = Key('coinbase-public.pem')
 
     const transaction = Transaction(null, publicKey, Money('USD', 30), null)
-    transaction.hash = transaction.calculateHash()
-    assert.isNotEmpty(transaction.hash)
+    transaction.id = transaction.calculateHash()
+    assert.isNotEmpty(transaction.id)
     const signature = transaction.generateSignature(privateKey, 'coinbase')
     transaction.signature = signature
     console.log('Signed data', signature)

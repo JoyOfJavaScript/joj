@@ -3,12 +3,12 @@ import { assert } from 'chai'
 
 describe('Block Spec', () => {
   it('Should create genesis block', () => {
-    const b = Block('-1', [])
+    const b = Block(1, '-1', [])
     assert.equal(b.previousHash, '-1')
   })
 
   it('Should init a new block', () => {
-    const b = Block('123', [])
+    const b = Block(1, '123', [])
     assert.equal(b.previousHash, '123')
     b.timestamp = 'tomorrow'
     assert.equal(b.timestamp, 'tomorrow')
@@ -19,14 +19,14 @@ describe('Block Spec', () => {
   })
 
   it('Should init a new trasactional block', () => {
-    const b = Block('123', ['1', '2', '3'])
+    const b = Block(1, '123', ['1', '2', '3'])
     assert.deepEqual(b.pendingTransactions, ['1', '2', '3'])
     assert.equal(b.previousHash, '123')
     assert.equal(b.nonce, 0)
   })
 
   it('Should validate core properties', () => {
-    const b = Block('123', ['1', '2', '3'])
+    const b = Block(1, '123', ['1', '2', '3'])
     b.hash = b.calculateHash()
     const currentHash = b.hash
     assert.ok(currentHash.length > 0)

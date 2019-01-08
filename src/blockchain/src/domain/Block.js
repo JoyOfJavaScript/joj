@@ -9,7 +9,6 @@ import {
 } from './block/validations'
 import HasHash from './shared/HasHash'
 import HasValidation from './shared/HasValidation'
-import { curry } from '../../../adt/dist/combinators'
 import proofOfWork from './block/proof_of_work'
 
 /**
@@ -20,15 +19,16 @@ import proofOfWork from './block/proof_of_work'
  * Hashes constitute the digital fingerprint of a block. They are calcualted using all of the
  * properties of such block. Blocks are immutable with respect to their hash, if the hash of a block
  * changes, it's a different block
- *
+ * @param {Number} id                  Block ID
  * @param {String} previousHash        Reference to the previous block in the chain
  * @param {Array}  pendingTransactions Array of pending transactions from the chain
  * @return {Block} Newly created block with its own computed hash
  */
-export default curry((previousHash, pendingTransactions) =>
+export default (id, previousHash, pendingTransactions) =>
   Object.assign(
     new class Block {
       constructor () {
+        this.id = id
         this.previousHash = previousHash
         this.pendingTransactions = pendingTransactions || []
         this.difficulty = 2
@@ -46,6 +46,7 @@ export default curry((previousHash, pendingTransactions) =>
           proofOfWork(this, ''.padStart(this.difficulty, '0'), this.nonce)
         )
       }
+
       /**
        * Check whether this block is a genesis block (first block in a any chain)
        * @return {Boolean} Whether this is a genesis block
@@ -53,6 +54,7 @@ export default curry((previousHash, pendingTransactions) =>
       isGenesis () {
         return this.previousHash === '0'.repeat(64)
       }
+
       isValid () {
         if (this.isGenesis()) {
           return Success(true)
@@ -74,6 +76,7 @@ export default curry((previousHash, pendingTransactions) =>
             : Failure([`Validation failed for block ${this.hash}`])
         }
       }
+
       /**
        * Returns the minimal JSON representation of this object
        * @return {Object} JSON object
@@ -100,4 +103,3 @@ export default curry((previousHash, pendingTransactions) =>
     HasHash(['timestamp', 'previousHash', 'nonce', 'pendingTransactions']),
     HasValidation()
   )
-)
