@@ -1,9 +1,6 @@
 import { assemble, computeCipher } from '../src/domain/shared/has_hash'
 import { assert } from 'chai'
 
-console.log(assemble)
-console.log(assemble)
-
 describe('Has Hash Spec', () => {
   it('Should compute a SHA256 cicpher', () => {
     const obj = {

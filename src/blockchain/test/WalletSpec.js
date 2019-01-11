@@ -1,7 +1,7 @@
-import { assert } from 'chai'
 import Wallet from '../src/domain/Wallet'
-import path from 'path'
+import { assert } from 'chai'
 import fs from 'fs'
+import path from 'path'
 
 describe('Wallet', () => {
   it('Should create a valid wallet with public and private keys', () => {

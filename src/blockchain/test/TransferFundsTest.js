@@ -6,7 +6,7 @@ import Money from '../src/domain/value/Money'
 import Transaction from '../src/domain/Transaction'
 import Wallet from '../src/domain/Wallet'
 import { assert } from 'chai'
-import { compose } from '../../adt/dist/combinators'
+import { compose } from '../src/lib/fp/combinators'
 import path from 'path'
 
 describe('Transfer Funds Test suite', () => {
