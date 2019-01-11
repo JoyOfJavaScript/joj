@@ -1,5 +1,5 @@
 import 'core-js/es7/observable'
-import { curry } from '../../../adt/dist/combinators'
+import { curry } from '../fp/combinators'
 
 export const listen$ = curry((eventName, element) => {
   return new Observable(observer => {

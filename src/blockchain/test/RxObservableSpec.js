@@ -1,4 +1,4 @@
-import '../src/rx/reactive-extensions'
+import '../src/lib/rx/reactive-extensions'
 import { assert } from 'chai'
 
 describe('Tests for Observable', () => {
