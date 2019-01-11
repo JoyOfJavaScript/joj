@@ -1,4 +1,4 @@
-import Maybe from '../../../../../adt/dist/maybe'
+import Maybe from 'fp/maybe'
 
 const verifySignatureInput = (verifier, publicKey, data, signature) =>
   Maybe.of(k => s => d => [k, s, d])

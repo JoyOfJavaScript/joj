@@ -1,5 +1,5 @@
 import crypto from 'crypto'
-import { curry } from '../../../../../adt/dist/combinators'
+import { curry } from 'fp/combinators'
 
 const computeCipher = curry((options, data) =>
   crypto

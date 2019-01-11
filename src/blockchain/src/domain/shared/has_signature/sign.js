@@ -1,5 +1,5 @@
 import crypto from 'crypto'
-import { curry } from '../../../../../adt/dist/combinators'
+import { curry } from 'fp/combinators'
 
 const sign = curry((options, input, credentials) => {
   const s = crypto.createSign(options.algorithm)

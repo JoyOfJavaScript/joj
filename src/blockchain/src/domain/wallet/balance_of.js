@@ -1,5 +1,5 @@
 import Money from '../value/Money'
-import { curry } from '../../../../adt/dist/combinators'
+import { curry } from 'fp/combinators'
 
 const balanceOf = curry((addr, tx) =>
   Money.sum(

@@ -1,6 +1,6 @@
 import { currencyMatch, isNumber, notNaN } from './money/validations'
-import Validation from '../../../../adt/dist/validation'
-import { composeM } from '../../../../adt/dist/combinators'
+import Validation from 'fp/validation'
+import { composeM } from 'fp/combinators'
 import precisionRound from './money/precision_round'
 
 export const BITCOIN = '₿'

@@ -1,4 +1,4 @@
-import Maybe from '../../../../../adt/dist/maybe'
+import Maybe from 'fp/maybe'
 
 /**
  * Signs the input data given a private key

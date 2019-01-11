@@ -6,7 +6,7 @@ import {
   not,
   prop,
   reduce
-} from '../../../../adt/dist/combinators'
+} from 'fp/combinators'
 import Money from '../value/Money'
 import balanceOf from './balance_of'
 

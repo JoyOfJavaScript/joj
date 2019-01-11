@@ -1,4 +1,4 @@
-import { Failure, Success } from '../../../../../adt/dist/validation'
+import { Failure, Success } from 'fp/validation'
 
 /**
  * Check that currency matches

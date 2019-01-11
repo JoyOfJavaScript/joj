@@ -1,4 +1,4 @@
-import { curry } from '../../../../adt/dist/combinators'
+import { curry } from 'fp/combinators'
 
 export const checkLength = curry((len, b) => () => b.hash.length === len)
 export const checkNoTampering = b => b.hash === b.calculateHash()
