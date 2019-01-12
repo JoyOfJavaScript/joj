@@ -1,5 +1,5 @@
-import { Failure, Success } from '../../../adt/dist/validation'
-import Block from './Block'
+import { Failure, Success } from 'fp/validation'
+import { initBlock as Block } from './'
 import HasValidation from './shared/HasValidation'
 
 // Alternate solution: http://2ality.com/2013/03/subclassing-builtins-es6.html

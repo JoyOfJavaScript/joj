@@ -1,5 +1,5 @@
 import computeBalance from './wallet/compute_balance'
-import { curry } from '../../../adt/dist/combinators'
+import { curry } from 'fp/combinators'
 
 /**
  * Construct a new Wallet. The private key is used to sign the data and the

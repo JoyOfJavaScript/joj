@@ -1,4 +1,4 @@
-import Block from '../Block'
+import { initBlock as Block } from '../'
 import { MINING_REWARD } from '../../infrastructure/settings'
 import Money from '../value/Money'
 import Transaction from '../Transaction'
