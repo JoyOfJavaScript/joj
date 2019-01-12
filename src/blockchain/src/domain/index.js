@@ -1,15 +1,13 @@
 import Block from './Block.js'
 import HasHash from './shared/HasHash'
+import HasSignature from './shared/HasSignature'
 import HasValidation from './shared/HasValidation'
+import Transaction from './Transaction.js'
+import { curry } from 'fp/combinators'
 
 /**
- * Transactional blocks contain the set of all pending transactions in the chain
- * These are used to move/transfer assets around within transactions
- * Bitcoins are a good example of transactional blocks.
+ * Creates a new Block instance
  *
- * Hashes constitute the digital fingerprint of a block. They are calcualted using all of the
- * properties of such block. Blocks are immutable with respect to their hash, if the hash of a block
- * changes, it's a different block
  * @param {Number} id                  Block ID
  * @param {String} previousHash        Reference to the previous block in the chain
  * @param {Array}  pendingTransactions Array of pending transactions from the chain
@@ -22,4 +20,23 @@ export const initBlock = (id, previousHash, pendingTransactions) =>
     HasValidation()
   )
 
-export default { initBlock }
+/**
+ * Creates a new Transaction instance
+ *
+ * @param {Key}   sender        Origin of transaction (public key of sender)
+ * @param {Key}   recipient     Destination of transaction (public of the receiver)
+ * @param {Money} funds         Amount to transfer
+ * @param {String} description  Description of the transaction
+ * @param {CryptoSigner} signer Signer to use for transactions
+ * @return {Transaction} Newly created transaction
+ */
+export const initTransaction = curry((sender, recipient, funds, description) =>
+  Object.assign(
+    new Transaction(sender, recipient, funds, description),
+    HasHash(['timestamp', 'sender', 'recipient', 'funds', 'nonce']),
+    HasSignature(['sender', 'recipient', 'funds']),
+    HasValidation()
+  )
+)
+
+export default { initBlock, initTransaction }

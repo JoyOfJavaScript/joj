@@ -1,7 +1,6 @@
-import { initBlock as Block } from '../'
+import { initBlock as Block, initTransaction as Transaction } from '../'
 import { MINING_REWARD } from '../../infrastructure/settings'
 import Money from '../value/Money'
-import Transaction from '../Transaction'
 import Wallet from '../Wallet'
 import fs from 'fs'
 import path from 'path'

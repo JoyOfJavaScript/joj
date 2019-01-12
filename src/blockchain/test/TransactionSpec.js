@@ -1,6 +1,6 @@
 import Key from '../src/domain/value/Key'
 import Money from '../src/domain/value/Money'
-import Transaction from '../src/domain/Transaction'
+import { initTransaction as Transaction } from '../src/domain'
 import { assert } from 'chai'
 
 describe('Transaction', () => {

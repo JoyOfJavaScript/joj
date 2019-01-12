@@ -17,10 +17,6 @@ import proofOfWork from './block/proof_of_work'
  * Hashes constitute the digital fingerprint of a block. They are calcualted using all of the
  * properties of such block. Blocks are immutable with respect to their hash, if the hash of a block
  * changes, it's a different block
- * @param {Number} id                  Block ID
- * @param {String} previousHash        Reference to the previous block in the chain
- * @param {Array}  pendingTransactions Array of pending transactions from the chain
- * @return {Block} Newly created block with its own computed hash
  */
 export default class Block {
   constructor (id, previousHash, pendingTransactions = []) {
