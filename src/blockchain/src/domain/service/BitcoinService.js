@@ -1,7 +1,10 @@
-import { initBlock as Block, initTransaction as Transaction } from '../'
+import {
+  initBlock as Block,
+  initTransaction as Transaction,
+  initWallet as Wallet
+} from '../'
 import { MINING_REWARD } from '../../infrastructure/settings'
 import Money from '../value/Money'
-import Wallet from '../Wallet'
 import fs from 'fs'
 import path from 'path'
 
@@ -73,7 +76,7 @@ class BitcoinService {
     // Mine block and pass it all pending transactions in the chain
     // In reality, blocks are not to exceed 1MB, so not all tx are sent to all blocks
     // We keep transactions immutable by substracting similar transactions for the fee
-    const previousHash = this.ledger.top().hash
+    const previousHash = this.ledger.top.hash
     const nextId = this.ledger.height + 1
     return this.mineBlock(
       Block(nextId, previousHash, this.ledger.pendingTransactions)

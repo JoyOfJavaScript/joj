@@ -1,10 +1,12 @@
 import { MethodCounter, TraceLog } from '../src/common/proxies'
+import {
+  initBlockchain as Blockchain,
+  initTransaction as Transaction,
+  initWallet as Wallet
+} from '../src/domain'
 import BitcoinService from '../src/domain/service/BitcoinService'
-import Blockchain from '../src/domain/Blockchain'
 import Key from '../src/domain/value/Key'
 import Money from '../src/domain/value/Money'
-import { initTransaction as Transaction } from '../src/domain'
-import Wallet from '../src/domain/Wallet'
 import { assert } from 'chai'
 import { compose } from '../src/lib/fp/combinators'
 import path from 'path'
