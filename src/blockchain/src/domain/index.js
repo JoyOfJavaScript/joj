@@ -55,7 +55,6 @@ export const initWallet = curry(
 // Alternate solution: http://2ality.com/2013/03/subclassing-builtins-es6.html
 
 // TODO
-// implement block as a linked list
 // store blockchain to file db
 
 /**
