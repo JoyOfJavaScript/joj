@@ -1,4 +1,4 @@
-import { Failure, Success } from '../../../adt/dist/validation'
+import { Failure, Success } from 'fp/validation'
 
 /**
  * A transaction holds information (keys) identifying who is making the payment
@@ -6,15 +6,17 @@ import { Failure, Success } from '../../../adt/dist/validation'
  * Ownership of an asset (like money) is transfered via transactions.
  */
 export default class Transaction {
+  timestamp = Date.now()
+  id = undefined // Gets computed  later
+  #nonce = 0
+
   constructor (sender, recipient, funds, description = 'Generic') {
     this.sender = sender
     this.recipient = recipient
     this.funds = funds
-    this.description = description || 'Generic'
-    this.nonce = 0
-    this.timestamp = Date.now()
-    this.id = undefined // Gets computed  later
+    this.description = description
   }
+
   /**
    * Gets the numerical amount of the funds
    * @return {Number} Amount number
@@ -69,6 +71,7 @@ export default class Transaction {
   get [Symbol.for('version')] () {
     return '1.0'
   }
+
   [Symbol.iterator] () {
     return {
       next: () => ({ done: true })

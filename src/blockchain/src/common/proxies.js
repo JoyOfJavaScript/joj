@@ -1,4 +1,4 @@
-import { curry } from '../../../adt/dist/combinators'
+import { curry } from 'fp/combinators'
 
 // Handlers
 const accessorLogHandler = {
@@ -23,7 +23,7 @@ const methodCountHandler = names => ({
 // TODO: enhance it to keep an internal map with all counters instead of printing it to the screen
 const perfCountHandler = names => {
   return {
-    get (target, key) {
+    get (target, key, r) {
       if (names.includes(key)) {
         const start = process.hrtime()
         const result = Reflect.get(target, key)
@@ -31,7 +31,7 @@ const perfCountHandler = names => {
         console.info('Execution time: %ds %dms', end[0], end[1] / 1000000)
         return result
       }
-      return Reflect.get(target, key)
+      return Reflect.get(target, key, r)
     }
   }
 }

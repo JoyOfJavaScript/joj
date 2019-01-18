@@ -6,17 +6,18 @@ import { Success } from 'fp/validation'
  * and allow itself to bootstrap with a Genesis block.
  */
 export default class Blockchain {
+  blocks = new Map() // Could be made private, but instance method invocation breaks when called through a proxy
   constructor (version, genesis) {
     this.version = version
-    this.blocks = new Map([[genesis.hash.valueOf(), genesis]])
     this.top = genesis
+    this.blocks.set(genesis.hash, genesis)
     this.timestamp = Date.now()
     this.pendingTransactions = []
   }
 
   push (newBlock) {
     newBlock.blockchain = this
-    this.blocks.set(newBlock.hash.valueOf(), newBlock)
+    this.blocks.set(newBlock.hash, newBlock)
     this.top = newBlock
     return this.top
   }
@@ -26,7 +27,7 @@ export default class Blockchain {
   }
 
   lookUp (hash) {
-    const h = hash.valueOf()
+    const h = hash
     if (this.blocks.has(h)) {
       return this.blocks.get(h)
     }
@@ -49,7 +50,7 @@ export default class Blockchain {
   // TODO: Use an iterator to check all blocks instead of toArray. Delete toArray method and use ...blockchain to invoke the iterator
   // TODO: You can use generators to run a simulation
   isValid () {
-    return Success(this.height > 0)
+    return Success(this.height() > 0)
   }
 
   addPendingTransaction (tx) {
