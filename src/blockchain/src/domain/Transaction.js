@@ -7,8 +7,8 @@ import { Failure, Success } from 'fp/validation'
  */
 export default class Transaction {
   timestamp = Date.now()
-  id = undefined // Gets computed  later
-  #nonce = 0
+  nonce = 0
+  id
 
   constructor (sender, recipient, funds, description = 'Generic') {
     this.sender = sender
@@ -35,7 +35,7 @@ export default class Transaction {
 
   /**
    * Displays a friendly description of this transaction for reporting purposes
-   * @return {{String}} A friendly string representation
+   * @return {String} A friendly string representation
    */
   displayTransaction () {
     return `Transaction ${this.description} from ${this.sender} to ${

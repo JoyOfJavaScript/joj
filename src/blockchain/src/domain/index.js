@@ -35,7 +35,7 @@ export const initBlock = (id, previousHash, pendingTransactions) =>
 export const initTransaction = curry((sender, recipient, funds, description) =>
   Object.assign(
     new Transaction(sender, recipient, funds, description),
-    HasHash(['timestamp', 'sender', 'recipient', 'funds', 'nonce']),
+    HasHash(['timestamp', 'sender', 'recipient', 'funds']),
     HasSignature(['sender', 'recipient', 'funds']),
     HasValidation()
   )

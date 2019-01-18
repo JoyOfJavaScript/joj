@@ -19,8 +19,8 @@ import proofOfWork from './block/proof_of_work'
  * changes, it's a different block
  */
 export default class Block {
-  constructor (id, previousHash, pendingTransactions = []) {
-    this.id = id
+  constructor (index, previousHash, pendingTransactions = []) {
+    this.index = index
     this.previousHash = previousHash
     this.pendingTransactions = pendingTransactions
     this.difficulty = 2
