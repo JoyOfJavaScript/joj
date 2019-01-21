@@ -1,4 +1,4 @@
-import { initWallet as Wallet } from '../src/domain'
+import { createWallet as Wallet } from '../src/domain'
 import { assert } from 'chai'
 import fs from 'fs'
 import path from 'path'

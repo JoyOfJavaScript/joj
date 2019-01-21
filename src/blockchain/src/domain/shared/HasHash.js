@@ -16,7 +16,7 @@ const DEFAULT_ENCODING_HEX = 'hex'
  *
  * @param {Array} keys     List of property names present in this object that shall be used for hashing
  * @param {Object} options Options to configure the hashing process (algorithm, encoding)
- * @return {string} Return a string hash of the block
+ * @return {String} Return a string hash of the block
  */
 const HasHash = (
   keys,
@@ -24,7 +24,7 @@ const HasHash = (
 ) => ({
   /**
    * Calculates a hashed value from the values of provided state marked by keys
-   * @param {String} entropy Add more entropy to the calculated hash for this object
+   *
    * @return {String} A hash value
    */
   calculateHash () {

@@ -1,4 +1,4 @@
-import { initBlockchain as BlockChain } from '../src/domain'
+import { createBlockchain as BlockChain } from '../src/domain'
 import { PerfCount } from '../src/common/proxies'
 import { assert } from 'chai'
 
