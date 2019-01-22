@@ -1,6 +1,6 @@
+import { compose, composeM, curry } from 'fp/combinators'
 import { currencyMatch, isNumber, notNaN } from './money/validations'
 import Validation from 'fp/validation'
-import { composeM } from 'fp/combinators'
 import precisionRound from './money/precision_round'
 
 export const BITCOIN = '₿'
@@ -13,23 +13,30 @@ export const US_DOLLAR = '$'
  * @param {string} amount   Amount represented
  * @return {Money} Returns a money object
  */
-const Money = (currency = BITCOIN, amount = 0) => ({
-  amount,
-  currency,
-  constructor: Money,
-  equals: other =>
-    Object.is(currency, other.currency) && Object.is(amount, other.amount),
-  inspect: () => `${currency} ${amount}`,
-  serialize: () => JSON.stringify({ amount, currency }),
-  round: (precision = 2) => Money(currency, precisionRound(amount, precision)),
-  minus: m => Money(currency, amount - m.amount),
-  plus: m => Money(currency, amount + m.amount),
-  times: m => Money(currency, amount * m.amount),
-  compareTo: other => amount - other.amount,
-  asNegative: () => Money(currency, amount * -1),
-  [Symbol.toPrimitive]: () => precisionRound(amount, 2),
-  [Symbol.hasInstance]: i => i.constructor.name === 'Money'
-})
+const Money = curry((currency, amount) =>
+  compose(
+    Object.seal,
+    Object.freeze
+  )({
+    amount,
+    currency: currency,
+    constructor: Money,
+    equals: other =>
+      Object.is(currency, other.currency) && Object.is(amount, other.amount),
+    inspect: () => `${currency} ${amount}`,
+    serialize: () => JSON.stringify({ amount, currency }),
+    round: (precision = 2) =>
+      Money(currency, precisionRound(amount, precision)),
+    minus: m => Money(currency, amount - m.amount),
+    plus: m => Money(currency, amount + m.amount),
+    times: m => Money(currency, amount * m.amount),
+    compareTo: other => amount - other.amount,
+    asNegative: () => Money(currency, amount * -1),
+    toString: () => 'Hey',
+    [Symbol.toPrimitive]: () => precisionRound(amount, 2),
+    [Symbol.hasInstance]: i => i.constructor.name === 'Money'
+  })
+)
 
 // Zero
 Money.zero = (currency = BITCOIN) => Money(currency, 0)
