@@ -1,4 +1,4 @@
-import { Failure, Success } from 'fp/validation'
+import { Failure, Success } from 'fp/data/validation'
 
 /**
  * A transaction holds information (keys) identifying who is making the payment

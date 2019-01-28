@@ -1,6 +1,6 @@
 import { Success } from './'
 import { assert } from 'chai'
-import { compose } from '../combinators'
+import { compose } from '../../combinators'
 
 const toLower = str => str.toLowerCase()
 const first = n => str => str.substring(0, n)

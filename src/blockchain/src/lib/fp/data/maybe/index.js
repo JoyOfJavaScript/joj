@@ -1,6 +1,6 @@
 /* eslint fp/no-mutation:0 */
 import { Failure, Success } from '../validation'
-import { identity, isFunction } from '../combinators'
+import { identity, isFunction } from '../../combinators'
 
 const Maybe = {
   '@@type': 'Maybe',
@@ -16,25 +16,25 @@ export const Just = (Maybe.Just = a =>
       isJust: () => true,
       isNothing: () => false,
       fold: (fn = identity) => fn(a),
-      filter: (fn = identity) => fn(a) ? Just(a) : Nothing(),
+      filter: (fn = identity) => (fn(a) ? Just(a) : Nothing()),
       map: fn => Maybe.fromNullable(fn(a)),
       flatMap: fn => Maybe.fromNullable(fn(a).merge()),
       ap: Ma =>
-        (Ma.isNothing()
+        Ma.isNothing()
           ? // If applying to a Maybe.Nothing, skip
-            Nothing()
+          Nothing()
           : // Applying a Maybe.Just
-            isFunction(a)
-              ? // If a is a function, look at the contents of Ma
-                Maybe.of(
-                  isFunction(Ma.merge())
-                    ? // If Ma holds another function, fold Ma with a
-                      Ma.merge().call(Ma, a)
-                    : // Ma holds a value, apply that value to a
-                      a(Ma.merge())
-                )
-              : // a is a value and Ma has a function
-                Maybe.of(Ma.merge().call(Ma, a))),
+          isFunction(a)
+            ? // If a is a function, look at the contents of Ma
+            Maybe.of(
+              isFunction(Ma.merge())
+                ? // If Ma holds another function, fold Ma with a
+                Ma.merge().call(Ma, a)
+                : // Ma holds a value, apply that value to a
+                a(Ma.merge())
+            )
+            : // a is a value and Ma has a function
+            Maybe.of(Ma.merge().call(Ma, a)),
       get: () => a,
       getOrElse: _ => a,
       getOrElseThrow: error => a,

@@ -1,5 +1,5 @@
-import Maybe from '../src/lib/fp/maybe'
-import Validation from '../src/lib/fp/validation'
+import Maybe from '../src/lib/fp/data/maybe'
+import Validation from '../src/lib/fp/data/validation'
 import { assert } from 'chai'
 import { compose } from '../src/lib/fp/combinators'
 import computeHash from './computeHash'

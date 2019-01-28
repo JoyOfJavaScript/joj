@@ -1,6 +1,6 @@
 import { toMaybe, toValidation } from './'
-import Maybe from '../maybe'
-import Validation from '../validation'
+import Maybe from '../data/maybe'
+import Validation from '../data/validation'
 import { assert } from 'chai'
 import { compose } from '../combinators'
 

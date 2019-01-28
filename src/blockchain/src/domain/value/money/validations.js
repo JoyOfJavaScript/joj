@@ -1,4 +1,4 @@
-import { Failure, Success } from 'fp/validation'
+import { Failure, Success } from 'fp/data/validation'
 
 /**
  * Check that currency matches

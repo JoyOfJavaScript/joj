@@ -1,7 +1,7 @@
 import Validation, { Failure, Success } from './'
 import Maybe from '../maybe'
 import { assert } from 'chai'
-import { curry } from '../combinators'
+import { curry } from '../../combinators'
 
 // const { Success, Failure } = Validation
 

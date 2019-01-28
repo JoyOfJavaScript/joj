@@ -1,5 +1,5 @@
 import '../lang/object'
-import { Failure, Success } from 'fp/validation'
+import { Failure, Success } from 'fp/data/validation'
 import {
   checkDifficulty,
   checkLength,

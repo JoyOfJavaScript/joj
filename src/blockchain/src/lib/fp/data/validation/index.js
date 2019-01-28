@@ -1,6 +1,6 @@
 /* eslint fp/no-mutation:0,fp/no-throw:0 */
 import { Just, Nothing } from '../maybe'
-import { identity, isFunction } from '../combinators'
+import { identity, isFunction } from '../../combinators'
 
 // Abstract
 const Validation = {
@@ -20,13 +20,15 @@ export const Success = (Validation.Success = a =>
       map: fn => Validation.fromNullable(fn(a), ['Value is null']),
       flatMap: fnM => fnM(a),
       ap: Va =>
-        (Va.isFailure()
+        Va.isFailure()
           ? Va
           : a && isFunction(a)
-              ? Success(
-                  isFunction(Va.fold()) ? Va.fold().call(Va, a) : a(Va.fold())
-                )
-              : a ? Success(Va.fold().call(Va, a)) : Failure()),
+            ? Success(
+              isFunction(Va.fold()) ? Va.fold().call(Va, a) : a(Va.fold())
+            )
+            : a
+              ? Success(Va.fold().call(Va, a))
+              : Failure(),
       bifold: successTransform => successTransform(a),
       // This what makes Validation not a real monad (also not a real disjunction)
       bimap: successTransform => Success(successTransform(a)),
@@ -56,7 +58,7 @@ export const Failure = (Validation.Failure = b =>
       ap: Va => (Va.isFailure() ? Failure(b.concat(Va.merge())) : Failure(b)),
       foldOrElse: (_, defaultValue) => defaultValue,
       concat: Va =>
-        (Va.isFailure() ? Failure(b.concat(Va.fold())) : Failure(b)),
+        Va.isFailure() ? Failure(b.concat(Va.fold())) : Failure(b),
       bifold: (_, failTransform) => failTransform(b),
       // This what makes Validation not a real monad (also not a real disjunction)
       bimap: (_, failTransform) => Failure(failTransform(b)),
@@ -95,7 +97,7 @@ function errorWith (str) {
 }
 
 Validation.fromNullable = (a, errors) =>
-  (a != null ? Success(a) : Failure(errors))
+  a != null ? Success(a) : Failure(errors)
 
 Validation.fromMaybe = (Ma, errors) => () => {
   if (Ma['@@type'] === 'Maybe') {

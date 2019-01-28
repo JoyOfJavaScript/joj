@@ -1,4 +1,4 @@
-import Maybe from 'fp/maybe'
+import Maybe from 'fp/data/maybe'
 
 /**
  * Signs the input data given a private key

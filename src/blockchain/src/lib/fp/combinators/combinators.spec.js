@@ -1,4 +1,4 @@
-import { Failure, Success } from '../validation'
+import { Failure, Success } from '../data/validation'
 import { assert } from 'chai'
 import { composeM } from './'
 

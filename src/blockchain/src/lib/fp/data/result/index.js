@@ -1,6 +1,6 @@
 /* eslint fp/no-mutation:0,fp/no-throw:0 */
 import { Failure, Success } from '../validation'
-import { identity, isFunction } from '../combinators'
+import { identity, isFunction } from '../../combinators'
 
 const Result = {
   '@@type': 'Result',

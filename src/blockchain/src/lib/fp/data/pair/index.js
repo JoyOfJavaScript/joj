@@ -1,5 +1,5 @@
 /* eslint fp/no-mutation:0,fp/no-throw:0 */
-import { curry, identity } from '../combinators'
+import { curry, identity } from '../../combinators'
 
 /**
  * Test whether some value is of type ctor
@@ -14,9 +14,11 @@ export const is = ctor => val =>
 const fork = (join, func1, func2) => val => join(func1(val), func2(val))
 
 const type = val =>
-  (val === null
+  val === null
     ? 'Null'
-    : !val ? 'Undefined' : Object.prototype.toString.call(val).slice(8, -1))
+    : !val
+      ? 'Undefined'
+      : Object.prototype.toString.call(val).slice(8, -1)
 
 const tap = fn => x => {
   fn(x)
@@ -62,9 +64,9 @@ export const Pair = (A, B) => (l, r) =>
       right
     }),
     [Symbol.toPrimitive]: hint =>
-      (console.log('As primitive', hint) + hint === 'string'
+      console.log('As primitive', hint) + hint === 'string'
         ? `Pair [${left}, ${right}]`
-        : [left, right])
+        : [left, right]
   }))(
     // Check that objects passed into this tuple are the right type
     typeOf(A)(l),

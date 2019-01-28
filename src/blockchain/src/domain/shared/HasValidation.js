@@ -1,4 +1,4 @@
-import { Success } from 'fp/validation'
+import { Success } from 'fp/data/validation'
 
 /**
  * HasValidation mixin.

@@ -1,6 +1,6 @@
 import Validation, { Failure, Success } from './'
 import { assert } from 'chai'
-import { curry } from '../combinators'
+import { curry } from '../../combinators'
 
 const notEmpty = str =>
   str && str.length > 0 ? Success(str) : Failure(['String is empty'])

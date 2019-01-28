@@ -1,6 +1,6 @@
 import { compose, composeM, curry } from 'fp/combinators'
 import { currencyMatch, isNumber, notNaN } from './money/validations'
-import Validation from 'fp/validation'
+import Validation from 'fp/data/validation'
 import precisionRound from './money/precision_round'
 
 export const BITCOIN = '₿'
