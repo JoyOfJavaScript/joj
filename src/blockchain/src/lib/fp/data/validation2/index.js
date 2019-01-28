@@ -1,4 +1,4 @@
-import map from '../adt/map'
+import Functor from '../contract/Functor'
 
 // https://folktale.origamitower.com/docs/v2.3.0/migrating/from-data.validation/
 export default class Validation {
@@ -20,11 +20,11 @@ export default class Validation {
    * @return {Success} Success
    */
   static Success (a) {
-    return Object.assign(new Success(a), map)
+    return Object.assign(new Success(a), Functor())
   }
 
   static Failure (b) {
-    return Object.assign(new Failure(b), map)
+    return Object.assign(new Failure(b), Functor())
   }
 
   get isSuccess () {
