@@ -1,10 +1,10 @@
-import Combinators from '../../../adt/dist/combinators'
+import Combinators from 'fp/combinators'
 
 export const Levels = new Map([
   ['TRACE', 0],
   ['INFO', 1],
   ['WARN', 2],
-  ['ERROR', 3],
+  ['ERROR', 3]
 ])
 
 const log = Combinators.curry((level, message, error = null) => {
@@ -24,5 +24,5 @@ export default {
   trace: log(Levels.get('TRACE')),
   info: log(Levels.get('INFO')),
   warn: log(Levels.get('WARN')),
-  error: log(Levels.get('ERROR')),
+  error: log(Levels.get('ERROR'))
 }
