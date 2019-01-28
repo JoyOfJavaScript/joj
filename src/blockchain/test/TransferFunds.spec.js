@@ -1,9 +1,9 @@
-import { MethodCounter, TraceLog } from '../src/common/proxies'
 import {
   createBlockchain as Blockchain,
   createTransaction as Transaction,
   createWallet as Wallet
 } from '../src/domain'
+import { MethodCounter, TraceLog } from '../src/common/proxies'
 import BitcoinService from '../src/domain/service/BitcoinService'
 import Key from '../src/domain/value/Key'
 import Money from '../src/domain/value/Money'

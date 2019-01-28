@@ -1,11 +1,11 @@
-/*eslint fp/no-mutation:0,fp/no-throw:0*/
+/* eslint fp/no-mutation:0,fp/no-throw:0 */
 import { Failure, Success } from '../validation'
 import { identity, isFunction } from '../combinators'
 
 const Result = {
   '@@type': 'Result',
   '@@implements': ['of', 'map', 'ap', 'fold', 'flatMap', 'merge'],
-  of: b => Ok(b),
+  of: b => Ok(b)
 }
 
 export const Error = (Result.Error = a =>
@@ -31,8 +31,8 @@ export const Error = (Result.Error = a =>
       toString: () => `Result#Error (${a})`,
       toJSON: () => ({
         type: 'Result#Error',
-        value: a,
-      }),
+        value: a
+      })
     },
     Result
   ))
@@ -49,19 +49,19 @@ export const Ok = (Result.Ok = b =>
       ap: Eb =>
         Eb.isError()
           ? // If applying to a Result.Error, skip
-            Eb
+          Eb
           : // Applying a Result.Ok
-            isFunction(b)
+          isFunction(b)
             ? // If b is a function, look at the contents of Eb
-              Result.of(
-                isFunction(Eb.merge())
-                  ? // If Eb holds another function, fold Eb with b
-                    Eb.merge().call(Eb, b)
-                  : // Eb holds a value, apply that value to b
-                    b(Eb.merge())
-              )
+            Result.of(
+              isFunction(Eb.merge())
+                ? // If Eb holds another function, fold Eb with b
+                Eb.merge().call(Eb, b)
+                : // Eb holds a value, apply that value to b
+                b(Eb.merge())
+            )
             : // b is a value and Eb has a function
-              Result.of(Eb.merge().call(Eb, b)),
+            Result.of(Eb.merge().call(Eb, b)),
       get: () => b,
       getOrElse: _ => b,
       getOrElseThrow: error => b,
@@ -71,8 +71,8 @@ export const Ok = (Result.Ok = b =>
       toString: () => `Result#Ok (${b})`,
       toJSON: () => ({
         type: 'Result#Ok',
-        value: b,
-      }),
+        value: b
+      })
     },
     Result
   ))

@@ -3,30 +3,19 @@ import {
   createTransaction as Transaction,
   createWallet as Wallet
 } from '../'
+import Key from '../value/Key'
 import { MINING_REWARD } from '../../infrastructure/settings'
 import Money from '../value/Money'
 import fs from 'fs'
-import path from 'path'
 
 class BitcoinService {
-  static BASE = path.join(__dirname, '../../../..', 'blockchain-wallets')
-
   /**
    * Constructs a BitcoinService instance with the specified blockchain ledger
    * @param {Blockchain} ledger Ledger to manage
    */
   constructor (ledger) {
     this.ledger = ledger
-    this.network = Wallet(
-      fs.readFileSync(
-        path.join(BitcoinService.BASE, 'bitcoin-public.pem'),
-        'utf8'
-      ),
-      fs.readFileSync(
-        path.join(BitcoinService.BASE, 'bitcoin-private.pem'),
-        'utf8'
-      )
-    )
+    this.network = Wallet(Key('bitcoin-public.pem'), Key('bitcoin-private.pem'))
   }
 
   /**
