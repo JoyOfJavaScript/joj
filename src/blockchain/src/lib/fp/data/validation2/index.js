@@ -1,3 +1,5 @@
+import map from '../adt/map'
+
 // https://folktale.origamitower.com/docs/v2.3.0/migrating/from-data.validation/
 export default class Validation {
   #value = undefined
@@ -18,11 +20,11 @@ export default class Validation {
    * @return {Success} Success
    */
   static Success (a) {
-    return new Success(a)
+    return Object.assign(new Success(a), map)
   }
 
   static Failure (b) {
-    return new Failure(b)
+    return Object.assign(new Failure(b), map)
   }
 
   get isSuccess () {
@@ -48,12 +50,24 @@ export class Success extends Validation {
     super(a)
   }
 
+  static of (a) {
+    return new Success(a)
+  }
+
   get isSuccess () {
     return true
   }
 
   get tag () {
     return this.#tag
+  }
+
+  get [Symbol.for('implements')] () {
+    return ['map']
+  }
+
+  [Symbol.iterator] () {
+    return Array
   }
 }
 
@@ -73,5 +87,9 @@ export class Failure extends Validation {
 
   get tag () {
     return this.#tag
+  }
+
+  get [Symbol.for('implements')] () {
+    return ['']
   }
 }

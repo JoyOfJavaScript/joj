@@ -14,7 +14,12 @@ describe('Validation', () => {
   })
 
   it('Validation#map', () => {
-    const result = Validation.Success(2).map(x => x ** 2)
-    assert.equal(result, 4)
+    const success = Validation.Success(2).map(x => x ** 2)
+    assert.equal(success.unsafeGet(), 4)
+
+    const failure = Validation.Failure(3).map(x => x ** 2)
+    assert.throws(() => {
+      failure.unsafeGet()
+    }, `Can't extract the value of a Failure`)
   })
 })
