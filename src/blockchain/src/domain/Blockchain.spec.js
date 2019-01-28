@@ -1,5 +1,5 @@
-import { createBlockchain as BlockChain } from '../src/domain'
-import { PerfCount } from '../src/common/proxies'
+import { createBlockchain as BlockChain } from '.'
+import { PerfCount } from '../common/proxies'
 import { assert } from 'chai'
 
 // Create blockchain with a genesis block
@@ -7,7 +7,7 @@ const ledger = PerfCount('validate')(BlockChain())
 
 console.log('Height: ', ledger.height())
 
-describe('Create a valid Blockchain data structure', () => {
+describe('Blockchain Spec', () => {
   it('Should create a block chain and assert if valid', () => {
     assert.isOk(ledger.toArray() instanceof Array)
     const [g, ...blocks] = ledger.toArray()

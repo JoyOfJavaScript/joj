@@ -1,4 +1,4 @@
-import { assemble, computeCipher } from '../src/domain/shared/has_hash'
+import { assemble, computeCipher } from './has_hash'
 import { assert } from 'chai'
 
 describe('Has Hash Spec', () => {

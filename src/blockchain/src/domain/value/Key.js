@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 
-const BASE = path.join(process.cwd(), '../', 'blockchain-wallets')
+const BASE = path.join(process.cwd(), '.', 'wallets')
 const Key = name => {
   const k = fs.readFileSync(path.join(BASE, name), 'utf8')
   if (!k || k.length === 0) {

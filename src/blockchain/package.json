@@ -33,7 +33,7 @@
     "lint": "eslint src",
     "lint-fix": "eslint src --fix",
     "build": "rm -rf dist && babel src --out-dir dist && cp -f package.json dist",
-    "test": "NODE_PATH=$NODE_PATH:src/lib mocha --recursive --require test/testSetup.js --check-leaks --colors",
+    "test": "NODE_PATH=$NODE_PATH:src/lib mocha src **/*.spec.js --recursive --require test/testSetup.js --check-leaks --colors",
     "test-dev": "NODE_PATH=$NODE_PATH:src/lib nodemon --watch src/ --watch test/ --exec 'mocha --recursive --require test/testSetup --colors || true'",
     "test-debug": "NODE_PATH=$NODE_PATH:src/lib LOG=trace mocha --recursive --require test/testSetup test/**/*Spec.js --check-leaks --colors",
     "flow": "flow",

@@ -1,4 +1,4 @@
-import '../src/lang/object'
+import './object'
 import { assert } from 'chai'
 
 describe('Language extensions test', () => {
