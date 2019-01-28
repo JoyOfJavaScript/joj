@@ -7,8 +7,8 @@ import { Success } from 'fp/validation'
  */
 export default class Blockchain {
   blocks = new Map() // Could be made private, but instance method invocation breaks when called through a proxy
-  constructor (version, genesis) {
-    this.version = version
+  #version = '1.0'
+  constructor (genesis) {
     this.top = genesis
     this.blocks.set(genesis.hash, genesis)
     this.timestamp = Date.now()
@@ -58,7 +58,7 @@ export default class Blockchain {
   }
 
   get [Symbol.for('version')] () {
-    return '1.0'
+    return this.#version
   }
 
   [Symbol.iterator] () {

@@ -68,8 +68,7 @@ export const createWallet = curry(
 // http://exploringjs.com/es6/ch_classes.html#sec_species-pattern
 
 export const createBlockchain = (genesis = createGenesisBlock()) => {
-  const version = '1.0'
-  return Object.assign(new Blockchain(version, genesis), HasValidation())
+  return Object.assign(new Blockchain(genesis), HasValidation())
 }
 
 function createGenesisBlock (previousHash = '0'.repeat(64)) {

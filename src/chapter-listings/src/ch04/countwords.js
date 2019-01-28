@@ -25,6 +25,9 @@ describe('Count words', () => {
     // const result = 2 |> double |> (x => 3 + x) |> (x => toStringBase(2, x))
     const result = '1 2 3' |> split |> count
     expect(result).to.be.equal(3)
+
+    const result2 = '1 2 3' |> split |> count |> (x => x ** 2)
+    expect(result2).to.be.equal(9)
   })
   it('Count blocks imperative', () => {
     function countWords (filename) {

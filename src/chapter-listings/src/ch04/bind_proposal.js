@@ -63,4 +63,15 @@ describe('Bind proposal', () => {
     const result = 10::map(numToUsd)::map(toBitcoin)
     expect(result.amount).to.be.equal(0.0027999999999999995)
   })
+
+  it('Extracts from Array', () => {
+    const { map, filter, reduce } = Array.prototype
+
+    const result = [1, 2, 3]
+      ::filter(n => n % 2 === 0)
+      ::map(n => n ** 2)
+      ::reduce((a, b) => a + b, 0)
+
+    expect(result).to.be.equal(4)
+  })
 })
