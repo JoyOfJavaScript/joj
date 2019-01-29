@@ -1,11 +1,10 @@
-import Functor from '../contract/Functor'
+import { Applicative, Functor, Monad } from '../contract'
 
 // https://folktale.origamitower.com/docs/v2.3.0/migrating/from-data.validation/
 export default class Validation {
-  #value = undefined
   #tag = 'Validation'
   constructor (value) {
-    this.#value = value // detect if called from a derived, otherwise throw exception new.target ?
+    this._val = value // detect if called from a derived, otherwise throw exception new.target ?
     if (![Success.name, Failure.name].includes(new.target.name)) {
       throw new Error(
         `Can't directly constructor a Validation. Please use constructor Validation.of`
@@ -13,18 +12,28 @@ export default class Validation {
     }
   }
 
+  get value () {
+    return this._val
+  }
+
   /**
-   * Returns the success branch
+   * Returns the success branch (right bias)
    *
    * @param {Object} a Any value
    * @return {Success} Success
    */
   static Success (a) {
-    return Object.assign(new Success(a), Functor())
+    return Success.of(a)
   }
 
+  /**
+   * Returns the left (failure) branch
+   *
+   * @param {Array} b Array containing a failure validation message
+   * @return {Success} Failure
+   */
   static Failure (b) {
-    return Object.assign(new Failure(b), Functor())
+    return Failure.of(b)
   }
 
   get isSuccess () {
@@ -38,7 +47,7 @@ export default class Validation {
   isEqual (otherValidation) {}
 
   unsafeGet () {
-    return this.#value
+    return this.value
   }
 
   getOrElse () {}
@@ -51,7 +60,7 @@ export class Success extends Validation {
   }
 
   static of (a) {
-    return new Success(a)
+    return Object.assign(new Success(a), Functor(), Applicative(), Monad())
   }
 
   get isSuccess () {
@@ -63,7 +72,7 @@ export class Success extends Validation {
   }
 
   get [Symbol.for('implements')] () {
-    return ['map']
+    return ['map', 'ap']
   }
 
   [Symbol.iterator] () {
@@ -79,6 +88,10 @@ export class Failure extends Validation {
 
   get isFailure () {
     return true
+  }
+
+  static of (b) {
+    return Object.assign(new Failure(b), Functor(), Applicative(), Monad())
   }
 
   unsafeGet () {

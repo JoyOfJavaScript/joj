@@ -22,4 +22,12 @@ describe('Validation', () => {
       failure.unsafeGet()
     }, `Can't extract the value of a Failure`)
   })
+
+  it('Validation#ap', () => {
+    const add = x => y => x + y
+    const val = Validation.Success(add)
+      .ap(Validation.Success(1))
+      .ap(Validation.Success(3))
+    assert.equal(val.unsafeGet(), 4)
+  })
 })

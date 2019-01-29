@@ -1,7 +1,6 @@
-import { curry } from 'fp/combinators'
-
-const implementsContract = curry((contract, obj) =>
-  obj[Symbol.for('implements')].includes(contract)
-)
+const implementsContract = (obj, ...contracts) => {
+  const impl = obj[Symbol.for('implements')]
+  return contracts.every(c => impl.includes(c))
+}
 
 export { implementsContract }

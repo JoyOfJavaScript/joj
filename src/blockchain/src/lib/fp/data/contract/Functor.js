@@ -10,8 +10,8 @@ import { implementsContract } from './shared'
  */
 const Functor = () => ({
   map (f) {
-    if (implementsContract('map', this)) {
-      return this.constructor.of(f(this.unsafeGet()))
+    if (implementsContract(this, 'map')) {
+      return this.constructor.of(f(this.value))
     } else {
       return this
     }
