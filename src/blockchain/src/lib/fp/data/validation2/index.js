@@ -1,4 +1,4 @@
-import { Applicative, Functor, Monad } from '../contract'
+import { decorate } from '../contract'
 
 // https://folktale.origamitower.com/docs/v2.3.0/migrating/from-data.validation/
 export default class Validation {
@@ -51,6 +51,10 @@ export default class Validation {
   }
 
   getOrElse () {}
+
+  get [Symbol.for('implements')] () {
+    return ['map', 'ap', 'flatMap']
+  }
 }
 
 export class Success extends Validation {
@@ -60,7 +64,7 @@ export class Success extends Validation {
   }
 
   static of (a) {
-    return Object.assign(new Success(a), Functor(), Applicative(), Monad())
+    return decorate(new Success(a))
   }
 
   get isSuccess () {
@@ -69,14 +73,6 @@ export class Success extends Validation {
 
   get tag () {
     return this.#tag
-  }
-
-  get [Symbol.for('implements')] () {
-    return ['map', 'ap']
-  }
-
-  [Symbol.iterator] () {
-    return Array
   }
 }
 
@@ -91,7 +87,7 @@ export class Failure extends Validation {
   }
 
   static of (b) {
-    return Object.assign(new Failure(b), Functor(), Applicative(), Monad())
+    return decorate(new Failure(b))
   }
 
   unsafeGet () {
@@ -100,9 +96,5 @@ export class Failure extends Validation {
 
   get tag () {
     return this.#tag
-  }
-
-  get [Symbol.for('implements')] () {
-    return ['']
   }
 }
