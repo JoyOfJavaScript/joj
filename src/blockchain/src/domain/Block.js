@@ -7,7 +7,6 @@ import {
   checkNoTampering,
   checkTimestamps
 } from './block/validations'
-import proofOfWork from './block/proof_of_work'
 
 /**
  * Transactional blocks contain the set of all pending transactions in the chain
@@ -19,24 +18,29 @@ import proofOfWork from './block/proof_of_work'
  * changes, it's a different block
  */
 export default class Block {
+  #blockchain
+  #version = '1.0'
+  #index = 0
   constructor (index, previousHash, pendingTransactions = []) {
-    this.index = index
+    this.#index = index
     this.previousHash = previousHash
     this.pendingTransactions = pendingTransactions
     this.difficulty = 2
     this.nonce = 0
     this.timestamp = Date.now()
     this.hash = undefined // Gets computed later
-    this.blockchain = undefined // Gets set after construction
   }
+
   /**
-   * Execute proof of work algorithm to mine block
-   * @return {Promise<Block>} Mined block
+   * Set the blockchain object this block is contained in
+   *
+   * @readonly
+   * @param {Blockchain} b Blockchain strucure
+   * @return {Block} Returns the block
    */
-  async mine () {
-    return Promise.resolve(
-      proofOfWork(this, ''.padStart(this.difficulty, '0'), this.nonce)
-    )
+  set blockchain (b) {
+    this.#blockchain = b
+    return this
   }
 
   /**
@@ -52,7 +56,7 @@ export default class Block {
       return Success(true)
     } else {
       // Compare each block with its previous
-      const previous = this.blockchain.lookUp(this.previousHash)
+      const previous = this.#blockchain.lookUp(this.previousHash)
 
       const result = [
         checkLength(64),
@@ -75,6 +79,7 @@ export default class Block {
    */
   toJSON () {
     return {
+      index: this.#index,
       previousHash: this.previousHash,
       hash: this.hash,
       nonce: this.nonce,
@@ -84,7 +89,7 @@ export default class Block {
   }
 
   get [Symbol.for('version')] () {
-    return '1.0'
+    return this.#version
   }
 
   // TODO: in chapter on symbols, create a symbol for [Symbol.observable] then show validating blockchain using it

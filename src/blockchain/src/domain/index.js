@@ -18,7 +18,13 @@ import { curry } from 'fp/combinators'
 export const createBlock = (id, previousHash, pendingTransactions) =>
   Object.assign(
     new Block(id, previousHash, pendingTransactions),
-    HasHash(['timestamp', 'previousHash', 'nonce', 'pendingTransactions']),
+    HasHash([
+      'index',
+      'timestamp',
+      'previousHash',
+      'nonce',
+      'pendingTransactions'
+    ]),
     HasValidation()
   )
 

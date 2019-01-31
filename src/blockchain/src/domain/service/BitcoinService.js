@@ -7,6 +7,7 @@ import Key from '../value/Key'
 import { MINING_REWARD } from '../../infrastructure/settings'
 import Money from '../value/Money'
 import fs from 'fs'
+import proofOfWork from './bitcoinservice/proof_of_work'
 
 class BitcoinService {
   /**
@@ -23,7 +24,7 @@ class BitcoinService {
    * Recalculate new blocks hash until the difficulty condition is met (mine)
    * Point new block's previous to current
    *
-   * @param {Block}       newBlock   New block to add into the chain
+   * @param {Block}  newBlock   New block to add into the chain
    * @return {Block} Returns new block mined into the blockchain
    */
   async mineBlock (newBlock) {
@@ -32,7 +33,12 @@ class BitcoinService {
         newBlock.pendingTransactions.length
       } pending transactions in block`
     )
-    return this.ledger.push(await newBlock.mine())
+
+    return this.ledger.push(
+      await Promise.resolve(
+        proofOfWork(newBlock, ''.padStart(newBlock.difficulty, '0'))
+      )
+    )
   }
 
   /**
