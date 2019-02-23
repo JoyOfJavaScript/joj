@@ -15,7 +15,7 @@ import { curry } from 'fp/combinators'
  * @param {Array}  pendingTransactions Array of pending transactions from the chain
  * @return {Block} Newly created block with its own computed hash
  */
-export const createBlock = (id, previousHash, pendingTransactions) =>
+export const assembleBlock = (id, previousHash, pendingTransactions) =>
   Object.assign(
     new Block(id, previousHash, pendingTransactions),
     HasHash([
@@ -38,7 +38,7 @@ export const createBlock = (id, previousHash, pendingTransactions) =>
  * @param {CryptoSigner} signer Signer to use for transactions
  * @return {Transaction} Newly created transaction
  */
-export const createTransaction = curry(
+export const assembleTransaction = curry(
   (sender, recipient, funds, description) =>
     Object.assign(
       new Transaction(sender, recipient, funds, description),
@@ -55,7 +55,7 @@ export const createTransaction = curry(
  * @param {Key} privateKey Private key
  * @return {Wallet} A new wallet
  */
-export const createWallet = curry(
+export const assembleWallet = curry(
   (publicKey, privateKey) => new Wallet(publicKey, privateKey)
 )
 
@@ -73,15 +73,15 @@ export const createWallet = curry(
 // Talk about species and the species pattern
 // http://exploringjs.com/es6/ch_classes.html#sec_species-pattern
 
-export const createBlockchain = (genesis = createGenesisBlock()) => {
+export const assembleBlockchain = (genesis = createGenesisBlock()) => {
   return Object.assign(new Blockchain(genesis), HasValidation())
 }
 
 function createGenesisBlock (previousHash = '0'.repeat(64)) {
   const pendingTransactions = [] // Could contain a first transaction like a starting reward
-  const genesis = createBlock(1, previousHash, pendingTransactions)
+  const genesis = assembleBlock(1, previousHash, pendingTransactions)
   genesis.hash = genesis.calculateHash()
   return genesis
 }
 
-export default { createBlock, createTransaction, createBlockchain }
+export default { assembleBlock, assembleTransaction, assembleBlockchain }

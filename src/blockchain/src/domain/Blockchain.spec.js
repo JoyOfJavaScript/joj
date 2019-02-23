@@ -1,4 +1,4 @@
-import { createBlockchain as BlockChain } from '.'
+import { assembleBlockchain as BlockChain } from '.'
 import { PerfCount } from '../common/proxies'
 import { assert } from 'chai'
 

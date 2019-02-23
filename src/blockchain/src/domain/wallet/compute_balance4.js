@@ -11,7 +11,7 @@ import {
 import Money from '../value/Money'
 import balanceOf from './balance_of'
 
-const computeBalance = curry((address, ledger) =>
+const computeBalance = curry((address, blocks) =>
   compose(
     Money.round,
     reduce(Money.sum, Money.zero()),
@@ -22,8 +22,7 @@ const computeBalance = curry((address, ledger) =>
         not,
         prop('isGenesis')
       )
-    ),
-    Array.from
-  )(ledger)
+    )
+  )(blocks)
 )
 export default computeBalance

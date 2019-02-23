@@ -1,7 +1,7 @@
 import {
-  createBlockchain as Blockchain,
-  createTransaction as Transaction,
-  createWallet as Wallet
+  assembleBlockchain as Blockchain,
+  assembleTransaction as Transaction,
+  assembleWallet as Wallet
 } from '../src/domain'
 import { MethodCounter, TraceLog } from '../src/common/proxies'
 import BitcoinService from '../src/domain/service/BitcoinService'

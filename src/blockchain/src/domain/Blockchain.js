@@ -1,4 +1,4 @@
-import { Success } from 'fp/data/validation'
+import { Success } from 'fp/data/validation2'
 
 /**
  * Untamperable blockchain. You may initialize the chain with an existing
@@ -50,7 +50,7 @@ export default class Blockchain {
   // TODO: Use an iterator to check all blocks instead of toArray. Delete toArray method and use ...blockchain to invoke the iterator
   // TODO: You can use generators to run a simulation
   isValid () {
-    return Success(this.height() > 0)
+    return Success.of(this.height() > 0)
   }
 
   addPendingTransaction (tx) {

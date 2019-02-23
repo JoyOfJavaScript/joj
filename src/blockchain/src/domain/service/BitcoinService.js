@@ -1,7 +1,7 @@
 import {
-  createBlock as Block,
-  createTransaction as Transaction,
-  createWallet as Wallet
+  assembleBlock as Block,
+  assembleTransaction as Transaction,
+  assembleWallet as Wallet
 } from '../'
 import Key from '../value/Key'
 import { MINING_REWARD } from '../../infrastructure/settings'

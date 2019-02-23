@@ -62,10 +62,10 @@ export default class Block {
         checkLength(64),
         checkNoTampering,
         checkDifficulty(this.difficulty),
-        checkLinkage(previous),
-        checkTimestamps(previous)
-      ].every(f => f(this))
-      // .reduce((r, f) => r && f(this))
+        checkLinkage({ ...previous }),
+        checkTimestamps({ ...previous })
+      ].every(f => f({ ...this }))
+      // .reduce((r, f) => r && f({ ...this }))
 
       return result
         ? Success(true)

@@ -20,6 +20,26 @@ const util = {
 }
 
 describe('OLOO domain modeling', () => {
+  it('Extends array using OLOO pattern', () => {
+    // TODO: finish
+    const MyArray = {
+      init (element) {
+        MyArray.prototype = Object.create(Array.prototype)
+        return [element]
+      }
+    }
+    const blockchain = Object.create(MyArray).init(createGenesisBlock())
+
+    console.log(blockchain)
+    blockchain.push({ hash: '234' })
+    console.log(blockchain)
+    console.log(blockchain instanceof Array)
+
+    function createGenesisBlock () {
+      return { hash: '0000' }
+    }
+  })
+
   it('Should create a simple Transaction model', () => {
     const Transaction = {}
     Transaction.init = function (fromEmail, toEmail) {
@@ -73,7 +93,9 @@ describe('OLOO domain modeling', () => {
 
     MoneyTransaction.calculateHash = function () {
       const data = [this.fromEmail, this.toEmail, this.funds].join('')
-      let hash = 0, i = 0
+      let hash = 0
+
+      let i = 0
       const len = data.length
       while (i < len) {
         hash = ((hash << 5) - hash + data.charCodeAt(i++)) << 0

@@ -32,7 +32,7 @@ const HasHash = (
       computeCipher(options),
       assemble,
       props(keys)
-    )(this)
+    )({ ...this })
   }
 })
 

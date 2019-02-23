@@ -1,4 +1,4 @@
-import { createWallet as Wallet } from '.'
+import { assembleWallet as Wallet } from '.'
 import { assert } from 'chai'
 import fs from 'fs'
 import path from 'path'

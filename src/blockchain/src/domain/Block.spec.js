@@ -1,4 +1,4 @@
-import { createBlock as Block } from '.'
+import { assembleBlock as Block } from '.'
 import { assert } from 'chai'
 
 describe('Block Spec', () => {

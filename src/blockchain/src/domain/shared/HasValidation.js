@@ -3,10 +3,7 @@ import { Success } from 'fp/data/validation'
 /**
  * HasValidation mixin.
  *
- * TODO:
- *
- * @param {Array}        keys   List of property names present in this object that shall be used for hashing
- * @return {string} Return a string hash of the block
+ * @return {Validation} Validation result
  */
 const HasValidation = () => ({
   /**

@@ -1,6 +1,6 @@
 import Key from './value/Key'
 import Money from './value/Money'
-import { createTransaction as Transaction } from '.'
+import { assembleTransaction as Transaction } from '.'
 import { assert } from 'chai'
 
 describe('Transaction', () => {

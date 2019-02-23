@@ -5,7 +5,7 @@ import { Failure, Success } from 'fp/data/validation'
  * or relinquishing an asset, the monetary value being transacted and to whom is sent to.
  * Ownership of an asset (like money) is transfered via transactions.
  */
-export default class Transaction {
+const Transaction = class {
   timestamp = Date.now()
   nonce = 0
   id
@@ -78,6 +78,8 @@ export default class Transaction {
     }
   }
 }
+
+export default Transaction
 
 // https://medium.com/programmers-blockchain/creating-your-first-blockchain-with-java-part-2-transactions-2cdac335e0ce
 // https://nodejs.org/api/crypto.html#crypto_class_sign

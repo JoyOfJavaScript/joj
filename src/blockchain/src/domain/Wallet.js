@@ -12,6 +12,6 @@ export default class Wallet {
     return this.publicKey
   }
   balance (ledger) {
-    return computeBalance(this.publicKey)(ledger)
+    return computeBalance(this.publicKey)([...ledger])
   }
 }

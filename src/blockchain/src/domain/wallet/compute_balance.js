@@ -22,8 +22,7 @@ const computeBalance = address =>
         not,
         prop('isGenesis')
       )
-    ),
-    Array.from
+    )
   )
 
 export default computeBalance
