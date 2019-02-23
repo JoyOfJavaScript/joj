@@ -1,12 +1,10 @@
-import {
-  assembleBlockchain as Blockchain,
-  assembleTransaction as Transaction,
-  assembleWallet as Wallet
-} from '../src/domain'
+import { assembleWallet as Wallet } from '../src/domain'
+import Blockchain from '../src/domain/Blockchain'
 import { MethodCounter, TraceLog } from '../src/common/proxies'
 import BitcoinService from '../src/domain/service/BitcoinService'
 import Key from '../src/domain/value/Key'
 import Money from '../src/domain/value/Money'
+import Transaction from '../src/domain/Transaction'
 import { assert } from 'chai'
 import { compose } from '../src/lib/fp/combinators'
 import path from 'path'
@@ -22,7 +20,7 @@ describe('Transfer Funds Test suite', () => {
     // Some miner
     const miner = Wallet(Key('miner-public.pem'), Key('miner-private.pem'))
 
-    const first = Transaction(
+    const first = new Transaction(
       null,
       miner.address,
       (100).btc(),
@@ -34,7 +32,7 @@ describe('Transfer Funds Test suite', () => {
       TraceLog,
       MethodCounter('lookUp', 'validate')
     )
-    const ledger = applyProxies(Blockchain())
+    const ledger = applyProxies(new Blockchain())
     ledger.addPendingTransaction(first)
 
     const bitcoinService = new BitcoinService(ledger)

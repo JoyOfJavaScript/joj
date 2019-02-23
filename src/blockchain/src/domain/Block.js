@@ -7,6 +7,8 @@ import {
   checkNoTampering,
   checkTimestamps
 } from './block/validations'
+import HasHash from './shared/HasHash'
+import HasValidation from './shared/HasValidation'
 
 /**
  * Transactional blocks contain the set of all pending transactions in the chain
@@ -17,6 +19,7 @@ import {
  * properties of such block. Blocks are immutable with respect to their hash, if the hash of a block
  * changes, it's a different block
  */
+
 export default class Block {
   #blockchain
   #version = '1.0'
@@ -64,8 +67,8 @@ export default class Block {
         checkDifficulty(this.difficulty),
         checkLinkage({ ...previous }),
         checkTimestamps({ ...previous })
-      ].every(f => f({ ...this }))
-      // .reduce((r, f) => r && f({ ...this }))
+      ].every(f => f(this))
+      // .reduce((r, f) => r && f(this))
 
       return result
         ? Success(true)
@@ -97,3 +100,15 @@ export default class Block {
     return this.pendingTransactions[Symbol.iterator]()
   }
 }
+
+Object.assign(
+  Block.prototype,
+  HasHash([
+    'index',
+    'timestamp',
+    'previousHash',
+    'nonce',
+    'pendingTransactions'
+  ]),
+  HasValidation()
+)

@@ -1,9 +1,9 @@
-import { assembleBlockchain as BlockChain } from '.'
+import BlockChain from './Blockchain'
 import { PerfCount } from '../common/proxies'
 import { assert } from 'chai'
 
 // Create blockchain with a genesis block
-const ledger = PerfCount('validate')(BlockChain())
+const ledger = PerfCount('validate')(new BlockChain())
 
 console.log('Height: ', ledger.height())
 

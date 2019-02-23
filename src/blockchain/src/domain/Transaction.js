@@ -1,11 +1,14 @@
 import { Failure, Success } from 'fp/data/validation'
+import HasHash from './shared/HasHash'
+import HasSignature from './shared/HasSignature'
+import HasValidation from './shared/HasValidation'
 
 /**
  * A transaction holds information (keys) identifying who is making the payment
  * or relinquishing an asset, the monetary value being transacted and to whom is sent to.
  * Ownership of an asset (like money) is transfered via transactions.
  */
-const Transaction = class {
+export default class Transaction {
   timestamp = Date.now()
   nonce = 0
   id
@@ -79,7 +82,12 @@ const Transaction = class {
   }
 }
 
-export default Transaction
+Object.assign(
+  Transaction.prototype,
+  HasHash(['timestamp', 'sender', 'recipient', 'funds']),
+  HasSignature(['sender', 'recipient', 'funds']),
+  HasValidation()
+)
 
 // https://medium.com/programmers-blockchain/creating-your-first-blockchain-with-java-part-2-transactions-2cdac335e0ce
 // https://nodejs.org/api/crypto.html#crypto_class_sign

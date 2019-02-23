@@ -1,11 +1,11 @@
 import Key from './value/Key'
 import Money from './value/Money'
-import { assembleTransaction as Transaction } from '.'
+import Transaction from './Transaction'
 import { assert } from 'chai'
 
 describe('Transaction', () => {
   it('Should create a valid transaction', () => {
-    const tx = Transaction('sally', 'luke', Money('₿', 0.1), null)
+    const tx = new Transaction('sally', 'luke', Money('₿', 0.1), null)
     tx.id = tx.calculateHash()
     console.log('Transaction Hash: ', tx.id)
     assert.isNotEmpty(tx.id)
@@ -23,7 +23,7 @@ describe('Signature', () => {
     const coinbase = Key('coinbase-public.pem')
     const luke = Key('luke-public.pem')
 
-    const transaction = Transaction(coinbase, luke, Money('USD', 30), null)
+    const transaction = new Transaction(coinbase, luke, Money('USD', 30), null)
     const signature = transaction.generateSignature(privateKey, 'coinbase')
     console.log('Signed data', signature)
     assert.isNotEmpty(signature)
@@ -37,7 +37,7 @@ describe('Signature', () => {
     const privateKey = Key('coinbase-private.pem')
     const publicKey = Key('coinbase-public.pem')
 
-    const transaction = Transaction(null, publicKey, Money('USD', 30), null)
+    const transaction = new Transaction(null, publicKey, Money('USD', 30), null)
     transaction.id = transaction.calculateHash()
     assert.isNotEmpty(transaction.id)
     const signature = transaction.generateSignature(privateKey, 'coinbase')

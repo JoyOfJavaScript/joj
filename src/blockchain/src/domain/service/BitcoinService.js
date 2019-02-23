@@ -1,11 +1,9 @@
-import {
-  assembleBlock as Block,
-  assembleTransaction as Transaction,
-  assembleWallet as Wallet
-} from '../'
+import Block from '../Block'
 import Key from '../value/Key'
 import { MINING_REWARD } from '../../infrastructure/settings'
 import Money from '../value/Money'
+import Transaction from '../Transaction'
+import { assembleWallet as Wallet } from '../'
 import fs from 'fs'
 import proofOfWork from './bitcoinservice/proof_of_work'
 
@@ -74,7 +72,7 @@ class BitcoinService {
     const previousHash = this.ledger.top.hash
     const nextId = this.ledger.height + 1
     return this.mineBlock(
-      Block(nextId, previousHash, this.ledger.pendingTransactions)
+      new Block(nextId, previousHash, this.ledger.pendingTransactions)
     ).then(block => {
       // Reward is bigger when there are more transactions to process
       const fee =
@@ -90,7 +88,7 @@ class BitcoinService {
       // Reset pending transactions for this blockchain
       // Put fee transaction into the chain for next mining operation
       // Network will reward the first miner to mine the block with the transaction fee
-      const reward = Transaction(
+      const reward = new Transaction(
         this.network.address,
         address,
         Money.sum(Money('₿', fee), MINING_REWARD),
@@ -118,7 +116,7 @@ class BitcoinService {
       throw new RangeError('Insufficient funds!')
     }
     const fee = Money.multiply(funds, Money('₿', 0.02))
-    const transfer = Transaction(
+    const transfer = new Transaction(
       walletA.address,
       walletB.address,
       funds,
@@ -127,7 +125,7 @@ class BitcoinService {
     transfer.signature = transfer.generateSignature(walletA.privateKey)
     transfer.id = transfer.calculateHash()
     // Sender pays the fee
-    const txFee = Transaction(
+    const txFee = new Transaction(
       walletA.address,
       this.network.address,
       fee,

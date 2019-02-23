@@ -1,5 +1,28 @@
 import 'core-js/fn/array/flat-map'
 
+if (typeof Object.impl !== 'function') {
+  // Must be:
+  // - writable: false
+  // - enumerable: false
+  // - configurable: false
+  Object.defineProperty(Object, 'impl', {
+    value: (...mixins) => target => {
+      if (!Object.isExtensible(target) || Object.isSealed(target)) {
+        throw new TypeError(
+          'Unable to concatenate mixins into base object. Object is either not extensible or has been sealed'
+        )
+      }
+      // Mixin object delegates
+      // return Object.assign(to, mixins.reduce((a, b) => ({ ...a, ...b }), {}))
+      Object.assign(target.prototype, ...mixins)
+      return target
+    },
+    enumerable: false,
+    writable: false,
+    configurable: false
+  })
+}
+
 if (typeof Object.mixin !== 'function') {
   // Must be:
   // - writable: false
@@ -44,18 +67,18 @@ const sortReducer = (accumulator, value) => {
 }
 
 const collisionReducer = (accumulator, value, index, arr) =>
-  (value === arr[index + 1] ? [...accumulator, value] : accumulator)
+  value === arr[index + 1] ? [...accumulator, value] : accumulator
 
 function isDescriptor (obj) {
   return obj && (obj['state'] || obj['methods'])
 }
 
 /**
-   * Freeze an object (making it immutable) as well as any nested properties
-   * in this object's graph
-   * @param {Object}  obj Object to freeze
-   * @return {Object} Returns back same object with its attributes (writable) augmented
-   */
+ * Freeze an object (making it immutable) as well as any nested properties
+ * in this object's graph
+ * @param {Object}  obj Object to freeze
+ * @return {Object} Returns back same object with its attributes (writable) augmented
+ */
 export const deepFreeze = obj => {
   if (!Object.isFrozen(obj)) {
     // ES2015, we don't have to check whether attribute is object

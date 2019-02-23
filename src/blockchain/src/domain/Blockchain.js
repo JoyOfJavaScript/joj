@@ -1,4 +1,6 @@
+import HasValidation from './shared/HasValidation'
 import { Success } from 'fp/data/validation2'
+import Block from './Block'
 
 /**
  * Untamperable blockchain. You may initialize the chain with an existing
@@ -8,7 +10,7 @@ import { Success } from 'fp/data/validation2'
 export default class Blockchain {
   blocks = new Map() // Could be made private, but instance method invocation breaks when called through a proxy
   #version = '1.0'
-  constructor (genesis) {
+  constructor (genesis = createGenesisBlock()) {
     this.top = genesis
     this.blocks.set(genesis.hash, genesis)
     this.timestamp = Date.now()
@@ -64,4 +66,13 @@ export default class Blockchain {
   [Symbol.iterator] () {
     return this.blocks.values()
   }
+}
+
+Object.assign(Blockchain.prototype, HasValidation())
+
+function createGenesisBlock (previousHash = '0'.repeat(64)) {
+  const pendingTransactions = [] // Could contain a first transaction like a starting reward
+  const genesis = new Block(1, previousHash, pendingTransactions)
+  genesis.hash = genesis.calculateHash()
+  return genesis
 }
