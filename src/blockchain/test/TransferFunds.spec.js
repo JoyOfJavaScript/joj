@@ -184,7 +184,7 @@ describe('Transfer Funds Test suite', () => {
       ledger.validate.invocations
     )
 
-    const file = path.join(__dirname, '../..', 'test-run.txt')
+    const file = path.join(__dirname, 'test-run.txt')
     bitcoinService.writeLedger(file)
     fs.unlink(file, err => {
       if (err) throw err
