@@ -1,12 +1,11 @@
-import { Combinators, Result } from '@joj/adt'
+import Validation from '../lib/fp/data/validation'
 import { assert, expect } from 'chai'
+import { curry } from '../lib/fp/combinators'
 import fs from 'fs'
 import path from 'path'
 
-const { curry } = Combinators
-
 const decode = (charset = 'utf8') => buffer =>
-  (!buffer ? '' : buffer.toString(charset))
+  !buffer ? '' : buffer.toString(charset)
 
 const tokenize = str => (str || '').split(/\s+/)
 
@@ -18,7 +17,12 @@ describe('Composition', () => {
   it('Should count the words in a file using function composition', () => {
     const read = fs.readFileSync
 
-    const countWords = compose(count, tokenize, decode('utf8'), read)
+    const countWords = compose(
+      count,
+      tokenize,
+      decode('utf8'),
+      read
+    )
 
     const file = path.join(__dirname, '..//..', 'res', 'sample.txt')
     const result = countWords(file)
@@ -27,16 +31,20 @@ describe('Composition', () => {
   })
 
   it('Should count the words in a file using function composition with Result', () => {
-    const { Ok, Error } = Result
+    const { Success, Failure } = Validation
     const read = name =>
-      (fs.existsSync(name)
-        ? Ok(fs.readFileSync(name))
-        : Error('File does not exist!'))
+      fs.existsSync(name)
+        ? Success(fs.readFileSync(name))
+        : Failure('File does not exist!')
 
     const file = path.join(__dirname, '..//..', 'res', 'sample.txt')
 
     const countWords = f =>
-      read(f).map(decode('utf8')).map(tokenize).map(count).getOrElse(0)
+      read(f)
+        .map(decode('utf8'))
+        .map(tokenize)
+        .map(count)
+        .getOrElse(0)
 
     const result = countWords(file)
     const result2 = countWords('xxx')

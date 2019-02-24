@@ -1,5 +1,5 @@
 import { assert } from 'chai'
-import { curry } from '@joj/blockchain/src/lib/fp/combinators'
+import { curry } from '../lib/fp/combinators'
 import fs from 'fs'
 import path from 'path'
 
@@ -30,7 +30,7 @@ describe('Async/Await', () => {
       new Promise((resolve, reject) => {
         fs.readFile(f, (err, data) => {
           if (err) {
-            reject(`Unable to read file ${f}`)
+            reject(new Error(`Unable to read file ${f}`))
           } else {
             resolve(data)
           }
