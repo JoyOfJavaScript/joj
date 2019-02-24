@@ -26,14 +26,14 @@
     "nodemon": "^1.18.9"
   },
   "dependencies": {
-    "@joj/adt": "file:../adt/dist"
+    "@joj/blockchain": "file:../blockchain"
   },
   "scripts": {
     "lint": "eslint src/",
     "lint-fix": "eslint src/ --fix",
     "flow": "flow",
     "build": "rm -rf dist && babel src --out-dir dist",
-    "test": "mocha --recursive --require src/testSetup.js --check-leaks",
+    "test": "mocha src --recursive --require src/testSetup.js --check-leaks",
     "test-docker": "nodemon --watch src/ --exec mocha --recursive --require src/testSetup.js --check-leaks src || true",
     "test-dev": "nodemon --watch src/ --exec mocha --recursive --require src/testSetup.js --check-leaks",
     "test-debug": "mocha --recursive --debug-brk --require babel-register",

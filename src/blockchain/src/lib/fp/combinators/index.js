@@ -1,5 +1,5 @@
-import 'core-js/fn/array/flatten'
 import 'core-js/fn/array/flat-map'
+import 'core-js/fn/array/flatten'
 
 // Function combinators
 export const identity = a => a

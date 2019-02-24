@@ -1,10 +1,10 @@
 import { assert } from 'chai'
-import { curry } from '@joj/adt/combinators'
+import { curry } from '@joj/blockchain/src/lib/fp/combinators'
 import fs from 'fs'
 import path from 'path'
 
-const decode = curry(
-  (charset, buffer) => (!buffer ? '' : buffer.toString(charset))
+const decode = curry((charset, buffer) =>
+  !buffer ? '' : buffer.toString(charset)
 )
 
 const tokenize = str => (str || '').split(/\s+/)
@@ -17,7 +17,9 @@ describe('Async/Await', () => {
       new Promise((resolve, reject) => {
         fs.access(f, fs.constants.R_OK, err => {
           if (err) {
-            reject(`File ${f} does not exists or no read access allowed`)
+            reject(
+              new Error(`File ${f} does not exists or no read access allowed`)
+            )
           } else {
             resolve(f)
           }
@@ -35,7 +37,7 @@ describe('Async/Await', () => {
         })
       })
 
-    async function countWords(f) {
+    async function countWords (f) {
       if (await exists(f)) {
         const data = await read(f)
         const decodedData = decode('utf8', data)
@@ -73,7 +75,7 @@ describe('Async/Await', () => {
         })
       })
 
-    async function countWords(f) {
+    async function countWords (f) {
       if (await exists(f)) {
         const data = await read(f)
         const decodedData = decode('utf8', data)
