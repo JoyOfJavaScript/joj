@@ -28,7 +28,6 @@ describe('Transfer Funds Test suite', () => {
       'First transaction'
     )
     first.signature = first.generateSignature(miner.privateKey)
-    first.id = first.calculateHash()
     const applyProxies = compose(
       TraceLog,
       MethodCounter('lookUp', 'validate')

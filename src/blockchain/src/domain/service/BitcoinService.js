@@ -98,7 +98,6 @@ class BitcoinService {
         'Mining Reward'
       )
       reward.signature = reward.generateSignature(this.network.privateKey)
-      reward.id = reward.calculateHash()
 
       // After the transactions have been added to a block, reset them with the reward for the next miner
       this.ledger.pendingTransactions = [reward]
@@ -126,7 +125,7 @@ class BitcoinService {
       description
     )
     transfer.signature = transfer.generateSignature(walletA.privateKey)
-    transfer.id = transfer.calculateHash()
+
     // Sender pays the fee
     const txFee = new Transaction(
       walletA.address,

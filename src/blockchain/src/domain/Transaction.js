@@ -18,6 +18,7 @@ export default class Transaction {
     this.recipient = recipient
     this.funds = funds
     this.description = description
+    this.id = this.calculateHash()
   }
 
   /**
