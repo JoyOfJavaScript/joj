@@ -1,9 +1,9 @@
 // @flow
 import { expect } from 'chai'
+import Validation from '../lib/fp/data/validation'
+import type ValidationT from '../lib/types/ValidationT'
 import fs from 'fs'
 import path from 'path'
-import { Combinators, Result } from '@joj/adt'
-import type { _Result } from '@joj/adt/_types'
 
 declare var describe: any
 declare var it: any
@@ -37,20 +37,20 @@ describe('Composition with types', () => {
   })
 
   it('Should read the contensts of a file into Result', () => {
-    const { Ok, Error } = Result
+    const { Success, Failure } = Validation
 
-    function read (name: string): _Result {
+    function read (name: string): ValidationT {
       return fs.existsSync(name)
-        ? Ok(fs.readFileSync(name))
-        : Error('File does not exist!')
+        ? Success(fs.readFileSync(name))
+        : Failure(['File does not exist!'])
     }
 
     expect(
       read(file)
         .map(decode)
-        .isOk()
+        .isSuccess()
     ).to.be.true
-    expect(read('xxx').isError()).to.be.true
+    expect(read('xxx').isFailure()).to.be.true
 
     // function countResult(result: _Result<buffer$Encoding>): number {
     //   return result
