@@ -3,7 +3,7 @@ import Key from '../value/Key'
 import { MINING_REWARD } from '../../infrastructure/settings'
 import Money from '../value/Money'
 import Transaction from '../Transaction'
-import { assembleWallet as Wallet } from '../'
+import Wallet from '../Wallet'
 import fs from 'fs'
 import proofOfWork from './bitcoinservice/proof_of_work'
 
@@ -14,7 +14,10 @@ class BitcoinService {
    */
   constructor (ledger) {
     this.ledger = ledger
-    this.network = Wallet(Key('bitcoin-public.pem'), Key('bitcoin-private.pem'))
+    this.network = new Wallet(
+      Key('bitcoin-public.pem'),
+      Key('bitcoin-private.pem')
+    )
   }
 
   /**

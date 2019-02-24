@@ -1,4 +1,4 @@
-import { assembleWallet as Wallet } from '.'
+import Wallet from './Wallet'
 import { assert } from 'chai'
 import fs from 'fs'
 import path from 'path'
@@ -8,7 +8,7 @@ describe('Wallet', () => {
     const base = path.join(__dirname, '../..', 'wallets')
     const privateKey = path.join(base, 'coinbase-private.pem')
     const publicKey = path.join(base, 'coinbase-public.pem')
-    const wa = Wallet(
+    const wa = new Wallet(
       fs.readFileSync(privateKey, 'utf8'),
       fs.readFileSync(publicKey, 'utf8')
     )

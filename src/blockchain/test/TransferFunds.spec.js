@@ -1,10 +1,10 @@
-import { assembleWallet as Wallet } from '../src/domain'
-import Blockchain from '../src/domain/Blockchain'
 import { MethodCounter, TraceLog } from '../src/common/proxies'
 import BitcoinService from '../src/domain/service/BitcoinService'
+import Blockchain from '../src/domain/Blockchain'
 import Key from '../src/domain/value/Key'
 import Money from '../src/domain/value/Money'
 import Transaction from '../src/domain/Transaction'
+import Wallet from '../src/domain/Wallet'
 import { assert } from 'chai'
 import { compose } from '../src/lib/fp/combinators'
 import path from 'path'
@@ -12,13 +12,13 @@ import path from 'path'
 describe('Transfer Funds Test suite', () => {
   it('Should transfer funds from one wallet to the next', async () => {
     // Luke's digital wallet
-    const luke = Wallet(Key('luke-public.pem'), Key('luke-private.pem'))
+    const luke = new Wallet(Key('luke-public.pem'), Key('luke-private.pem'))
 
     // Ana's digital wallet
-    const ana = Wallet(Key('ana-public.pem'), Key('ana-private.pem'))
+    const ana = new Wallet(Key('ana-public.pem'), Key('ana-private.pem'))
 
     // Some miner
-    const miner = Wallet(Key('miner-public.pem'), Key('miner-private.pem'))
+    const miner = new Wallet(Key('miner-public.pem'), Key('miner-private.pem'))
 
     const first = new Transaction(
       null,
