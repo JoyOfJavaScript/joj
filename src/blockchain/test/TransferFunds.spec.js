@@ -7,6 +7,7 @@ import Transaction from '../src/domain/Transaction'
 import Wallet from '../src/domain/Wallet'
 import { assert } from 'chai'
 import { compose } from '../src/lib/fp/combinators'
+import fs from 'fs'
 import path from 'path'
 
 describe('Transfer Funds Test suite', () => {
@@ -185,5 +186,9 @@ describe('Transfer Funds Test suite', () => {
 
     const file = path.join(__dirname, '../..', 'test-run.txt')
     bitcoinService.writeLedger(file)
+    fs.unlink(file, err => {
+      if (err) throw err
+      console.log(`${file} was deleted`)
+    })
   })
 })
