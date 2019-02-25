@@ -2,23 +2,23 @@
 version: "2"
 services:  
   chapter_listings:
-    image: "node:10.13.0-slim"
+    image: "node:10.15.1-slim"
     user: "node"
     working_dir: /home/joj/src
     environment:
       - NODE_ENV=dev
-      - NPM_CONFIG_LOGLEVEL=info
+      - NPM_CONFIG_LOGLEVEL=error
     volumes:
         - ./src:/home/joj/src
-    command: bash -c  "npm install ; npm --prefix /home/joj/src/chapter-listings run test src/"
+    command: bash -c  "npm --prefix /home/joj/src/chapter-listings install --silent --progress=false ; npm --prefix /home/joj/src/chapter-listings run test src/"
 
   blockchain_tests:
-      image: "node:10.13.0-slim"
+      image: "node:10.15.1-slim"
       user: "node"
       working_dir: /home/joj/src
       environment:
         - NODE_ENV=dev
-        - NPM_CONFIG_LOGLEVEL=info
+        - NPM_CONFIG_LOGLEVEL=error
       volumes:
         - ./src:/home/joj/src
-      command: bash -c  "npm install ; npm --prefix /home/joj/src/blockchain run test src/ ; npm --prefix /home/joj/src/blockchain run test"
+      command: bash -c  "npm --prefix /home/joj/src/blockchain install --silent --progress=false ; npm --prefix /home/joj/src/blockchain run test src/ ; npm --prefix /home/joj/src/blockchain run test"
