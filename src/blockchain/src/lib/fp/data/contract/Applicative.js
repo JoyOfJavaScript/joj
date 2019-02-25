@@ -4,8 +4,7 @@ import { isFunction } from '../../combinators'
 /**
  * Provides apply extension
  *
- *
- * @see https://github.com/fantasyland/fantasy-land#functor
+ * @see https://github.com/fantasyland/fantasy-land#applicative
  * @return {Object} Object
  */
 const isApplicative = implementsContract('ap', 'map')

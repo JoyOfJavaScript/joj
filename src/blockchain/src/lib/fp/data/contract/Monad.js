@@ -3,7 +3,7 @@ import { implementsContract } from './shared'
 /**
  * Provides flatMap/chain/bind extension
  *
- * @see https://github.com/fantasyland/fantasy-land#functor
+ * @see https://github.com/fantasyland/fantasy-land#monad
  * @return {Object} Object
  */
 const isMonad = implementsContract('ap', 'map', 'flatMap', 'bind', 'chain')
