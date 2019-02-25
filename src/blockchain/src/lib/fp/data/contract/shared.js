@@ -1,4 +1,4 @@
-const implementsContract = (obj, ...contracts) => {
+const implementsContract = (...contracts) => obj => {
   const impl = obj[Symbol.for('implements')]
   return contracts.every(c => impl.includes(c))
 }

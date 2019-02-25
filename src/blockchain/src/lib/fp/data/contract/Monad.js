@@ -1,16 +1,16 @@
 import { implementsContract } from './shared'
 
 /**
- * Provides flatMap extension
- *
+ * Provides flatMap/chain/bind extension
  *
  * @see https://github.com/fantasyland/fantasy-land#functor
  * @return {Object} Object
  */
+const isMonad = implementsContract('ap', 'map', 'flatMap', 'bind', 'chain')
 const Monad = () => ({
   flatMap (f) {
-    if (implementsContract(this, 'ap', 'map', 'flatMap')) {
-      return f.call(this, this.value)
+    if (isMonad(this)) {
+      return f.call(this, this.value) // Removes extra wrapping layer
     } else {
       return this
     }

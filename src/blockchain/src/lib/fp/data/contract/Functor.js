@@ -8,9 +8,12 @@ import { implementsContract } from './shared'
  * @see https://github.com/fantasyland/fantasy-land#functor
  * @return {Object} Object
  */
+
+const isFunctor = implementsContract('map')
+
 const Functor = () => ({
   map (f) {
-    if (implementsContract(this, 'map')) {
+    if (isFunctor(this)) {
       return this.constructor.of(f(this.value))
     } else {
       return this

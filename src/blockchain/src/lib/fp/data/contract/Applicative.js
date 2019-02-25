@@ -8,9 +8,11 @@ import { isFunction } from '../../combinators'
  * @see https://github.com/fantasyland/fantasy-land#functor
  * @return {Object} Object
  */
+const isApplicative = implementsContract('ap', 'map')
+
 const Applicative = () => ({
   ap (App) {
-    if (implementsContract(this, 'ap', 'map')) {
+    if (isApplicative(this)) {
       if (isFunction(this.value)) {
         return this.constructor.of(this.value.call(this, App.value))
       } else {

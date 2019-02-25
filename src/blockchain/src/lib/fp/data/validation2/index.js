@@ -1,4 +1,6 @@
-import { decorate } from '../contract'
+import Applicative from '../contract/Applicative'
+import Functor from '../contract/Functor'
+import Monad from '../contract/Monad'
 
 // https://folktale.origamitower.com/docs/v2.3.0/migrating/from-data.validation/
 export default class Validation {
@@ -14,6 +16,16 @@ export default class Validation {
 
   get value () {
     return this._val
+  }
+
+  /**
+   * Type lifting
+   *
+   * @param {Object} value Any value
+   * @return {Success} Success branch with value
+   */
+  static of (value) {
+    return this.Success(value)
   }
 
   /**
@@ -44,7 +56,9 @@ export default class Validation {
     return false
   }
 
-  isEqual (otherValidation) {}
+  isEqual (otherValidation) {
+    // TODO:
+  }
 
   unsafeGet () {
     return this.value
@@ -53,7 +67,15 @@ export default class Validation {
   getOrElse () {}
 
   get [Symbol.for('implements')] () {
-    return ['map', 'ap', 'flatMap']
+    return ['map', 'ap', 'flatMap', 'chain', 'bind']
+  }
+
+  get tag () {
+    return this.#tag
+  }
+
+  toString () {
+    return `${this.tag} (${this.value})`
   }
 }
 
@@ -64,7 +86,7 @@ export class Success extends Validation {
   }
 
   static of (a) {
-    return decorate(new Success(a))
+    return new Success(a)
   }
 
   get isSuccess () {
@@ -87,7 +109,7 @@ export class Failure extends Validation {
   }
 
   static of (b) {
-    return decorate(new Failure(b))
+    return new Failure(b)
   }
 
   unsafeGet () {
@@ -98,3 +120,5 @@ export class Failure extends Validation {
     return this.#tag
   }
 }
+
+Object.assign(Validation.prototype, Applicative(), Functor(), Monad())
