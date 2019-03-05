@@ -1,4 +1,4 @@
-import { Failure, Success } from 'fp/data/validation'
+import { Failure, Success } from '../lib/fp/data/validation'
 import HasHash from './shared/HasHash'
 import HasSignature from './shared/HasSignature'
 import HasValidation from './shared/HasValidation'

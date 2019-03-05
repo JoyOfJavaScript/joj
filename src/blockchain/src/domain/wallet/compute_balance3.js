@@ -1,4 +1,4 @@
-import { curry, not, prop } from 'fp/combinators'
+import { curry, not, prop } from '../../lib/fp/combinators'
 import Money from '../value/Money'
 import balanceOf from './balance_of'
 

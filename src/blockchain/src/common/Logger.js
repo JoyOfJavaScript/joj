@@ -1,4 +1,4 @@
-import Combinators from 'fp/combinators'
+import Combinators from '../lib/fp/combinators'
 
 export const Levels = new Map([
   ['TRACE', 0],

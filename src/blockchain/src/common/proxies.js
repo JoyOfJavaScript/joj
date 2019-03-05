@@ -1,4 +1,4 @@
-import { curry } from 'fp/combinators'
+import { curry } from '../lib/fp/combinators'
 
 // Handlers
 const accessorLogHandler = {

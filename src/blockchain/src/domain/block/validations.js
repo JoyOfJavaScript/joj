@@ -1,4 +1,4 @@
-import { curry } from 'fp/combinators'
+import { curry } from '../../lib/fp/combinators'
 
 export const checkLength = curry((len, { hash }) => () => hash.length === len)
 export const checkNoTampering = b => b.hash === b.calculateHash()

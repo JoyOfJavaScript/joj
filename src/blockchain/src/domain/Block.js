@@ -1,5 +1,5 @@
 import '../lang/object'
-import { Failure, Success } from 'fp/data/validation'
+import { Failure, Success } from '../lib/fp/data/validation'
 import {
   checkDifficulty,
   checkLength,
@@ -31,7 +31,7 @@ export default class Block {
     this.difficulty = 2
     this.nonce = 0
     this.timestamp = Date.now()
-    this.hash = undefined // Gets computed later
+    this.hash = this.calculateHash()
   }
 
   /**

@@ -1,6 +1,6 @@
-import HasValidation from './shared/HasValidation'
-import { Success } from 'fp/data/validation2'
 import Block from './Block'
+import HasValidation from './shared/HasValidation'
+import { Success } from '../lib/fp/data/validation2'
 
 /**
  * Untamperable blockchain. You may initialize the chain with an existing

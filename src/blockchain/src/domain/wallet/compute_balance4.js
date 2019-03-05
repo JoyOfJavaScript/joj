@@ -7,7 +7,7 @@ import {
   not,
   prop,
   reduce
-} from 'fp/combinators'
+} from '../../lib/fp/combinators'
 import Money from '../value/Money'
 import balanceOf from './balance_of'
 

@@ -1,0 +1,31 @@
+import { assert } from 'chai'
+import fs from 'fs'
+import path from 'path'
+
+describe('1.4 - Higher-order functional programming', () => {
+  it('Functions are objects', () => {
+    assert.equal(Function.prototype.__proto__.constructor, Object)
+  })
+  it('Compose using reduce', () => {
+    const compose = (...fns) => arg => fns.reduceRight((c, f) => f(c), arg)
+
+    const decode = (charset = 'utf8') => buffer =>
+      !buffer ? '' : buffer.toString(charset)
+
+    const parseBlocks = str => (str || '').split(/\s+/)
+
+    const count = arr => (!arr ? 0 : arr.length)
+
+    const read = fs.readFileSync
+
+    const countBlocksInFile = compose(
+      count, // #A
+      parseBlocks, // #B
+      decode, // #C
+      read // #D
+    )
+
+    const filename = path.join(__dirname, '../../', 'res', 'sample.txt')
+    assert.isTrue(countBlocksInFile(filename) >= 6)
+  })
+})
