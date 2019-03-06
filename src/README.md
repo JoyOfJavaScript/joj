@@ -1,4 +1,4 @@
-# Source code for Joy of JavaScript
+# Source code for Joy of JavaScript (JoJ)
 The book uses two projects:
 
 ## Chapter-listings
