@@ -21,11 +21,11 @@ describe('1.4 - Higher-order functional programming', () => {
     const countBlocksInFile = compose(
       count, // #A
       parseBlocks, // #B
-      decode, // #C
+      decode('utf8'), // #C
       read // #D
     )
 
     const filename = path.join(__dirname, '../../', 'res', 'sample.txt')
-    assert.isTrue(countBlocksInFile(filename) >= 6)
+    assert.equal(countBlocksInFile(filename), 7)
   })
 })
