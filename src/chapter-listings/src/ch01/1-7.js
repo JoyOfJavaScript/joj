@@ -39,21 +39,21 @@ describe('1.7 - Types for JavaScript?', () => {
 
   it('countBlocksInFile using Validation', () => {
     const { Success, Failure } = Validation
-    interface IADT {
-      map: (f: (any) => any) => IADT<any>;
+    interface ADT {
+      map: (f: (any) => any) => ADT;
       value: any;
     }
-    interface ISuccess extends IADT {
+    interface SuccessT extends ADT {
       IsSuccess: boolean;
     }
 
-    interface IFailure extends IADT {
+    interface FailureT extends ADT {
       IsFailure: boolean;
     }
 
-    type IValidation = ISuccess | IFailure
+    type ValidationT = SuccessT | FailureT
 
-    const read = (f: string): IValidation =>
+    const read = (f: string): ValidationT =>
       fs.existsSync(f)
         ? Success(fs.readFileSync(f))
         : Failure([`File ${f} does not exist!`])
