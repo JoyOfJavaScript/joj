@@ -36,6 +36,14 @@ export default class Blockchain {
     throw new Error(`Block with hash ${h} not found!`)
   }
 
+  newBlock () {
+    const block = new Block(this.height, this.top.previousHash, [
+      ...this.pendingTransactions
+    ])
+    this.pendingTransactions = []
+    return this.push(block)
+  }
+
   /**
    * Helps troubleshooting and testing
    * @return {Array} An array version of all blocks
@@ -57,6 +65,10 @@ export default class Blockchain {
 
   addPendingTransaction (tx) {
     this.pendingTransactions.push(tx)
+  }
+
+  addPendingTransactions (...txs) {
+    this.pendingTransactions.push(...txs)
   }
 
   get [Symbol.for('version')] () {

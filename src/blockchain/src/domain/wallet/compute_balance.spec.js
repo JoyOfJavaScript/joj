@@ -1,5 +1,4 @@
 import '../value/Money'
-import Block from '../Block'
 import Blockchain from '../Blockchain'
 import Transaction from '../Transaction'
 import { assert } from 'chai'
@@ -15,8 +14,8 @@ describe('balanceOf Spec', () => {
       (10).btc(),
       'Test2'
     )
-    const block = new Block(2, ledger.top.hash, [tx1, tx2])
-    ledger.push(block)
+    ledger.addPendingTransactions(tx1, tx2)
+    ledger.newBlock()
     console.log('compute_balance', computeBalance('sender123')([...ledger]))
     assert.ok(computeBalance('sender123')([...ledger]).equals((-20).btc()))
     assert.ok(computeBalance('recipient123')([...ledger]).equals((20).btc()))
