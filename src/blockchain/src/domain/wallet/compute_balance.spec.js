@@ -1,20 +1,24 @@
 import '../value/Money'
+import Block from '../Block'
+import Blockchain from '../Blockchain'
 import Transaction from '../Transaction'
 import { assert } from 'chai'
-import balanceOf from './balance_of'
+import computeBalance from './compute_balance'
 
 describe('balanceOf Spec', () => {
   it('Should verify the behavior of helper function balanceOf', () => {
-    const sender = 'sender123'
-    const recipient = 'recipient123'
-    const funds = (10).btc()
-    const description = 'Test'
-
-    const testTx = new Transaction(sender, recipient, funds, description)
-    const result = balanceOf(sender, testTx)
-    assert.ok(result.equals((-10).btc()))
-
-    const result2 = balanceOf(recipient, testTx)
-    assert.ok(result2.equals((10).btc()))
+    const ledger = new Blockchain()
+    const tx1 = new Transaction('sender123', 'recipient123', (10).btc(), 'Test')
+    const tx2 = new Transaction(
+      'sender123',
+      'recipient123',
+      (10).btc(),
+      'Test2'
+    )
+    const block = new Block(2, ledger.top.hash, [tx1, tx2])
+    ledger.push(block)
+    console.log('compute_balance', computeBalance('sender123')([...ledger]))
+    assert.ok(computeBalance('sender123')([...ledger]).equals((-20).btc()))
+    assert.ok(computeBalance('recipient123')([...ledger]).equals((20).btc()))
   })
 })
