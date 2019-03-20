@@ -35,11 +35,11 @@ export default class Blockchain {
     }
     throw new Error(`Block with hash ${h} not found!`)
   }
-
   newBlock () {
-    const block = new Block(this.height, this.top.previousHash, [
+    const block = new Block(this.height, this.top.hash, [
       ...this.pendingTransactions
     ])
+    block.blockchain = this
     this.pendingTransactions = []
     return this.push(block)
   }

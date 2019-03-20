@@ -2,9 +2,9 @@ import '../value/Money'
 import Blockchain from '../Blockchain'
 import Transaction from '../Transaction'
 import { assert } from 'chai'
-import computeBalance from './compute_balance2'
+import computeBalance from './compute_balance5'
 
-describe('compute_balance2 Spec', () => {
+describe('compute_balance5 Spec', () => {
   it('Should verify the behavior of helper function balanceOf', () => {
     const ledger = new Blockchain()
     const tx1 = new Transaction('sender123', 'recipient123', (10).btc(), 'Test')
