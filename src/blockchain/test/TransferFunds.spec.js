@@ -164,7 +164,7 @@ describe('Transfer Funds Test suite', () => {
     // console.log(ledger.map(x => x.inspect()))
 
     console.table(
-      ledger.toArray().map(block => ({
+      [...ledger].map(block => ({
         genesis: block.isGenesis() ? '\u2714' : false,
         previousHash: block.previousHash.valueOf(),
         hash: block.hash.valueOf(),

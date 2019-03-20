@@ -45,14 +45,6 @@ export default class Blockchain {
   }
 
   /**
-   * Helps troubleshooting and testing
-   * @return {Array} An array version of all blocks
-   */
-  toArray () {
-    return [...this.blocks.values()]
-  }
-
-  /**
    * Validate the container
    *
    * @return {boolean} Whether the chain is valid

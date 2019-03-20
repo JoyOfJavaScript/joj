@@ -142,7 +142,7 @@ class BitcoinService {
   }
 
   writeLedger (filename) {
-    const toArray = a => a.toArray()
+    const toArray = a => [...a]
     const jsonString = a => JSON.stringify(a.toJSON())
     const csv = arr => arr.map(jsonString).join(',')
     const buffer = str => Buffer.from(str, 'utf8')

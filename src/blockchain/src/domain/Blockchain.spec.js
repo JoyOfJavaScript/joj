@@ -9,8 +9,7 @@ console.log('Height: ', ledger.height())
 
 describe('Blockchain Spec', () => {
   it('Should create a block chain and assert if valid', () => {
-    assert.isOk(ledger.toArray() instanceof Array)
-    const [g, ...blocks] = ledger.toArray()
+    const [g, ...blocks] = [...ledger]
     assert.isOk(blocks.length === 0)
     assert.equal(g.previousHash, '0'.repeat(64))
     assert.isOk(ledger.validate())
