@@ -16,8 +16,7 @@ const parseBlocks = (str: string): Array<string> => (str || '').split(/\s+/)
 
 const count = (arr: Array<string>): number => (!arr ? 0 : arr.length)
 
-const compose = (...fns: Array<(any) => any>) => (x: any): any =>
-  fns.reduceRight((v, f) => f(v), x)
+const compose = (...fns: Array<(any) => any>) => (x: any): any => fns.reduceRight((v, f) => f(v), x)
 
 const filename: string = path.join(__dirname, '../../', 'res', 'sample.txt')
 
@@ -54,10 +53,8 @@ describe('1.7 - Types for JavaScript?', () => {
     type ValidationT = SuccessT | FailureT
 
     const read = (f: string): ValidationT =>
-      fs.existsSync(f)
-        ? Success(fs.readFileSync(f))
-        : Failure([`File ${f} does not exist!`])
+      fs.existsSync(f) ? Success(fs.readFileSync(f)) : Failure([`File ${f} does not exist!`])
 
-    assert.exists(read(filename).value)
+    assert.exists(read(filename).get())
   })
 })

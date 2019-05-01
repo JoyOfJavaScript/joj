@@ -1,4 +1,4 @@
-import { implementsContract } from './shared'
+import { getSpeciesConstructor } from './shared'
 
 /**
  * Provides functor extension
@@ -7,12 +7,11 @@ import { implementsContract } from './shared'
  * @return {Object} Object
  */
 
-const isFunctor = implementsContract('map')
-
-const Functor = () => ({
-  map (f) {
-    if (isFunctor(this)) {
-      return this.constructor.of(f(this.value))
+const Functor = (shortCircuit = false) => ({
+  map(f) {
+    if (!shortCircuit) {
+      const C = getSpeciesConstructor(this)
+      return C.of(f(this.get()))
     } else {
       return this
     }

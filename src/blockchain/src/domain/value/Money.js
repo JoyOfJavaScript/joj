@@ -1,6 +1,6 @@
 import { compose, composeM, curry } from '../../lib/fp/combinators'
 import { currencyMatch, isNumber, notNaN } from './money/validations'
-import Validation from '../../lib/fp/data/validation'
+import Validation from '../../lib/fp/data/validation2'
 import precisionRound from './money/precision_round'
 
 export const BITCOIN = '₿'
@@ -21,12 +21,10 @@ const Money = curry((currency, amount) =>
     amount,
     currency: currency,
     constructor: Money,
-    equals: other =>
-      Object.is(currency, other.currency) && Object.is(amount, other.amount),
+    equals: other => Object.is(currency, other.currency) && Object.is(amount, other.amount),
     inspect: () => `${currency} ${amount}`,
     serialize: () => JSON.stringify({ amount, currency }),
-    round: (precision = 2) =>
-      Money(currency, precisionRound(amount, precision)),
+    round: (precision = 2) => Money(currency, precisionRound(amount, precision)),
     minus: m => Money(currency, amount - m.amount),
     plus: m => Money(currency, amount + m.amount),
     times: m => Money(currency, amount * m.amount),
@@ -49,25 +47,25 @@ Money.round = m => m.round()
 Money.compare = (m1, m2) =>
   Validation.of(x => m1.compareTo(m2))
     .ap(currencyMatch(m1, m2))
-    .merge()
+    .get()
 
 // Add two money objects
 Money.sum = (m1, m2) =>
   Validation.of(x => m1.plus(m2))
     .ap(currencyMatch(m1, m2))
     .flatMap(validateAmount)
-    .merge()
+    .get()
 
 // Subtract two Money objects
 Money.subtract = (m1, m2) =>
   Validation.of(x => m1.minus(m2))
     .ap(currencyMatch(m1, m2))
-    .merge()
+    .get()
 
 Money.multiply = (m1, m2) =>
   Validation.of(x => m1.times(m2))
     .ap(currencyMatch(m1, m2))
-    .merge()
+    .get()
 
 // Language extension for Number.prototype
 if (typeof Number.prototype.btc !== 'function') {
@@ -76,7 +74,7 @@ if (typeof Number.prototype.btc !== 'function') {
   // - enumerable: false
   // - configurable: false
   Object.defineProperty(Number.prototype, 'btc', {
-    value: function toBitcoin () {
+    value: function toBitcoin() {
       return Money(BITCOIN, this)
     },
     writable: false,

@@ -6,19 +6,20 @@ import { implementsContract } from './shared'
  * @see https://github.com/fantasyland/fantasy-land#monad
  * @return {Object} Object
  */
-const isMonad = implementsContract('ap', 'map', 'flatMap', 'bind', 'chain')
-const Monad = () => ({
-  flatMap (f) {
-    if (isMonad(this)) {
-      return f.call(this, this.value) // Removes extra wrapping layer
+const Monad = (shortCircuit = false) => ({
+  flatMap(f) {
+    if (!shortCircuit) {
+      return this.map(f).get()
     } else {
       return this
     }
   },
-  chain (f) {
+  chain(f) {
+    //#B
     return this.flatMap(f)
   },
-  bind (f) {
+  bind(f) {
+    //#B
     return this.flatMap(f)
   }
 })

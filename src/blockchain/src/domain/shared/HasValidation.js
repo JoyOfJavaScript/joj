@@ -9,14 +9,14 @@ const HasValidation = () => ({
    *
    * @return {Validation} A validation response
    */
-  // validate () {
-  //   // Invokes the object's [Symbol.iterator] to enumerate its state through the spread operator
-  //   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol/asyncIterator
-  //   return [...this].reduce(
-  //     (v, item) => v.flatMap(() => item.validate()),
-  //     this.isValid()
-  //   )
-  // }
+  validate() {
+    // Invokes the object's [Symbol.iterator] to enumerate its state through the spread operator
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol/asyncIterator
+    return [...this].reduce(
+      (validationResult, nextItem) => validationResult.flatMap(() => nextItem.validate()),
+      this.isValid()
+    )
+  }
   /**
    * Calcuates whether the items in this container are valid recursively. Would require tail-call optimization
    *
@@ -26,23 +26,23 @@ const HasValidation = () => ({
   //   return validateModel(this)
   // }
 
-  /**
-   * Impertaive approach
-   *
-   * @return {Validation} A validation response
-   */
-  validate () {
-    let result = this.isValid()
-    if (result.isSuccess) {
-      for (const element of this) {
-        result = result.flatMap(() => element.validate())
-      }
-    }
-    return result
-  }
+  // /**
+  //  * Imperative approach
+  //  *
+  //  * @return {Validation} A validation response
+  //  */
+  // validate() {
+  //   let result = this.isValid()
+  //   if (result.isSuccess) {
+  //     for (const element of this) {
+  //       result = result.flatMap(() => element.validate())
+  //     }
+  //   }
+  //   return result
+  // }
 })
 
-function validateModel (model) {
+function validateModel(model) {
   let result = model.isValid()
   if (result.isSuccess) {
     for (const element of model) {

@@ -12,12 +12,9 @@ class BitcoinService {
    * Constructs a BitcoinService instance with the specified blockchain ledger
    * @param {Blockchain} ledger Ledger to manage
    */
-  constructor (ledger) {
+  constructor(ledger) {
     this.ledger = ledger
-    this.network = new Wallet(
-      Key('bitcoin-public.pem'),
-      Key('bitcoin-private.pem')
-    )
+    this.network = new Wallet(Key('bitcoin-public.pem'), Key('bitcoin-private.pem'))
   }
 
   /**
@@ -25,21 +22,27 @@ class BitcoinService {
    * Recalculate new blocks hash until the difficulty condition is met (mine)
    * Point new block's previous to current
    *
-   * @param {Block}  newBlock   New block to add into the chain
+   * @param {Block}  newBlock  New block to add into the chain
    * @return {Block} Returns new block mined into the blockchain
    */
-  async mineBlock (newBlock) {
-    console.log(
-      `Found ${
-        newBlock.pendingTransactions.length
-      } pending transactions in block`
-    )
+  async mineNewBlock(newBlock) {
+    console.log(`Found ${newBlock.pendingTransactions.length} pending transactions in block`)
 
     return this.ledger.push(
-      await Promise.resolve(
-        proofOfWork(newBlock, ''.padStart(newBlock.difficulty, '0'))
-      )
+      await Promise.resolve(proofOfWork(newBlock, ''.padStart(newBlock.difficulty, '0')))
     )
+  }
+
+  /**
+   * Mines the existing block and returns it. It does not push it into the chain
+   * Recalculate new blocks hash until the difficulty condition is met (mine)
+   * Point new block's previous to current
+   *
+   * @param {Block}  block  Block to add into the chain
+   * @return {Block} Returns mined block with new hash meeting difficulty requirements
+   */
+  async mineBlock(block) {
+    return await Promise.resolve(proofOfWork(block, ''.padStart(block.difficulty, '0')))
   }
 
   /**
@@ -50,7 +53,7 @@ class BitcoinService {
    * @param {string}     address  Address to send reward to
    * @return {Money} Returns the user's total balance
    */
-  calculateBalanceOfWallet (address) {
+  calculateBalanceOfWallet(address) {
     let balance = Money.zero()
     for (const block of this.ledger) {
       if (!block.isGenesis()) {
@@ -68,49 +71,49 @@ class BitcoinService {
   }
 
   // Proof of Work
-  async minePendingTransactions (address) {
+  async minePendingTransactions(address) {
     // Mine block and pass it all pending transactions in the chain
     // In reality, blocks are not to exceed 1MB, so not all tx are sent to all blocks
     // We keep transactions immutable by substracting similar transactions for the fee
     const previousHash = this.ledger.top.hash
-    const nextId = this.ledger.height + 1
-    return this.mineBlock(
-      new Block(nextId, previousHash, this.ledger.pendingTransactions)
-    ).then(block => {
-      // Reward is bigger when there are more transactions to process
-      const fee =
-        Math.abs(
-          this.ledger.pendingTransactions
-            .filter(tx => tx.amount() < 0)
-            .map(tx => tx.amount())
-            .reduce((a, b) => a + b, 0)
-        ) *
-        this.ledger.pendingTransactions.length *
-        0.02
+    const nextId = this.ledger.height() + 1
+    return this.mineNewBlock(new Block(nextId, previousHash, this.ledger.pendingTransactions)).then(
+      block => {
+        // Reward is bigger when there are more transactions to process
+        const fee =
+          Math.abs(
+            this.ledger.pendingTransactions
+              .filter(tx => tx.amount() < 0)
+              .map(tx => tx.amount())
+              .reduce((a, b) => a + b, 0)
+          ) *
+          this.ledger.pendingTransactions.length *
+          0.02
 
-      // Reset pending transactions for this blockchain
-      // Put fee transaction into the chain for next mining operation
-      // Network will reward the first miner to mine the block with the transaction fee
-      const reward = new Transaction(
-        this.network.address,
-        address,
-        Money.sum(Money('₿', fee), MINING_REWARD),
-        'Mining Reward'
-      )
-      reward.signature = reward.generateSignature(this.network.privateKey)
+        // Reset pending transactions for this blockchain
+        // Put fee transaction into the chain for next mining operation
+        // Network will reward the first miner to mine the block with the transaction fee
+        const reward = new Transaction(
+          this.network.address,
+          address,
+          Money.sum(Money('₿', fee), MINING_REWARD),
+          'Mining Reward'
+        )
+        reward.signature = reward.generateSignature(this.network.privateKey)
 
-      // After the transactions have been added to a block, reset them with the reward for the next miner
-      this.ledger.pendingTransactions = [reward]
+        // After the transactions have been added to a block, reset them with the reward for the next miner
+        this.ledger.pendingTransactions = [reward]
 
-      // Validate the entire chain
-      this.ledger.validate()
+        // Validate the entire chain
+        this.ledger.validate()
 
-      return block
-    })
+        return block
+      }
+    )
   }
 
   // eslint-disable-next-line max-statements
-  transferFunds (walletA, walletB, funds, description) {
+  transferFunds(walletA, walletB, funds, description) {
     // Check for enough funds
     const balanceA = this.calculateBalanceOfWallet(walletA.address)
 
@@ -118,21 +121,11 @@ class BitcoinService {
       throw new RangeError('Insufficient funds!')
     }
     const fee = Money.multiply(funds, Money('₿', 0.02))
-    const transfer = new Transaction(
-      walletA.address,
-      walletB.address,
-      funds,
-      description
-    )
+    const transfer = new Transaction(walletA.address, walletB.address, funds, description)
     transfer.signature = transfer.generateSignature(walletA.privateKey)
 
     // Sender pays the fee
-    const txFee = new Transaction(
-      walletA.address,
-      this.network.address,
-      fee,
-      'Transaction Fee'
-    )
+    const txFee = new Transaction(walletA.address, this.network.address, fee, 'Transaction Fee')
     txFee.signature = txFee.generateSignature(walletA.privateKey)
     txFee.id = txFee.calculateHash()
 
@@ -141,7 +134,7 @@ class BitcoinService {
     return transfer
   }
 
-  writeLedger (filename) {
+  writeLedger(filename) {
     const toArray = a => [...a]
     const jsonString = a => JSON.stringify(a.toJSON())
     const csv = arr => arr.map(jsonString).join(',')

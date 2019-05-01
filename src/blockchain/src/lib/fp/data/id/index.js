@@ -1,0 +1,47 @@
+import Applicative from '../contract/Applicative'
+import Functor from '../contract/Functor'
+import Monad from '../contract/Monad'
+
+export default class Id {
+  #tag = 'ID'
+  #val
+  constructor (value) {
+    this.#val = value
+  }
+
+  get value () {
+    return this.#val
+  }
+
+  /**
+   * Type lifting
+   *
+   * @param {Object} value Any value
+   * @return {Id} Wrapped value
+   */
+  static of (value) {
+    return new Id(value)
+  }
+
+  get () {
+    return this.#val
+  }
+
+  get [Symbol.for('implements')] () {
+    return ['map']
+  }
+
+  static get [Symbol.species] () {
+    return this
+  }
+
+  get tag () {
+    return this.#tag
+  }
+
+  toString () {
+    return `${this.tag} (${this.value})`
+  }
+}
+
+Object.assign(Id.prototype, Functor())

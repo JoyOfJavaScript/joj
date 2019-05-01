@@ -25,7 +25,7 @@ describe('Signature', () => {
 
     // Assert 4 successful attempts
     for (const i in [1, 2, 3, 4]) {
-      assert.isOk(signature.verifySignature())
+      assert.isOk(signature.verifySignature(signature.sender))
     }
 
     // Create another signature (it will have its own attempts counter)
@@ -33,12 +33,12 @@ describe('Signature', () => {
     signature.signature = signature.generateSignature(lukePrivateKey)
 
     for (const i in [1, 2, 3]) {
-      assert.isNotOk(signature.verifySignature())
+      assert.isNotOk(signature.verifySignature(signature.sender))
     }
 
     // Halt
     assert.throws(() => {
-      signature.verifySignature()
+      signature.verifySignature(signature.sender)
     }, 'Security violation detected! Halting program!')
   })
 })

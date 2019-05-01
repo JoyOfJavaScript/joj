@@ -27,18 +27,16 @@ const HasHash = (
    *
    * @return {String} A hash value
    */
-  calculateHash () {
+  calculateHash() {
     return compose(
       computeCipher(options),
       assemble,
       props(keys)
-    )({ ...this })
+    )(this)
   }
 })
 
 HasHash.init = (...args) =>
-  process.env.LOG
-    ? new Proxy(HasHash(...args), LoggerHandler('hash'))
-    : HasHash(...args)
+  process.env.LOG ? new Proxy(HasHash(...args), LoggerHandler('hash')) : HasHash(...args)
 
 export default HasHash

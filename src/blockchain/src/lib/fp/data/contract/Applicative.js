@@ -1,4 +1,4 @@
-import { implementsContract } from './shared'
+import { getSpeciesConstructor } from './shared'
 import { isFunction } from '../../combinators'
 
 /**
@@ -7,13 +7,12 @@ import { isFunction } from '../../combinators'
  * @see https://github.com/fantasyland/fantasy-land#applicative
  * @return {Object} Object
  */
-const isApplicative = implementsContract('ap', 'map')
-
-const Applicative = () => ({
-  ap (App) {
-    if (isApplicative(this)) {
-      if (isFunction(this.value)) {
-        return this.constructor.of(this.value.call(this, App.value))
+const Applicative = (shortCircuit = false) => ({
+  ap(App) {
+    if (!shortCircuit) {
+      if (isFunction(this.get())) {
+        const C = getSpeciesConstructor(this)
+        return C.of(this.get().call(this, App.get()))
       } else {
         throw new Error(`Value wrapped inside applicative must be a function`)
       }

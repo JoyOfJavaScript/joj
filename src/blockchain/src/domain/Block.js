@@ -1,14 +1,10 @@
 import '../lang/object'
-import { Failure, Success } from '../lib/fp/data/validation'
-import {
-  checkDifficulty,
-  checkLength,
-  checkLinkage,
-  checkNoTampering,
-  checkTimestamps
-} from './block/validations'
+import Validation, { Success } from '../lib/fp/data/validation2'
+import { checkDifficulty, checkIndex, checkLinkage } from './block/validations'
+import { checkLength, checkTampering, checkTimestamps, checkVersion } from './shared/validations'
 import HasHash from './shared/HasHash'
 import HasValidation from './shared/HasValidation'
+import { composeM } from '../lib/fp/combinators'
 
 /**
  * Transactional blocks contain the set of all pending transactions in the chain
@@ -23,9 +19,9 @@ import HasValidation from './shared/HasValidation'
 export default class Block {
   #blockchain
   #version = '1.0'
-  #index = 0
-  constructor (index, previousHash, pendingTransactions = []) {
-    this.#index = index
+  index = 0
+  constructor(index, previousHash, pendingTransactions = []) {
+    this.index = index
     this.previousHash = previousHash
     this.pendingTransactions = pendingTransactions
     this.difficulty = 2
@@ -41,7 +37,7 @@ export default class Block {
    * @param {Blockchain} b Blockchain strucure
    * @return {Block} Returns the block
    */
-  set blockchain (b) {
+  set blockchain(b) {
     this.#blockchain = b
     return this
   }
@@ -50,39 +46,51 @@ export default class Block {
    * Check whether this block is a genesis block (first block in a any chain)
    * @return {Boolean} Whether this is a genesis block
    */
-  isGenesis () {
+  isGenesis() {
     return this.previousHash === '0'.repeat(64)
   }
 
-  isValid () {
-    if (this.isGenesis()) {
-      return Success(true)
-    } else {
-      // Compare each block with its previous
-      const previous = this.#blockchain.lookUp(this.previousHash)
+  isValid() {
+    // return this.isGenesis()
+    //   ? Success.of(true)
+    //   : Validation.of(this)
+    //       .flatMap(checkLength(64))
+    //       .flatMap(checkTampering)
+    //       .flatMap(checkDifficulty)
+    //       .flatMap(checkLinkage(previousHash))
+    //       .flatMap(checkTimestamps(previousTimestamp))
 
-      const result = [
-        checkLength(64),
-        checkNoTampering,
-        checkDifficulty(this.difficulty),
-        checkLinkage({ ...previous }),
-        checkTimestamps({ ...previous })
-      ].every(f => f(this))
-      // .reduce((r, f) => r && f(this))
+    return this.isGenesis()
+      ? Success.of(true)
+      : (block => {
+          // Compare each block with its previous
+          const {
+            index: previousBlockIndex,
+            hash: previousBlockHash,
+            timestamp: previousBlockTimestamp
+          } = this.#blockchain.lookUp(this.previousHash)
 
-      return result
-        ? Success(true)
-        : Failure([`Validation failed for block ${this.hash}`])
-    }
+          return composeM(
+            () => Success.of(true),
+            checkTampering,
+            checkDifficulty,
+            checkLinkage(previousBlockHash),
+            checkLength(64),
+            checkTimestamps(previousBlockTimestamp),
+            checkVersion(this.#blockchain[Symbol.for('version')]),
+            checkIndex(previousBlockIndex),
+            Validation.of
+          )(block)
+        })(this)
   }
 
   /**
    * Returns the minimal JSON representation of this object
    * @return {Object} JSON object
    */
-  toJSON () {
+  toJSON() {
     return {
-      index: this.#index,
+      index: this.index,
       previousHash: this.previousHash,
       hash: this.hash,
       nonce: this.nonce,
@@ -91,24 +99,18 @@ export default class Block {
     }
   }
 
-  get [Symbol.for('version')] () {
+  get [Symbol.for('version')]() {
     return this.#version
   }
 
   // TODO: in chapter on symbols, create a symbol for [Symbol.observable] then show validating blockchain using it
-  [Symbol.iterator] () {
+  [Symbol.iterator]() {
     return this.pendingTransactions[Symbol.iterator]()
   }
 }
 
 Object.assign(
   Block.prototype,
-  HasHash([
-    'index',
-    'timestamp',
-    'previousHash',
-    'nonce',
-    'pendingTransactions'
-  ]),
+  HasHash(['index', 'timestamp', 'previousHash', 'nonce', 'pendingTransactions']),
   HasValidation()
 )

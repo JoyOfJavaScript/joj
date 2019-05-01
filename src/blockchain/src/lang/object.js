@@ -1,5 +1,5 @@
 import 'core-js/fn/array/flat-map'
-
+Array.prototype.map 
 if (typeof Object.impl !== 'function') {
   // Must be:
   // - writable: false

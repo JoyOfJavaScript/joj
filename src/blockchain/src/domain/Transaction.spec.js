@@ -28,7 +28,7 @@ describe('Signature', () => {
     assert.isNotEmpty(signature)
     transaction.signature = signature
 
-    const result = transaction.verifySignature()
+    const result = transaction.verifySignature(coinbase)
     assert.isOk(result)
   })
 
@@ -42,7 +42,7 @@ describe('Signature', () => {
     transaction.signature = signature
     console.log('Signed data', signature)
     assert.isNotEmpty(signature)
-    const result = transaction.verifySignature()
+    const result = transaction.verifySignature(publicKey)
     assert.isOk(result)
   })
 })

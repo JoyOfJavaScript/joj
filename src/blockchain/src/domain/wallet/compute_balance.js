@@ -1,12 +1,4 @@
-import {
-  compose,
-  filter,
-  flatten,
-  map,
-  not,
-  prop,
-  reduce
-} from '../../lib/fp/combinators'
+import { compose, filter, flat, map, not, prop, reduce } from '../../lib/fp/combinators'
 import Money from '../value/Money'
 import balanceOf from './balance_of'
 
@@ -15,7 +7,7 @@ const computeBalance = address =>
     Money.round,
     reduce(Money.sum, Money.zero()),
     map(balanceOf(address)),
-    flatten,
+    flat,
     map(prop('pendingTransactions')),
     filter(
       compose(

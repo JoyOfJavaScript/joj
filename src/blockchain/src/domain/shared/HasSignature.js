@@ -14,34 +14,31 @@ export const HasSignature = (
     encoding: DEFAULT_ENCODING_HEX
   }
 ) => ({
-  generateSignature (privateKeyPath) {
+  generateSignature(privateKey) {
     return signInput(
       sign(options),
-      privateKeyPath,
+      privateKey,
       keys
         .map(k => this[k])
         .filter(prop => !!prop)
         .join('')
     )
   },
-  verifySignature () {
+  verifySignature(publicKey, signature) {
     return signatureVerifier(
       verify(options),
-      this.sender || this.recipient,
+      publicKey,
       keys
         .map(k => this[k])
         .filter(prop => !!prop)
         .join(''),
-      this.signature
+      signature || this.signature // Default to using the object's own signature property (if available)
     )
   }
 })
 
 const signatureVerifier = !process.env.SECURE
-  ? new Proxy(
-    verifySignatureInput,
-    SecureHandler(process.env.SECURE_ATTEMPTS || 3)
-  )
+  ? new Proxy(verifySignatureInput, SecureHandler(process.env.SECURE_ATTEMPTS || 3))
   : verifySignatureInput
 
 export default HasSignature

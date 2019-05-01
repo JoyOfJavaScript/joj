@@ -1,12 +1,7 @@
-import 'core-js/fn/array/flat-map'
-import 'core-js/fn/array/flatten'
-
 // Function combinators
 export const identity = a => a
 export const isFunction = a =>
-  a &&
-  typeof a === 'function' &&
-  Object.prototype.toString.call(a) === '[object Function]'
+  a && typeof a === 'function' && Object.prototype.toString.call(a) === '[object Function]'
 export const compose2 = (f, g) => (...args) => f(g(...args))
 export const compose = (...fns) => fns.reduce(compose2)
 export const pipe = (...fns) => fns.reduceRight(compose2)
@@ -14,16 +9,14 @@ export const curry = fn => (...args1) =>
   args1.length === fn.length
     ? fn(...args1)
     : (...args2) => {
-      const args = [...args1, ...args2]
-      return args.length >= fn.length ? fn(...args) : curry(fn)(...args)
-    }
+        const args = [...args1, ...args2]
+        return args.length >= fn.length ? fn(...args) : curry(fn)(...args)
+      }
 
 // ADT helpers
 export const not = curry((f, a) => !f(a))
-export const flatten = M => M.flatten()
-export const prop = curry((name, a) =>
-  a[name] && isFunction(a[name]) ? a[name].call(a) : a[name]
-)
+export const flat = M => M.flat()
+export const prop = curry((name, a) => (a[name] && isFunction(a[name]) ? a[name].call(a) : a[name]))
 export const props = curry((names, a) => names.map(n => prop(n, a)))
 export const map = curry((f, M) => M.map(f))
 export const reduce = curry((acc, start, M) => M.reduce(acc, start))
@@ -48,7 +41,7 @@ export default {
   flatMap,
   fold,
   reduce,
-  flatten,
+  flat,
   prop,
   props,
   not,

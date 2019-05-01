@@ -10,35 +10,34 @@ import { Success } from '../lib/fp/data/validation2'
 export default class Blockchain {
   blocks = new Map() // Could be made private, but instance method invocation breaks when called through a proxy
   #version = '1.0'
-  constructor (genesis = createGenesisBlock()) {
+  constructor(genesis = createGenesisBlock()) {
     this.top = genesis
     this.blocks.set(genesis.hash, genesis)
     this.timestamp = Date.now()
     this.pendingTransactions = []
   }
 
-  push (newBlock) {
+  push(newBlock) {
     newBlock.blockchain = this
     this.blocks.set(newBlock.hash, newBlock)
     this.top = newBlock
     return this.top
   }
 
-  height () {
+  height() {
     return this.blocks.size
   }
 
-  lookUp (hash) {
+  lookUp(hash) {
     const h = hash
     if (this.blocks.has(h)) {
       return this.blocks.get(h)
     }
     throw new Error(`Block with hash ${h} not found!`)
   }
-  newBlock () {
-    const block = new Block(this.height, this.top.hash, [
-      ...this.pendingTransactions
-    ])
+
+  newBlock() {
+    const block = new Block(this.height(), this.top.hash, [...this.pendingTransactions])
     block.blockchain = this
     this.pendingTransactions = []
     return this.push(block)
@@ -51,32 +50,29 @@ export default class Blockchain {
    */
   // TODO: Use an iterator to check all blocks instead of toArray. Delete toArray method and use ...blockchain to invoke the iterator
   // TODO: You can use generators to run a simulation
-  isValid () {
+  isValid() {
     return Success.of(this.height() > 0)
   }
 
-  addPendingTransaction (tx) {
+  addPendingTransaction(tx) {
     this.pendingTransactions.push(tx)
   }
 
-  addPendingTransactions (...txs) {
+  addPendingTransactions(...txs) {
     this.pendingTransactions.push(...txs)
   }
 
-  get [Symbol.for('version')] () {
+  get [Symbol.for('version')]() {
     return this.#version
   }
 
-  [Symbol.iterator] () {
+  [Symbol.iterator]() {
     return this.blocks.values()
   }
 }
 
 Object.assign(Blockchain.prototype, HasValidation())
 
-function createGenesisBlock (previousHash = '0'.repeat(64)) {
-  const pendingTransactions = [] // Could contain a first transaction like a starting reward
-  const genesis = new Block(1, previousHash, pendingTransactions)
-  genesis.hash = genesis.calculateHash()
-  return genesis
+function createGenesisBlock(previousHash = '0'.repeat(64)) {
+  return new Block(1, previousHash, [])
 }

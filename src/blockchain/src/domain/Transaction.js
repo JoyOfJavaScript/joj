@@ -1,31 +1,34 @@
-import { Failure, Success } from '../lib/fp/data/validation'
+import Validation, { Success } from '../lib/fp/data/validation2'
 import HasHash from './shared/HasHash'
 import HasSignature from './shared/HasSignature'
 import HasValidation from './shared/HasValidation'
-
+import { checkSignature } from './transaction/validations'
+import { checkTampering } from './shared/validations'
 /**
  * A transaction holds information (keys) identifying who is making the payment
  * or relinquishing an asset, the monetary value being transacted and to whom is sent to.
  * Ownership of an asset (like money) is transfered via transactions.
  */
 export default class Transaction {
+  #version = '1.0'
   timestamp = Date.now()
   nonce = 0
   id
+  hash
 
-  constructor (sender, recipient, funds, description = 'Generic') {
+  constructor(sender, recipient, funds, description = 'Generic') {
     this.sender = sender
     this.recipient = recipient
     this.funds = funds
     this.description = description
-    this.id = this.calculateHash()
+    this.id = this.hash = this.calculateHash()
   }
 
   /**
    * Gets the numerical amount of the funds
    * @return {Number} Amount number
    */
-  amount () {
+  amount() {
     return this.funds.amount
   }
 
@@ -33,7 +36,7 @@ export default class Transaction {
    * Gets the currency
    * @return {String} Currency string
    */
-  currency () {
+  currency() {
     return this.funds.currency
   }
 
@@ -41,30 +44,23 @@ export default class Transaction {
    * Displays a friendly description of this transaction for reporting purposes
    * @return {String} A friendly string representation
    */
-  displayTransaction () {
+  displayTransaction() {
     return `Transaction ${this.description} from ${this.sender} to ${
       this.recipient
     } for ${this.funds.toString()}`
   }
 
-  isValid () {
-    const isDataValid = this.id !== undefined
-    const isSignatureValid = this.verifySignature()
-    if (isDataValid && isSignatureValid) {
-      return Success(true)
-    } else {
-      return isDataValid
-        ? Failure([
-          `Failed transaction signature check for transaction: ${this.id}`
-        ])
-        : Failure([`Invalid transaction: ${this.sender}`])
-    }
+  isValid() {
+    return Validation.of(this)
+      .flatMap(checkSignature)
+      .flatMap(checkTampering)
+      .flatMap(() => Success.of(true))
   }
   /**
    * Returns a minimal JSON represetation of this object
    * @return {Object} JSON object
    */
-  toJSON () {
+  toJSON() {
     return {
       from: this.sender,
       to: this.recipient,
@@ -72,11 +68,11 @@ export default class Transaction {
     }
   }
 
-  get [Symbol.for('version')] () {
-    return '1.0'
+  get [Symbol.for('version')]() {
+    return this.#version
   }
 
-  [Symbol.iterator] () {
+  [Symbol.iterator]() {
     return {
       next: () => ({ done: true })
     }

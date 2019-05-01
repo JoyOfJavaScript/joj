@@ -1,4 +1,4 @@
-import { Failure, Success } from '../../../lib/fp/data/validation'
+import { Failure, Success } from '../../../lib/fp/data/validation2'
 
 /**
  * Check that currency matches
@@ -7,12 +7,10 @@ import { Failure, Success } from '../../../lib/fp/data/validation'
  * @return {Validation} Validates whether currencies match
  */
 export const currencyMatch = (m1, m2) =>
-  m1.currency === m2.currency ? Success(true) : Failure(['Currency mismatch!'])
+  m1.currency === m2.currency ? Success.of(true) : Failure.of(['Currency mismatch!'])
 
 export const notNaN = m =>
-  !isNaN(m.amount) ? Success(m) : Failure([`Number (${m.amount}) can't be NaN`])
+  !isNaN(m.amount) ? Success.of(m) : Failure.of([`Number (${m.amount}) can't be NaN`])
 
 export const isNumber = m =>
-  typeof m.amount === 'number'
-    ? Success(m)
-    : Failure([`Input (${m.amount}) is not a number`])
+  typeof m.amount === 'number' ? Success.of(m) : Failure.of([`Input (${m.amount}) is not a number`])
