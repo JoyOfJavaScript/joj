@@ -1,5 +1,3 @@
-import 'core-js/fn/array/flat-map'
-Array.prototype.map 
 if (typeof Object.impl !== 'function') {
   // Must be:
   // - writable: false
@@ -29,7 +27,7 @@ if (typeof Object.mixin !== 'function') {
   // - enumerable: false
   // - configurable: false
   Object.defineProperty(Object, 'mixin', {
-    value: function concatExtend (descriptor, ...mixins) {
+    value: function concatExtend(descriptor, ...mixins) {
       let base = Object(descriptor)
       if (isDescriptor(descriptor)) {
         base = { ...base.state, ...base.methods, ...base.interop }
@@ -69,7 +67,7 @@ const sortReducer = (accumulator, value) => {
 const collisionReducer = (accumulator, value, index, arr) =>
   value === arr[index + 1] ? [...accumulator, value] : accumulator
 
-function isDescriptor (obj) {
+function isDescriptor(obj) {
   return obj && (obj['state'] || obj['methods'])
 }
 
