@@ -1,4 +1,4 @@
-import { MethodCounter, TraceLog } from '../src/common/proxies'
+//import { MethodCounter, TraceLog } from '../src/common/proxies'
 import BitcoinService from '../src/domain/service/BitcoinService'
 import Blockchain from '../src/domain/Blockchain'
 import Key from '../src/domain/value/Key'
@@ -9,6 +9,21 @@ import { assert } from 'chai'
 import { compose } from '../src/lib/fp/combinators'
 import fs from 'fs'
 import path from 'path'
+
+const USE_PROXIES = true
+
+async function getLedger() {
+  const instance = new Blockchain()
+  if (USE_PROXIES) {
+    const { MethodCounter, TraceLog } = await import('../src/common/proxies')
+    const applyProxies = compose(
+      TraceLog,
+      MethodCounter('lookUp', 'validate')
+    )
+    return applyProxies(instance)
+  }
+  return instance
+}
 
 describe('Transfer Funds Test suite', () => {
   it('Should transfer funds from one wallet to the next', async () => {
@@ -23,11 +38,9 @@ describe('Transfer Funds Test suite', () => {
 
     const first = new Transaction(null, miner.address, (100).btc(), 'First transaction')
     first.signature = first.generateSignature(miner.privateKey)
-    const applyProxies = compose(
-      TraceLog,
-      MethodCounter('lookUp', 'validate')
-    )
-    const ledger = applyProxies(new Blockchain())
+
+    const ledger = await getLedger()
+
     ledger.addPendingTransaction(first)
 
     const bitcoinService = new BitcoinService(ledger)
@@ -133,10 +146,12 @@ describe('Transfer Funds Test suite', () => {
     const isLedgerValid = ledger.validate()
     assert.isOk(isLedgerValid.isSuccess, 'Is ledger valid?')
     assert.isTrue(isLedgerValid.get())
-    assert.isAbove(ledger.lookUp.invocations, 0)
-    assert.isAbove(ledger.validate.invocations, 0)
-    console.log('Number of lookUps made: ', ledger.lookUp.invocations)
-    console.log('Number of ledger validations made: ', ledger.validate.invocations)
+    if (USE_PROXIES) {
+      assert.isAbove(ledger.lookUp.invocations, 0)
+      assert.isAbove(ledger.validate.invocations, 0)
+      console.log('Number of lookUps made: ', ledger.lookUp.invocations)
+      console.log('Number of ledger validations made: ', ledger.validate.invocations)
+    }
 
     const file = path.join(__dirname, 'test-run.txt')
     bitcoinService.writeLedger(file)
