@@ -96,7 +96,8 @@ export default class Block {
       hash: this.hash,
       nonce: this.nonce,
       timestamp: this.timestamp,
-      pendingTransactions: this.pendingTransactions.length
+      pendingTransactions: this.pendingTransactions.length,
+      version: VERSION
     }
   }
 

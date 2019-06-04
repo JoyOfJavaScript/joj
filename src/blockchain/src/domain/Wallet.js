@@ -22,4 +22,11 @@ export default class Wallet {
   balance(ledger) {
     return computeBalance(this.publicKey)([...ledger])
   }
+
+  toJSON() {
+    return {
+      address: this.publicKey,
+      version: VERSION
+    }
+  }
 }

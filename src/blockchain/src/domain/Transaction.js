@@ -66,7 +66,8 @@ export default class Transaction {
     return {
       from: this.sender,
       to: this.recipient,
-      id: this.id
+      id: this.id,
+      version: VERSION
     }
   }
 
