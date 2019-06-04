@@ -3,7 +3,7 @@ import { currencyMatch, isNumber, notNaN } from './money/validations'
 import Validation from '../../lib/fp/data/validation2'
 import precisionRound from './money/precision_round'
 
-export const BITCOIN = '₿'
+export const JS_LITE = 'jsl'
 export const US_DOLLAR = '$'
 
 /**
@@ -19,7 +19,7 @@ const Money = curry((currency, amount) =>
     Object.freeze
   )({
     amount,
-    currency: currency,
+    currency,
     constructor: Money,
     equals: other => Object.is(currency, other.currency) && Object.is(amount, other.amount),
     inspect: () => `${currency} ${amount}`,
@@ -37,9 +37,9 @@ const Money = curry((currency, amount) =>
 )
 
 // Zero
-Money.zero = (currency = BITCOIN) => Money(currency, 0)
+Money.zero = (currency = JS_LITE) => Money(currency, 0)
 Money.Currencies = {
-  Bitcoin: BITCOIN
+  JSLite: JS_LITE
 }
 Money.round = m => m.round()
 
@@ -68,14 +68,14 @@ Money.multiply = (m1, m2) =>
     .get()
 
 // Language extension for Number.prototype
-if (typeof Number.prototype.btc !== 'function') {
+if (typeof Number.prototype.jsl !== 'function') {
   // Must be:
   // - writable: false
   // - enumerable: false
   // - configurable: false
-  Object.defineProperty(Number.prototype, 'btc', {
-    value: function toBitcoin() {
-      return Money(BITCOIN, this)
+  Object.defineProperty(Number.prototype, 'jsl', {
+    value: function JsLiteCoin() {
+      return Money(JS_LITE, this)
     },
     writable: false,
     configurable: false

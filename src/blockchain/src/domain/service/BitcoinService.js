@@ -69,7 +69,10 @@ class BitcoinService {
     return balance.round()
   }
 
-  // Proof of Work
+  /**
+   *
+   * @param {string} address Address to create reward transaction from the network
+   */
   async minePendingTransactions(address) {
     // Mine block and pass it all pending transactions in the chain
     // In reality, blocks are not to exceed 1MB, so not all tx are sent to all blocks
@@ -96,7 +99,7 @@ class BitcoinService {
         const reward = new Transaction(
           this.network.address,
           address,
-          Money.sum(Money('₿', fee), MINING_REWARD),
+          Money.sum(Money('jsl', fee), MINING_REWARD),
           'Mining Reward'
         )
         reward.signature = reward.generateSignature(this.network.privateKey)
@@ -120,7 +123,7 @@ class BitcoinService {
     if (Money.compare(balanceA, funds) < 0) {
       throw new RangeError('Insufficient funds!')
     }
-    const fee = Money.multiply(funds, Money('₿', 0.02))
+    const fee = Money.multiply(funds, Money('jsl', 0.02))
     const transfer = new Transaction(walletA.address, walletB.address, funds, description)
     transfer.signature = transfer.generateSignature(walletA.privateKey)
 

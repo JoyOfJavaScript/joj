@@ -13,7 +13,8 @@
   ],
   "plugins": [
     "@babel/plugin-proposal-class-properties",
-    "dynamic-import-node-babel-7"
+    "@babel/plugin-proposal-numeric-separator",
+    "dynamic-import-node-babel-7"    
   ],
   "retainLines": true
 }
