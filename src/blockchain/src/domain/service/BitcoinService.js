@@ -1,6 +1,6 @@
 import Block from '../Block'
 import Key from '../value/Key'
-import { MINING_REWARD } from '../../infrastructure/settings'
+import { MINING_REWARD } from '../../common/settings'
 import Money from '../value/Money'
 import Transaction from '../Transaction'
 import Wallet from '../Wallet'
