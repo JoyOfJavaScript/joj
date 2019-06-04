@@ -12,7 +12,7 @@ import path from 'path'
 
 const USE_PROXIES = true
 
-async function getLedger() {
+async function makeLedger() {
   const instance = new Blockchain()
   if (USE_PROXIES) {
     const { MethodCounter, TraceLog } = await import('../src/common/proxies')
@@ -23,6 +23,20 @@ async function getLedger() {
     return applyProxies(instance)
   }
   return instance
+}
+
+function makeLedgerP() {
+  const instance = new Blockchain()
+  if (USE_PROXIES) {
+    return import('../src/common/proxies').then(({ MethodCounter, TraceLog }) => {
+      const applyProxies = compose(
+        TraceLog,
+        MethodCounter('lookUp', 'validate')
+      )
+      return applyProxies(instance)
+    })
+  }
+  return Promise.resolve(instance)
 }
 
 describe('Transfer Funds Test suite', () => {
@@ -39,7 +53,7 @@ describe('Transfer Funds Test suite', () => {
     const first = new Transaction(null, miner.address, (100).btc(), 'First transaction')
     first.signature = first.generateSignature(miner.privateKey)
 
-    const ledger = await getLedger()
+    const ledger = await makeLedgerP()
 
     ledger.addPendingTransaction(first)
 

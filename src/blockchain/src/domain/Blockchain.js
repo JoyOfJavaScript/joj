@@ -2,6 +2,8 @@ import Block from './Block'
 import HasValidation from './shared/HasValidation'
 import { Success } from '../lib/fp/data/validation2'
 
+const VERSION = '1.0'
+
 /**
  * Untamperable blockchain. You may initialize the chain with an existing
  * chain. But the most common thing to do is initialize with an empty Chain
@@ -9,7 +11,6 @@ import { Success } from '../lib/fp/data/validation2'
  */
 export default class Blockchain {
   blocks = new Map() // Could be made private, but instance method invocation breaks when called through a proxy
-  #version = '1.0'
   constructor(genesis = createGenesisBlock()) {
     this.top = genesis
     this.blocks.set(genesis.hash, genesis)
@@ -63,7 +64,7 @@ export default class Blockchain {
   }
 
   get [Symbol.for('version')]() {
-    return this.#version
+    return VERSION
   }
 
   [Symbol.iterator]() {

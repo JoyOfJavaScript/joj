@@ -16,9 +16,10 @@ import { composeM } from '../lib/fp/combinators'
  * changes, it's a different block
  */
 
+const VERSION = '1.0'
+
 export default class Block {
   #blockchain
-  #version = '1.0'
   index = 0
   constructor(index, previousHash, pendingTransactions = []) {
     this.index = index
@@ -100,7 +101,7 @@ export default class Block {
   }
 
   get [Symbol.for('version')]() {
-    return this.#version
+    return VERSION
   }
 
   // TODO: in chapter on symbols, create a symbol for [Symbol.observable] then show validating blockchain using it

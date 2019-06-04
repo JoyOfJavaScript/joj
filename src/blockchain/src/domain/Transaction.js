@@ -4,13 +4,15 @@ import HasSignature from './shared/HasSignature'
 import HasValidation from './shared/HasValidation'
 import { checkSignature } from './transaction/validations'
 import { checkTampering } from './shared/validations'
+
+const VERSION = '1.0'
+
 /**
  * A transaction holds information (keys) identifying who is making the payment
  * or relinquishing an asset, the monetary value being transacted and to whom is sent to.
  * Ownership of an asset (like money) is transfered via transactions.
  */
 export default class Transaction {
-  #version = '1.0'
   timestamp = Date.now()
   nonce = 0
   id
@@ -69,7 +71,7 @@ export default class Transaction {
   }
 
   get [Symbol.for('version')]() {
-    return this.#version
+    return VERSION
   }
 
   [Symbol.iterator]() {
