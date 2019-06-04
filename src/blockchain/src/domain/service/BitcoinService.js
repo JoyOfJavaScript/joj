@@ -1,6 +1,5 @@
 import Block from '../Block'
 import Key from '../value/Key'
-import { MINING_REWARD } from '../../common/settings'
 import Money from '../value/Money'
 import Transaction from '../Transaction'
 import Wallet from '../Wallet'
@@ -78,7 +77,7 @@ class BitcoinService {
     const previousHash = this.ledger.top.hash
     const nextId = this.ledger.height() + 1
     return this.mineNewBlock(new Block(nextId, previousHash, this.ledger.pendingTransactions)).then(
-      block => {
+      async block => {
         // Reward is bigger when there are more transactions to process
         const fee =
           Math.abs(
@@ -93,6 +92,7 @@ class BitcoinService {
         // Reset pending transactions for this blockchain
         // Put fee transaction into the chain for next mining operation
         // Network will reward the first miner to mine the block with the transaction fee
+        const { MINING_REWARD } = await import('../../common/settings')
         const reward = new Transaction(
           this.network.address,
           address,
