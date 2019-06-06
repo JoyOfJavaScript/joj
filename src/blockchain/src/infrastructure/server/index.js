@@ -112,7 +112,7 @@
 //         to.address,
 //         Money('₿', details.amount)
 //       )
-//       tx.signature = tx.generateSignature(from.privateKey)
+//       tx.signature = tx.sign(from.privateKey)
 //       LEDGER.addPendingTransaction(tx)
 
 //       connection.sendUTF(

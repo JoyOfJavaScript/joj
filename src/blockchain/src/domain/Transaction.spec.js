@@ -23,7 +23,7 @@ describe('Signature', () => {
     const luke = Key('luke-public.pem')
 
     const transaction = new Transaction(coinbase, luke, Money('USD', 30), null)
-    const signature = transaction.generateSignature(privateKey, 'coinbase')
+    const signature = transaction.sign(privateKey, 'coinbase')
     console.log('Signed data', signature)
     assert.isNotEmpty(signature)
     transaction.signature = signature
@@ -38,7 +38,7 @@ describe('Signature', () => {
 
     const transaction = new Transaction(null, publicKey, Money('USD', 30), null)
     assert.isNotEmpty(transaction.id)
-    const signature = transaction.generateSignature(privateKey, 'coinbase')
+    const signature = transaction.sign(privateKey, 'coinbase')
     transaction.signature = signature
     console.log('Signed data', signature)
     assert.isNotEmpty(signature)

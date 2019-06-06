@@ -14,7 +14,7 @@ export const HasSignature = (
     encoding: DEFAULT_ENCODING_HEX
   }
 ) => ({
-  generateSignature(privateKey) {
+  sign(privateKey) {
     return signInput(
       sign(options),
       privateKey,

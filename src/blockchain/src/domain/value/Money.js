@@ -39,15 +39,18 @@ const Money = curry((currency, amount) =>
 // Zero
 Money.zero = (currency = JS_LITE) => Money(currency, 0)
 Money.Currencies = {
-  JSLite: JS_LITE
+  JSLite: JS_LITE,
+  USD: US_DOLLAR
 }
 Money.round = m => m.round()
 
 // Compare money objects
-Money.compare = (m1, m2) =>
-  Validation.of(x => m1.compareTo(m2))
-    .ap(currencyMatch(m1, m2))
-    .get()
+Money.compare = (m1, m2) => {
+  if (currencyMatch(m1, m2).isFailure) {
+    throw new Error(`Current mismatch ${m1.currency} != ${m2.currency}`)
+  }
+  return m1.compareTo(m2)
+}
 
 // Add two money objects
 Money.sum = (m1, m2) =>

@@ -1,41 +1,69 @@
 import { MAX_NODES, SYNC_TIMER } from '../../common/settings'
+import EventEmitter from 'events'
+import Key from '../../domain/value/Key'
+import Wallet from '../../domain/Wallet'
 
 export default class JSLiteNetwork {
-  #nodes = new Array(MAX_NODES)
-  #nodeDifficulty = new Map()
+  #nodes
   #intervalId
-  #intervalTimer = 0
+  #emitter
+  #pendingTransactions
+  #networkWallet
 
   constructor() {
+    this.#nodes = new Array(MAX_NODES)
+    this.#emitter = new EventEmitter()
+    this.#pendingTransactions = []
+    this.#networkWallet = new Wallet(Key('jsl-public.pem'), Key('jsl-private.pem'))
     this.startInterval()
   }
 
-  async addNode() {
-    const difficulty = JSLiteNetwork.computeNewDifficulty()
-    const node = new Node(123, difficulty)
-    this.#nodes.push(node)
-    this.#nodeDifficulty.put(difficulty, node)
+  get address() {
+    return this.#networkWallet.address
+  }
 
-    // Register listener for mine actions
+  async addMinerNode(minerAddress, mineBlockFn) {
+    if (this.#nodes.length >= MAX_NODES) {
+      throw 'Max Nodes Exceeded!'
+    }
+    const difficulty = JSLiteNetwork.calculateRandomDifficulty()
+    const minerNode = new Node(minerAddress, difficulty, this.#emitter, mineBlockFn)
+    this.#nodes.push(minerNode)
+    return minerNode
+  }
+
+  static calculateRandomDifficulty() {
+    return 2
   }
 
   startInterval() {
     this.#intervalId = setInterval(() => {
-      // Notify nodes to begin mining
+      this.#emitter.emit('MINE_BLOCK')
     }, SYNC_TIMER)
   }
 
-  static computeNewDifficulty() {
-    // https://github.com/babel/babel/issues/8052
-    return 2
+  shutdown() {
+    clearInterval(this.#intervalId)
   }
 }
 
+/**
+ * Mining nodes
+ */
 class Node {
-  id
+  address
   difficulty
-  constructor(id, difficulty) {
-    this.id = id
+  constructor(address, difficulty, emmitter, mineBlockFn) {
+    this.address = address
     this.difficulty = difficulty
+    this.emmitter = emmitter
+    this.proofOfWorkFn = mineBlockFn
+    this.initEvent(mineBlockFn)
+  }
+
+  initEvent(mineBlockFn) {
+    this.emmitter.on('MINE_BLOCK', () => {
+      mineBlockFn(this.address)
+    })
   }
 }

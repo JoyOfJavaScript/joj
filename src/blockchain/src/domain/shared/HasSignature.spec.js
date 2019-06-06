@@ -19,7 +19,7 @@ describe('Signature', () => {
     )
 
     console.log(signature)
-    const sign = signature.generateSignature(coinbasePrivateKey)
+    const sign = signature.sign(coinbasePrivateKey)
     signature.signature = sign
     assert.isNotEmpty(sign)
 
@@ -30,7 +30,7 @@ describe('Signature', () => {
 
     // Create another signature (it will have its own attempts counter)
     process.env.SECURE_ATTEMPTS = 1
-    signature.signature = signature.generateSignature(lukePrivateKey)
+    signature.signature = signature.sign(lukePrivateKey)
 
     for (const i in [1, 2, 3]) {
       assert.isNotOk(signature.verifySignature(signature.sender))

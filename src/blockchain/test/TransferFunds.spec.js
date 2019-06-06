@@ -47,11 +47,11 @@ describe('Transfer Funds Test suite', () => {
     // Ana's digital wallet
     const ana = new Wallet(Key('ana-public.pem'), Key('ana-private.pem'))
 
-    // Some miner
+    // Some miner's digital wallet
     const miner = new Wallet(Key('miner-public.pem'), Key('miner-private.pem'))
 
     const first = new Transaction(null, miner.address, (100).jsl(), 'First transaction')
-    first.signature = first.generateSignature(miner.privateKey)
+    first.signature = first.sign(miner.privateKey)
 
     const ledger = await makeLedgerP()
 

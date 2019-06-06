@@ -44,7 +44,9 @@ describe('Block Spec', () => {
   it('Should validate block', async () => {
     const chain = new Blockchain()
     const bitcoin = new BitcoinService(chain)
-    const block = await bitcoin.mineNewBlock(new Block(chain.height() + 1, chain.top.hash, []))
+    const block = await bitcoin.mineNewBlockIntoChain(
+      new Block(chain.height() + 1, chain.top.hash, [])
+    )
     const validation = block.isValid()
     console.log(validation.toString())
     assert.isOk(validation.isSuccess)
