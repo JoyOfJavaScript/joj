@@ -26,8 +26,8 @@ const publicLedger = new Blockchain()
 const jsliteService = new BitcoinService(publicLedger)
 const network = new JSLiteNetwork()
 const minerFunction = jsliteService.minePendingTransactions.bind(jsliteService)
-network.addMinerNode(miner.address, minerFunction)
-network.addMinerNode(miner2.address, minerFunction)
+network.addMinerNode('Miner 1', miner.address, minerFunction)
+network.addMinerNode('Miner 2', miner2.address, minerFunction)
 
 async function runSimulation() {
   // Put some money in the network to start simulation
@@ -47,14 +47,6 @@ async function runSimulation() {
     const dummyTransfer = dummyTransfers.get(transferIndex)
     try {
       jsliteService.transferFunds(...dummyTransfer)
-
-      console.table(
-        [...publicLedger].map(block => ({
-          previousHash: block.previousHash.valueOf(),
-          hash: block.hash.valueOf(),
-          ['tx-count']: block.transactions.length
-        }))
-      )
     } catch (e) {
       // continue simulation
     }
@@ -64,6 +56,13 @@ async function runSimulation() {
     clearInterval(simulation)
     network.stop()
     console.log('simulation ended')
+    console.table(
+      [...publicLedger].map(block => ({
+        previousHash: block.previousHash.valueOf(),
+        hash: block.hash.valueOf(),
+        ['tx-count']: block.transactions.length
+      }))
+    )
     console.log("Luke's balance is", luke.balance(publicLedger).toString())
     console.log("Ana's balance is", ana.balance(publicLedger).toString())
     console.log("Miner's balance is", miner.balance(publicLedger).toString())

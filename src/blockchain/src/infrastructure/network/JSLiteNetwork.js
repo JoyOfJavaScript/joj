@@ -21,12 +21,12 @@ export default class JSLiteNetwork {
     return this.#networkWallet.address
   }
 
-  async addMinerNode(minerAddress, mineBlockFn) {
+  async addMinerNode(displayName, minerAddress, mineBlockFn) {
     if (this.#nodes.length >= MAX_NODES) {
       throw 'Max Nodes Exceeded!'
     }
     const difficulty = JSLiteNetwork.calculateRandomDifficulty()
-    const minerNode = new Node(minerAddress, difficulty, this.#emitter, mineBlockFn)
+    const minerNode = new Node(displayName, minerAddress, difficulty, this.#emitter, mineBlockFn)
     this.#nodes.push(minerNode)
     return minerNode
   }
@@ -57,7 +57,8 @@ function getRandomInteger(min, max) {
 class Node {
   address
   difficulty
-  constructor(address, difficulty, emmitter, mineBlockFn) {
+  constructor(displayName, address, difficulty, emmitter, mineBlockFn) {
+    this.displayName = displayName
     this.address = address
     this.difficulty = difficulty
     this.emmitter = emmitter
@@ -68,7 +69,7 @@ class Node {
 
   listenForMineEvent(mineBlockFn) {
     this.emmitter.on('MINE_BLOCK', () => {
-      console.log('Miner node: Beginning mining process')
+      console.log(`${this.displayName}: Beginning mining process`)
       mineBlockFn(this.address, this.difficulty)
     })
   }
