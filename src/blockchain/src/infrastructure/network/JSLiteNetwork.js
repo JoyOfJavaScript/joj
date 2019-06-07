@@ -32,7 +32,7 @@ export default class JSLiteNetwork {
   }
 
   static calculateRandomDifficulty() {
-    return 2
+    return getRandomInteger(1, 4)
   }
 
   start() {
@@ -47,6 +47,10 @@ export default class JSLiteNetwork {
   }
 }
 
+function getRandomInteger(min, max) {
+  return Math.floor(Math.random() * (max - min)) + min
+}
+
 /**
  * Mining nodes
  */
@@ -59,6 +63,7 @@ class Node {
     this.emmitter = emmitter
     this.proofOfWorkFn = mineBlockFn
     this.listenForMineEvent(mineBlockFn)
+    console.log(`Initialized new miner node with difficulty ${difficulty}`)
   }
 
   listenForMineEvent(mineBlockFn) {

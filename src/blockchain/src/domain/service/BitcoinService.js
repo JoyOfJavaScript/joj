@@ -4,7 +4,7 @@ import Money from '../value/Money'
 import Transaction from '../Transaction'
 import Wallet from '../Wallet'
 import fs from 'fs'
-import proofOfWork from './bitcoinservice/proof_of_work'
+import proofOfWork from './bitcoinservice/proof_of_work2'
 
 class BitcoinService {
   #ledger
@@ -74,6 +74,14 @@ class BitcoinService {
     const block = await this.mineNewBlockIntoChain(
       new Block(nextId, previousHash, this.#ledger.pendingTransactions, proofOfWorkDifficulty)
     )
+
+    // Validate the entire chain
+    const chainValidation = this.#ledger.validate()
+    if (chainValidation.isFailure) {
+      // if validation fails, exit and don't reward anyone
+      throw new Error(`Chain validation failed ${chainValidation.toString()}`)
+    }
+
     // Reward is bigger when there are more transactions to process
     const fee =
       Math.abs(
@@ -99,9 +107,6 @@ class BitcoinService {
 
     // After the transactions have been added to a block, reset them with the reward for the next miner
     this.#ledger.pendingTransactions = [reward]
-
-    // Validate the entire chain
-    this.#ledger.validate()
 
     return block
   }

@@ -10,13 +10,15 @@ import Wallet from './domain/Wallet'
 const luke = new Wallet(Key('luke-public.pem'), Key('luke-private.pem'))
 const ana = new Wallet(Key('ana-public.pem'), Key('ana-private.pem'))
 const miner = new Wallet(Key('miner-public.pem'), Key('miner-private.pem'))
+const miner2 = new Wallet(Key('coinbase-public.pem'), Key('coinbase-private.pem'))
 
 // Transfers made during simulation
 const dummyTransfers = new Map([
   [0, [miner, luke, (10).jsl(), 'Transfer 10 JSL to Luke']],
   [1, [luke, ana, (5).jsl(), 'Transfer 5 JSL from Luke to Ana']],
   [2, [ana, luke, (2.5).jsl(), 'Transfer 2.5 JSL from Ana to Luke']],
-  [3, [miner, ana, (10).jsl(), 'Transfer 10 JSL to Ana']]
+  [3, [miner, ana, (10).jsl(), 'Transfer 10 JSL to Ana']],
+  [4, [miner, miner2, (30).jsl(), 'Transfer 30 JSL to Second Miner']]
 ])
 
 // // Initialize infrastructure
@@ -25,6 +27,7 @@ const jsliteService = new BitcoinService(publicLedger)
 const network = new JSLiteNetwork()
 const minerFunction = jsliteService.minePendingTransactions.bind(jsliteService)
 network.addMinerNode(miner.address, minerFunction)
+network.addMinerNode(miner2.address, minerFunction)
 
 async function runSimulation() {
   // Put some money in the network to start simulation
@@ -64,6 +67,7 @@ async function runSimulation() {
     console.log("Luke's balance is", luke.balance(publicLedger).toString())
     console.log("Ana's balance is", ana.balance(publicLedger).toString())
     console.log("Miner's balance is", miner.balance(publicLedger).toString())
+    console.log("Miner 2's balance is", miner2.balance(publicLedger).toString())
   }, 120_000)
 
   return 0
