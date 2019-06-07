@@ -22,7 +22,7 @@ describe('Block Spec', () => {
 
   it('Should init a new trasactional block', () => {
     const b = new Block(1, '123', ['1', '2', '3'])
-    assert.deepEqual(b.pendingTransactions, ['1', '2', '3'])
+    assert.deepEqual(b.transactions, ['1', '2', '3'])
     assert.equal(b.previousHash, '123')
     assert.equal(b.nonce, 0)
   })

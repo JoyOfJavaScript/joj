@@ -60,7 +60,7 @@ describe('Transfer Funds Test suite', () => {
     const bitcoinService = new BitcoinService(ledger)
 
     // Mine some initial block, after mining the reward is BTC 100 for wa
-    await bitcoinService.minePendingTransactions(miner.address)
+    await bitcoinService.minePendingTransactions(miner.address, 2)
 
     const balance = miner.balance(ledger)
 
@@ -69,10 +69,10 @@ describe('Transfer Funds Test suite', () => {
     assert.isOk(balance.equals((100).jsl()))
 
     // Mine the next block to retrieve reward
-    await bitcoinService.minePendingTransactions(miner.address)
+    await bitcoinService.minePendingTransactions(miner.address, 2)
 
     bitcoinService.transferFunds(miner, luke, Money('jsl', 20), 'Transfer 20 JSL to Luke')
-    await bitcoinService.minePendingTransactions(miner.address)
+    await bitcoinService.minePendingTransactions(miner.address, 2)
 
     let lukeBalance = luke.balance(ledger)
     console.log("Luke's balance is", lukeBalance)
@@ -83,7 +83,7 @@ describe('Transfer Funds Test suite', () => {
 
     // Transfer funds between Luke and Ana
     bitcoinService.transferFunds(luke, ana, Money('jsl', 10), 'Transfer ₿20 from Luke to Ana')
-    await bitcoinService.minePendingTransactions(miner.address)
+    await bitcoinService.minePendingTransactions(miner.address, 2)
 
     let anaBalance = bitcoinService.calculateBalanceOfWallet(ana.address)
 
@@ -100,7 +100,7 @@ describe('Transfer Funds Test suite', () => {
 
     // Both wallets currently have about 10 BTC
     bitcoinService.transferFunds(luke, ana, (5).jsl(), 'Transfer ₿5 from Luke to Ana')
-    await bitcoinService.minePendingTransactions(miner.address)
+    await bitcoinService.minePendingTransactions(miner.address, 2)
 
     anaBalance = bitcoinService.calculateBalanceOfWallet(ana.address)
 
@@ -119,7 +119,7 @@ describe('Transfer Funds Test suite', () => {
     // Ana sends Luke some BTC 5, then Luke returns 3
     bitcoinService.transferFunds(ana, luke, Money('jsl', 5), 'Transfer ₿5 from Ana back to Luke')
     bitcoinService.transferFunds(luke, ana, Money('jsl', 3), 'Transfer ₿3 from Luke back to Ana')
-    await bitcoinService.minePendingTransactions(miner.address)
+    await bitcoinService.minePendingTransactions(miner.address, 2)
 
     anaBalance = bitcoinService.calculateBalanceOfWallet(ana.address)
 
@@ -153,7 +153,7 @@ describe('Transfer Funds Test suite', () => {
         genesis: block.isGenesis() ? '\u2714' : false,
         previousHash: block.previousHash.valueOf(),
         hash: block.hash.valueOf(),
-        count: block.pendingTransactions.length
+        count: block.transactions.length
       }))
     )
 

@@ -21,14 +21,14 @@ const VERSION = '1.0'
 export default class Block {
   #blockchain
   index = 0
-  constructor(index, previousHash, pendingTransactions = []) {
+  hash = ''
+  constructor(index, previousHash, transactions = [], difficulty = 0) {
     this.index = index
     this.previousHash = previousHash
-    this.pendingTransactions = pendingTransactions
-    this.difficulty = 2
+    this.transactions = transactions
     this.nonce = 0
+    this.difficulty = difficulty
     this.timestamp = Date.now()
-    this.hash = this.calculateHash()
   }
 
   /**
@@ -96,7 +96,7 @@ export default class Block {
       hash: this.hash,
       nonce: this.nonce,
       timestamp: this.timestamp,
-      pendingTransactions: this.pendingTransactions.length,
+      pendingTransactions: this.transactions.length,
       version: VERSION
     }
   }
@@ -107,12 +107,12 @@ export default class Block {
 
   // TODO: in chapter on symbols, create a symbol for [Symbol.observable] then show validating blockchain using it
   [Symbol.iterator]() {
-    return this.pendingTransactions[Symbol.iterator]()
+    return this.transactions[Symbol.iterator]()
   }
 }
 
 Object.assign(
   Block.prototype,
-  HasHash(['index', 'timestamp', 'previousHash', 'nonce', 'pendingTransactions']),
+  HasHash(['index', 'timestamp', 'previousHash', 'nonce', 'transactions']),
   HasValidation()
 )

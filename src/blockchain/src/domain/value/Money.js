@@ -30,7 +30,7 @@ const Money = curry((currency, amount) =>
     times: m => Money(currency, amount * m.amount),
     compareTo: other => amount - other.amount,
     asNegative: () => Money(currency, amount * -1),
-    toString: () => 'Hey',
+    toString: () => `${amount} ${Money.Currencies[currency]}`,
     [Symbol.toPrimitive]: () => precisionRound(amount, 2),
     [Symbol.hasInstance]: i => i.constructor.name === 'Money'
   })
@@ -39,8 +39,8 @@ const Money = curry((currency, amount) =>
 // Zero
 Money.zero = (currency = JS_LITE) => Money(currency, 0)
 Money.Currencies = {
-  JSLite: JS_LITE,
-  USD: US_DOLLAR
+  [JS_LITE]: 'JS Lite',
+  [US_DOLLAR]: 'USD'
 }
 Money.round = m => m.round()
 

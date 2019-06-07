@@ -28,7 +28,7 @@ class BitcoinService {
    * @return {Block} Returns new block mined into the blockchain
    */
   async mineNewBlockIntoChain(newBlock) {
-    console.log(`Found ${newBlock.pendingTransactions.length} pending transactions in block`)
+    console.log(`Found ${newBlock.transactions.length} pending transactions in block`)
 
     return this.#ledger.push(await proofOfWork(newBlock, ''.padStart(newBlock.difficulty, '0')))
   }
@@ -45,7 +45,7 @@ class BitcoinService {
     let balance = Money.zero()
     for (const block of this.#ledger) {
       if (!block.isGenesis()) {
-        for (const tx of block.pendingTransactions) {
+        for (const tx of block.transactions) {
           if (tx.sender === address) {
             balance = balance.minus(tx.funds)
           }
@@ -61,17 +61,18 @@ class BitcoinService {
   /**
    * Mine transactions into a new block
    * @param {string} rewardAddress Address that will receive the reward for the mining process
-   * @param {number} proofOfWorkDifficulty Difficulty factor for the proof of work function
+   * @param {number} proofOfWorkDifficulty Difficulty factor for the proof of work function (default difficulty of 2)
    * @return {Block} New mined block
    */
-  async minePendingTransactions(rewardAddress) {
+  async minePendingTransactions(rewardAddress, proofOfWorkDifficulty = 2) {
+    console.log('Mining pending transactions...')
     // Mine block and pass it all pending transactions in the chain
     // In reality, blocks are not to exceed 1MB, so not all tx are sent to all blocks
     // We keep transactions immutable by substracting similar transactions for the fee
     const previousHash = this.#ledger.top.hash
     const nextId = this.#ledger.height() + 1
     const block = await this.mineNewBlockIntoChain(
-      new Block(nextId, previousHash, this.#ledger.pendingTransactions)
+      new Block(nextId, previousHash, this.#ledger.pendingTransactions, proofOfWorkDifficulty)
     )
     // Reward is bigger when there are more transactions to process
     const fee =
@@ -107,11 +108,12 @@ class BitcoinService {
 
   // eslint-disable-next-line max-statements
   transferFunds(walletA, walletB, funds, description) {
+    console.log(`Executing transaction ${description}`)
     // Check for enough funds
     const balanceA = this.calculateBalanceOfWallet(walletA.address)
 
     if (Money.compare(balanceA, funds) < 0) {
-      throw new RangeError('Insufficient funds!')
+      throw new RangeError(`Insufficient funds for address ${walletA.address}`)
     }
     const fee = Money.multiply(funds, Money('jsl', 0.02))
     const transfer = new Transaction(walletA.address, walletB.address, funds, description)

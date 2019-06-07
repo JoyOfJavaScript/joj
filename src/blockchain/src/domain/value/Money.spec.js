@@ -8,7 +8,7 @@ describe('Money Value Object', () => {
     assert.equal(five + five, 2 * five)
     assert.ok(Money('USD', five + five).equals(Money('USD', 10)))
     assert.equal((5).jsl().amount, 5)
-    assert.equal((5).jsl().currency, Money.Currencies.JSLite)
+    assert.equal((5).jsl().currency, 'jsl')
   })
   it('Should be frozen', () => {
     const five = Money('USD', 5)

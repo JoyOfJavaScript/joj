@@ -11,11 +11,10 @@ export default class JSLiteNetwork {
   #networkWallet
 
   constructor() {
-    this.#nodes = new Array(MAX_NODES)
-    this.#emitter = new EventEmitter()
+    this.#nodes = []
     this.#pendingTransactions = []
+    this.#emitter = new EventEmitter().setMaxListeners(MAX_NODES)
     this.#networkWallet = new Wallet(Key('jsl-public.pem'), Key('jsl-private.pem'))
-    this.startInterval()
   }
 
   get address() {
@@ -36,13 +35,14 @@ export default class JSLiteNetwork {
     return 2
   }
 
-  startInterval() {
+  start() {
     this.#intervalId = setInterval(() => {
       this.#emitter.emit('MINE_BLOCK')
     }, SYNC_TIMER)
   }
 
-  shutdown() {
+  stop() {
+    this.#emitter.removeAllListeners()
     clearInterval(this.#intervalId)
   }
 }
@@ -58,12 +58,13 @@ class Node {
     this.difficulty = difficulty
     this.emmitter = emmitter
     this.proofOfWorkFn = mineBlockFn
-    this.initEvent(mineBlockFn)
+    this.listenForMineEvent(mineBlockFn)
   }
 
-  initEvent(mineBlockFn) {
+  listenForMineEvent(mineBlockFn) {
     this.emmitter.on('MINE_BLOCK', () => {
-      mineBlockFn(this.address)
+      console.log('Miner node: Beginning mining process')
+      mineBlockFn(this.address, this.difficulty)
     })
   }
 }
