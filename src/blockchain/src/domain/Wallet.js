@@ -11,6 +11,14 @@ export default class Wallet {
     this.publicKey = publicKey
     this.privateKey = privateKey
   }
+
+  /**
+   * Generates a new wallet
+   *
+   * @return {Wallet} A new digital wallet
+   */
+  static generateWallet() {}
+
   get address() {
     return this.publicKey
   }

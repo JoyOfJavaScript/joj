@@ -7,19 +7,11 @@ import { curry } from '../../combinators'
 
 const toUpper = str => str.toUpperCase()
 
-const notEmpty = str =>
-  str && str.length > 0 ? Success(str) : Failure(['String is empty'])
+const notEmpty = str => (str && str.length > 0 ? Success(str) : Failure(['String is empty']))
 
 const notExceeds = curry((n, str) =>
-  str.length <= n
-    ? Success(str)
-    : Failure([`String exceeds set length of ${n}`])
+  str.length <= n ? Success(str) : Failure([`String exceeds set length of ${n}`])
 )
-
-const startsWithNumber = str =>
-  Number.isInteger(str[0])
-    ? Success(str)
-    : Failure(['Strings does not start with a number'])
 
 describe('From Maybe To Validation', () => {
   it('Maybe -> Validation', () => {

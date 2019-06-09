@@ -16,8 +16,6 @@ const signInput = (signer, privateKey, input) =>
     .map(String)
     .map(key => ({ key }))
     .map(signer(input))
-    .getOrElseThrow(
-      new Error('Please provide valid arguments for [privateKey] and [input]')
-    )
+    .getOrElseThrow(new Error('Please provide valid arguments for [privateKey] and [input]'))
 
 export default signInput

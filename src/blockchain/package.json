@@ -34,16 +34,13 @@
     "lint": "eslint src",
     "lint-fix": "eslint src --fix",
     "build": "rm -rf dist && babel src --out-dir dist && cp -f package.json dist",
-    "test-all": "NODE_PATH=$NODE_PATH:src/lib mocha src test **/*.spec.js --recursive --require test/testSetup.js --check-leaks --colors",
-    "test": "NODE_PATH=$NODE_PATH:src/lib mocha --recursive --require test/testSetup.js --check-leaks --colors",
-    "test-dev": "NODE_PATH=$NODE_PATH:src/lib nodemon --watch src/ --watch test/ --exec 'mocha --recursive --require test/testSetup --colors || true'",
-    "test-debug": "NODE_PATH=$NODE_PATH:src/lib LOG=trace mocha --recursive --require test/testSetup test/**/*Spec.js --check-leaks --colors",
+    "test-all": "NODE_PATH=$NODE_PATH:src/lib mocha src test **/*.spec.js --exclude src/app.js --recursive --require test/testSetup.js --check-leaks --colors",
+    "test": "NODE_PATH=$NODE_PATH:src/lib mocha --exclude src/app.js --recursive --require test/testSetup.js --check-leaks --colors",
+    "test-dev": "NODE_PATH=$NODE_PATH:src/lib nodemon --watch src/ --watch test/ --exec 'mocha --exclude src/app.js --recursive --require test/testSetup --colors || true'",
+    "test-debug": "NODE_PATH=$NODE_PATH:src/lib LOG=trace mocha --recursive --exclude src/app.js --require test/testSetup test/**/*Spec.js --check-leaks --colors",
     "flow": "flow",
     "flow-init": "flow init",
     "flow-status": "flow status",
-    "start-app": "nodemon --exec babel-node -- src/app.js",
-    "start-peer0": "nodemon --exec babel-node -- src/p2p/node.js 3000",
-    "start-peer1": "nodemon --exec babel-node -- src/p2p/node.js 3001",
-    "start-peer2": "nodemon --exec babel-node -- src/p2p/node.js 3002"
+    "start-app": "nodemon --exec babel-node -- src/app.js"
   }
 }

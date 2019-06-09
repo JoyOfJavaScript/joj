@@ -18,6 +18,27 @@ export default class Blockchain {
     this.pendingTransactions = []
   }
 
+  /**
+   * Create a copy of this blockchain
+   * @param {Blockchain} blockchain Blockchain instance to copy
+   * @return {Blockchain} New Blockchain instance
+   */
+  static copy(blockchain) {
+    return this.from([...blockchain])
+  }
+
+  /**
+   * Helper function to construct a blockchain data structure from a set of blocks
+   * @return {Blockchain} A new Blockchain instace from a set of blocks
+   */
+  static from(...blocks) {
+    const newChain = new Blockchain()
+    for (const block of blocks) {
+      newChain.push(block)
+    }
+    return newChain
+  }
+
   push(newBlock) {
     newBlock.blockchain = this
     this.blocks.set(newBlock.hash, newBlock)
@@ -27,6 +48,15 @@ export default class Blockchain {
 
   height() {
     return this.blocks.size
+  }
+
+  lookUpByIndex(index) {
+    for (const block of this) {
+      if (block.index === index) {
+        return block
+      }
+    }
+    return null
   }
 
   lookUp(hash) {
@@ -53,6 +83,8 @@ export default class Blockchain {
   // TODO: You can use generators to run a simulation
   isValid() {
     return Success.of(this.height() > 0)
+
+    // Maybe: add to check all block indeces for uniqueness
   }
 
   addPendingTransaction(tx) {

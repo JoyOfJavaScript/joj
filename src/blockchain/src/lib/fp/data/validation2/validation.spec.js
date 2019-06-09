@@ -32,7 +32,7 @@ describe('Validation', () => {
   })
 
   it('Validation#equals', () => {
-    assert.isNotOk(Validation.Success(1) == Validation.Success(1))
+    assert.isNotOk(Validation.Success(1) === Validation.Success(1))
     assert.isNotOk(Validation.Success(1) === Validation.Success(1))
     assert.isOk(Validation.Success(1).equals(Validation.Success(1)))
   })

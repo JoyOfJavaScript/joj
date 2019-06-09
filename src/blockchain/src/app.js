@@ -21,24 +21,33 @@ const dummyTransfers = new Map([
   [4, [miner, miner2, (30).jsl(), 'Transfer 30 JSL to Second Miner']]
 ])
 
-// // Initialize infrastructure
-const publicLedger = new Blockchain()
-const jsliteService = new BitcoinService(publicLedger)
+// Initialize infrastructure
 const network = new JSLiteNetwork()
-const minerFunction = jsliteService.minePendingTransactions.bind(jsliteService)
-network.addMinerNode('Miner 1', miner.address, minerFunction)
-network.addMinerNode('Miner 2', miner2.address, minerFunction)
+
+const publicLedger1 = new Blockchain()
+const publicLedger2 = new Blockchain()
+
+const jsliteService1 = new BitcoinService(publicLedger1)
+const jsliteService2 = new BitcoinService(publicLedger2)
+
+const node1Config = {
+  displayName: 'Miner 1',
+  address: miner.address,
+  minerFn: jsliteService1.minePendingTransactions.bind(jsliteService1)
+}
+
+const node2Config = {
+  displayName: 'Miner 2',
+  address: miner2.address,
+  minerFn: jsliteService2.minePendingTransactions.bind(jsliteService2)
+}
+
+network.addMinerNode(node1Config)
+network.addMinerNode(node2Config)
 
 async function runSimulation() {
-  // Put some money in the network to start simulation
-  const first = new Transaction(null, miner.address, (100).jsl(), 'First transaction')
-  first.signature = first.sign(miner.privateKey)
-  publicLedger.addPendingTransaction(first)
-
-  // Mine the first block, after mining the reward of 100 JSL will go toward the miner
-  const minedBlock = await jsliteService.minePendingTransactions(miner.address, 2)
-  console.log(`Mined ${minedBlock.transactions.length} new transactions into the chain`)
-  console.log('Miner starts out with %s', miner.balance(publicLedger).toString())
+  await loadChain(jsliteService1, publicLedger1, miner, (100).jsl())
+  await loadChain(jsliteService2, publicLedger2, miner2, (200).jsl())
 
   network.start()
 
@@ -46,7 +55,7 @@ async function runSimulation() {
     const transferIndex = Util.nextInteger().next().value % dummyTransfers.size
     const dummyTransfer = dummyTransfers.get(transferIndex)
     try {
-      jsliteService.transferFunds(...dummyTransfer)
+      jsliteService1.transferFunds(...dummyTransfer)
     } catch (e) {
       // continue simulation
     }
@@ -56,20 +65,38 @@ async function runSimulation() {
     clearInterval(simulation)
     network.stop()
     console.log('simulation ended')
-    console.table(
-      [...publicLedger].map(block => ({
-        previousHash: block.previousHash.valueOf(),
-        hash: block.hash.valueOf(),
-        ['tx-count']: block.transactions.length
-      }))
-    )
-    console.log("Luke's balance is", luke.balance(publicLedger).toString())
-    console.log("Ana's balance is", ana.balance(publicLedger).toString())
-    console.log("Miner's balance is", miner.balance(publicLedger).toString())
-    console.log("Miner 2's balance is", miner2.balance(publicLedger).toString())
+    printChain('Miner 1 Ledger', publicLedger1)
+    printChain('Miner 2 ledger', publicLedger2)
   }, 120_000)
 
   return 0
+}
+
+function printChain(reportName, chain) {
+  console.log(`Summary for ${reportName}`)
+  console.table(
+    [...chain].map(block => ({
+      previousHash: block.previousHash.valueOf(),
+      hash: block.hash.valueOf(),
+      ['tx-count']: block.transactions.length
+    }))
+  )
+  console.log("Luke's balance is", luke.balance(chain).toString())
+  console.log("Ana's balance is", ana.balance(chain).toString())
+  console.log("Miner's balance is", miner.balance(chain).toString())
+  console.log("Miner 2's balance is", miner2.balance(chain).toString())
+}
+
+// Put some money in the network to start simulation
+async function loadChain(service, chain, minerWallet, funds) {
+  const first = new Transaction(null, minerWallet.address, funds, 'First transaction in chain')
+  first.signature = first.sign(minerWallet.privateKey)
+  publicLedger1.addPendingTransaction(first)
+
+  // Mine the first block, after mining the reward of 100 JSL will go toward the miner
+  const minedBlock = await service.minePendingTransactions(minerWallet.address, 2)
+  console.log(`Mined ${minedBlock.transactions.length} new transactions into the chain`)
+  console.log('Miner starts out with %s', minerWallet.balance(chain).toString())
 }
 
 const Util = {
