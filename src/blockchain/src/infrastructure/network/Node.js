@@ -21,8 +21,15 @@ export default class Node {
   listenForMineEvent() {
     this.#emitter.on('MINE_BLOCK', async () => {
       console.log(`${this.displayName}: Beginning mining process`)
-      const minedBlock = await this.mineBlockFn()
-      console.log(`${this.dislayName} just mined ${minedBlock.hash} with index ${minedBlock.index}`)
+      try {
+        const minedBlock = await this.mineBlockFn()
+        console.log(
+          `${this.displayName} just mined ${minedBlock.hash} with index ${minedBlock.index}`
+        )
+      } catch (e) {
+        // Block was rejected, skip
+        console.log(`Block from ${this.displayName} was rejected`)
+      }
     })
   }
 }

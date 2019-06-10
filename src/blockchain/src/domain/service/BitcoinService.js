@@ -31,7 +31,7 @@ class BitcoinService {
     console.log(`Found ${newBlock.transactions.length} pending transactions in block`)
     // Check that this block index does not already exist
     if (this.#ledger.lookUpByIndex(newBlock.index)) {
-      throw new Error('Block has already been mined!')
+      throw new Error('Block rejected since it had already been mined!')
     }
     return this.#ledger.push(await proofOfWork(newBlock, ''.padStart(newBlock.difficulty, '0')))
   }

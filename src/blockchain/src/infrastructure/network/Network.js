@@ -5,21 +5,43 @@ import EventEmitter from 'events'
 import Key from '../../domain/value/Key'
 import Node from './Node'
 import Wallet from '../../domain/Wallet'
+import Transaction from '../../domain/Transaction'
 
-export default class JSLiteNetwork {
+export default class Network {
   #nodes
   #intervalId
   #emitter
   #pendingTransactions
   #networkWallet
   #service
+  #chain
 
   constructor() {
     this.#nodes = []
     this.#pendingTransactions = []
     this.#emitter = new EventEmitter().setMaxListeners(MAX_NODES)
     this.#networkWallet = new Wallet(Key('jsl-public.pem'), Key('jsl-private.pem'))
-    this.#service = new BitcoinService(new Blockchain())
+    this.#chain = new Blockchain()
+    this.#service = new BitcoinService(this.#chain)
+  }
+
+  get chain() {
+    return this.#chain
+  }
+
+  async loadFunds(wallet, funds) {
+    const first = new Transaction(
+      null,
+      wallet.address,
+      funds,
+      'Assigning some initial funds to user'
+    )
+    first.signature = first.sign(wallet.privateKey)
+    this.#chain.addPendingTransaction(first)
+
+    const minedBlock = await this.#service.minePendingTransactions(wallet.address, 2)
+    console.log(`Mined ${minedBlock.transactions.length} new transactions into the chain`)
+    console.log('Miner starts out with %s', wallet.balance(this.#chain).toString())
   }
 
   get address() {
@@ -30,7 +52,7 @@ export default class JSLiteNetwork {
     if (this.#nodes.length >= MAX_NODES) {
       throw 'Max Nodes Exceeded!'
     }
-    const difficulty = JSLiteNetwork.calculateRandomDifficulty()
+    const difficulty = Network.calculateRandomDifficulty()
     const minerFn = this.#service.minePendingTransactions.bind(this.#service, address, difficulty)
     const minerNode = new Node(displayName, address, difficulty, this.#emitter, minerFn)
     this.#nodes.push(minerNode)
