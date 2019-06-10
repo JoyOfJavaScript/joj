@@ -41,6 +41,6 @@
     "flow": "flow",
     "flow-init": "flow init",
     "flow-status": "flow status",
-    "start-app": "nodemon --exec babel-node -- src/app.js"
+    "start": "nodemon --exec babel-node -- src/app.js"
   }
 }

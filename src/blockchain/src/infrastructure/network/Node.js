@@ -16,8 +16,6 @@ export default class Node {
     console.log(`Initialized new miner node with difficulty ${difficulty}`)
   }
 
-  discoverPeers() {}
-
   listenForMineEvent() {
     this.#emitter.on('MINE_BLOCK', async () => {
       console.log(`${this.displayName}: Beginning mining process`)

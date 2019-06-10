@@ -15,7 +15,7 @@ const USE_PROXIES = true
 async function makeLedger() {
   const instance = new Blockchain()
   if (USE_PROXIES) {
-    const { MethodCounter, TraceLog } = await import('../src/common/proxies')
+    const { MethodCounter, TraceLog } = await '../src/common/proxies')
     const applyProxies = compose(
       TraceLog,
       MethodCounter('lookUp', 'validate')

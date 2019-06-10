@@ -48,7 +48,7 @@ export default class Network {
     return this.#networkWallet.address
   }
 
-  addMinerNode({ displayName, address }) {
+  addMinerNode(displayName, address) {
     if (this.#nodes.length >= MAX_NODES) {
       throw 'Max Nodes Exceeded!'
     }
@@ -60,11 +60,11 @@ export default class Network {
   }
 
   processTransaction(transactionDetails) {
-    // take the transaction and use transfer funds to put it in the shared ledger
-    this.#service.transferFunds(...transactionDetails)
-
-    // miners get the a copy of ledger from the network and start proof of work with certain difficulty
-    // when proof of work finishes, first miner to accomplish sends event to other miner
+    try {
+      this.#service.transferFunds(...transactionDetails)
+    } catch (e) {
+      // ignoring
+    }
   }
 
   static calculateRandomDifficulty() {
