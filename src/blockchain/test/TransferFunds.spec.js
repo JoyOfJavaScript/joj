@@ -57,7 +57,7 @@ describe('Transfer Funds Test suite', () => {
 
     ledger.addPendingTransaction(first)
 
-    const bitcoinService = new JSLCoinService(ledger)
+    const bitcoinService = JSLCoinService(ledger)
 
     // Mine some initial block, after mining the reward is BTC 100 for wa
     await bitcoinService.minePendingTransactions(miner.address, 2)

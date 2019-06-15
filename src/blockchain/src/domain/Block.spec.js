@@ -43,7 +43,7 @@ describe('Block Spec', () => {
 
   it('Should validate block', async () => {
     const chain = new Blockchain()
-    const bitcoin = new JSLCoinService(chain)
+    const bitcoin = JSLCoinService(chain)
     const block = await bitcoin.mineNewBlockIntoChain(
       new Block(chain.height() + 1, chain.top.hash, [])
     )

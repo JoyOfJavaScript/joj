@@ -22,7 +22,7 @@ export default class Network {
     this.#emitter = new EventEmitter().setMaxListeners(MAX_NODES)
     this.#networkWallet = new Wallet(Key('jsl-public.pem'), Key('jsl-private.pem'))
     this.#chain = new Blockchain()
-    this.#service = new JSLCoinService(this.#chain)
+    this.#service = JSLCoinService(this.#chain)
   }
 
   get chain() {
