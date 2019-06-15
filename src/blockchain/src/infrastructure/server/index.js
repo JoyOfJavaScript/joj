@@ -8,22 +8,23 @@
 // import Wallet from '../domain/Wallet'
 // import WebSocket from 'websocket'
 // import canned_transactions from './canned_transactions'
-// import http from 'http'
+import http from 'http'
 // import network from './network'
 
-// process.title = 'blockchain-server'
+const PORT = 1337
+const HOST = '127.0.0.1'
 
-// const { server: WebSocketServer } = WebSocket
+process.title = 'network-server'
 
-// const httpServer = http.createServer((request, response) => {
-//   // process HTTP request. Since we're writing just WebSockets
-//   // server we don't have to implement anything.
-//   console.log(new Date() + ' Received request for ' + request.url)
-//   response.writeHead(404)
-//   response.end()
-// })
+const httpServer = http.createServer((request, response) => {
+  console.log(new Date() + ' Received request for ' + request.url)
+  response.writeHead(404)
+  response.end()
+})
 
-// httpServer.listen(1337)
+httpServer.listen(PORT, HOST, () => {
+  console.log(`Serving running at http://${HOST}:${PORT}/`)
+})
 
 // // create the server
 // const wsServer = new WebSocketServer({ httpServer })

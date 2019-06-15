@@ -1,6 +1,6 @@
 import Block from './Block'
 import Blockchain from './Blockchain'
-import BitcoinService from './service/BitcoinService'
+import JSLCoinService from './service/JSLCoinService'
 import { assert } from 'chai'
 
 describe('Block Spec', () => {
@@ -43,7 +43,7 @@ describe('Block Spec', () => {
 
   it('Should validate block', async () => {
     const chain = new Blockchain()
-    const bitcoin = new BitcoinService(chain)
+    const bitcoin = new JSLCoinService(chain)
     const block = await bitcoin.mineNewBlockIntoChain(
       new Block(chain.height() + 1, chain.top.hash, [])
     )

@@ -4,6 +4,7 @@
   "private": true,
   "main": "index.js",
   "description": "Simple blockchain primitives",
+  "license": "ISC",
   "devDependencies": {
     "@babel/cli": "^7.2.3",
     "@babel/core": "^7.2.2",
@@ -27,8 +28,7 @@
     "standard": "^11.0.1"
   },
   "dependencies": {
-    "@babel/polyfill": "^7.2.5",
-    "websocket": "^1.0.28"
+    "@babel/polyfill": "^7.2.5"
   },
   "scripts": {
     "lint": "eslint src",
@@ -41,6 +41,7 @@
     "flow": "flow",
     "flow-init": "flow init",
     "flow-status": "flow status",
-    "start": "nodemon --exec babel-node -- src/app.js"
+    "start": "nodemon --exec babel-node -- src/app.js",
+    "start-server": "nodemon --exec babel-node -- src/infrastructure/server/index.js"
   }
 }

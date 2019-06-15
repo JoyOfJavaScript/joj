@@ -1,5 +1,5 @@
 import { MAX_NODES, SYNC_TIMER } from '../../common/settings'
-import BitcoinService from '../../domain/service/BitcoinService'
+import JSLCoinService from '../../domain/service/JSLCoinService'
 import Blockchain from '../../domain/Blockchain'
 import EventEmitter from 'events'
 import Key from '../../domain/value/Key'
@@ -22,7 +22,7 @@ export default class Network {
     this.#emitter = new EventEmitter().setMaxListeners(MAX_NODES)
     this.#networkWallet = new Wallet(Key('jsl-public.pem'), Key('jsl-private.pem'))
     this.#chain = new Blockchain()
-    this.#service = new BitcoinService(this.#chain)
+    this.#service = new JSLCoinService(this.#chain)
   }
 
   get chain() {

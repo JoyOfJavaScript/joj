@@ -4,13 +4,13 @@ import Money from '../value/Money'
 import Transaction from '../Transaction'
 import Wallet from '../Wallet'
 import fs from 'fs'
-import proofOfWork from './bitcoinservice/proof_of_work2'
+import proofOfWork from './jslcoinservice/proof_of_work2'
 
-class BitcoinService {
+export default class JSLCoinService {
   #ledger
   #network
   /**
-   * Constructs a BitcoinService instance with the specified blockchain ledger
+   * Constructs a JSLCoinService instance with the specified blockchain ledger
    * @param {Blockchain} ledger Ledger to manage
    */
   constructor(ledger) {
@@ -146,4 +146,3 @@ class BitcoinService {
     return write(buffer(csv(toArray(this.#ledger))))
   }
 }
-export default BitcoinService

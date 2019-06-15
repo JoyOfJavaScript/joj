@@ -1,6 +1,6 @@
 //import { MethodCounter, TraceLog } from '../src/common/proxies'
-import BitcoinService from '../src/domain/service/BitcoinService'
 import Blockchain from '../src/domain/Blockchain'
+import JSLCoinService from '../src/domain/service/JSLCoinService'
 import Key from '../src/domain/value/Key'
 import Money from '../src/domain/value/Money'
 import Transaction from '../src/domain/Transaction'
@@ -15,7 +15,7 @@ const USE_PROXIES = true
 async function makeLedger() {
   const instance = new Blockchain()
   if (USE_PROXIES) {
-    const { MethodCounter, TraceLog } = await '../src/common/proxies')
+    const { MethodCounter, TraceLog } = await import('../src/common/proxies')
     const applyProxies = compose(
       TraceLog,
       MethodCounter('lookUp', 'validate')
@@ -57,7 +57,7 @@ describe('Transfer Funds Test suite', () => {
 
     ledger.addPendingTransaction(first)
 
-    const bitcoinService = new BitcoinService(ledger)
+    const bitcoinService = new JSLCoinService(ledger)
 
     // Mine some initial block, after mining the reward is BTC 100 for wa
     await bitcoinService.minePendingTransactions(miner.address, 2)

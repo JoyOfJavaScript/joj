@@ -1,8 +1,7 @@
 import './domain/value/Money'
-import BitcoinService from './domain/service/BitcoinService'
+import JSLCoinService from './domain/service/JSLCoinService'
 import Key from './domain/value/Key'
 import Network from './infrastructure/network/Network'
-import Transaction from './domain/Transaction'
 import Wallet from './domain/Wallet'
 
 // Users in simulation
@@ -38,7 +37,7 @@ async function runSimulation() {
     clearInterval(simulation)
     network.stop()
     console.log('simulation ended')
-    printChain('Miner 1 Ledger', network.chain)
+    printChain('Ledger Summary', network.chain)
   }, 120_000)
 
   return 0
