@@ -1,4 +1,4 @@
-import Block from '../Block'
+import Builder from '../'
 import Key from '../value/Key'
 import Money from '../value/Money'
 import Transaction from '../Transaction'
@@ -72,7 +72,12 @@ const JSLCoinService = ledger => {
       const previousHash = ledger.top.hash
       const nextId = ledger.height() + 1
       const block = await this.mineNewBlockIntoChain(
-        new Block(nextId, previousHash, ledger.pendingTransactions, proofOfWorkDifficulty)
+        new Builder.Block()
+          .at(nextId)
+          .linkedTo(previousHash)
+          .withPendingTransactions(ledger.pendingTransactions)
+          .withDifficulty(proofOfWorkDifficulty)
+          .build()
       )
 
       // Validate the entire chain

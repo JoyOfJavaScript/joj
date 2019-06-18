@@ -1,5 +1,6 @@
 import Block from './Block'
 import Blockchain from './Blockchain'
+import Builder from './'
 import JSLCoinService from './service/JSLCoinService'
 import { assert } from 'chai'
 
@@ -7,6 +8,15 @@ describe('Block Spec', () => {
   it('Should create genesis block', () => {
     const b = new Block(1, '-1', [])
     assert.equal(b.previousHash, '-1')
+  })
+  it('Should create a new  block using Builders', () => {
+    const b = new Builder.Block()
+      .at(1)
+      .linkedTo('-1')
+      .withPendingTransactions([])
+      .build()
+    assert.equal(b.previousHash, '-1')
+    assert.isEmpty(b.transactions)
   })
 
   it('Should init a new block', () => {
