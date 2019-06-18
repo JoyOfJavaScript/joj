@@ -116,7 +116,7 @@ describe('3.4 - Assembling objects using mixins', () => {
     const signable = Object.assign({ foo: 'foo', bar: 'bar' }, HasSignature(['foo', 'bar']))
     const testPublicKey = Key('test-public.pem')
     const testPrivateKey = Key('test-private.pem')
-    const signature = signable.generateSignature(testPrivateKey)
+    const signature = signable.sign(testPrivateKey)
     assert.isTrue(signature.length > 0)
     assert.isTrue(signable.verifySignature(testPublicKey, signature))
   })

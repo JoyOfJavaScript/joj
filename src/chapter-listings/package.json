@@ -1,18 +1,18 @@
 {
-  "name": "chapter-listings",
+  "name": "@joj/chapter-listings",
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
     "@babel/cli": "^7.2.0",
-    "@babel/core": "^7.3.4",
-    "@babel/node": "^7.2.2",
+    "@babel/core": "^7.4.5",
+    "@babel/node": "^7.4.5",
     "@babel/plugin-proposal-class-properties": "^7.3.4",
     "@babel/plugin-proposal-function-bind": "^7.2.0",
     "@babel/plugin-proposal-object-rest-spread": "^7.3.4",
     "@babel/plugin-proposal-pipeline-operator": "^7.2.0",
-    "@babel/plugin-transform-regenerator": "^7.3.4",
+    "@babel/plugin-transform-regenerator": "^7.4.5",
     "@babel/polyfill": "^7.2.5",
-    "@babel/preset-env": "^7.3.4",
+    "@babel/preset-env": "^7.4.5",
     "@babel/preset-flow": "^7.0.0",
     "@babel/register": "^7.0.0",
     "babel-eslint": "^8.2.3",
@@ -22,9 +22,9 @@
     "eslint-plugin-flowtype-errors": "^3.6.0",
     "eslint-plugin-fp": "^2.3.0",
     "flow-bin": "^0.59.0",
-    "flow-typed": "^2.4.0",
+    "flow-typed": "^2.5.2",
     "mocha": "^4.0.1",
-    "nodemon": "^1.18.11"
+    "nodemon": "^1.19.1"
   },
   "dependencies": {
     "@joj/blockchain": "file:../blockchain/dist",

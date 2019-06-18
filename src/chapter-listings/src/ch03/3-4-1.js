@@ -1,6 +1,5 @@
 import Block from '@joj/blockchain/domain/Block'
 import HasHash from '@joj/blockchain/domain/shared/HasHash'
-import HasSignature from '@joj/blockchain/domain/shared/HasSignature'
 import HasValidation from '@joj/blockchain/domain/shared/HasValidation'
 import { assert } from 'chai'
 

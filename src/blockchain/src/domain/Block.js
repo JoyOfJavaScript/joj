@@ -23,7 +23,6 @@ const VERSION = '1.0'
 export default class Block {
   #blockchain
   index = 0
-  hash = ''
   constructor(index, previousHash, transactions = [], difficulty = 0) {
     this.index = index
     this.previousHash = previousHash
@@ -31,6 +30,7 @@ export default class Block {
     this.nonce = 0
     this.difficulty = difficulty
     this.timestamp = Date.now()
+    this.hash = this.calculateHash()
   }
 
   /**

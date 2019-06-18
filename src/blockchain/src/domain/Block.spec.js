@@ -64,7 +64,7 @@ describe('Block Spec', () => {
 
   it('Should validate block 2', async () => {
     const chain = new Blockchain()
-    const b2 = new Block(2, chain.top.hash, []) // #A
+    const b2 = new Block(2, chain.top.hash, [])
     const b3 = new Block(3, b2.hash, [])
 
     chain.push(b2)
@@ -72,7 +72,7 @@ describe('Block Spec', () => {
 
     const validation = b3.isValid()
     console.log(validation.toString())
-    assert.isOk(validation.isFailure)
+    assert.isOk(validation.isSuccess)
   })
 
   it('Should fail validation of two consecutive blocks', async () => {
