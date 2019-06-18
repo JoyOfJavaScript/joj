@@ -1,9 +1,6 @@
 import { Failure, Success } from '../../lib/fp/data/validation2'
 import { curry } from '../../lib/fp/combinators'
 
-export const checkTampering = block =>
-  block.hash === block.calculateHash() ? Success.of(block) : Failure.of('Block hash is invalid')
-
 export const checkDifficulty = block =>
   block.hash.substring(0, block.difficulty) === '0'.repeat(block.difficulty)
     ? Success.of(block)
@@ -20,3 +17,5 @@ export const checkIndex = curry((previousBlockIndex, block) =>
     ? Success.of(block)
     : Failure.of(`Block out of order [previous (${previousBlockIndex}) next (${block.index})]`)
 )
+
+export const dummy = () => Success.of('Dummy') // This export is tree-shaked when using either Webpack or Uglify-JS

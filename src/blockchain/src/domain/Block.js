@@ -2,8 +2,6 @@ import '../lang/object'
 import Validation, { Success } from '../lib/fp/data/validation2'
 import { checkDifficulty, checkIndex, checkLinkage } from './block/validations'
 import { checkLength, checkTampering, checkTimestamps, checkVersion } from './shared/validations'
-import * as ValidationsUtil from './shared/validations'
-console.log('Test', ValidationsUtil)
 import HasHash from './shared/HasHash'
 import HasValidation from './shared/HasValidation'
 import { composeM } from '../lib/fp/combinators'

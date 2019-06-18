@@ -28,7 +28,7 @@ export default class Wallet {
   }
 
   balance(ledger) {
-    return computeBalance(this.publicKey)([...ledger])
+    return /*#__PURE__*/ computeBalance(this.publicKey)([...ledger])
   }
 
   toJSON() {

@@ -23,7 +23,7 @@ export default class Transaction {
     this.recipient = recipient
     this.funds = funds
     this.description = description
-    this.id = this.hash = this.calculateHash()
+    this.id = this.hash = /*#__PURE__*/ this.calculateHash()
   }
 
   /**
@@ -54,8 +54,8 @@ export default class Transaction {
 
   isValid() {
     return Validation.of(this)
-      .flatMap(checkSignature)
-      .flatMap(checkTampering)
+      .flatMap(/*#__PURE__*/ checkSignature)
+      .flatMap(/*#__PURE__*/ checkTampering)
       .flatMap(() => Success.of(true))
   }
   /**
