@@ -1,4 +1,4 @@
-import { compose, props } from '../../lib/fp/combinators'
+import { compose, props } from '@lib/fp/combinators'
 import LoggerHandler from '../../common/LoggerHandler'
 import assemble from './has_hash/assemble'
 import computeCipher from './has_hash/compute_cipher'

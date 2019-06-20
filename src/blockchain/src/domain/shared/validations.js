@@ -1,5 +1,5 @@
-import { Failure, Success } from '../../lib/fp/data/validation2'
-import { curry } from '../../lib/fp/combinators'
+import { Failure, Success } from '@lib/fp/data/validation2'
+import { curry } from '@lib/fp/combinators'
 
 export const checkTampering = obj =>
   obj.hash === obj.calculateHash() ? Success.of(obj) : Failure.of('Invalid hash')

@@ -1,4 +1,4 @@
-// import '../../lib/rx/reactive-extensions'
+// import '@lib/rx/reactive-extensions'
 // import {
 //   client as WebSocketClient,
 //   connection as WebSocketConnection

@@ -1,5 +1,5 @@
 import crypto from 'crypto'
-import { curry } from '../../../lib/fp/combinators'
+import { curry } from '@lib/fp/combinators'
 
 const verify = curry((options, pem, sign, input) => {
   const v = crypto.createVerify(options.algorithm)

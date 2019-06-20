@@ -1,5 +1,5 @@
-import { Failure, Success } from '../../lib/fp/data/validation2'
-import { curry } from '../../lib/fp/combinators'
+import { Failure, Success } from '@lib/fp/data/validation2'
+import { curry } from '@lib/fp/combinators'
 
 export const checkDifficulty = block =>
   block.hash.substring(0, block.difficulty) === '0'.repeat(block.difficulty)

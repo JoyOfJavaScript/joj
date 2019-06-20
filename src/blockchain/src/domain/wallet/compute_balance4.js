@@ -1,4 +1,4 @@
-import { compose, curry, filter, flatMap, map, not, prop, reduce } from '../../lib/fp/combinators'
+import { compose, curry, filter, flatMap, map, not, prop, reduce } from '@lib/fp/combinators'
 import Money from '../value/Money'
 import balanceOf from './balance_of'
 

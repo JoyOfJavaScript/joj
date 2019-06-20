@@ -1,4 +1,4 @@
-import { Failure, Success } from '../../../lib/fp/data/validation2'
+import { Failure, Success } from '@lib/fp/data/validation2'
 
 /**
  * Check that currency matches

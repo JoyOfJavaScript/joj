@@ -1,6 +1,6 @@
-import { compose, composeM, curry } from '../../lib/fp/combinators'
+import { compose, composeM, curry } from '@lib/fp/combinators'
 import { currencyMatch, isNumber, notNaN } from './money/validations'
-import Validation from '../../lib/fp/data/validation2'
+import Validation from '@lib/fp/data/validation2'
 import precisionRound from './money/precision_round'
 
 export const JS_LITE = 'jsl'
