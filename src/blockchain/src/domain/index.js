@@ -1,9 +1,7 @@
 import Block from './Block'
-import Blockchain from './Blockchain'
 import Transaction from './Transaction'
-import Wallet from './Wallet'
 
-const Builder = {
+export default {
   Transaction: class {
     #sender
     #recipient
@@ -73,10 +71,3 @@ const Builder = {
     }
   }
 }
-
-export { Block }
-export { Blockchain }
-export { Transaction }
-export { Wallet }
-
-export default Builder
