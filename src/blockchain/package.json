@@ -52,6 +52,7 @@
     "bundle": "webpack"
   },
   "_moduleAliases": {
-    "@lib": "src/lib"
+    "@lib": "src/lib",
+    "@domain": "src/domain"
   }
 }

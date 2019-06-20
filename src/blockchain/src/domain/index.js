@@ -9,6 +9,7 @@ const Builder = {
     #recipient
     #funds
     #description = 'Generic'
+    #signerPrivateKey = undefined
 
     to(to) {
       this.#sender = to
@@ -26,8 +27,16 @@ const Builder = {
       this.#description = sentence
       return this
     }
+    signWith(privateKey) {
+      this.#signerPrivateKey = privateKey
+      return this
+    }
     build() {
-      return new Transaction(this.#sender, this.#recipient, this.#funds, this.#description)
+      const tx = new Transaction(this.#sender, this.#recipient, this.#funds, this.#description)
+      if (this.#signerPrivateKey) {
+        tx.signature = tx.sign(this.#signerPrivateKey)
+      }
+      return tx
     }
   },
   Block: class {

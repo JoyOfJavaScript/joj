@@ -1,11 +1,11 @@
 import { MAX_NODES, SYNC_TIMER } from '../../common/settings'
-import JSLCoinService from '../../domain/service/JSLCoinService'
+import { Transaction as Transaction$Builder } from '@domain'
 import Blockchain from '../../domain/Blockchain'
 import EventEmitter from 'events'
+import JSLCoinService from '../../domain/service/JSLCoinService'
 import Key from '../../domain/value/Key'
 import Node from './Node'
 import Wallet from '../../domain/Wallet'
-import Transaction from '../../domain/Transaction'
 
 export default class Network {
   #nodes
@@ -30,13 +30,11 @@ export default class Network {
   }
 
   async loadFunds(wallet, funds) {
-    const first = new Transaction(
-      null,
-      wallet.address,
-      funds,
-      'Assigning some initial funds to user'
-    )
-    first.signature = first.sign(wallet.privateKey)
+    const first = new Transaction$Builder()
+      .to(wallet.address)
+      .having(funds)
+      .withDescription('Assigning some initial funds to user')
+      .signedBy(wallet.privateKey)
     this.#chain.addPendingTransaction(first)
 
     const minedBlock = await this.#service.minePendingTransactions(wallet.address, 2)
