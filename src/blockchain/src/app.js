@@ -65,4 +65,4 @@ const Util = {
   }
 }
 
-runSimulation().then(() => console.log('simulation started'))
+runSimulation().then(() => console.log('Simulation started'))

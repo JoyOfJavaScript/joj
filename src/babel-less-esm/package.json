@@ -4,12 +4,19 @@
   "description": "Example of a Babel-less configuration using esm module library",
   "main": "index.js",
   "module": "index.js",
+  "type": "module",
   "scripts": {
-    "start": "node -r esm src/index.js"
+    "start": "node -r esm src/index.js",
+    "test": "mjs-mocha"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "esm": "^3.2.25"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mjs-mocha": "^3.0.0",
+    "mocha": "^6.1.4"
   }
 }

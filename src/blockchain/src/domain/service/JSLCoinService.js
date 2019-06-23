@@ -132,7 +132,6 @@ const JSLCoinService = ledger => {
       // Sender pays the fee to the network
       const txFee = new Transaction(walletA.address, network.address, fee, 'Transaction Fee')
       txFee.signature = txFee.sign(walletA.privateKey)
-      txFee.id = txFee.calculateHash()
 
       // Add new pending transactions in the blockchain representing the transfer and the fee
       ledger.pendingTransactions.push(transfer, txFee)
