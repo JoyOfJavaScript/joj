@@ -48,7 +48,7 @@ function printChain(reportName, chain) {
     [...chain].map(block => ({
       previousHash: block.previousHash.valueOf(),
       hash: block.hash.valueOf(),
-      ['tx-count']: block.transactions.length
+      ['tx-count']: block.data.length
     }))
   )
   console.log("Luke's balance is", luke.balance(chain).toString())

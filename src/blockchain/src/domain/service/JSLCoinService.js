@@ -1,10 +1,10 @@
-import Builder from '../'
-import Key from '../value/Key'
-import Money from '../value/Money'
-import Transaction from '../Transaction'
-import Wallet from '../Wallet'
+import Builder from '../../domain.js'
+import Key from '../value/Key.js'
+import Money from '../value/Money.js'
+import Transaction from '../Transaction.js'
+import Wallet from '../Wallet.js'
 import fs from 'fs'
-import proofOfWork from './jslcoinservice/proof_of_work2'
+import proofOfWork from './jslcoinservice/proof_of_work2.js'
 
 /**
  * Constructs a JSLCoinService instance with the specified blockchain ledger
@@ -25,7 +25,7 @@ const JSLCoinService = ledger => {
      * @return {Block} Returns new block mined into the blockchain
      */
     mineNewBlockIntoChain: async function(newBlock) {
-      console.log(`Found ${newBlock.transactions.length} pending transactions in block`)
+      console.log(`Found ${newBlock.data.length} pending transactions in block`)
       // Check that this block index does not already exist
       if (ledger.lookUpByIndex(newBlock.index)) {
         throw new Error('Block rejected since it had already been mined!')
@@ -45,7 +45,7 @@ const JSLCoinService = ledger => {
       let balance = Money.zero()
       for (const block of ledger) {
         if (!block.isGenesis()) {
-          for (const tx of block.transactions) {
+          for (const tx of block.data) {
             if (tx.sender === address) {
               balance = balance.minus(tx.funds)
             }

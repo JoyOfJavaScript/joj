@@ -1,5 +1,5 @@
-import Block from './Block'
-import Transaction from './Transaction'
+import Block from './domain/Block.js'
+import Transaction from './domain/Transaction.js'
 
 export default {
   Transaction: class {

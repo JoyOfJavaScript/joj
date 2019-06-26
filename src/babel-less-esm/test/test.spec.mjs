@@ -8,4 +8,8 @@ describe('Test', () => {
   it('Import an .mjs module', () => {
     assert.equal(Calculator.multiply(2, 5), 10)
   })
+  it('Async call', async () => {
+    const result = await Calculator.multiply(2, 5)
+    assert.equal(result, 10)
+  })
 })

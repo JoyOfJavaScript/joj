@@ -8,7 +8,7 @@ const computeBalance = curry((address, blocks) =>
     reduce(Money.sum, Money.zero()),
     map(balanceOf(address)),
     flat,
-    map(prop('transactions')),
+    map(prop('data')),
     filter(
       compose(
         not,

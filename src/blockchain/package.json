@@ -54,6 +54,6 @@
   },
   "_moduleAliases": {
     "@lib": "src/lib",
-    "@domain": "src/domain"
+    "@domain": "src/domain.js"
   }
 }

@@ -38,7 +38,7 @@ export default class Network {
     this.#chain.addPendingTransaction(first)
 
     const minedBlock = await this.#service.minePendingTransactions(wallet.address, 2)
-    console.log(`Mined ${minedBlock.transactions.length} new transactions into the chain`)
+    console.log(`Mined ${minedBlock.data.length} new transactions into the chain`)
     console.log('Miner starts out with %s', wallet.balance(this.#chain).toString())
   }
 

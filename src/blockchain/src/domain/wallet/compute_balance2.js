@@ -5,7 +5,7 @@ import balanceOf from './balance_of'
 const computeBalance = curry((address, blocks) =>
   blocks
     .filter(not(prop('isGenesis')))
-    .flatMap(prop('transactions'))
+    .flatMap(prop('data'))
     .map(balanceOf(address))
     .reduce(Money.sum, Money.zero())
     .round()

@@ -1,7 +1,7 @@
-import Builder from './'
-import Key from './value/Key'
-import Money from './value/Money'
-import Transaction from './Transaction'
+import Builder from '../domain.js'
+import Key from './value/Key.js'
+import Money from './value/Money.js'
+import Transaction from './Transaction.js'
 import { assert } from 'chai'
 
 describe('Transaction', () => {

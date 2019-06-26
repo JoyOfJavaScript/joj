@@ -1,6 +1,6 @@
-import Block from './Block'
+import Block from './Block.js'
 import Blockchain from './Blockchain'
-import Builder from './'
+import Builder from '../domain.js'
 import JSLCoinService from './service/JSLCoinService'
 import { assert } from 'chai'
 
@@ -16,7 +16,7 @@ describe('Block Spec', () => {
       .withPendingTransactions([])
       .build()
     assert.equal(b.previousHash, '-1')
-    assert.isEmpty(b.transactions)
+    assert.isEmpty(b.data)
   })
 
   it('Should init a new block', () => {
@@ -32,7 +32,7 @@ describe('Block Spec', () => {
 
   it('Should init a new trasactional block', () => {
     const b = new Block(1, '123', ['1', '2', '3'])
-    assert.deepEqual(b.transactions, ['1', '2', '3'])
+    assert.deepEqual(b.data, ['1', '2', '3'])
     assert.equal(b.previousHash, '123')
     assert.equal(b.nonce, 0)
   })
