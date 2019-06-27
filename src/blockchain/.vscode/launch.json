@@ -30,13 +30,9 @@
         "type": "node",
         "request": "launch",
         "name": "Current file",
-        "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
+        "program": "${workspaceFolder}/node_modules/.bin/mjs-mocha",
         "env": {"NODE_PATH":"$NODE_PATH:src/lib"},
-        "args": [
-            "--require",
-            "./test/testSetup.js",                
-            "--no-timeout",            
-            "--colors",
+        "args": [            
             "${file}"
         ],
         "console": "integratedTerminal",
