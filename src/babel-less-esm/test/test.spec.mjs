@@ -1,5 +1,6 @@
 // import assert from 'assert'
 import Calculator from '../src/calculator.mjs'
+import Calculator2 from '../src/calculator2.mjs'
 import chai from 'chai'
 
 const { assert } = chai

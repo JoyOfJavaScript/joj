@@ -1,4 +1,4 @@
-import { compose, props } from '@lib/fp/combinators'
+import { compose, prop, props } from '@lib/fp/combinators'
 import LoggerHandler from '../../common/LoggerHandler'
 import assemble from './has_hash/assemble'
 import computeCipher from './has_hash/compute_cipher'
@@ -28,11 +28,12 @@ const HasHash = (
    * @return {String} A hash value
    */
   calculateHash() {
+    const objToHash = Object.fromEntries(new Map(keys.map(k => [k, prop(k, this)])))
     return compose(
       computeCipher(options),
       assemble,
       props(keys)
-    )(this)
+    )(objToHash)
   }
 })
 
