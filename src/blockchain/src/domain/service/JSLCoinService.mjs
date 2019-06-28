@@ -103,8 +103,7 @@ const JSLCoinService = ledger => {
       // Reset pending transactions for this blockchain
       // Put fee transaction into the chain for next mining operation
       // Network will reward the first miner to mine the block with the transaction fee
-      // TODO: Fix this!!!
-      const MINING_REWARD = Money('jsl', 12.5) // await import('../../common/settings.mjs')
+      const { MINING_REWARD } = await import('../../common/settings.mjs')
       const reward = new Transaction(
         network.address,
         rewardAddress,
