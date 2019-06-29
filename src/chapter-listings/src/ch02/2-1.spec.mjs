@@ -1,4 +1,6 @@
-import { assert } from 'chai'
+import chai from 'chai'
+
+const { assert } = chai
 
 describe('2.1 - Reviewing "prototypal inheritance"', () => {
   it('Simple proto', () => {
@@ -21,7 +23,7 @@ describe('2.1 - Reviewing "prototypal inheritance"', () => {
 
     const moneyTransaction = Object.create(transaction)
     moneyTransaction.funds = 0.0
-    moneyTransaction.addFunds = function (funds = 0) {
+    moneyTransaction.addFunds = function(funds = 0) {
       this.funds += Number(funds)
     }
 

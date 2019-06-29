@@ -1,8 +1,10 @@
-import HasHash from '@joj/blockchain/domain/shared/HasHash'
-import HasSignature from '@joj/blockchain/domain/shared/HasSignature'
-import HasValidation from '@joj/blockchain/domain/shared/HasValidation'
-import Key from '@joj/blockchain/domain/value/Key'
-import { assert } from 'chai'
+import HasHash from '@joj/blockchain/domain/shared/HasHash.mjs'
+import HasSignature from '@joj/blockchain/domain/shared/HasSignature.mjs'
+import HasValidation from '@joj/blockchain/domain/shared/HasValidation.mjs'
+import Key from '@joj/blockchain/domain/value/Key.mjs'
+import chai from 'chai'
+
+const { assert } = chai
 
 const HasBread = {
   bread: 'Wheat',

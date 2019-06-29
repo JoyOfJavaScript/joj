@@ -1,5 +1,7 @@
-import Block from '@joj/blockchain/domain/Block'
-import { assert } from 'chai'
+import Block from '@joj/blockchain/domain/Block.mjs'
+import chai from 'chai'
+
+const { assert } = chai
 
 function createGenesisBlock(previousHash = '0'.repeat(64)) {
   return new Block(1, previousHash, [])

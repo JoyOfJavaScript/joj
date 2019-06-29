@@ -1,13 +1,12 @@
-import { assert } from 'chai'
-import { curry } from '@joj/blockchain/lib/fp/combinators'
+import chai from 'chai'
+import { curry } from '@joj/blockchain/lib/fp/combinators.mjs'
 import fs from 'fs'
 import path from 'path'
 
+const { assert } = chai
 const fsp = fs.promises
 
-const decode = curry((charset, buffer) =>
-  !buffer ? '' : buffer.toString(charset)
-)
+const decode = curry((charset, buffer) => (!buffer ? '' : buffer.toString(charset)))
 
 const parseBlocks = str => (str || '').split(/\s+/)
 
@@ -15,7 +14,7 @@ const count = arr => (!arr ? 0 : arr.length)
 
 describe('1.6 - Taming asynchronous code', () => {
   it('CountBlocksInFile using async/await', async () => {
-    async function countBlocksInFile (file) {
+    async function countBlocksInFile(file) {
       try {
         await fsp.access(file, fs.constants.F_OK | fs.constants.R_OK)
         const data = await fsp.readFile(file)
@@ -28,7 +27,7 @@ describe('1.6 - Taming asynchronous code', () => {
       }
     }
 
-    const filename = path.join(__dirname, '../../', 'res', 'sample.txt')
+    const filename = path.join(process.cwd(), 'res', 'sample.txt')
     const result = await countBlocksInFile(filename)
     console.log('Result is: ', result)
     assert.equal(result, 7)

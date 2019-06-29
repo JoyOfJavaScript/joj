@@ -1,4 +1,6 @@
-import { assert } from 'chai'
+import chai from 'chai'
+
+const { assert } = chai
 
 describe('1.3.2 - JavaScript objects: no fluff, just stuff', () => {
   it('Object literals', () => {
@@ -14,11 +16,11 @@ describe('1.3.2 - JavaScript objects: no fluff, just stuff', () => {
     assert.equal(weapon.name, 'Javelin')
   })
   it('Object constructor', () => {
-    function PoleWeapon (material) {
+    function PoleWeapon(material) {
       this.material = material
     }
 
-    function Spear (name) {
+    function Spear(name) {
       PoleWeapon.call(this, 'wood')
       this.name = name
     }
@@ -33,13 +35,13 @@ describe('1.3.2 - JavaScript objects: no fluff, just stuff', () => {
 
   it('Classes', () => {
     class PoleWeapon {
-      constructor (material) {
+      constructor(material) {
         this.material = material
       }
     }
 
     class Spear extends PoleWeapon {
-      constructor (name) {
+      constructor(name) {
         super('wood')
         this.name = name
       }
@@ -52,14 +54,14 @@ describe('1.3.2 - JavaScript objects: no fluff, just stuff', () => {
 
   it('Delegation', () => {
     const PoleWeapon = {
-      init (material) {
+      init(material) {
         this.material = material
         return this
       }
     }
 
     const Spear = Object.create(PoleWeapon)
-    Spear.init = function (name) {
+    Spear.init = function(name) {
       PoleWeapon.init.call(this, 'wood')
       this.name = name
       return this
@@ -81,11 +83,7 @@ describe('1.3.2 - JavaScript objects: no fluff, just stuff', () => {
       name
     })
 
-    const weapon = Object.assign(
-      PoleWeapon,
-      HasMaterial('wood'),
-      HasName('Javelin')
-    )
+    const weapon = Object.assign(PoleWeapon, HasMaterial('wood'), HasName('Javelin'))
     assert.equal(weapon.material, 'wood')
     assert.equal(weapon.name, 'Javelin')
   })

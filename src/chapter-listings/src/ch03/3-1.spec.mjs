@@ -1,4 +1,6 @@
-import { assert } from 'chai'
+import chai from 'chai'
+
+const { assert } = chai
 
 describe('3.1 - Object/behavior delegation with OLOO', () => {
   it('Listing 3.1 HashTransaction using simple object linking', () => {

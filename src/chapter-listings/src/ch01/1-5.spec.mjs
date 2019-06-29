@@ -1,13 +1,15 @@
-import Blockchain from '@joj/blockchain/domain/Blockchain'
+import Blockchain from '@joj/blockchain/domain/Blockchain.mjs'
 
-import { assert } from 'chai'
+import chai from 'chai'
+
+const { assert } = chai
 
 describe('1.5 - Separating concerns like a pro', () => {
   it('Perf counter using proxy', () => {
     let time = 0
     const perfCountHandler = (...names) => {
       return {
-        get (target, key) {
+        get(target, key) {
           if (names.includes(key)) {
             const start = process.hrtime()
             const result = Reflect.get(target, key)

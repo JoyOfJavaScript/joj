@@ -1,6 +1,8 @@
-import { assert } from 'chai'
+import chai from 'chai'
 import fs from 'fs'
 import path from 'path'
+
+const { assert } = chai
 
 describe('1.4 - Higher-order functional programming', () => {
   it('Functions are objects', () => {
@@ -9,8 +11,7 @@ describe('1.4 - Higher-order functional programming', () => {
   it('Compose using reduce', () => {
     const compose = (...fns) => arg => fns.reduceRight((c, f) => f(c), arg)
 
-    const decode = (charset = 'utf8') => buffer =>
-      !buffer ? '' : buffer.toString(charset)
+    const decode = (charset = 'utf8') => buffer => (!buffer ? '' : buffer.toString(charset))
 
     const parseBlocks = str => (str || '').split(/\s+/)
 
@@ -25,7 +26,7 @@ describe('1.4 - Higher-order functional programming', () => {
       read // #D
     )
 
-    const filename = path.join(__dirname, '../../', 'res', 'sample.txt')
+    const filename = path.join(process.cwd(), 'res', 'sample.txt')
     assert.equal(countBlocksInFile(filename), 7)
   })
 })

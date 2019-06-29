@@ -1,6 +1,6 @@
-import Applicative from './Applicative'
-import Functor from './Functor'
-import Monad from './Monad'
+import Applicative from './contract/Applicative.mjs'
+import Functor from './contract/Functor.mjs'
+import Monad from './contract/Monad.mjs'
 
 export { Functor }
 export { Applicative }

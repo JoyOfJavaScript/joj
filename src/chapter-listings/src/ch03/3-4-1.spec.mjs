@@ -1,7 +1,9 @@
-import Block from '@joj/blockchain/domain/Block'
-import HasHash from '@joj/blockchain/domain/shared/HasHash'
-import HasValidation from '@joj/blockchain/domain/shared/HasValidation'
-import { assert } from 'chai'
+import Block from '@joj/blockchain/domain/Block.mjs'
+import HasHash from '@joj/blockchain/domain/shared/HasHash.mjs'
+import HasValidation from '@joj/blockchain/domain/shared/HasValidation.mjs'
+import chai from 'chai'
+
+const { assert } = chai
 
 describe('3.4.1 - Mixin linearization', () => {
   it('Simple mixin linearization', () => {

@@ -1,6 +1,8 @@
-import HasHash from '@joj/blockchain/domain/shared/HasHash'
-import HasValidation from '@joj/blockchain/domain/shared/HasValidation'
-import { assert } from 'chai'
+import HasHash from '@joj/blockchain/domain/shared/HasHash.mjs'
+import HasValidation from '@joj/blockchain/domain/shared/HasValidation.mjs'
+import chai from 'chai'
+
+const { assert } = chai
 
 describe('1.3.4 - Inheritance vs composition: why not both?', () => {
   it('Block class with composed mixins', () => {
@@ -8,23 +10,23 @@ describe('1.3.4 - Inheritance vs composition: why not both?', () => {
       #version = '1.0'
       #blockchain
       hash
-      constructor (index, previousHash, pendingTransactions = []) {
+      constructor(index, previousHash, pendingTransactions = []) {
         this.index = index
         this.previousHash = previousHash
         this.pendingTransactions = pendingTransactions
         this.timestamp = Date.now()
       }
 
-      set blockchain (b) {
+      set blockchain(b) {
         this.#blockchain = b
         return this
       }
 
-      isGenesis () {
+      isGenesis() {
         return this.previousHash === '0'.repeat(64)
       }
 
-      [Symbol.iterator] () {
+      [Symbol.iterator]() {
         return this.pendingTransactions[Symbol.iterator]()
       }
     }
@@ -42,7 +44,7 @@ describe('1.3.4 - Inheritance vs composition: why not both?', () => {
     assert.isOk(b.calculateHash().length, 64)
   })
   it('Object.assign vs compose', () => {
-    function compose (target, ...mixins) {
+    function compose(target, ...mixins) {
       let obj = target
       for (const mixin of mixins) {
         obj = { ...obj, ...mixin }

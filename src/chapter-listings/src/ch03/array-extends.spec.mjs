@@ -1,4 +1,6 @@
-import { assert } from 'chai'
+import chai from 'chai'
+
+const { assert } = chai
 
 describe('Extending from Arrays', () => {
   it('Should extend from Array using classes', () => {
@@ -8,7 +10,10 @@ describe('Extending from Arrays', () => {
       //     return Array
       //   }
     }
-    const b1 = 1, b2 = 2, b3 = 3, b4 = 4
+    const b1 = 1,
+      b2 = 2,
+      b3 = 3,
+      b4 = 4
     const ledger = new Blockchain(b1, b2, b3)
     ledger.push(b4)
     assert.isOk(ledger instanceof Blockchain)
@@ -21,11 +26,14 @@ describe('Extending from Arrays', () => {
   })
   it('Should extend from Array using classes (set species)', () => {
     class Blockchain extends Array {
-      static get [Symbol.species] () {
+      static get [Symbol.species]() {
         return Array
       }
     }
-    const b1 = 1, b2 = 2, b3 = 3, b4 = 4
+    const b1 = 1,
+      b2 = 2,
+      b3 = 3,
+      b4 = 4
     const ledger = new Blockchain(b1, b2, b3)
     ledger.push(b4)
     assert.isOk(ledger instanceof Blockchain)
@@ -38,14 +46,17 @@ describe('Extending from Arrays', () => {
   })
 
   it('Should extend from Array using prototype', () => {
-    function Blockchain (...blocks) {
+    function Blockchain(...blocks) {
       Object.setPrototypeOf(blocks, Blockchain.prototype)
       return blocks
     }
     Blockchain.prototype = Object.create(Array.prototype)
     Blockchain.prototype.constructor = Blockchain
 
-    const b1 = 1, b2 = 2, b3 = 3, b4 = 4
+    const b1 = 1,
+      b2 = 2,
+      b3 = 3,
+      b4 = 4
     const ledger = new Blockchain(b1, b2, b3)
     ledger.push(b4)
     assert.isOk(ledger instanceof Blockchain)
@@ -57,7 +68,7 @@ describe('Extending from Arrays', () => {
   })
 
   it('Should use structure typing (array-like) to behave like an array', () => {
-    function Blockchain (...blocks) {
+    function Blockchain(...blocks) {
       for (let i = 0; i < blocks.length; i++) {
         this[i] = blocks[i]
       }
@@ -69,7 +80,10 @@ describe('Extending from Arrays', () => {
       }
     }
 
-    const b1 = 1, b2 = 2, b3 = 3, b4 = 4
+    const b1 = 1,
+      b2 = 2,
+      b3 = 3,
+      b4 = 4
     const ledger = new Blockchain(b1, b2, b3)
     ledger.push(b4)
     assert.isOk(ledger instanceof Blockchain)

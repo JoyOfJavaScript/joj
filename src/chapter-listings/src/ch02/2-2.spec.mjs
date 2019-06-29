@@ -1,13 +1,15 @@
-import { assert } from 'chai'
+import chai from 'chai'
+
+const { assert } = chai
 
 describe('2.2 - Constructor functions', () => {
   it('Transaction hierarchy using constructor functions', () => {
-    function Transaction (sender, recipient) {
+    function Transaction(sender, recipient) {
       this.sender = sender
       this.recipient = recipient
     }
 
-    function HashTransaction (sender, recipient) {
+    function HashTransaction(sender, recipient) {
       if (!new.target) {
         return new HashTransaction(sender, recipient)
       }
@@ -18,7 +20,7 @@ describe('2.2 - Constructor functions', () => {
     HashTransaction.prototype = Object.create(Transaction.prototype)
     HashTransaction.prototype.constructor = HashTransaction
 
-    HashTransaction.prototype.calculateHash = function () {
+    HashTransaction.prototype.calculateHash = function() {
       const data = [this.sender, this.recipient].join('')
       let hash = 0
 
@@ -34,12 +36,12 @@ describe('2.2 - Constructor functions', () => {
   })
 
   it('Omit new.target check', () => {
-    function Transaction (sender, recipient) {
+    function Transaction(sender, recipient) {
       this.sender = sender
       this.recipient = recipient
     }
 
-    function HashTransaction (sender, recipient) {
+    function HashTransaction(sender, recipient) {
       Transaction.call(this, sender, recipient)
     }
 
@@ -57,12 +59,12 @@ describe('2.2 - Constructor functions', () => {
   })
 
   it('Fat-finger prototype references', () => {
-    function Transaction (sender, recipient) {
+    function Transaction(sender, recipient) {
       this.sender = sender
       this.recipient = recipient
     }
 
-    function HashTransaction (name, sender, recipient) {
+    function HashTransaction(name, sender, recipient) {
       Transaction.call(this, sender, recipient)
       this.name = name
     }

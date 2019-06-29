@@ -1,4 +1,6 @@
-import { assert } from 'chai'
+import chai from 'chai'
+
+const { assert } = chai
 
 describe('2.1.2 - Differential inheritance', () => {
   it('Adds calculateHash to transaction', () => {
@@ -9,7 +11,7 @@ describe('2.1.2 - Differential inheritance', () => {
 
     const moneyTransaction = Object.create(transaction)
     moneyTransaction.funds = 0.0
-    moneyTransaction.addFunds = function (funds = 0) {
+    moneyTransaction.addFunds = function(funds = 0) {
       this.funds += Number(funds)
     }
 
@@ -20,7 +22,7 @@ describe('2.1.2 - Differential inheritance', () => {
 
     const hashTransaction = Object.create(transaction)
 
-    hashTransaction.calculateHash = function () {
+    hashTransaction.calculateHash = function() {
       const data = [this.sender, this.recipient].join('')
       let hash = 0
 
@@ -42,7 +44,7 @@ describe('2.1.2 - Differential inheritance', () => {
 
     const hashTransaction = Object.create(transaction)
 
-    hashTransaction.calculateHash = function () {
+    hashTransaction.calculateHash = function() {
       const data = [this.sender, this.recipient].join('')
       let hash = 0
 
@@ -57,7 +59,7 @@ describe('2.1.2 - Differential inheritance', () => {
 
     const moneyTransaction = Object.setPrototypeOf({}, hashTransaction)
     moneyTransaction.funds = 0.0
-    moneyTransaction.addFunds = function (funds = 0) {
+    moneyTransaction.addFunds = function(funds = 0) {
       this.funds += Number(funds)
     }
     moneyTransaction.addFunds(10)

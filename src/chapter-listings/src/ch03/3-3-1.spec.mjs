@@ -1,4 +1,6 @@
-import { assert } from 'chai'
+import chai from 'chai'
+
+const { assert } = chai
 
 describe('3.3 - Functional Mixins', () => {
   it('3.3.1 - Object.assign uncovered', () => {

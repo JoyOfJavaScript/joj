@@ -1,8 +1,10 @@
-import { assert } from 'chai'
+import chai from 'chai'
+
+const { assert } = chai
 
 describe('Studies new and instanceof', () => {
   it('Using new', () => {
-    function Transaction (from, to) {
+    function Transaction(from, to) {
       this.from = from
       this.to = to
     }
@@ -15,7 +17,7 @@ describe('Studies new and instanceof', () => {
     }, TypeError)
 
     // Using new with function returns a value
-    function Transaction2 (from, to) {
+    function Transaction2(from, to) {
       this.from = from
       this.to = to
       return {
@@ -30,7 +32,7 @@ describe('Studies new and instanceof', () => {
 
   it('Using instanceof', () => {
     class User {
-      constructor ({ userName, avatar }) {
+      constructor({ userName, avatar }) {
         this.userName = userName
         this.avatar = avatar
       }
@@ -46,20 +48,20 @@ describe('Studies new and instanceof', () => {
     assert.isOk(currentUser instanceof User)
 
     // Shape - superclass
-    function Shape () {
+    function Shape() {
       this.x = 0
       this.y = 0
     }
 
     // superclass method
-    Shape.prototype.move = function (x, y) {
+    Shape.prototype.move = function(x, y) {
       this.x += x
       this.y += y
       console.info('Shape moved.')
     }
 
     // Rectangle - subclass
-    function Rectangle () {
+    function Rectangle() {
       Shape.call(this) // call super constructor.
     }
 

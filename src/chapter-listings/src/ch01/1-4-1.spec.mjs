@@ -1,8 +1,9 @@
-import Validation from '@joj/blockchain/lib/fp/data/validation2'
-import { assert } from 'chai'
+import Validation from '@joj/blockchain/lib/fp/data/validation2/validation.mjs'
+import chai from 'chai'
 import fs from 'fs'
 import path from 'path'
 
+const { assert } = chai
 const { Failure, Success } = Validation
 
 const read = f =>
@@ -12,8 +13,7 @@ describe('1.4.1 - Algebraic Coding', () => {
   it('Implement read using Validation ADT', () => {
     assert.isNotNull(Failure)
     assert.isNotNull(Success)
-
-    const filename = path.join(__dirname, '../../', 'res', 'sample.txt')
+    const filename = path.join(process.cwd(), 'res', 'sample.txt')
     assert.isOk(read(filename).isSuccess)
     assert.isOk(read('/invalid/path/to/file').isFailure)
     assert.deepEqual(read('/invalid/path/to/file').getOrElse('default'), 'default')
@@ -32,7 +32,7 @@ describe('1.4.1 - Algebraic Coding', () => {
         .map(parseBlocks)
         .map(count)
 
-    const filename = path.join(__dirname, '../../', 'res', 'sample.txt')
+    const filename = path.join(process.cwd(), 'res', 'sample.txt')
     assert.equal(countBlocksInFile(filename).get(), 7)
   })
 })
