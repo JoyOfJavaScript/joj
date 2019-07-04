@@ -23,6 +23,7 @@
     "eslint-plugin-flowtype": "^2.50.3",
     "eslint-plugin-flowtype-errors": "^3.3.6",
     "eslint-plugin-fp": "^2.3.0",
+    "esm": "^3.2.25",
     "flow-bin": "^0.59.0",
     "link-module-alias": "^1.2.0",
     "mjs-mocha": "^3.0.0",
@@ -47,7 +48,7 @@
     "flow": "flow",
     "flow-init": "flow init",
     "flow-status": "flow status",
-    "start": "nodemon --exec babel-node -- src/app.js",
+    "start": "nodemon --exec 'node -r esm -r @babel/register src/app.js'",
     "start-server": "nodemon --exec babel-node -- src/infrastructure/server/index.js",
     "bundle": "webpack"
   },
