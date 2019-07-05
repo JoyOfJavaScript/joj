@@ -70,13 +70,13 @@ export default class Block {
 
           return composeM(
             () => Success.of(true),
-            checkTampering,
-            checkDifficulty,
-            checkLinkage(previousBlockHash),
-            checkLength(64),
-            checkTimestamps(previousBlockTimestamp),
-            checkVersion(this.#blockchain[Symbol.for('version')]),
-            checkIndex(previousBlockIndex),
+            /*#__PURE__*/ checkTampering,
+            /*#__PURE__*/ checkDifficulty,
+            /*#__PURE__*/ checkLinkage(previousBlockHash),
+            /*#__PURE__*/ checkLength(64),
+            /*#__PURE__*/ checkTimestamps(previousBlockTimestamp),
+            /*#__PURE__*/ checkVersion(this.#blockchain[Symbol.for('version')]),
+            /*#__PURE__*/ checkIndex(previousBlockIndex),
             Validation.of
           )(block)
         })(this)

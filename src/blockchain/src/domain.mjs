@@ -9,12 +9,12 @@ export default {
     #description = 'Generic'
     #signerPrivateKey = undefined
 
-    to(to) {
-      this.#sender = to
+    from(user) {
+      this.#sender = user
       return this
     }
-    from(from) {
-      this.#recipient = from
+    to(user) {
+      this.#recipient = user
       return this
     }
     having(amount) {

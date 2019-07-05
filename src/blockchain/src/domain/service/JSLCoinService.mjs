@@ -69,12 +69,10 @@ const JSLCoinService = ledger => {
       // Mine block and pass it all pending transactions in the chain
       // In reality, blocks are not to exceed 1MB, so not all tx are sent to all blocks
       // We keep transactions immutable by substracting similar transactions for the fee
-      const previousHash = ledger.top.hash
-      const nextId = ledger.height() + 1
       const block = await this.mineNewBlockIntoChain(
         new Builder.Block()
-          .at(nextId)
-          .linkedTo(previousHash)
+          .at(ledger.height() + 1)
+          .linkedTo(ledger.top.hash)
           .withPendingTransactions(ledger.pendingTransactions)
           .withDifficulty(proofOfWorkDifficulty)
           .build()
@@ -119,7 +117,7 @@ const JSLCoinService = ledger => {
     },
 
     // eslint-disable-next-line max-statements
-    transferFunds: function(walletA, walletB, funds, description) {
+    transferFunds: function(walletA, walletB, funds, description, transferFee = 0.02) {
       console.log(`Executing transaction ${description}`)
       // Check for enough funds
       const balanceA = this.calculateBalanceOfWallet(walletA.address)
@@ -127,17 +125,34 @@ const JSLCoinService = ledger => {
       if (Money.compare(balanceA, funds) < 0) {
         throw new RangeError(`Insufficient funds for address ${walletA.address}`)
       }
-      const fee = Money.multiply(funds, Money('jsl', 0.02))
-      const transfer = new Transaction(walletA.address, walletB.address, funds, description)
-      transfer.signature = transfer.sign(walletA.privateKey)
 
-      // Sender pays the fee to the network
-      const txFee = new Transaction(walletA.address, network.address, fee, 'Transaction Fee')
-      txFee.signature = txFee.sign(walletA.privateKey)
-
-      // Add new pending transactions in the blockchain representing the transfer and the fee
-      ledger.pendingTransactions.push(transfer, txFee)
+      const transfer =
+        // Add new pending transactions in the blockchain representing the transfer and the fee
+        ledger.pendingTransactions.push(
+          this.createTransfer(walletA, walletB, funds, description),
+          this.createFeeTransaction(walletA, funds, transferFee)
+        )
       return transfer
+    },
+
+    createTransfer: function(walletA, walletB, funds, description) {
+      return new Builder.Transaction()
+        .from(walletA.address)
+        .to(walletB.address)
+        .having(funds)
+        .withDescription(description)
+        .signWith(walletA.privateKey)
+        .build()
+    },
+
+    createFeeTransaction: function(walletA, funds, transferFee) {
+      return new Builder.Transaction()
+        .from(walletA.address)
+        .to(network.address)
+        .having(Money.multiply(funds, Money('jsl', transferFee)))
+        .withDescription('Transaction Fee')
+        .signWith(walletA.privateKey)
+        .build()
     },
 
     writeLedger: function(filename) {

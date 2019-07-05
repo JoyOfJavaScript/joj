@@ -20,8 +20,10 @@ describe('Blockchain Spec', () => {
 
   it('Should fail validation of two consecutive blocks', async () => {
     const chain = new Blockchain()
-    chain.push(new Block(chain.height() + 1, chain.top.hash, []))
-    chain.push(new Block(chain.height() + 2, chain.top.hash, []))
+    let top = chain.push(new Block(chain.height() + 1, chain.top.hash, []))
+    assert.equal(top.index, 2)
+    top = chain.push(new Block(chain.height() + 1, chain.top.hash, []))
+    assert.equal(top.index, 3)
     chain.top.index = 0 // tamper with index
     const validation = chain.validate()
     console.log(validation.toString())
