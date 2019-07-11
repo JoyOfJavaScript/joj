@@ -119,40 +119,27 @@ const JSLCoinService = ledger => {
     // eslint-disable-next-line max-statements
     transferFunds: function(walletA, walletB, funds, description, transferFee = 0.02) {
       console.log(`Executing transaction ${description}`)
-      // Check for enough funds
-      const balanceA = this.calculateBalanceOfWallet(walletA.address)
 
-      if (Money.compare(balanceA, funds) < 0) {
+      if (Money.compare(walletA.balance(ledger), funds) < 0) {
         throw new RangeError(`Insufficient funds for address ${walletA.address}`)
       }
 
-      const transfer =
-        // Add new pending transactions in the blockchain representing the transfer and the fee
-        ledger.pendingTransactions.push(
-          this.createTransfer(walletA, walletB, funds, description),
-          this.createFeeTransaction(walletA, funds, transferFee)
-        )
-      return transfer
-    },
-
-    createTransfer: function(walletA, walletB, funds, description) {
-      return new Builder.Transaction()
-        .from(walletA.address)
-        .to(walletB.address)
-        .having(funds)
-        .withDescription(description)
-        .signWith(walletA.privateKey)
-        .build()
-    },
-
-    createFeeTransaction: function(walletA, funds, transferFee) {
-      return new Builder.Transaction()
-        .from(walletA.address)
-        .to(network.address)
-        .having(Money.multiply(funds, Money('jsl', transferFee)))
-        .withDescription('Transaction Fee')
-        .signWith(walletA.privateKey)
-        .build()
+      return ledger.pendingTransactions.push(
+        new Builder.Transaction()
+          .from(walletA.address)
+          .to(walletB.address)
+          .having(funds)
+          .withDescription(description)
+          .signWith(walletA.privateKey)
+          .build(),
+        new Builder.Transaction()
+          .from(walletA.address)
+          .to(network.address)
+          .having(Money.multiply(funds, Money('jsl', transferFee)))
+          .withDescription('Transaction Fee')
+          .signWith(walletA.privateKey)
+          .build()
+      )
     },
 
     writeLedger: function(filename) {
@@ -165,5 +152,4 @@ const JSLCoinService = ledger => {
     }
   }
 }
-
 export default JSLCoinService
