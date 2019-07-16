@@ -8,7 +8,7 @@ import { getSpeciesConstructor } from './shared.mjs'
  */
 
 const Functor = (shortCircuit = false) => ({
-  map(f) {
+  map(f = x => x) {
     if (!shortCircuit) {
       const C = getSpeciesConstructor(this)
       return C.of(f(this.get()))
