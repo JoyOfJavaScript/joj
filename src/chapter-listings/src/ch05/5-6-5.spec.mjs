@@ -1,9 +1,7 @@
+import { composeM, curry } from '@joj/blockchain/lib/fp/combinators.mjs'
 import Blockchain from '@joj/blockchain/domain/Blockchain.mjs'
 import HasHash from '@joj/blockchain/domain/shared/HasHash.mjs'
 import chai from 'chai'
-import { curry } from '@joj/blockchain/lib/fp/combinators.mjs'
-import fs from 'fs'
-import path from 'path'
 
 const VERSION = '1.0'
 
@@ -55,17 +53,16 @@ class Block {
 
   isValid() {
     const {
-      index: previousBlockIndex, //#A
+      index: previousBlockIndex,
       timestamp: previousBlockTimestamp
     } = this.#blockchain.lookUp(this.previousHash)
 
-    const validateTimestamps = checkTimestamps(previousBlockTimestamp, this) //#B
-
-    const validateIndex = checkIndex(previousBlockIndex, this) //#B
-
-    const validateTampering = checkTampering(this)
-
-    return validateTimestamps.isSuccess && validateIndex.isSuccess && validateTampering.isSuccess
+    return composeM(
+      checkTimestamps(previousBlockTimestamp),
+      checkIndex(previousBlockIndex),
+      checkTampering,
+      Validation.of
+    )(this)
   }
 
   /**
@@ -96,9 +93,12 @@ class Block {
 
 Object.assign(Block.prototype, HasHash(['index', 'timestamp', 'previousHash', 'nonce', 'data']))
 
-const Monad = () => ({
-  flatMap(f) {
-    return this.map(f).get() // #A
+const getSpeciesConstructor = original =>
+  original.constructor[Symbol.species] || original.constructor
+
+const Monad = shortCircuit => ({
+  flatMap(f = x => x) {
+    return !shortCircuit ? this.map(f).get() : this
   },
   chain(f) {
     //#B
@@ -110,10 +110,14 @@ const Monad = () => ({
   }
 })
 
-const Functor = () => ({
-  map(f = identity) {
-    //#A
-    return this.constructor.of(f(this.get())) //#B
+const Functor = (shortCircuit = false) => ({
+  map(f = x => x) {
+    if (!shortCircuit) {
+      const C = getSpeciesConstructor(this)
+      return C.of(f(this.get()))
+    } else {
+      return this
+    }
   }
 })
 
@@ -210,46 +214,29 @@ Object.assign(Failure.prototype, Functor(Failure.SHORT_CIRCUIT), Monad(Failure.S
 
 const { assert } = chai
 
-describe('5.6 - Implementing the Validation ADT', () => {
-  it('5.6.2 - Modeling success or failure', () => {
-    const block = new Block(1, '123456789', ['some data'], 1)
-    const checkTampering = block =>
-      block.hash === block.calculateHash() ? Success.of(block) : Failure.of('Block hash is invalid')
-    assert.isTrue(checkTampering(block).isSuccess)
-    block.data = ['data compromised']
-    assert.isTrue(checkTampering(block).isFailure)
-  })
-
-  it('Parent Validation class with Success and Failure subclasses', () => {
-    const read = f =>
-      fs.existsSync(f)
-        ? Success.of(fs.readFileSync(f)) //#B
-        : Failure.of(`File ${f} does not exist!`) //#C
-    const file = path.join(process.cwd(), 'src/ch05', 'sample.txt')
-    const noFile = path.join(process.cwd(), 'src/ch05', 'not-exists.txt')
-
-    assert.isTrue(read(file).isSuccess)
-    assert.isTrue(read(noFile).isFailure)
-
-    const decode = (encoding = 'utf8') => buffer => buffer.toString(encoding)
-    const count = arr => (!arr ? 0 : arr.length)
-
-    const countBlocksInFile = f =>
-      read(f)
-        .map(decode('utf8'))
-        .map(JSON.parse)
-        .map(count)
-
-    assert.equal(countBlocksInFile(file).get(), 3)
-  })
-
-  it('Validating a block', () => {
+describe('5.6.5 - 1.6.5	Point-free coding with ADTs', () => {
+  it('Shows isValid using composeM', () => {
     const ledger = new Blockchain()
     let block = new Block(ledger.height() + 1, ledger.top.hash, ['some data'])
     block = ledger.push(block)
     console.log(block)
-    assert.isTrue(block.isValid())
+    assert.isTrue(block.isValid().isSuccess)
     block.data = ['data compromised']
-    assert.isFalse(block.isValid())
+    assert.isFalse(block.isValid().isSuccess)
+  })
+  it('Performs positive and negative test cases', () => {
+    const chain = new Blockchain()
+
+    const genesis = chain.top
+    const b2 = new Block(2, genesis.hash, []) // #A
+    const b3 = new Block(3, b2.hash, [])
+
+    chain.push(b2) //#B
+    chain.push(b3) //#B
+
+    assert.isTrue(b3.isValid().isSuccess)
+
+    chain.top.index = 0 //#C
+    assert.isTrue(chain.isValid().isFailure) // 'Failure (Block out of order [previous (2) next (0)])'
   })
 })
