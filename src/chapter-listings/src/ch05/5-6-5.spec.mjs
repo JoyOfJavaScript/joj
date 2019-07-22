@@ -224,15 +224,4 @@ describe('5.6.5 - 1.6.5	Point-free coding with ADTs', () => {
     block.data = ['data compromised']
     assert.isFalse(block.isValid().isSuccess)
   })
-  it('Performs positive and negative test cases', () => {
-    // const chain = new Blockchain()
-    // const genesis = chain.top
-    // const b2 = new Block(2, genesis.hash, []) // #A
-    // const b3 = new Block(3, b2.hash, [])
-    // chain.push(b2) //#B
-    // chain.push(b3) //#B
-    // assert.isTrue(b3.isValid().isSuccess)
-    // chain.top.index = 0 //#C
-    // assert.isTrue(chain.isValid().isFailure) // 'Failure (Block out of order [previous (2) next (0)])'
-  })
 })
