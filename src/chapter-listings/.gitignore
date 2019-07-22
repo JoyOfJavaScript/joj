@@ -1,6 +1,7 @@
 dist
 node_modules
 *.txt
+_babel
 ch06
 ch07
 ch08
