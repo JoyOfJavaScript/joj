@@ -1,6 +1,6 @@
 /* eslint fp/no-mutation:0,fp/no-throw:0 */
-import { Failure, Success } from '../validation'
-import { identity, isFunction } from '../../combinators'
+import { Failure, Success } from '../validation/index.mjs'
+import { identity, isFunction } from '../../combinators.mjs'
 
 const Result = {
   '@@type': 'Result',
@@ -49,18 +49,18 @@ export const Ok = (Result.Ok = b =>
       ap: Eb =>
         Eb.isError()
           ? // If applying to a Result.Error, skip
-          Eb
+            Eb
           : // Applying a Result.Ok
           isFunction(b)
-            ? // If b is a function, look at the contents of Eb
+          ? // If b is a function, look at the contents of Eb
             Result.of(
               isFunction(Eb.merge())
                 ? // If Eb holds another function, fold Eb with b
-                Eb.merge().call(Eb, b)
+                  Eb.merge().call(Eb, b)
                 : // Eb holds a value, apply that value to b
-                b(Eb.merge())
+                  b(Eb.merge())
             )
-            : // b is a value and Eb has a function
+          : // b is a value and Eb has a function
             Result.of(Eb.merge().call(Eb, b)),
       get: () => b,
       getOrElse: _ => b,
@@ -82,10 +82,8 @@ const errorWith = str => {
   throw new TypeError(str)
 }
 
-Result.fromNullable = (a, error = 'Null argument provided') =>
-  a != null ? Ok(a) : Error(error)
-Result.fromEmpty = a =>
-  Result.fromNullable(a).map(x => (x.length === 0 ? null : x))
+Result.fromNullable = (a, error = 'Null argument provided') => (a != null ? Ok(a) : Error(error))
+Result.fromEmpty = a => Result.fromNullable(a).map(x => (x.length === 0 ? null : x))
 Result.fromValidation = Va => () => {
   if (Va['@@type'] === 'Validation') {
     if (Va.isSuccess()) {
