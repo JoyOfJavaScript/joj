@@ -3,7 +3,7 @@ import { curry } from '@lib/fp/combinators.mjs'
 
 export const checkTampering = obj =>
   obj.hash === obj.calculateHash() ? Success.of(obj) : Failure.of('Invalid hash')
-
+ 
 export const checkLength = curry((len, obj) =>
   len === obj.hash.length ? Success.of(obj) : Failure.of(`Hash length must equal ${len}`)
 )
