@@ -1,4 +1,4 @@
-# Joy of JavaScript (JoJ)
+# Joy of JavaScript (J.JS)
 Thank you for becoming an early adopter of Joy of JavaScript, and welcome! To get the most out of this book, you’ll want to have a professional grasp of JavaScript either  on the server or the client side, as well as an interest in learning new ways to write JavaScript.
 
 We’re at the perfect point of inflexion for a book like Joy of JavaScript. The language is moving at a frantic pace, and this book allows you to jump ahead and begin to grasp the stream of new proposals and modern programming idioms that will equip you to tackle today’s challenges in the most clean and elegant way. So you can truly enjoy using it!

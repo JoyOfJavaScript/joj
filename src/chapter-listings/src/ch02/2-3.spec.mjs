@@ -71,7 +71,7 @@ describe('2.3.1 - Prototypes !== classes', () => {
       }
 
       displayTransaction() {
-        return `${this.transactionId}: ${this.displayTransaction()}`
+        return `${this.transactionId}: ${super.displayTransaction()}`
       }
     }
     const tx = new HashTransaction('luis@joj.com', 'luke@joj.com', 10)

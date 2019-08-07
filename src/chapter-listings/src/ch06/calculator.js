@@ -1,3 +1,7 @@
+/**
+ * Sample dummyt module used for unit testing purposes
+ */
+
 let feePercent = 0.6
 
 exports.feePercent = feePercent
