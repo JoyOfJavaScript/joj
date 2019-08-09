@@ -1,3 +1,4 @@
+import { compose, curry } from '@joj/blockchain/lib/fp/combinators.mjs'
 import chai from 'chai'
 
 const { assert } = chai
@@ -44,5 +45,15 @@ describe('5.1.1 - Using containers for encapsulation and immutability', () => {
       .map(toUpper)
       .pop()
     assert.equal(letters, 'ABC')
+  })
+  it('Mapping validate over functions', () => {
+    const validate = fn => data =>
+      data ? fn(data) : throw new Error(`Received invalid data ${data}`)
+
+    const fns = [toUpper, join, unique].map(validate)
+
+    const letters = compose(...fns)
+
+    assert.equal(letters('aabbcc'), 'ABC')
   })
 })
