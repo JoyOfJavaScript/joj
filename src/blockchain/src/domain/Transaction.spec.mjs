@@ -29,7 +29,7 @@ describe('Transaction', () => {
     console.log('Transaction Hash: ', tx.id)
     assert.isNotEmpty(tx.id)
     assert.equal(tx[Symbol.for('version')], '1.0')
-    console.log(console.log(tx))
+    console.log(tx)
   })
 })
 
