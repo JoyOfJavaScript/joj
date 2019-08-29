@@ -9,7 +9,7 @@ const join = arr => arr.join('')
 
 describe('5.3 - The map/compose correspondence', () => {
   it('map', () => {
-    Function.prototype.map = function(f) {
+    Function.prototype.map = function (f) {
       return compose(
         f,
         this
@@ -26,11 +26,20 @@ describe('5.3 - The map/compose correspondence', () => {
     assert.equal(unique.map(join).map(toUpper)('aabbcc'), 'ABC')
   })
   it('flatMap', () => {
-    Function.prototype.flatMap = function(F) {
+    Function.prototype.flatMap = function (F) {
       return compose(
         arr => arr.pop(), //#A
         F,
         this
+      )
+    }
+    assert.equal(toUpper.flatMap(unique)('aa'), 'A')
+  })
+  it('flatMap with map', () => {
+    Function.prototype.flatMap = function (F) {
+      return compose(
+        arr => arr.pop(),
+        this.map(F)
       )
     }
     assert.equal(toUpper.flatMap(unique)('aa'), 'A')
