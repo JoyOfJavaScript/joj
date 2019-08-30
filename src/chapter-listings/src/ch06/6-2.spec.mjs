@@ -13,7 +13,7 @@ describe('6.2 -  Module patterns', () => {
     //Using an object namespace
     {
       BlockchainApp.domain = {} //#B
-      BlockchainApp.domain.Transaction = (function() {
+      BlockchainApp.domain.Transaction = (function () {
         const feePercent = 0.6 //#C
 
         function precisionRound(number, precision) {
@@ -23,13 +23,13 @@ describe('6.2 -  Module patterns', () => {
 
         return {
           //#D
-          construct: function(sender, recipient, funds = 0.0) {
+          construct: function (sender, recipient, funds = 0.0) {
             this.sender = sender
             this.recipient = recipient
             this.funds = Number(funds)
             return this
           },
-          netTotal: function() {
+          netTotal: function () {
             return precisionRound(this.funds * feePercent, 2)
           }
         }
@@ -64,7 +64,7 @@ describe('6.2 -  Module patterns', () => {
     }
   })
   it('2. Immediately-Invoked Function Expressions (IIFEs)', () => {
-    (function(namespace) {
+    (function Transaction(namespace) {
       const VERSION = '1.0' //#A
       namespace.domain = {} //#B
 
@@ -126,7 +126,7 @@ describe('6.2 -  Module patterns', () => {
 
     const HasHash =
       global.HasHash ||
-      function(keys) {
+      function HasHash(keys) {
         const options = {
           algorithm: 'SHA256',
           encoding: 'hex'
@@ -166,19 +166,19 @@ describe('6.2 -  Module patterns', () => {
       //const network = new Wallet(Key('jsl-public.pem'), Key('jsl-private.pem')) //#A
 
       return {
-        mineNewBlockIntoChain: async function(newBlock) {
+        mineNewBlockIntoChain: async function (newBlock) {
           //#B
           //...
         },
 
-        minePendingTransactions: async function(
+        minePendingTransactions: async function (
           rewardAddress, //#C
           proofOfWorkDifficulty = 2
         ) {
           //...
         },
 
-        transferFunds: function(walletA, walletB, funds, description) {
+        transferFunds: function (walletA, walletB, funds, description) {
           //#D
           //...
           assert.isNotNull(walletA)
