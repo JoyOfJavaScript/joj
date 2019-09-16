@@ -14,22 +14,22 @@ describe('2.2 - Constructor functions', () => {
         return new HashTransaction(sender, recipient)
       }
       Transaction.call(this, sender, recipient)
+
+      this.calculateHash = function () {
+        const data = [this.sender, this.recipient].join('')
+        let hash = 0
+
+        let i = 0
+        while (i < data.length) {
+          hash = ((hash << 5) - hash + data.charCodeAt(i++)) << 0
+        }
+        return hash ** 2
+      }
     }
 
     assert.isNotNull(HashTransaction.prototype)
     HashTransaction.prototype = Object.create(Transaction.prototype)
     HashTransaction.prototype.constructor = HashTransaction
-
-    HashTransaction.prototype.calculateHash = function() {
-      const data = [this.sender, this.recipient].join('')
-      let hash = 0
-
-      let i = 0
-      while (i < data.length) {
-        hash = ((hash << 5) - hash + data.charCodeAt(i++)) << 0
-      }
-      return hash ** 2
-    }
 
     const tx = new HashTransaction('luis@joj.com', 'luke@joj.com')
     assert.equal(tx.calculateHash(), 60195031661110560)

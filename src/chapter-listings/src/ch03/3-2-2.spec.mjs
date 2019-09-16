@@ -76,16 +76,21 @@ describe('3.2.2 - Implicit Delegation', () => {
 
   it('OLOO', () => {
     const MyArray = {
-      init(element) {
-        MyArray.prototype = Object.create(Array.prototype)
-        return [element]
+      init(element) { //#A
+        this.length = 0
+        this.push(element)
+        return this
+      },
+      push(b) {
+        this[this.length] = b
+        return ++this.length
       }
     }
-    const blockchain = Object.create(MyArray).init(createGenesisBlock())
+    const Blockchain = Object.create(MyArray).init(createGenesisBlock())
+    const chain = Object.create(Blockchain)
 
-    assert.isTrue(blockchain instanceof Array)
-    assert.equal(blockchain.length, 1)
-    assert.equal(blockchain[0].previousHash, '0'.repeat(64))
+    assert.equal(chain.length, 1)
+    assert.equal(chain[0].previousHash, '0'.repeat(64))
   })
 
   it('Listing 3.2 - Modeling Transaction using behavior delegation (OLOO)', () => {
@@ -97,7 +102,7 @@ describe('3.2.2 - Implicit Delegation', () => {
         this.recipient = _validateEmail(recipient)
         this.funds = Number(funds)
 
-        this.netTotal = function() {
+        this.netTotal = function () {
           return _precisionRound(this.funds * _feePercent, 2)
         }
 
@@ -125,7 +130,7 @@ describe('3.2.2 - Implicit Delegation', () => {
       return this
     }
 
-    HashTransaction.calculateHash = function() {
+    HashTransaction.calculateHash = function () {
       const data = [this.sender, this.recipient, this.funds].join('')
       let hash = 0,
         i = 0
