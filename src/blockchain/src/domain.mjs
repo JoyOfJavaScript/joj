@@ -1,6 +1,10 @@
 import Block from './domain/Block.mjs'
 import Transaction from './domain/Transaction.mjs'
 
+export { default as Block } from './domain/Block.mjs'
+export { default as Transaction } from './domain/Transaction.mjs'
+export { default as Blockchain } from './domain/Blockchain.mjs'
+
 export default {
   Transaction: class {
     #sender

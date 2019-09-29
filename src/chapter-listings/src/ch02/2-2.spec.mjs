@@ -32,6 +32,7 @@ describe('2.2 - Constructor functions', () => {
     HashTransaction.prototype.constructor = HashTransaction
 
     const tx = new HashTransaction('luis@joj.com', 'luke@joj.com')
+    assert.isTrue(tx.__proto__ === HashTransaction.prototype)
     assert.equal(tx.calculateHash(), 60195031661110560)
   })
 

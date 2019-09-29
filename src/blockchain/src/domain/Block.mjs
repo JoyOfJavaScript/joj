@@ -61,15 +61,14 @@ export default class Block {
     return this.isGenesis()
       ? Success.of(true)
       : (block => {
-          // Compare each block with its previous
-          const {
-            index: previousBlockIndex,
-            hash: previousBlockHash,
-            timestamp: previousBlockTimestamp
-          } = this.#blockchain.lookUp(this.previousHash)
+        // Compare each block with its previous
+        const {
+          index: previousBlockIndex,
+          hash: previousBlockHash,
+          timestamp: previousBlockTimestamp
+        } = this.#blockchain.lookUp(this.previousHash)
 
-          return composeM(
-            () => Success.of(true),
+        return composeM(
             /*#__PURE__*/ checkTampering,
             /*#__PURE__*/ checkDifficulty,
             /*#__PURE__*/ checkLinkage(previousBlockHash),
@@ -77,9 +76,9 @@ export default class Block {
             /*#__PURE__*/ checkTimestamps(previousBlockTimestamp),
             /*#__PURE__*/ checkVersion(this.#blockchain[Symbol.for('version')]),
             /*#__PURE__*/ checkIndex(previousBlockIndex),
-            Validation.of
-          )(block)
-        })(this)
+          Validation.of
+        )(block)
+      })(this)
   }
 
   /**

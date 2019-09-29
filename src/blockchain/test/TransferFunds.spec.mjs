@@ -160,7 +160,6 @@ describe('Transfer Funds Test suite', () => {
 
     const isLedgerValid = ledger.validate()
     assert.isOk(isLedgerValid.isSuccess, 'Is ledger valid?')
-    assert.isTrue(isLedgerValid.get())
     if (USE_PROXIES) {
       assert.isAbove(ledger.lookUp.invocations, 0)
       assert.isAbove(ledger.validate.invocations, 0)

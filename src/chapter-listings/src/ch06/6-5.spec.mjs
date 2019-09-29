@@ -1,11 +1,29 @@
+import Builder, { Block, Transaction } from '@joj/blockchain/domain.mjs'
 import { makeChain, makeMoney } from './factory_functions.mjs'
-import Builder from '@joj/blockchain/domain.mjs'
 import Money from '@joj/blockchain/domain/value/Money.mjs'
 import chai from 'chai'
 
 const { assert } = chai
 
 describe('6.5 - Import patterns', () => {
+
+  it('Test proxy export', () => {
+    const tx = new Transaction('luis@joj.com', 'luke@joj.com', 10)
+    assert.equal(tx.sender, 'luis@joj.com')
+    assert.equal(tx.recipient, 'luke@joj.com')
+    assert.equal(tx.calculateHash().length, 64)
+    assert.equal(
+      tx.displayTransaction(),
+      'Transaction Generic from luis@joj.com to luke@joj.com for 10'
+    )
+
+    const b = new Block(1, 'ABC123', [])
+    assert.equal(b.index, 1)
+    assert.equal(b.previousHash, 'ABC123')
+    assert.isNotTrue(b.isGenesis())
+    assert.isOk(b.calculateHash().length, 64)
+  })
+
   it('Factory functions', () => {
     const m = makeMoney('jsl', 10)
     assert.equal(m.currency, 'jsl')

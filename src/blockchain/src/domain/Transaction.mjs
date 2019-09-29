@@ -1,4 +1,4 @@
-import Validation, { Success } from '../lib/fp/data/validation2/validation.mjs'
+import Validation, { Failure, Success } from '../lib/fp/data/validation2/validation.mjs'
 import HasHash from './shared/HasHash.mjs'
 import HasSignature from './shared/HasSignature.mjs'
 import HasValidation from './shared/HasValidation.mjs'
@@ -49,15 +49,27 @@ export default class Transaction {
   displayTransaction() {
     return `Transaction ${this.description} from ${this.sender} to ${
       this.recipient
-    } for ${this.funds.toString()}`
+      } for ${this.funds.toString()}`
   }
 
   isValid() {
     return Validation.of(this)
       .flatMap(/*#__PURE__*/ checkSignature)
       .flatMap(/*#__PURE__*/ checkTampering)
-      .flatMap(() => Success.of(true))
   }
+
+  // isValid() {
+  //   if (!this.verifySignature(this.sender || this.recipient)) {
+  //     return Failure.of(`Failed transaction signature check for transaction: ${this.id}`)
+  //   }
+
+  //   if (this.hash !== this.calculateHash()) {
+  //     return Failure.of('Invalid hash')
+  //   }
+
+  //   return Success.of(this)
+  // }
+
   /**
    * Returns a minimal JSON represetation of this object
    * @return {Object} JSON object
