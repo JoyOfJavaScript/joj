@@ -3,8 +3,7 @@ import Key from '../value/Key.mjs'
 import Money from '../value/Money.mjs'
 import Transaction from '../Transaction.mjs'
 import Wallet from '../Wallet.mjs'
-import fs from 'fs'
-import proofOfWork from './jslcoinservice/proof_of_work2.mjs'
+import { compose, curry, isFunction } from '../../lib/fp/combinators.mjs'
 
 /**
  * Constructs a JSLCoinService instance with the specified blockchain ledger
@@ -19,24 +18,34 @@ const JSLCoinService = ledger => {
     calculateBalanceOfWallet,
     minePendingTransactions,
     transferFunds,
-    writeLedger
+    serializeLedger
   }
+
   /**
    * Mines a new block into the chain. It involves:
    * Recalculate new blocks hash until the difficulty condition is met (mine)
    * Point new block's previous to current
    *
-   * @param {Block}  newBlock  New block to add into the chain
-   * @param {number} proofOfWorkDifficulty Difficulty factor for proof of work function (default: 2)
+   * @param {Block}  newBlock  New block to add into the chain   
    * @return {Block} Returns new block mined into the blockchain
    */
   async function mineNewBlockIntoChain(newBlock) {
     console.log(`Found ${newBlock.data.length} pending transactions in block`)
     // Check that this block index does not already exist
-    if (ledger.lookUpByIndex(newBlock.index)) {
-      throw new Error('Block rejected since it had already been mined!')
+    // if (ledger.lookUpByIndex(newBlock.index)) {
+    //   throw new Error('Block rejected since it had already been mined!')
+    // }    
+    let proofOfWorkAlgo = undefined
+    switch (newBlock[Symbol.for('version')]) {
+      case '2.0': {
+        proofOfWorkAlgo = (await import('./jslcoinservice/proof_of_work3.mjs')).default
+        break;
+      }
+      default: case '1.0':
+        proofOfWorkAlgo = (await import('./jslcoinservice/proof_of_work2.mjs')).default
+        break;
     }
-    return ledger.push(await proofOfWork(newBlock, ''.padStart(newBlock.difficulty, '0')))
+    return ledger.push(await proofOfWorkAlgo(newBlock, ''.padStart(newBlock.difficulty, '0')))
   }
 
   /**
@@ -148,13 +157,17 @@ const JSLCoinService = ledger => {
     )
   }
 
-  function writeLedger(filename) {
+  function serializeLedger() {
     const toArray = a => [...a]
-    const jsonString = a => JSON.stringify(a.toJSON())
-    const csv = arr => arr.map(jsonString).join(',')
+    const toJson = obj => {
+      return isFunction(obj[Symbol.for('toJson')])
+        ? obj[Symbol.for('toJson')]()
+        : JSON.stringify(obj)
+    }
+    const join = curry((serializer, arr) => arr.map(serializer).join(','))
     const buffer = str => Buffer.from(str, 'utf8')
-    const write = buff => fs.writeFileSync(filename, buff)
-    return write(buffer(csv(toArray(ledger))))
+    return ledger |> toArray |> join(toJson) |> buffer
+    // return compose(buffer, csv(toJson), toArray)(ledger)
   }
 }
 export default JSLCoinService

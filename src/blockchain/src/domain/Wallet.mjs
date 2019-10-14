@@ -17,7 +17,7 @@ export default class Wallet {
    *
    * @return {Wallet} A new digital wallet
    */
-  static generateWallet() {}
+  static generateWallet() { }
 
   get address() {
     return this.publicKey
@@ -31,10 +31,11 @@ export default class Wallet {
     return /*#__PURE__*/ computeBalance(this.publicKey)([...ledger])
   }
 
-  toJSON() {
-    return {
+  [Symbol.for('toJson')]() {
+    return JSON.stringify({
       address: this.publicKey,
       version: VERSION
     }
+    )
   }
 }

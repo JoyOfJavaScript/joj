@@ -168,10 +168,15 @@ describe('Transfer Funds Test suite', () => {
     }
 
     const file = path.join(process.cwd(), 'test', 'test-run.txt')
-    service.writeLedger(file)
-    fs.unlink(file, err => {
-      if (err) throw err
-      console.log(`${file} was deleted`)
-    })
+    const rawLedger = service.serializeLedger(file)
+    try {
+      fs.writeFileSync(file, rawLedger)
+    }
+    finally {
+      fs.unlink(file, err => {
+        if (err) throw err
+        console.log(`${file} was deleted`)
+      })
+    }
   })
 })

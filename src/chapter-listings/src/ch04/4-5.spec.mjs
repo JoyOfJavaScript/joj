@@ -1,5 +1,5 @@
-import { compose, curry, prop, props } from '@joj/blockchain/lib/fp/combinators.mjs'
 import chai from 'chai'
+import { compose } from '@joj/blockchain/lib/fp/combinators.mjs'
 import fs from 'fs'
 import path from 'path'
 

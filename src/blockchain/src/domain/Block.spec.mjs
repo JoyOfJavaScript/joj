@@ -49,8 +49,8 @@ describe('Block Spec', () => {
     console.log('Hash: ', b.hash)
     assert.ok(b.hash.length > 0)
     assert.notEqual(currentHash, b.hash)
-    assert.ok(b.toJSON().previousHash)
-    assert.notOk(b.toJSON().difficulty)
+    assert.ok(JSON.parse(b[Symbol.for('toJson')]()).previousHash)
+    assert.notOk(JSON.parse(b[Symbol.for('toJson')]()).difficulty)
   })
 
   it('Should validate block', async () => {

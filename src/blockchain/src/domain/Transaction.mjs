@@ -74,13 +74,14 @@ export default class Transaction {
    * Returns a minimal JSON represetation of this object
    * @return {Object} JSON object
    */
-  toJSON() {
-    return {
+  [Symbol.for('toJson')]() {
+    return JSON.stringify({
       from: this.sender,
       to: this.recipient,
       id: this.id,
       version: VERSION
     }
+    )
   }
 
   get [Symbol.for('version')]() {
