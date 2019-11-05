@@ -102,6 +102,10 @@ export default class Blockchain {
   [Symbol.iterator]() {
     return this.blocks.values()
   }
+
+  get [Symbol.toStringTag]() {
+    return 'Blockchain'
+  }
 }
 
 Object.assign(Blockchain.prototype, HasValidation())

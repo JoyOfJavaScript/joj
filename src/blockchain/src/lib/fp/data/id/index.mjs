@@ -1,15 +1,13 @@
-import Applicative from '../contract/Applicative'
-import Functor from '../contract/Functor'
-import Monad from '../contract/Monad'
+import Functor from '../contract/Functor.mjs'
 
 export default class Id {
   #tag = 'ID'
   #val
-  constructor (value) {
+  constructor(value) {
     this.#val = value
   }
 
-  get value () {
+  get value() {
     return this.#val
   }
 
@@ -19,27 +17,27 @@ export default class Id {
    * @param {Object} value Any value
    * @return {Id} Wrapped value
    */
-  static of (value) {
+  static of(value) {
     return new Id(value)
   }
 
-  get () {
+  get() {
     return this.#val
   }
 
-  get [Symbol.for('implements')] () {
+  get [Symbol.for('implements')]() {
     return ['map']
   }
 
-  static get [Symbol.species] () {
+  static get [Symbol.species]() {
     return this
   }
 
-  get tag () {
+  get tag() {
     return this.#tag
   }
 
-  toString () {
+  toString() {
     return `${this.tag} (${this.value})`
   }
 }

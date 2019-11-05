@@ -2,7 +2,6 @@ import fs from 'fs'
 import path from 'path'
 
 const BASE = path.join(process.cwd(), '.', 'wallets')
-console.log('Base is', BASE)
 const Key = (name, base = BASE) => {
   try {
     const k = fs.readFileSync(path.join(base, name), 'utf8')
@@ -10,15 +9,22 @@ const Key = (name, base = BASE) => {
       throw new Error(`Key file is empty ${name}`)
     }
     return {
-      valueOf: () => k,
-      toString: () => k,
-      [Symbol.toPrimitive]: () => k
+      [Symbol.toPrimitive]: (hint) => {
+        switch (hint) {
+          case 'number':
+            return k.length
+          case 'string':
+          default:
+            return k
+        }
+      }
     }
   } catch (e) {
-    console.log(`Unable to load key ${name}. PEM does not exist in wallets directory`)
+    console.log(`Unable to load key ${name}. PEM does not exist in the filesystem`)
     throw e
   }
 }
+
 export default Key
 
 // TODO: Hash the key values and use those as addresses

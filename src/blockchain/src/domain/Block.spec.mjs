@@ -86,4 +86,10 @@ describe('Block Spec', () => {
     console.log(validation.toString())
     assert.isOk(validation.isFailure)
   })
+
+  it('Tests toString', () => {
+    const chain = new Blockchain()
+    const block = new Block(chain.height() + 1, chain.top.hash, []);
+    assert.equal(block.toString(), '[object Block]')
+  })
 })

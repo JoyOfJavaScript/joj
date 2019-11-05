@@ -166,27 +166,31 @@ describe('6.2 -  Module patterns', () => {
       //const network = new Wallet(Key('jsl-public.pem'), Key('jsl-private.pem')) //#A
 
       return {
-        mineNewBlockIntoChain: async function (newBlock) {
-          //#B
-          //...
-        },
+        mineNewBlockIntoChain,
+        minePendingTransactions,
+        transferFunds
+      }
 
-        minePendingTransactions: async function (
-          rewardAddress, //#C
-          proofOfWorkDifficulty = 2
-        ) {
-          //...
-        },
+      async function mineNewBlockIntoChain(newBlock) {
+        //#B
+        //...
+      }
 
-        transferFunds: function (walletA, walletB, funds, description) {
-          //#D
-          //...
-          assert.isNotNull(walletA)
-          assert.isNotNull(walletB)
-          assert.equal(funds.currency, 'jsl')
-          assert.isNotEmpty(description)
-          console.log('Running', arguments[3])
-        }
+      async function minePendingTransactions(
+        rewardAddress, //#C
+        proofOfWorkDifficulty = 2
+      ) {
+        //...
+      }
+
+      function transferFunds(walletA, walletB, funds, description) {
+        //#D
+        //...
+        assert.isNotNull(walletA)
+        assert.isNotNull(walletB)
+        assert.equal(funds.currency, 'jsl')
+        assert.isNotEmpty(description)
+        console.log('Running', arguments[3])
       }
     }
     const service = JSLCoinService(new Blockchain())

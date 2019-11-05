@@ -93,6 +93,10 @@ export default class Transaction {
       next: () => ({ done: true })
     }
   }
+
+  get [Symbol.toStringTag]() {
+    return 'Transaction'
+  }
 }
 
 Object.assign(

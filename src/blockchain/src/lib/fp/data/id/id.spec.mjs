@@ -1,5 +1,7 @@
-import Id from '.'
-import { assert } from 'chai'
+import Id from './index.mjs'
+import chai from 'chai'
+
+const { assert } = chai
 
 describe('ID', () => {
   it('Constructor', () => {

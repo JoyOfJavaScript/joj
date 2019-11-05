@@ -20,10 +20,15 @@ describe('JSLCoinService Spec', () => {
       fs.writeFileSync(file, rawLedger)
     }
     finally {
-      // fs.unlink(file, err => {
-      //   if (err) throw err
-      //   console.log(`${file} was deleted`)
-      // })
+      fs.unlink(file, err => {
+        if (err) throw err
+        console.log(`${file} was deleted`)
+      })
     }
+  })
+
+  it('Uses Symbol.toStringTag', () => {
+    const service = JSLCoinService(null)
+    assert.equal(service.toString(), '[object JSLCoinService]')
   })
 })

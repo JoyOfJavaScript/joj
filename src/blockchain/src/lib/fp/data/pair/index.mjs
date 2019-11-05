@@ -1,5 +1,5 @@
 /* eslint fp/no-mutation:0,fp/no-throw:0 */
-import { curry, identity } from '../../combinators'
+import { curry, identity } from '../../combinators.mjs'
 
 /**
  * Test whether some value is of type ctor
@@ -44,7 +44,7 @@ export const Pair = (A, B) => (l, r) =>
     left,
     right,
     constructor: Pair,
-    [Symbol.iterator]: function * () {
+    [Symbol.iterator]: function* () {
       yield left
       yield right
     },
@@ -64,7 +64,7 @@ export const Pair = (A, B) => (l, r) =>
       right
     }),
     [Symbol.toPrimitive]: hint =>
-      console.log('As primitive', hint) + hint === 'string'
+      hint === 'string'
         ? `Pair [${left}, ${right}]`
         : [left, right]
   }))(

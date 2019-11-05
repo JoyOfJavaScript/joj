@@ -14,6 +14,7 @@ const JSLCoinService = ledger => {
   const network = new Wallet(Key('jsl-public.pem'), Key('jsl-private.pem'))
 
   return {
+    [Symbol.toStringTag]: 'JSLCoinService',
     mineNewBlockIntoChain,
     calculateBalanceOfWallet,
     minePendingTransactions,

@@ -32,11 +32,6 @@ describe('5.1.1 - Using containers for encapsulation and immutability', () => {
         super(1) // #A
         this.fill(value)
       }
-
-      static get [Symbol.species]() {
-        //#B
-        return this //#C
-      }
     }
 
     const letters = Id.of('aabbcc') //#D

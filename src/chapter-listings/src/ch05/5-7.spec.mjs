@@ -34,6 +34,7 @@ describe('5.7 - ADTs that help shape the future of JavaScript', () => {
         .map(prop('street'))
     assert.equal(getStreet(user).merge(), '14610')
   })
+  
   it('5.7.2	Try and throw expressions', () => {
     const checkData = data => (data !== null ? data : throw 'IllegalArgumentException')
     assert.throws(() => {

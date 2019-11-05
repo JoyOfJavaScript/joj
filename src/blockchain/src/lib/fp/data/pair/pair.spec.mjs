@@ -1,5 +1,7 @@
-import Pair from './'
-import { assert } from 'chai'
+import Pair from './index.mjs'
+import chai from 'chai'
+
+const { assert } = chai
 
 describe('Pair', () => {
   it('Should destructure a pair of strings  ', () => {

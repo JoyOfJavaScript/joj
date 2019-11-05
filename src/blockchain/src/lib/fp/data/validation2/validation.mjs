@@ -64,7 +64,12 @@ export default class Validation {
   }
 
   toString() {
-    return `${this.constructor.name} (${this.#val})`
+    return `${this.constructor.name} (${this.#val
+  })`
+  }
+
+  [Symbol.toPrimitive](hint) {
+    return this.get()
   }
 }
 
@@ -93,9 +98,9 @@ export class Failure extends Validation {
     throw new Error(`Can't extract the value of a Failure`)
   }
 
-  getOrElse(defaultVal) {
-    return defaultVal
-  }
+getOrElse(defaultVal) {
+  return defaultVal
+}
 }
 
 Failure.SHORT_CIRCUIT = true

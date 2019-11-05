@@ -105,6 +105,10 @@ export default class Block {
   [Symbol.iterator]() {
     return this.data[Symbol.iterator]()
   }
+
+  get [Symbol.toStringTag]() {
+    return 'Block'
+  }
 }
 
 Object.assign(
