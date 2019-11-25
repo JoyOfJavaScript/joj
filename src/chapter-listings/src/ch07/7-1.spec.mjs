@@ -1,3 +1,4 @@
+// import libConfig from './mylib/package.json'
 import chai from 'chai'
 
 const { assert } = chai
@@ -16,7 +17,12 @@ describe('7.1 - Using eval', () => {
     /* eslint-enable no-eval */
   })
 
-  // it('Loads data from package.json', () => {
-  //   assert.isNotNull(libConfig)
-  // })
+  it('Loads data from package.json', async () => {
+    // assert.isNotNull(libConfig)
+
+    const { default: libConfigAsync } = await import(
+      './mylib/package.json'
+    )
+    assert.isNotNull(libConfigAsync)
+  })
 })
