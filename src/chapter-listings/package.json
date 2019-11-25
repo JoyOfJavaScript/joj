@@ -43,7 +43,7 @@
     "lint": "eslint src/",
     "lint-fix": "eslint src/ --fix",
     "flow": "flow",
-    "build": "babel src --out-dir _babel/src --keep-file-extension",
+    "build": "babel src --out-dir _babel/src --keep-file-extension && cp -f package.json _babel/src/ch07",
     "test": "mjs-mocha",
     "test-all": "rm -rf _babel && npm run build; mjs-mocha _babel; mocha _babel/**/*spec.js; rm -rf _babel",
     "test-docker": "nodemon --watch src/ --exec mjs-mocha src || true",
