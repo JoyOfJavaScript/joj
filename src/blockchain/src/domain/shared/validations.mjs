@@ -1,9 +1,9 @@
-import { Failure, Success } from '@lib/fp/data/validation2/validation.mjs'
-import { curry } from '@lib/fp/combinators.mjs'
+import { Failure, Success } from '@util/fp/data/validation2/validation.mjs'
+import { curry } from '@util/fp/combinators.mjs'
 
 export const checkTampering = obj =>
   obj.hash === obj.calculateHash() ? Success.of(obj) : Failure.of('Invalid hash')
- 
+
 export const checkLength = curry((len, obj) =>
   len === obj.hash.length ? Success.of(obj) : Failure.of(`Hash length must equal ${len}`)
 )

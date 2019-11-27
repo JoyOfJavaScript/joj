@@ -1,5 +1,5 @@
 import crypto from 'crypto'
-import { curry } from '@lib/fp/combinators.mjs'
+import { curry } from '@util/fp/combinators.mjs'
 
 const sign = curry((options, input, credentials) => {
   const s = crypto.createSign(options.algorithm)

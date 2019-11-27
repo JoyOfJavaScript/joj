@@ -1,6 +1,6 @@
 import Block from './Block.mjs'
 import HasValidation from './shared/HasValidation.mjs'
-import { Success } from '../lib/fp/data/validation2/validation.mjs'
+import { Success } from '@util/fp/data/validation2/validation.mjs'
 
 const VERSION = '1.0'
 

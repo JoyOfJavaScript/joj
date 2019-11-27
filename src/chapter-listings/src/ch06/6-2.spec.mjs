@@ -1,5 +1,5 @@
 import '@joj/blockchain/domain/value/Money.mjs'
-import { compose, prop, props } from '@joj/blockchain/lib/fp/combinators.mjs'
+import { compose, prop, props } from '@joj/blockchain/util/fp/combinators.mjs'
 import Blockchain from '@joj/blockchain/domain/Blockchain.mjs'
 import assemble from '@joj/blockchain/domain/shared/has_hash/assemble.mjs'
 import chai from 'chai'

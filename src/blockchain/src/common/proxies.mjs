@@ -1,4 +1,4 @@
-import { curry } from '../lib/fp/combinators.mjs'
+import { curry } from '@util/fp/combinators.mjs'
 
 // Handlers
 const traceLogHandler = {

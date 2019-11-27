@@ -1,6 +1,6 @@
-import { Error, Ok } from '@joj/blockchain/lib/fp/data/result/index.mjs'
+import { Error, Ok } from '@joj/blockchain/util/fp/data/result/index.mjs'
 import chai from 'chai'
-import { curry } from '@joj/blockchain/lib/fp/combinators.mjs'
+import { curry } from '@joj/blockchain/util/fp/combinators.mjs'
 
 const { assert } = chai
 

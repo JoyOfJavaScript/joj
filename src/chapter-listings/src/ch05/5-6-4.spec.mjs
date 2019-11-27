@@ -1,7 +1,7 @@
 import Blockchain from '@joj/blockchain/domain/Blockchain.mjs'
 import HasHash from '@joj/blockchain/domain/shared/HasHash.mjs'
 import chai from 'chai'
-import { curry } from '@joj/blockchain/lib/fp/combinators.mjs'
+import { curry } from '@joj/blockchain/util/fp/combinators.mjs'
 
 const VERSION = '1.0'
 

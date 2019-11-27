@@ -2,7 +2,7 @@
 version: "2"
 services:  
     blockchain_tests:
-      image: "node:12.5.0-slim"
+      image: "node:13.2.0-slim"
       user: "node"
       working_dir: /home/joj/src
       environment:
@@ -12,7 +12,7 @@ services:
         - ./src:/home/joj/src
       command: bash -c  "npm --prefix /home/joj/src/blockchain install --silent --progress=false ; npm --prefix /home/joj/src/blockchain run test-all"
     chapter_listings:
-      image: "node:12.5.0-slim"
+      image: "node:13.2.0-slim"
       user: "node"
       working_dir: /home/joj/src
       environment:

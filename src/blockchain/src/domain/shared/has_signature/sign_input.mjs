@@ -1,4 +1,4 @@
-import Maybe from '@lib/fp/data/maybe.mjs'
+import Maybe from '@util/fp/data/maybe.mjs'
 
 /**
  * Signs the input data given a private key

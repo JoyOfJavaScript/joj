@@ -1,4 +1,4 @@
-import Validation, { Failure, Success } from '../lib/fp/data/validation2/validation.mjs'
+import Validation, { Failure, Success } from '@util/fp/data/validation2/validation.mjs'
 import HasHash from './shared/HasHash.mjs'
 import HasSignature from './shared/HasSignature.mjs'
 import HasValidation from './shared/HasValidation.mjs'

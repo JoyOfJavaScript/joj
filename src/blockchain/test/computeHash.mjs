@@ -1,4 +1,4 @@
-import { compose, curry } from '../src/lib/fp/combinators.mjs'
+import { compose, curry } from '../src/util/fp/combinators.mjs'
 import crypto from 'crypto'
 
 const ALGO_SHA256 = 'sha256'

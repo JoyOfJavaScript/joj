@@ -1,5 +1,5 @@
-import { Failure, Success } from '@joj/blockchain/lib/fp/data/validation2/validation.mjs'
-import { compose, curry, isFunction, prop } from '@joj/blockchain/lib/fp/combinators.mjs'
+import { Failure, Success } from '@joj/blockchain/util/fp/data/validation2/validation.mjs'
+import { compose, curry, isFunction, prop } from '@joj/blockchain/util/fp/combinators.mjs'
 import Block from '@joj/blockchain/domain/Block.mjs'
 import chai from 'chai'
 

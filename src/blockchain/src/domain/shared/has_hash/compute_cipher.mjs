@@ -1,5 +1,5 @@
 import crypto from 'crypto'
-import { curry } from '@lib/fp/combinators.mjs'
+import { curry } from '@util/fp/combinators.mjs'
 
 const computeCipher = curry((options, data) =>
   crypto

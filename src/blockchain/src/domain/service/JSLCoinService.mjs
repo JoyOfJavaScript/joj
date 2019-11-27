@@ -1,9 +1,9 @@
+import { curry, isFunction } from '@util/fp/combinators.mjs'
 import Builder from '../../domain.mjs'
 import Key from '../value/Key.mjs'
 import Money from '../value/Money.mjs'
 import Transaction from '../Transaction.mjs'
 import Wallet from '../Wallet.mjs'
-import { compose, curry, isFunction } from '../../lib/fp/combinators.mjs'
 
 /**
  * Constructs a JSLCoinService instance with the specified blockchain ledger

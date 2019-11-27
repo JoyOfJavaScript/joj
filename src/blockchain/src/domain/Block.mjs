@@ -1,4 +1,4 @@
-import Validation, { Success } from '../lib/fp/data/validation2/validation.mjs'
+import Validation, { Success } from '@util/fp/data/validation2/validation.mjs'
 import { checkDifficulty, checkIndex, checkLinkage } from './block/validations.mjs'
 import {
   checkLength,
@@ -8,7 +8,7 @@ import {
 } from './shared/validations.mjs'
 import HasHash from './shared/HasHash.mjs'
 import HasValidation from './shared/HasValidation.mjs'
-import { composeM } from '../lib/fp/combinators.mjs'
+import { composeM } from '@util/fp/combinators.mjs'
 
 const VERSION = '1.0'
 

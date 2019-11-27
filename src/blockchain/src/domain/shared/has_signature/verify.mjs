@@ -1,5 +1,5 @@
 import crypto from 'crypto'
-import { curry } from '@lib/fp/combinators.mjs'
+import { curry } from '@util/fp/combinators.mjs'
 
 const verify = curry((options, pem, sign, input) => {
   const v = crypto.createVerify(options.algorithm)

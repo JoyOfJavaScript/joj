@@ -6,7 +6,7 @@ import Money from '../src/domain/value/Money.mjs'
 import Transaction from '../src/domain/Transaction.mjs'
 import Wallet from '../src/domain/Wallet.mjs'
 import chai from 'chai'
-import { compose } from '../src/lib/fp/combinators.mjs'
+import { compose } from '../src/util/fp/combinators.mjs'
 import fs from 'fs'
 import path from 'path'
 

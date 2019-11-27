@@ -1,4 +1,4 @@
-import { curry, not, prop } from '@lib/fp/combinators.mjs'
+import { curry, not, prop } from '@util/fp/combinators.mjs'
 import Money from '../value/Money.mjs'
 import balanceOf from './balance_of.mjs'
 

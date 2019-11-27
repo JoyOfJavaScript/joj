@@ -1,5 +1,5 @@
 
-import { identity } from '@joj/blockchain/lib/fp/combinators.mjs'
+import { identity } from '@joj/blockchain/util/fp/combinators.mjs'
 import chai from 'chai'
 
 const { assert } = chai

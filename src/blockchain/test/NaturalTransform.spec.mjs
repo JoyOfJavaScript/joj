@@ -1,7 +1,7 @@
-import Maybe from '../src/lib/fp/data/maybe.mjs'
-import Validation from '../src/lib/fp/data/validation/index.mjs'
+import Maybe from '../src/util/fp/data/maybe.mjs'
+import Validation from '../src/util/fp/data/validation/index.mjs'
 import chai from 'chai'
-import { compose } from '../src/lib/fp/combinators.mjs'
+import { compose } from '../src/util/fp/combinators.mjs'
 import computeHash from './computeHash.mjs'
 
 const { assert } = chai

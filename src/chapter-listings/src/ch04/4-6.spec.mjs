@@ -7,7 +7,7 @@ import {
   not,
   prop,
   reduce
-} from '@joj/blockchain/lib/fp/combinators.mjs'
+} from '@joj/blockchain/util/fp/combinators.mjs'
 import Blockchain from '@joj/blockchain/domain/Blockchain.mjs'
 import Money from '@joj/blockchain/domain/value/Money.mjs'
 import Transaction from '@joj/blockchain/domain/Transaction.mjs'

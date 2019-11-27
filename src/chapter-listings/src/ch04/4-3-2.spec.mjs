@@ -1,4 +1,4 @@
-import { compose, curry } from '@joj/blockchain/lib/fp/combinators.mjs'
+import { compose, curry } from '@joj/blockchain/util/fp/combinators.mjs'
 import chai from 'chai'
 import crypto from 'crypto'
 

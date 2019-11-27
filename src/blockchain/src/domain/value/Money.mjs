@@ -1,6 +1,6 @@
-import { compose, composeM, curry } from '@lib/fp/combinators.mjs'
+import { compose, composeM, curry } from '@util/fp/combinators.mjs'
 import { currencyMatch, isNumber, notNaN } from './money/validations.mjs'
-import Validation from '@lib/fp/data/validation2/validation.mjs'
+import Validation from '@util/fp/data/validation2/validation.mjs'
 import precisionRound from './money/precision_round.mjs'
 
 export const JS_LITE = 'jsl'
