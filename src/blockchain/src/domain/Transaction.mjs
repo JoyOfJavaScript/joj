@@ -23,6 +23,7 @@ export default class Transaction {
     this.recipient = recipient
     this.funds = funds
     this.description = description
+    this.signature = undefined
     this.id = this.hash = /*#__PURE__*/ this.calculateHash()
   }
 
@@ -40,6 +41,14 @@ export default class Transaction {
    */
   currency() {
     return this.funds.currency
+  }
+
+  /**
+   * Sign this transaction 
+   * @param privateKey 
+   */
+  signTransaction(privateKey) {
+    this.signature = this.sign(privateKey)
   }
 
   /**

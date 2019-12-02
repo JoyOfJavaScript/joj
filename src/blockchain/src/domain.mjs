@@ -36,7 +36,7 @@ export default {
     build() {
       const tx = new Transaction(this.#sender, this.#recipient, this.#funds, this.#description)
       if (this.#signerPrivateKey) {
-        tx.signature = tx.sign(this.#signerPrivateKey)
+        tx.signTransaction(this.#signerPrivateKey)
       }
       return tx
     }

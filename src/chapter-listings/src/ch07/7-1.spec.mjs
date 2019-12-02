@@ -1,4 +1,3 @@
-// import libConfig from './mylib/package.json'
 import chai from 'chai'
 
 const { assert } = chai
@@ -18,11 +17,13 @@ describe('7.1 - Using eval', () => {
   })
 
   it('Loads data from package.json', async () => {
-    // assert.isNotNull(libConfig)
 
+    // Using dynamic import until Mocha adds proper supports for ESM
+    // TODO: Move to a static import to match writing
     const { default: libConfigAsync } = await import(
       './mylib/package.json'
     )
     assert.isNotNull(libConfigAsync)
+    assert.equal(libConfigAsync.name, '@joj/chapter-listings-mylib-example')
   })
 })

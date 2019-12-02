@@ -124,7 +124,7 @@ const JSLCoinService = ledger => {
       Money.sum(Money('jsl', fee), MINING_REWARD),
       'Mining Reward'
     )
-    reward.signature = reward.sign(network.privateKey)
+    reward.signTransaction(network.privateKey)
 
     // After the transactions have been added to a block, reset them with the reward for the next miner
     ledger.pendingTransactions = [reward]

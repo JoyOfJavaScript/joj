@@ -7,6 +7,7 @@ const VERSION = '1.0'
  * public key can be used to verify its integrity
  */
 export default class Wallet {
+  // Leave this as an empty constructor and generate the public Key and private Key when instantiating a new one
   constructor(publicKey, privateKey) {
     this.publicKey = publicKey
     this.privateKey = privateKey

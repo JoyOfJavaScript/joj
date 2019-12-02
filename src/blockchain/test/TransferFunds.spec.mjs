@@ -52,7 +52,7 @@ describe('Transfer Funds Test suite', () => {
     const miner = new Wallet(Key('miner-public.pem'), Key('miner-private.pem'))
 
     const first = new Transaction(null, miner.address, (100).jsl(), 'First transaction')
-    first.signature = first.sign(miner.privateKey)
+    first.signTransaction(miner.privateKey)
 
     const ledger = await makeLedgerP()
 
