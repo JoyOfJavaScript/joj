@@ -29,4 +29,40 @@ describe('Blockchain Spec', () => {
     console.log(validation.toString())
     assert.isOk(validation.isFailure)
   })
+
+  it('Promise.allSettled used to validate two blockchain objects', () => {
+
+    const chain1 = new Blockchain()
+    chain1.push(new Block(chain1.height() + 1, chain1.top.hash, []))
+    chain1.push(new Block(chain1.height() + 1, chain1.top.hash, []))
+
+    const chain2 = new Blockchain()
+    chain2.push(new Block(chain2.height() + 1, chain2.top.hash, []))
+    chain2.push(new Block(chain2.height() + 1, chain2.top.hash, []))
+    chain2.top.hash = 'XXXXXXX'
+
+    return Promise.allSettled([
+      validateLedger(chain1),
+      validateLedger(chain2),
+    ])
+      .then(results => {
+        assert.equal(results.length, 2)
+        assert.equal(results[0].status, 'fulfilled')
+        assert.equal(results[1].status, 'rejected')
+        assert.equal(results[0].value.height(), 3)
+        assert.isUndefined(results[1].value)
+        assert.equal(results[1].reason.message, 'Chain validation failed Failure (Hash length must equal 64)')
+      })
+  })
 })
+
+function validateLedger(ledger) {
+  return new Promise((resolve, reject) => {
+    const chainValidation = ledger.validate()
+    if (chainValidation.isFailure) {
+      reject(new Error(`Chain validation failed ${chainValidation.toString()}`))
+    }
+    resolve(ledger)
+  })
+}
+

@@ -28,7 +28,7 @@ const JSLCoinService = ledger => {
    * Point new block's previous to current
    *
    * @param {Block}  newBlock  New block to add into the chain   
-   * @return {Block} Returns new block mined into the blockchain
+   * @return {Blockchain} Returns a reference to the blockchain with the new block inserted
    */
   async function mineNewBlockIntoChain(newBlock) {
     console.log(`Found ${newBlock.data.length} pending transactions in block`)
@@ -46,8 +46,10 @@ const JSLCoinService = ledger => {
         proofOfWorkAlgo = (await import('./jslcoinservice/proof_of_work2.mjs')).default
         break;
     }
-    return ledger.push(await proofOfWorkAlgo(newBlock, ''.padStart(newBlock.difficulty, '0')))
+    ledger.push(await proofOfWorkAlgo(newBlock, ''.padStart(newBlock.difficulty, '0')))
+    return ledger
   }
+
 
   /**
    * (Imperative version)
@@ -78,14 +80,61 @@ const JSLCoinService = ledger => {
    * Mine transactions into a new block
    * @param {string} rewardAddress Address that will receive the reward for the mining process
    * @param {number} proofOfWorkDifficulty Difficulty factor for the proof of work function (default difficulty of 2)
-   * @return {Block} New mined block
+   * @return {Promise<void>} New mined block
    */
-  async function minePendingTransactions(rewardAddress, proofOfWorkDifficulty = 2) {
-    console.log('Mining pending transactions...')
-    // Mine block and pass it all pending transactions in the chain
-    // In reality, blocks are not to exceed 1MB, so not all tx are sent to all blocks
-    // We keep transactions immutable by substracting similar transactions for the fee
-    const block = await mineNewBlockIntoChain(
+  // async function minePendingTransactions(rewardAddress, proofOfWorkDifficulty = 2) {
+  //   console.log('Mining pending transactions...')
+  //   // Mine block and pass it all pending transactions in the chain
+  //   // In reality, blocks are not to exceed 1MB, so not all tx are sent to all blocks
+  //   // We keep transactions immutable by substracting similar transactions for the fee
+  //   await mineNewBlockIntoChain(
+  //     new Builder.Block()
+  //       .at(ledger.height() + 1)
+  //       .linkedTo(ledger.top.hash)
+  //       .withPendingTransactions(ledger.pendingTransactions)
+  //       .withDifficulty(proofOfWorkDifficulty)
+  //       .build()
+  //   )
+
+  //   // Validate the entire chain
+  //   console.log('Validating entire chain...')
+  //   const chainValidation = ledger.validate()
+  //   if (chainValidation.isFailure) {
+  //     // if validation fails, exit and don't reward anyone
+  //     throw new Error(`Chain validation failed ${chainValidation.toString()}`)
+  //   }
+
+  //   // Reward is bigger when there are more transactions to process
+  //   const fee =
+  //     Math.abs(
+  //       ledger.pendingTransactions
+  //         .filter(tx => tx.amount() < 0)
+  //         .map(tx => tx.amount())
+  //         .reduce((a, b) => a + b, 0)
+  //     ) *
+  //     ledger.pendingTransactions.length *
+  //     0.02
+
+  //   console.log('Adding fee transaction to set of pending transctions...')
+  //   // Reset pending transactions for this blockchain
+  //   // Put fee transaction into the chain for next mining operation
+  //   // Network will reward the first miner to mine the block with the transaction fee
+  //   const { MINING_REWARD } = await import('../../common/settings.mjs')
+  //   const reward = new Transaction(
+  //     network.address,
+  //     rewardAddress,
+  //     Money.sum(Money('jsl', fee), MINING_REWARD),
+  //     'Mining Reward'
+  //   )
+  //   reward.signTransaction(network.privateKey)
+
+  //   // After the transactions have been added to a block, reset them with the reward for the next miner
+  //   ledger.pendingTransactions = [reward]
+  // }
+
+  // Promise-based implementation of minePendingTransactions
+  function minePendingTransactions(rewardAddress, proofOfWorkDifficulty = 2) {
+    return mineNewBlockIntoChain(
       new Builder.Block()
         .at(ledger.height() + 1)
         .linkedTo(ledger.top.hash)
@@ -93,44 +142,32 @@ const JSLCoinService = ledger => {
         .withDifficulty(proofOfWorkDifficulty)
         .build()
     )
+      .then(validateLedger)
+      .then(() => import('../../common/settings.mjs')
+        .then(({ MINING_REWARD }) => {
+          const fee =
+            Math.abs(
+              ledger.pendingTransactions
+                .filter(tx => tx.amount() < 0)
+                .map(tx => tx.amount())
+                .reduce((a, b) => a + b, 0)
+            ) *
+            ledger.pendingTransactions.length *
+            0.02
 
-    // Validate the entire chain
-    console.log('Validating entire chain...')
-    const chainValidation = ledger.validate()
-    if (chainValidation.isFailure) {
-      // if validation fails, exit and don't reward anyone
-      throw new Error(`Chain validation failed ${chainValidation.toString()}`)
-    }
+          const reward = new Transaction(
+            network.address,
+            rewardAddress,
+            Money.sum(Money('jsl', fee), MINING_REWARD),
+            'Mining Reward'
+          )
+          reward.signTransaction(network.privateKey)
 
-    // Reward is bigger when there are more transactions to process
-    const fee =
-      Math.abs(
-        ledger.pendingTransactions
-          .filter(tx => tx.amount() < 0)
-          .map(tx => tx.amount())
-          .reduce((a, b) => a + b, 0)
-      ) *
-      ledger.pendingTransactions.length *
-      0.02
-
-    console.log('Adding fee transaction to set of pending transctions...')
-    // Reset pending transactions for this blockchain
-    // Put fee transaction into the chain for next mining operation
-    // Network will reward the first miner to mine the block with the transaction fee
-    const { MINING_REWARD } = await import('../../common/settings.mjs')
-    const reward = new Transaction(
-      network.address,
-      rewardAddress,
-      Money.sum(Money('jsl', fee), MINING_REWARD),
-      'Mining Reward'
-    )
-    reward.signTransaction(network.privateKey)
-
-    // After the transactions have been added to a block, reset them with the reward for the next miner
-    ledger.pendingTransactions = [reward]
-
-    return block
+          ledger.pendingTransactions = [reward]
+        })
+      )
   }
+
 
   // eslint-disable-next-line max-statements
   function transferFunds(walletA, walletB, funds, description, transferFee = 0.02) {
@@ -171,4 +208,16 @@ const JSLCoinService = ledger => {
     // return compose(buffer, csv(toJson), toArray)(ledger)
   }
 }
+
+// Helpers
+function validateLedger(ledger) {
+  return new Promise((resolve, reject) => {
+    const chainValidation = ledger.validate()
+    if (chainValidation.isFailure) {
+      reject(new Error(`Chain validation failed ${chainValidation.toString()}`))
+    }
+    resolve(ledger)
+  })
+}
+
 export default JSLCoinService

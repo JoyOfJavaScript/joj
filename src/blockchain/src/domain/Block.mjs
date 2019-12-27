@@ -91,7 +91,7 @@ export default class Block {
       previousHash: this.previousHash,
       hash: this.hash,
       timestamp: this.timestamp,
-      dataCount: this.data ?.length,
+      dataCount: this.data.length,
       version: VERSION
     }
     )

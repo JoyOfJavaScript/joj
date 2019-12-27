@@ -56,9 +56,10 @@ describe('Block Spec', () => {
   it('Should validate block', async () => {
     const chain = new Blockchain()
     const bitcoin = JSLCoinService(chain)
-    const block = await bitcoin.mineNewBlockIntoChain(
+    await bitcoin.mineNewBlockIntoChain(
       new Block(chain.height() + 1, chain.top.hash, [])
     )
+    const block = chain.top
     const validation = block.isValid()
     console.log(validation.toString())
     assert.isOk(validation.isSuccess)
