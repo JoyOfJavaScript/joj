@@ -1,5 +1,5 @@
 import Money from '../value/Money.mjs'
-import { curry } from '@util/fp/combinators.mjs'
+import { curry } from '~util/fp/combinators.mjs'
 
 const balanceOf = curry((addr, tx) =>
   Money.sum(

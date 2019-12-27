@@ -1,4 +1,4 @@
-import { curry, isFunction } from '@util/fp/combinators.mjs'
+import { curry, isFunction } from '~util/fp/combinators.mjs'
 import Builder from '../../domain.mjs'
 import Key from '../value/Key.mjs'
 import Money from '../value/Money.mjs'

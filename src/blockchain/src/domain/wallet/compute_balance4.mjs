@@ -1,4 +1,4 @@
-import { compose, curry, filter, flatMap, map, not, prop, reduce } from '@util/fp/combinators.mjs'
+import { compose, curry, filter, flatMap, map, not, prop, reduce } from '~util/fp/combinators.mjs'
 import Money from '../value/Money.mjs'
 import balanceOf from './balance_of.mjs'
 

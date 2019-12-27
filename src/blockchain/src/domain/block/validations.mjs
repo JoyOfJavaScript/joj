@@ -1,5 +1,5 @@
-import { Failure, Success } from '@util/fp/data/validation2/validation.mjs'
-import { curry } from '@util/fp/combinators.mjs'
+import { Failure, Success } from '~util/fp/data/validation2/validation.mjs'
+import { curry } from '~util/fp/combinators.mjs'
 
 export const checkDifficulty = block =>
   block.hash.substring(0, block.difficulty) === '0'.repeat(block.difficulty)

@@ -1,4 +1,4 @@
-import Maybe from '@util/fp/data/maybe.mjs'
+import Maybe from '~util/fp/data/maybe.mjs'
 
 const verifySignatureInput = (verifier, publicKey, data, signature) =>
   Maybe.of(k => s => d => [k, s, d])

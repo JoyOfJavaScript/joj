@@ -1,5 +1,5 @@
 import { MAX_NODES, SYNC_TIMER } from '../../common/settings.mjs'
-import { Transaction as Transaction$Builder } from '@domain/domain.mjs'
+import { Transaction as Transaction$Builder } from '~domain/domain.mjs'
 import Blockchain from '../../domain/Blockchain.mjs'
 import EventEmitter from 'events'
 import JSLCoinService from '../../domain/service/JSLCoinService.mjs'

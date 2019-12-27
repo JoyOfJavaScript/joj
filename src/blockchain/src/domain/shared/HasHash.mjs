@@ -1,4 +1,4 @@
-import { compose, prop, props } from '@util/fp/combinators.mjs'
+import { compose, prop, props } from '~util/fp/combinators.mjs'
 import LoggerHandler from '../../common/LoggerHandler.mjs'
 import assemble from './has_hash/assemble.mjs'
 import computeCipher from './has_hash/compute_cipher.mjs'

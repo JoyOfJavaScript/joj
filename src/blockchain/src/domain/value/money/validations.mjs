@@ -1,4 +1,4 @@
-import { Failure, Success } from '@util/fp/data/validation2/validation.mjs'
+import { Failure, Success } from '~util/fp/data/validation2/validation.mjs'
 
 /**
  * Check that currency matches
