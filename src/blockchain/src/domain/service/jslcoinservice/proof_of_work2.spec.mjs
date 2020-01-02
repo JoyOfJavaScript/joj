@@ -1,9 +1,10 @@
+import 'core-js/modules/esnext.promise.any.js'
 import Block from '../../Block.mjs'
+import {
+  Worker
+} from 'worker_threads'
 import chai from 'chai'
 import proofOfWorfk from './proof_of_work2.mjs'
-import {
-  Worker, isMainThread, parentPort, workerData
-} from 'worker_threads'
 
 const { assert } = chai
 
@@ -48,11 +49,11 @@ describe('Proof of work (2)', () => {
       })
   })
 
-  it('Canceling proof of work', () => {
+  it('Get fastest result', () => {
     const block = new Block(1, 'PREV', [], 6)
     return Promise.race([
       proofOfWorkAsync(block),
-      cancelAfter(2)
+      ignoreAfter(2)
     ])
       .then(() => {
         assert.isOk(block.nonce > 0)
@@ -69,7 +70,7 @@ describe('Proof of work (2)', () => {
     const block = new Block(1, 'PREV', [], 2)
     return Promise.allSettled([
       proofOfWorkAsync(block),
-      cancelAfter(2)
+      rejectAfter(2)
     ])
       .then(results => {
         assert.equal(results.length, 2)
@@ -77,26 +78,46 @@ describe('Proof of work (2)', () => {
         assert.equal(results[1].status, 'rejected')
         assert.equal(results[0].value.index, 1)
         assert.isUndefined(results[1].value)
-        assert.equal(results[1].reason.message, 'Operation timed out after 2 seconds')
+        assert.equal(results[1].reason.message, 'Operation rejected after 2 seconds')
       })
   })
 
-  // it('Promise.any with value', () => {
-  //   return Promise.any([
-  //     proofOfWorkAsync(new Block(1, 'PREV', [], 1)),
-  //     cancelAfter(10)
-  //   ])
-  //     .then(block => {
-  //       assert.equal(block.index, 1)
-  //       assert.equal(block.difficulty, 1)
-  //     })
-  // })
+  it('Promise.any with value', () => {
+    return Promise.any([
+      proofOfWorkAsync(new Block(1, 'PREV_HASH', ['a', 'b', 'c'], 1)),
+      rejectAfter(2)
+    ])
+      .then(block => {
+        assert.equal(block.index, 1)
+        assert.equal(block.difficulty, 1)
+      })
+  })
+
+  it('Promise.any with rejection', () => {
+    return Promise.any([
+      Promise.reject(new Error('Error 1')),
+      Promise.reject(new Error('Error 2'))
+    ])
+      .catch(aggregateError => {
+        console.log('in here')
+        console.log('aggregate error', aggregateError)
+        assert.equal(aggregateError.errors.length, 200)
+      })
+  })
 })
 
-function cancelAfter(seconds) {
+function ignoreAfter(seconds) {
   return new Promise((_, reject) => {
     setTimeout(() => {
       reject(new Error(`Operation timed out after ${seconds} seconds`))
+    }, seconds * 1_000)
+  })
+}
+
+function rejectAfter(seconds) {
+  return new Promise((_, reject) => {
+    setTimeout(() => {
+      reject(new Error(`Operation rejected after ${seconds} seconds`))
     }, seconds * 1_000)
   })
 }

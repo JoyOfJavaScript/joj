@@ -6,13 +6,13 @@ const { assert } = chai
 
 describe('Proof of work', () => {
   it('Calls proof of work with low difficulty', () => {
-    const block = new Block(1, 'PREV', [], 2)
+    const block = new Block(1, 'PREV', ['a', 'b', 'c'], 2)
     proofOfWorfk(block, ''.padStart(block.difficulty, '0'))
     assert.isOk(block.nonce > 0)
   })
 
   it('Calls proof of work async', () => {
-    const block = new Block(1, 'PREV', [], 2)
+    const block = new Block(1, 'PREV', ['a', 'b', 'c'], 2)
     const ret = proofOfWorkAsync(block)
       .then(() => {
         assert.isOk(block.nonce > 0)
@@ -23,8 +23,8 @@ describe('Proof of work', () => {
 
   it('Run two proof of work in parallel', () => {
     return Promise.all([
-      proofOfWorkAsync(new Block(1, 'PREV', [], 1)),
-      proofOfWorkAsync(new Block(1, 'PREV', [], 2))
+      proofOfWorkAsync(new Block(1, 'PREV', ['a', 'b', 'c'], 1), 500),
+      proofOfWorkAsync(new Block(2, 'PREV', [1, 2, 3], 2), 1000)
     ])
       .then(([blockDiff2, blockDiff3]) => {
         assert.isOk(blockDiff2.hash.startsWith('0'))
@@ -35,8 +35,8 @@ describe('Proof of work', () => {
 
   it('Race two proof of work', () => {
     return Promise.race([
-      proofOfWorkAsync(new Block(1, 'PREV', [], 1)),
-      proofOfWorkAsync(new Block(2, 'PREV', [], 2))
+      proofOfWorkAsync(new Block(1, 'PREV_HASH', ['a', 'b', 'c'], 1)),
+      proofOfWorkAsync(new Block(2, 'PREV_HASH', [1, 2, 3], 3))
     ])
       .then(blockWinner => {
         assert.isOk(blockWinner.hash.startsWith('0'))
@@ -46,10 +46,10 @@ describe('Proof of work', () => {
 })
 
 
-function proofOfWorkAsync(block) {
+function proofOfWorkAsync(block, after = 1000) {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve(proofOfWorfk(block, ''.padStart(block.difficulty, '0')))
-    }, 1000)
+    }, after)
   })
 }
