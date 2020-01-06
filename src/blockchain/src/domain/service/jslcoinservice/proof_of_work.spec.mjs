@@ -1,18 +1,23 @@
 import Block from '../../Block.mjs'
 import chai from 'chai'
 import proofOfWorfk from './proof_of_work.mjs'
+import crypto from 'crypto'
 
 const { assert } = chai
 
+function randomId() {
+  return crypto.randomBytes(16).toString("hex")
+}
+
 describe('Proof of work', () => {
   it('Calls proof of work with low difficulty', () => {
-    const block = new Block(1, 'PREV', ['a', 'b', 'c'], 2)
+    const block = new Block(1, randomId(), ['a', 'b', 'c'], 2)
     proofOfWorfk(block, ''.padStart(block.difficulty, '0'))
     assert.isOk(block.nonce > 0)
   })
 
   it('Calls proof of work async', () => {
-    const block = new Block(1, 'PREV', ['a', 'b', 'c'], 2)
+    const block = new Block(1, randomId(), ['a', 'b', 'c'], 2)
     const ret = proofOfWorkAsync(block)
       .then(() => {
         assert.isOk(block.nonce > 0)
@@ -23,8 +28,8 @@ describe('Proof of work', () => {
 
   it('Run two proof of work in parallel', () => {
     return Promise.all([
-      proofOfWorkAsync(new Block(1, 'PREV', ['a', 'b', 'c'], 1), 500),
-      proofOfWorkAsync(new Block(2, 'PREV', [1, 2, 3], 2), 1000)
+      proofOfWorkAsync(new Block(1, randomId(), ['a', 'b', 'c'], 1), 500),
+      proofOfWorkAsync(new Block(2, randomId(), [1, 2, 3], 2), 1000)
     ])
       .then(([blockDiff2, blockDiff3]) => {
         assert.isOk(blockDiff2.hash.startsWith('0'))
@@ -35,8 +40,8 @@ describe('Proof of work', () => {
 
   it('Race two proof of work', () => {
     return Promise.race([
-      proofOfWorkAsync(new Block(1, 'PREV_HASH', ['a', 'b', 'c'], 1)),
-      proofOfWorkAsync(new Block(2, 'PREV_HASH', [1, 2, 3], 3))
+      proofOfWorkAsync(new Block(1, randomId(), ['a', 'b', 'c'], 1)),
+      proofOfWorkAsync(new Block(2, randomId(), [1, 2, 3], 3))
     ])
       .then(blockWinner => {
         assert.isOk(blockWinner.hash.startsWith('0'))

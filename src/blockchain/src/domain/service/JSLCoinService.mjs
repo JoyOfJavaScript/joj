@@ -195,16 +195,16 @@ const JSLCoinService = ledger => {
     )
   }
 
-  function serializeLedger() {
+  function serializeLedger(delimeter = ';') {
     const toArray = a => [...a]
     const toJson = obj => {
       return isFunction(obj[Symbol.for('toJson')])
         ? obj[Symbol.for('toJson')]()
         : JSON.stringify(obj)
     }
-    const join = curry((serializer, arr) => arr.map(serializer).join(','))
+    const join = curry((serializer, delimeter, arr) => arr.map(serializer).join(delimeter))
     const buffer = str => Buffer.from(str, 'utf8')
-    return ledger |> toArray |> join(toJson) |> buffer
+    return ledger |> toArray |> join(toJson, delimeter) |> buffer
     // return compose(buffer, csv(toJson), toArray)(ledger)
   }
 }

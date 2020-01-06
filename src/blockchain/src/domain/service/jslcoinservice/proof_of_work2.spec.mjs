@@ -4,19 +4,24 @@ import {
   Worker
 } from 'worker_threads'
 import chai from 'chai'
+import crypto from 'crypto'
 import proofOfWorfk from './proof_of_work2.mjs'
 
 const { assert } = chai
 
+function randomId() {
+  return crypto.randomBytes(16).toString("hex")
+}
+
 describe('Proof of work (2)', () => {
   it('Calls proof of work with low difficulty', () => {
-    const block = new Block(1, 'PREV', [], 2)
+    const block = new Block(1, randomId(), [], 2)
     proofOfWorfk(block, ''.padStart(block.difficulty, '0'))
     assert.isOk(block.nonce > 0)
   })
 
   it('Calls proof of work async', () => {
-    const block = new Block(1, 'PREV', [], 3)
+    const block = new Block(1, randomId(), [], 3)
     const ret = proofOfWorkAsync(block)
       .then(noncedBlock => {
         assert.isOk(noncedBlock.nonce > 0)
@@ -27,8 +32,8 @@ describe('Proof of work (2)', () => {
 
   it('Run two proof of work in parallel', () => {
     return Promise.all([
-      proofOfWorkAsync(new Block(1, 'PREV', [], 1)),
-      proofOfWorkAsync(new Block(2, 'PREV', [], 4))
+      proofOfWorkAsync(new Block(1, randomId(), [], 1)),
+      proofOfWorkAsync(new Block(2, randomId(), [], 4))
     ])
       .then(([blockDiff1, blockDiff2]) => {
         assert.isOk(blockDiff1.nonce > 0)
@@ -40,8 +45,8 @@ describe('Proof of work (2)', () => {
 
   it('Race two proof of work', () => {
     return Promise.race([
-      proofOfWorkAsync(new Block(1, 'PREV', [], 1)),
-      proofOfWorkAsync(new Block(2, 'PREV', [], 4))
+      proofOfWorkAsync(new Block(1, randomId(), [], 1)),
+      proofOfWorkAsync(new Block(2, randomId(), [], 4))
     ])
       .then(blockWinner => {
         assert.isOk(blockWinner.nonce > 0)
@@ -50,7 +55,7 @@ describe('Proof of work (2)', () => {
   })
 
   it('Get fastest result', () => {
-    const block = new Block(1, 'PREV', [], 6)
+    const block = new Block(1, randomId(), [], 6)
     return Promise.race([
       proofOfWorkAsync(block),
       ignoreAfter(2)
@@ -60,14 +65,13 @@ describe('Proof of work (2)', () => {
         assert.equal(block.difficulty, 6)
         assert.isOk(block.hash.startsWith('000000'))
       }, cancellationError => {
-        console.log('Got canceled!')
         assert.equal(cancellationError.message, 'Operation timed out after 2 seconds')
       })
   })
 
 
   it('Promise.allSettled', () => {
-    const block = new Block(1, 'PREV', [], 2)
+    const block = new Block(1, randomId(), [], 2)
     return Promise.allSettled([
       proofOfWorkAsync(block),
       rejectAfter(2)
@@ -84,7 +88,7 @@ describe('Proof of work (2)', () => {
 
   it('Promise.any with value', () => {
     return Promise.any([
-      proofOfWorkAsync(new Block(1, 'PREV_HASH', ['a', 'b', 'c'], 1)),
+      proofOfWorkAsync(new Block(1, randomId(), ['a', 'b', 'c'], 1)),
       rejectAfter(2)
     ])
       .then(block => {
@@ -99,8 +103,6 @@ describe('Proof of work (2)', () => {
       Promise.reject(new Error('Error 2'))
     ])
       .catch(aggregateError => {
-        console.log('in here')
-        console.log('aggregate error', aggregateError)
         assert.equal(aggregateError.errors.length, 200)
       })
   })
