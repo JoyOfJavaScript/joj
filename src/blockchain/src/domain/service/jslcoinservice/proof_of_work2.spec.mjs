@@ -106,6 +106,18 @@ describe('Proof of work (2)', () => {
         assert.equal(aggregateError.errors.length, 200)
       })
   })
+
+  it('Promise.any with rejection', async () => {
+
+    const tasks = [
+      proofOfWorkAsync(new Block(1, randomId(), [], 2)),
+      proofOfWorkAsync(new Block(2, randomId(), [], 2)),
+      proofOfWorkAsync(new Block(2, randomId(), [], 2))
+    ]
+    for await (const minedBlock of [tasks]) {
+      assert.isOk(minedBlock.hash.startsWith('00'))
+    }
+  })
 })
 
 function ignoreAfter(seconds) {

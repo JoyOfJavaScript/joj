@@ -30,7 +30,7 @@
     "flow-typed": "^2.6.2",
     "link-module-alias": "^1.2.0",
     "mjs-mocha": "^3.0.0",
-    "mocha": "^5.2.0",
+    "mocha": "7.0.0-esm1",
     "nodemon": "^1.19.4"
   },
   "dependencies": {
