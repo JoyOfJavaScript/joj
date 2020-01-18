@@ -49,8 +49,6 @@ describe('7.5 - Well-known symbols', () => {
     console.log(letters)
     console.log(result)
 
-    const { push } = Array.prototype
-
     class EvenNumbers extends Array {
       constructor(...nums) {
         super()
@@ -124,7 +122,7 @@ describe('7.5 - Well-known symbols', () => {
         assert.notOk(run instanceof ValidatingPromise)
         assert.equal(finalResult, 'BAR')
       });
-  })
+  }).timeout(5000)
 
   it('Extending native promise (Failure)', () => {
     return task(null)
@@ -133,7 +131,7 @@ describe('7.5 - Well-known symbols', () => {
         console.log(result.toString())
         assert.isOk(result.isFailure)
       })
-  })
+  }).timeout(5000)
 
   it('Delayed promise', () => {
     class DelayedPromise extends Promise {
@@ -156,7 +154,7 @@ describe('7.5 - Well-known symbols', () => {
       .then(num => num + 2)
       .then(finalResult => { assert.equal(finalResult, 102); return finalResult; })
       .then(console.log);
-  })
+  }).timeout(5000)
 
   it('@@toPrimitive', () => {
     class EvenNumbers extends Array {

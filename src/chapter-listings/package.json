@@ -29,7 +29,6 @@
     "flow-bin": "^0.59.0",
     "flow-typed": "^2.6.2",
     "link-module-alias": "^1.2.0",
-    "mjs-mocha": "^3.0.0",
     "mocha": "7.0.0-esm1",
     "nodemon": "^1.19.4"
   },
@@ -44,8 +43,8 @@
     "lint-fix": "eslint src/ --fix",
     "flow": "flow",
     "build": "babel src --out-dir _babel/src --keep-file-extension --copy-files",
-    "test": "mjs-mocha",
-    "test-all": "rm -rf _babel && npm run build; mjs-mocha _babel --experimental-json-modules; rm -rf _babel",
+    "test": "mocha",
+    "test-all": "rm -rf _babel && npm run build; mocha \"_babel/**/*spec.mjs\"; rm -rf _babel",
     "flow-init": "flow init",
     "flow-status": "flow status"
   }
