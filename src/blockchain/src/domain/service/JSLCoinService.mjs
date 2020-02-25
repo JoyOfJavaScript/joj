@@ -1,4 +1,4 @@
-import { curry, isFunction } from '~util/fp/combinators.mjs'
+import { buffer, join, toArray, toJson } from '~util/helpers.mjs'
 import Builder from '../../domain.mjs'
 import Key from '../value/Key.mjs'
 import Money from '../value/Money.mjs'
@@ -36,17 +36,18 @@ const JSLCoinService = ledger => {
     // if (ledger.lookUpByIndex(newBlock.index)) {
     //   throw new Error('Block rejected since it had already been mined!')
     // }    
-    let proofOfWorkAlgo = undefined
+    let proofOfWorkModule
     switch (newBlock[Symbol.for('version')]) {
       case '2.0': {
-        proofOfWorkAlgo = (await import('./jslcoinservice/proof_of_work3.mjs')).default
+        proofOfWorkModule = await import('./jslcoinservice/proof_of_work3.mjs')
         break;
       }
       default: case '1.0':
-        proofOfWorkAlgo = (await import('./jslcoinservice/proof_of_work2.mjs')).default
+        proofOfWorkModule = await import('./jslcoinservice/proof_of_work2.mjs')
         break;
     }
-    ledger.push(await proofOfWorkAlgo(newBlock, ''.padStart(newBlock.difficulty, '0')))
+    const { proofOfWork } = proofOfWorkModule
+    ledger.push(await proofOfWork(newBlock, ''.padStart(newBlock.difficulty, '0')))
     return ledger
   }
 
@@ -142,30 +143,39 @@ const JSLCoinService = ledger => {
         .withDifficulty(proofOfWorkDifficulty)
         .build()
     )
-      .then(validateLedger)
-      .then(() => import('../../common/settings.mjs')
-        .then(({ MINING_REWARD }) => {
-          const fee =
-            Math.abs(
-              ledger.pendingTransactions
-                .filter(tx => tx.amount() < 0)
-                .map(tx => tx.amount())
-                .reduce((a, b) => a + b, 0)
-            ) *
-            ledger.pendingTransactions.length *
-            0.02
+      .then(:: ledger.validate)
+      //  => {
+      //   return ledger.validate()
+      // })
+      .then(validation => {
+        if (validation.isSuccess) {
+          return import('../../common/settings.mjs')
+            .then(({ MINING_REWARD }) => {
+              const fee =
+                Math.abs(
+                  ledger.pendingTransactions
+                    .filter(tx => tx.amount() < 0)
+                    .map(tx => tx.amount())
+                    .reduce((a, b) => a + b, 0)
+                ) *
+                ledger.pendingTransactions.length *
+                0.02
 
-          const reward = new Transaction(
-            network.address,
-            rewardAddress,
-            Money.sum(Money('jsl', fee), MINING_REWARD),
-            'Mining Reward'
-          )
-          reward.signTransaction(network.privateKey)
+              const reward = new Transaction(
+                network.address,
+                rewardAddress,
+                Money.sum(Money('jsl', fee), MINING_REWARD),
+                'Mining Reward'
+              )
+              reward.signTransaction(network.privateKey)
 
-          ledger.pendingTransactions = [reward]
-        })
-      )
+              ledger.pendingTransactions = [reward]
+            })
+        }
+        else {
+          new Error(`Chain validation failed ${validation.toString()}`)
+        }
+      })
   }
 
 
@@ -196,14 +206,7 @@ const JSLCoinService = ledger => {
   }
 
   function serializeLedger(delimeter = ';') {
-    const toArray = a => [...a]
-    const toJson = obj => {
-      return isFunction(obj[Symbol.for('toJson')])
-        ? obj[Symbol.for('toJson')]()
-        : JSON.stringify(obj)
-    }
-    const join = curry((serializer, delimeter, arr) => arr.map(serializer).join(delimeter))
-    const buffer = str => Buffer.from(str, 'utf8')
+
     return ledger |> toArray |> join(toJson, delimeter) |> buffer
     // return compose(buffer, csv(toJson), toArray)(ledger)
   }

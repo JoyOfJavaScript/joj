@@ -1,7 +1,7 @@
 import Block from '../../Block.mjs'
 import chai from 'chai'
-import proofOfWorfk from './proof_of_work.mjs'
 import crypto from 'crypto'
+import proofOfWork from './proof_of_work.mjs'
 
 const { assert } = chai
 
@@ -12,7 +12,7 @@ function randomId() {
 describe('Proof of work', () => {
   it('Calls proof of work with low difficulty', () => {
     const block = new Block(1, randomId(), ['a', 'b', 'c'], 2)
-    proofOfWorfk(block, ''.padStart(block.difficulty, '0'))
+    proofOfWork(block, ''.padStart(block.difficulty, '0'))
     assert.isOk(block.nonce > 0)
   })
 
@@ -41,7 +41,7 @@ describe('Proof of work', () => {
   it('Race two proof of work', () => {
     return Promise.race([
       proofOfWorkAsync(new Block(1, randomId(), ['a', 'b', 'c'], 1)),
-      proofOfWorkAsync(new Block(2, randomId(), [1, 2, 3], 3))
+      proofOfWorkAsync(new Block(2, randomId(), [1, 2, 3], 2))
     ])
       .then(blockWinner => {
         assert.isOk(blockWinner.hash.startsWith('0'))
@@ -54,7 +54,7 @@ describe('Proof of work', () => {
 function proofOfWorkAsync(block, after = 1000) {
   return new Promise((resolve) => {
     setTimeout(() => {
-      resolve(proofOfWorfk(block, ''.padStart(block.difficulty, '0')))
+      resolve(proofOfWork(block, ''.padStart(block.difficulty, '0')))
     }, after)
   })
 }

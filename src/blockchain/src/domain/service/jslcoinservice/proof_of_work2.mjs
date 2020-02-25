@@ -1,5 +1,5 @@
 // TODO: use trampolining to simulate TCO in order to reach mining difficulty 4
-const proofOfWork = (block, hashPrefix) => {
+export const proofOfWork = (block, hashPrefix) => {
   do {
     block.nonce += 1
     block.hash = block.calculateHash()
