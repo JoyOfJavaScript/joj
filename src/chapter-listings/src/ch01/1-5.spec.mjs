@@ -1,4 +1,4 @@
-import Blockchain from '@joj/blockchain/domain/Blockchain.mjs'
+import Blockchain from '@joj/blockchain/domain/Blockchain.js'
 
 import chai from 'chai'
 

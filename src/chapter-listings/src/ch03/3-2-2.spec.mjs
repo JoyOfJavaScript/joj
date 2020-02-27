@@ -1,4 +1,4 @@
-import Block from '@joj/blockchain/domain/Block.mjs'
+import Block from '@joj/blockchain/domain/Block.js'
 import chai from 'chai'
 
 const { assert } = chai

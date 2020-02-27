@@ -1,7 +1,7 @@
-import './domain/value/Money.mjs'
-import Key from './domain/value/Key.mjs'
-import Network from './infrastructure/network/Network.mjs'
-import Wallet from './domain/Wallet.mjs'
+import './domain/value/Money.js'
+import Key from './domain/value/Key.js'
+import Network from './infrastructure/network/Network.js'
+import Wallet from './domain/Wallet.js'
 
 // Users in simulation
 const luke = new Wallet(Key('luke-public.pem'), Key('luke-private.pem'))

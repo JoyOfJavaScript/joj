@@ -1,4 +1,4 @@
-import { compose, curry } from '@joj/blockchain/util/fp/combinators.mjs'
+import { compose, curry } from '@joj/blockchain/util/fp/combinators.js'
 import chai from 'chai'
 
 const { assert } = chai

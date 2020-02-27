@@ -1,5 +1,5 @@
-import Block from '@joj/blockchain/domain/Block.mjs'
-import Blockchain from '@joj/blockchain/domain/Blockchain.mjs'
+import Block from '@joj/blockchain/domain/Block.js'
+import Blockchain from '@joj/blockchain/domain/Blockchain.js'
 import chai from 'chai'
 
 const { assert } = chai

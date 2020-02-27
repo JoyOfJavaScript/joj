@@ -1,6 +1,6 @@
-import Builder, { Block, Transaction } from '@joj/blockchain/domain.mjs'
+import Builder, { Block, Transaction } from '@joj/blockchain/domain.js'
 import { makeChain, makeMoney } from './factory_functions.mjs'
-import Money from '@joj/blockchain/domain/value/Money.mjs'
+import Money from '@joj/blockchain/domain/value/Money.js'
 import chai from 'chai'
 
 const { assert } = chai

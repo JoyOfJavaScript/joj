@@ -1,5 +1,5 @@
 import chai from 'chai'
-import { compose } from '@joj/blockchain/util/fp/combinators.mjs'
+import { compose } from '@joj/blockchain/util/fp/combinators.js'
 
 const { assert } = chai
 

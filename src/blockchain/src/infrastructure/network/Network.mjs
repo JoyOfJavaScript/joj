@@ -1,11 +1,11 @@
-import { MAX_NODES, SYNC_TIMER } from '../../common/settings.mjs'
-import { Transaction as Transaction$Builder } from '~domain/domain.mjs'
-import Blockchain from '../../domain/Blockchain.mjs'
+import { MAX_NODES, SYNC_TIMER } from '../../common/settings.js'
+import { Transaction as Transaction$Builder } from '~domain/domain.js'
+import Blockchain from '../../domain/Blockchain.js'
 import EventEmitter from 'events'
-import JSLCoinService from '../../domain/service/JSLCoinService.mjs'
-import Key from '../../domain/value/Key.mjs'
-import Node from './Node.mjs'
-import Wallet from '../../domain/Wallet.mjs'
+import JSLCoinService from '../../domain/service/JSLCoinService.js'
+import Key from '../../domain/value/Key.js'
+import Node from './Node.js'
+import Wallet from '../../domain/Wallet.js'
 
 export default class Network {
   #nodes

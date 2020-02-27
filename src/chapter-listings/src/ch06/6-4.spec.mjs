@@ -1,11 +1,11 @@
-import * as ValidationsUtil from '@joj/blockchain/domain/shared/validations.mjs'
+import * as ValidationsUtil from '@joj/blockchain/domain/shared/validations.js'
 import {
   checkDifficulty,
   checkIndex,
   checkLinkage
-} from '@joj/blockchain/domain/block/validations.mjs'
-import Blockchain from '@joj/blockchain/domain/Blockchain.mjs'
-import Transaction from '@joj/blockchain/domain/Transaction.mjs'
+} from '@joj/blockchain/domain/block/validations.js'
+import Blockchain from '@joj/blockchain/domain/Blockchain.js'
+import Transaction from '@joj/blockchain/domain/Transaction.js'
 import chai from 'chai'
 
 const { assert } = chai
@@ -43,7 +43,7 @@ describe('6.4 - Out with the old and in with the new', () => {
 
   it('Dynamic importing with query string params', async () => {
     const { default: computeBalance } = await import(
-      '@joj/blockchain/domain/wallet/compute_balance.mjs?v=1'
+      '@joj/blockchain/domain/wallet/compute_balance.js?v=1'
     )
     assert.isNotNull(computeBalance)
   })
@@ -52,11 +52,11 @@ describe('6.4 - Out with the old and in with the new', () => {
     const useNewAlgorithm = FeatureFlags.check('USE_NEW_ALGORITHM', false)
 
     let { default: computeBalance } = await import(
-      '@joj/blockchain/domain/wallet/compute_balance.mjs'
+      '@joj/blockchain/domain/wallet/compute_balance.js'
     )
 
     if (useNewAlgorithm) {
-      computeBalance = (await import('@joj/blockchain/domain/wallet/compute_balance2.mjs')).default
+      computeBalance = (await import('@joj/blockchain/domain/wallet/compute_balance2.js')).default
     }
 
     const ledger = new Blockchain()

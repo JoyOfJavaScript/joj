@@ -1,5 +1,5 @@
 import chai from 'chai'
-import { curry } from '@joj/blockchain/util/fp/combinators.mjs'
+import { curry } from '@joj/blockchain/util/fp/combinators.js'
 import fs from 'fs'
 import path from 'path'
 

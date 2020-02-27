@@ -1,6 +1,8 @@
-import { Failure, Success } from '../data/validation'
-import { assert } from 'chai'
-import { composeM } from './'
+import { Failure, Success } from './data/validation/index.js'
+import chai from 'chai'
+import { composeM } from './combinators.js'
+
+const { assert } = chai
 
 const notNaN = num =>
   !isNaN(num) ? Success(num) : Failure([`Number (${num}) can't be NaN`])

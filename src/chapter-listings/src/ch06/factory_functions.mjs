@@ -1,7 +1,7 @@
-import Block from '@joj/blockchain/domain/Block.mjs'
-import Blockchain from '@joj/blockchain/domain/Blockchain.mjs'
-import Money from '@joj/blockchain/domain/value/Money.mjs'
-import { compose } from '@joj/blockchain/util/fp/combinators.mjs'
+import Block from '@joj/blockchain/domain/Block.js'
+import Blockchain from '@joj/blockchain/domain/Blockchain.js'
+import Money from '@joj/blockchain/domain/value/Money.js'
+import { compose } from '@joj/blockchain/util/fp/combinators.js'
 
 export function makeMoney(currency, amount) {
   return compose(

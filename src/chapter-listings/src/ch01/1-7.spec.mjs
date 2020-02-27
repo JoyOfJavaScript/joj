@@ -1,7 +1,7 @@
 // https://github.com/facebookarchive/flow-remove-types/issues/70
 // Wiating for Flow support
 // @flow
-import Validation from '@joj/blockchain/util/fp/data/validation2/validation.mjs'
+import Validation from '@joj/blockchain/util/fp/data/validation2/validation.js'
 import chai from 'chai'
 import fs from 'fs'
 import path from 'path'

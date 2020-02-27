@@ -1,5 +1,5 @@
-import { Failure, Success } from '@joj/blockchain/util/fp/data/validation2/validation.mjs'
-import { compose, curry } from '@joj/blockchain/util/fp/combinators.mjs'
+import { Failure, Success } from '@joj/blockchain/util/fp/data/validation2/validation.js'
+import { compose, curry } from '@joj/blockchain/util/fp/combinators.js'
 import R from 'ramda'
 import chai from 'chai'
 const { chain: flatMap, map } = R

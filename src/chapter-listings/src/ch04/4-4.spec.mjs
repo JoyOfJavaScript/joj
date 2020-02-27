@@ -1,5 +1,5 @@
-import { compose, curry, prop, props } from '@joj/blockchain/util/fp/combinators.mjs'
-import Money from '@joj/blockchain/domain/value/Money.mjs'
+import { compose, curry, prop, props } from '@joj/blockchain/util/fp/combinators.js'
+import Money from '@joj/blockchain/domain/value/Money.js'
 import chai from 'chai'
 import crypto from 'crypto'
 

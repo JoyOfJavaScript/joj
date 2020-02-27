@@ -1,4 +1,4 @@
-import { Failure, Success } from '@joj/blockchain/util/fp/data/validation2/validation.mjs'
+import { Failure, Success } from '@joj/blockchain/util/fp/data/validation2/validation.js'
 import { exists, readFileSync } from 'fs'
 import { feePercent, netTotal, setFeePercent } from './calculator.mjs'
 import chai from 'chai'

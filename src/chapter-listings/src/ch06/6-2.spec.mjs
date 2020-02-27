@@ -1,9 +1,9 @@
-import '@joj/blockchain/domain/value/Money.mjs'
-import { compose, prop, props } from '@joj/blockchain/util/fp/combinators.mjs'
-import Blockchain from '@joj/blockchain/domain/Blockchain.mjs'
-import assemble from '@joj/blockchain/domain/shared/has_hash/assemble.mjs'
+import '@joj/blockchain/domain/value/Money.js'
+import { compose, prop, props } from '@joj/blockchain/util/fp/combinators.js'
+import Blockchain from '@joj/blockchain/domain/Blockchain.js'
+import assemble from '@joj/blockchain/domain/shared/has_hash/assemble.js'
 import chai from 'chai'
-import computeCipher from '@joj/blockchain/domain/shared/has_hash/compute_cipher.mjs'
+import computeCipher from '@joj/blockchain/domain/shared/has_hash/compute_cipher.js'
 
 const { assert } = chai
 

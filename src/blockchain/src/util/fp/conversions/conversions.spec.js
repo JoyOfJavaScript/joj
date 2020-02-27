@@ -1,8 +1,10 @@
-import { toMaybe, toValidation } from './'
-import Maybe from '../data/maybe'
-import Validation from '../data/validation'
-import { assert } from 'chai'
-import { compose } from '../combinators'
+import { toMaybe, toValidation } from './index.js'
+import Maybe from '../data/maybe.js'
+import Validation from '../data/validation/index.js'
+import chai from 'chai'
+import { compose } from '../combinators.js'
+
+const { assert } = chai
 
 const notEmpty = str =>
   str && str.length > 0

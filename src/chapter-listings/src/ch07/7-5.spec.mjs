@@ -1,6 +1,6 @@
-import { Failure, Success } from '@joj/blockchain/util/fp/data/validation2/validation.mjs'
+import { Failure, Success } from '@joj/blockchain/util/fp/data/validation2/validation.js'
 import chai from 'chai'
-import { isFunction, prop } from '@joj/blockchain/util/fp/combinators.mjs'
+import { isFunction, prop } from '@joj/blockchain/util/fp/combinators.js'
 import { exec } from 'child_process';
 
 const { assert } = chai

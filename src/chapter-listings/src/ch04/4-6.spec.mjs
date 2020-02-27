@@ -7,10 +7,10 @@ import {
   not,
   prop,
   reduce
-} from '@joj/blockchain/util/fp/combinators.mjs'
-import Blockchain from '@joj/blockchain/domain/Blockchain.mjs'
-import Money from '@joj/blockchain/domain/value/Money.mjs'
-import Transaction from '@joj/blockchain/domain/Transaction.mjs'
+} from '@joj/blockchain/util/fp/combinators.js'
+import Blockchain from '@joj/blockchain/domain/Blockchain.js'
+import Money from '@joj/blockchain/domain/value/Money.js'
+import Transaction from '@joj/blockchain/domain/Transaction.js'
 import chai from 'chai'
 
 const { assert } = chai

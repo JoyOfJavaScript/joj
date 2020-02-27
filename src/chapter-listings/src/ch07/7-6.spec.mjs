@@ -1,6 +1,6 @@
-import { Failure, Success } from '@joj/blockchain/util/fp/data/validation2/validation.mjs'
-import { compose, curry, isFunction, prop } from '@joj/blockchain/util/fp/combinators.mjs'
-import Block from '@joj/blockchain/domain/Block.mjs'
+import { Failure, Success } from '@joj/blockchain/util/fp/data/validation2/validation.js'
+import { compose, curry, isFunction, prop } from '@joj/blockchain/util/fp/combinators.js'
+import Block from '@joj/blockchain/domain/Block.js'
 import chai from 'chai'
 
 const { assert } = chai

@@ -1,4 +1,4 @@
-import Validation from '@joj/blockchain/util/fp/data/validation2/validation.mjs'
+import Validation from '@joj/blockchain/util/fp/data/validation2/validation.js'
 import chai from 'chai'
 import fs from 'fs'
 import path from 'path'

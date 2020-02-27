@@ -1,5 +1,5 @@
-import HasHash from '@joj/blockchain/domain/shared/HasHash.mjs'
-import HasValidation from '@joj/blockchain/domain/shared/HasValidation.mjs'
+import HasHash from '@joj/blockchain/domain/shared/HasHash.js'
+import HasValidation from '@joj/blockchain/domain/shared/HasValidation.js'
 import chai from 'chai'
 
 const { assert } = chai
