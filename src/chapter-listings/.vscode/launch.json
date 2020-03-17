@@ -3,33 +3,13 @@
   // Hover to view descriptions of existing attributes.
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
-  "configurations": [    
-    {
-      "name": "All tests",
-      "type": "node",
-      "request": "launch",
-      "cwd": "${workspaceRoot}",
-      "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
-      "args": [
-        "./src/*.js",
-        "--recursive",
-        "--require",
-        "./testSetup.js",                
-        "--no-timeout",
-        "--colors"
-      ],
-      "runtimeArgs": ["--nolazy"],      
-      "console": "integratedTerminal",
-      "internalConsoleOptions": "neverOpen"
-    },
+  "configurations": [      
     {
         "type": "node",
         "request": "launch",
         "name": "Debug current file",
         "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
-        "args": [
-            "--require",
-            "./src/testSetup.js",                
+        "args": [            
             "--no-timeout",            
             "--colors",
             "${file}"

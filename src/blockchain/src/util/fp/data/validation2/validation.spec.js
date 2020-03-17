@@ -1,7 +1,11 @@
-import Validation from './validation.js'
+import Validation, { Failure, Success } from './validation.js'
 import chai from 'chai'
 
 const { assert } = chai
+
+const notNull = str => (str !== null ? Success.of(str) : Failure.of(['String is null']))
+const notEmpty = str => (str.length > 0 ? Success.of(str) : Failure.of(['String is empty']))
+const toLower = str => str.toLowerCase()
 
 describe('Validation', () => {
   it('Constructor', () => {
@@ -23,6 +27,11 @@ describe('Validation', () => {
     assert.throws(() => {
       failure.get()
     }, `Can't extract the value of a Failure`)
+  })
+
+  it('Validation#map (with strings)', () => {
+    assert.equal(notNull('JavaScript').flatMap(notEmpty).map(toLower).get(), 'javascript')
+    assert.isOk(notNull(null).flatMap(notEmpty).map(toLower).isFailure)
   })
 
   it('Validation#ap', () => {

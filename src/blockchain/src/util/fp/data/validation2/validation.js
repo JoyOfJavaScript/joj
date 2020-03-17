@@ -86,17 +86,17 @@ export class Success extends Validation {
 Object.assign(Success.prototype, Applicative(), Functor(), Monad())
 
 export class Failure extends Validation {
-  get isFailure() {
-    return true
-  }
+    get isFailure() {
+      return true
+    }
 
-  static of(b) {
-    return new Failure(b)
-  }
+    static of(b) {
+      return new Failure(b)
+    }
 
-  get() {
-    throw new Error(`Can't extract the value of a Failure`)
-  }
+    get() {
+      throw new Error(`Can't extract the value of a Failure`)
+    }
 
 getOrElse(defaultVal) {
   return defaultVal
