@@ -5,34 +5,13 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "All tests",
-      "type": "node",
-      "request": "launch",
-      "cwd": "${workspaceRoot}",
-      "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
-      "args": [
-        "./test/*Spec.js",
-        "--recursive",
-        "--require",
-        "./test/testSetup.js",                
-        "--no-timeout",
-        "--colors"
-      ],
-      "runtimeArgs": ["--nolazy"],      
-      "console": "integratedTerminal",
-      "internalConsoleOptions": "neverOpen",
-      "skipFiles": [
-        "${workspaceRoot}/node_modules/**/*.js",
-        "<node_internals>/**/*.js"
-      ]
-    },
-    {
         "type": "node",
         "request": "launch",
         "name": "Current file",
-        "program": "${workspaceFolder}/node_modules/.bin/mjs-mocha",
-        "env": {"NODE_PATH":"$NODE_PATH:src/lib"},
+        "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
         "args": [            
+            "--no-timeout",            
+            "--colors",
             "${file}"
         ],
         "console": "integratedTerminal",

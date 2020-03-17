@@ -1,4 +1,5 @@
 import Block from './Block.js'
+import EventEmmitter from 'events'
 import HasValidation from './shared/HasValidation.js'
 import { Success } from '~util/fp/data/validation2/validation.js'
 
@@ -11,6 +12,7 @@ const VERSION = '1.0'
  */
 export default class Blockchain {
   blocks = new Map() // Could be made private, but instance method invocation breaks when called through a proxy
+  blockPushEmitter = new EventEmmitter()
   constructor(genesis = createGenesisBlock()) {
     this.top = genesis
     this.blocks.set(genesis.hash, genesis)
@@ -43,6 +45,7 @@ export default class Blockchain {
     newBlock.blockchain = this
     this.blocks.set(newBlock.hash, newBlock)
     this.top = newBlock
+    this.blockPushEmitter.emit('new_block', newBlock);
     return this.top
   }
 
@@ -67,6 +70,7 @@ export default class Blockchain {
     throw new Error(`Block with hash ${h} not found!`)
   }
 
+  // unit test helper
   newBlock() {
     const block = new Block(this.height(), this.top.hash, [...this.pendingTransactions])
     block.blockchain = this
@@ -103,6 +107,21 @@ export default class Blockchain {
     return this.blocks.values()
   }
 
+  async*[Symbol.asyncIterator]() {
+    //flush out all blocks
+    for (const block of this.blocks.values()) {
+      yield block
+    }
+    while (true) {
+      yield new Promise(resolve => {  //https://hackernoon.com/using-async-generators-for-data-streams-f2cd2a1f02b3
+        this.blockPushEmitter.once('new_block', block => {
+          console.log('Emitting a new block: ', block.hash)
+          resolve(block)
+        })
+      })
+    }
+  }
+
   get [Symbol.toStringTag]() {
     return 'Blockchain'
   }
@@ -110,6 +129,7 @@ export default class Blockchain {
 
 Object.assign(Blockchain.prototype, HasValidation())
 
-function createGenesisBlock(previousHash = '0'.repeat(64)) {
+function createGenesisBlock() {
+  const previousHash = '0'.repeat(64)
   return new Block(1, previousHash, [])
 }

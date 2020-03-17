@@ -19,5 +19,7 @@
     "@babel/plugin-proposal-optional-chaining",
     ["@babel/plugin-proposal-pipeline-operator", { "proposal": "minimal" }]
   ],
-  "retainLines": true
+  "retainLines": true,
+  "comments": true,
+  "highlightCode": true  
 }

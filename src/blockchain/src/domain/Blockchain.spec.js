@@ -1,3 +1,4 @@
+import '../util/rx.mjs'
 import Block from './Block.js'
 import Blockchain from './Blockchain.js'
 import { PerfCount } from '../common/proxies.js'
@@ -29,6 +30,32 @@ describe('Blockchain Spec', () => {
     console.log(validation.toString())
     assert.isOk(validation.isFailure)
   })
+
+  it('Should stream its blocks through its async generator', done => {
+    const chain = new Blockchain()
+    let top = chain.push(new Block(chain.height() + 1, chain.top.hash, []))
+    assert.equal(top.index, 2)
+    top = chain.push(new Block(chain.height() + 1, chain.top.hash, []))
+    assert.equal(top.index, 3)
+
+    // At this point blockchain has [genesis, block1, block2]
+    const chain$ = Observable.fromAsyncGenerator(chain)
+      .filter(block => !block.previousHash.startsWith('0000'))
+      .subscribe({
+        next(block) { console.log('Receiving new block: ', block.previousHash) },
+        complete() { done() }
+      })
+
+    setInterval(() => {
+      top = chain.push(new Block(chain.height() + 1, chain.top.hash, []))
+      assert.isNotNull(top.hash)
+    }, 1000)
+
+    setTimeout(() => {
+      chain$.unsubscribe()
+      done()
+    }, 10_000)
+  }).timeout(11_000)
 
   it('Promise.allSettled used to validate two blockchain objects', () => {
 
