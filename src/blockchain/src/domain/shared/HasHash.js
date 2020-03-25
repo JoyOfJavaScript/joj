@@ -28,7 +28,7 @@ const HasHash = (
    * @return {String} A hash value
    */
   calculateHash() {
-    const objToHash = Object.fromEntries(new Map(keys.map(k => [k, prop(k, this)])))
+    const objToHash = Object.fromEntries(keys.map(k => [k, prop(k, this)]))
     return compose(
       computeCipher(options),
       assemble,

@@ -51,4 +51,16 @@ describe('Validation', () => {
   it('Validation#toString', () => {
     assert.equal(Validation.Success(1).toString(), 'Success (1)')
   })
+
+  it('Validation#[Symbol.iterator]', () => {
+    const [, right] = Validation.Success(2)
+
+    assert.equal(right.get(), 2)
+    assert.isOk(right.isSuccess)
+
+    const [left,] = Validation.Failure(new Error('Error occurred!'))
+
+    assert.equal(left.getOrElse(5), 5)
+    assert.isOk(left.isFailure)
+  })
 })

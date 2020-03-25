@@ -29,18 +29,6 @@ export default class Blockchain {
     return this.from([...blockchain])
   }
 
-  /**
-   * Helper function to construct a blockchain data structure from a set of blocks
-   * @return {Blockchain} A new Blockchain instace from a set of blocks
-   */
-  static from(...blocks) {
-    const newChain = new Blockchain()
-    for (const block of blocks) {
-      newChain.push(block)
-    }
-    return newChain
-  }
-
   push(newBlock) {
     newBlock.blockchain = this
     this.blocks.set(newBlock.hash, newBlock)
@@ -71,11 +59,15 @@ export default class Blockchain {
   }
 
   // unit test helper
-  newBlock() {
-    const block = new Block(this.height(), this.top.hash, [...this.pendingTransactions])
-    block.blockchain = this
-    this.pendingTransactions = []
-    return this.push(block)
+  * newBlock() {
+    while (true) {
+      const block = new Block(this.height(), this.top.hash, this.pendingTransactions)
+      yield this.push(block)
+    }
+  }
+
+  clear() {
+    this.blocks.clear()
   }
 
   /**
@@ -113,7 +105,7 @@ export default class Blockchain {
       yield block
     }
     while (true) {
-      yield new Promise(resolve => {  //https://hackernoon.com/using-async-generators-for-data-streams-f2cd2a1f02b3
+      yield new Promise(resolve => {
         this.blockPushEmitter.once('new_block', block => {
           console.log('Emitting a new block: ', block.hash)
           resolve(block)

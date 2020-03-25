@@ -70,6 +70,7 @@ export default {
       this.#difficulty = difficulty
       return this
     }
+
     build() {
       return new Block(this.#index, this.#previousHash, this.#pendingTransactions, this.#difficulty)
     }

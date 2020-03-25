@@ -9,6 +9,7 @@ import {
 import HasHash from './shared/HasHash.js'
 import HasValidation from './shared/HasValidation.js'
 import { composeM } from '~util/fp/combinators.js'
+import { toJson } from '~util/helpers.js'
 
 const VERSION = '1.0'
 
@@ -92,6 +93,7 @@ export default class Block {
       hash: this.hash,
       timestamp: this.timestamp,
       dataCount: this.data.length,
+      data: this.data.map(toJson),
       version: VERSION
     }
     )

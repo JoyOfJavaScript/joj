@@ -71,6 +71,11 @@ export default class Validation {
   [Symbol.toPrimitive](hint) {
     return this.get()
   }
+
+  * [Symbol.iterator] () {
+    yield this.isFailure ? Failure.of(this.#val) : undefined
+    yield this.isSuccess ? Success.of(this.#val) : undefined 
+  }
 }
 
 export class Success extends Validation {

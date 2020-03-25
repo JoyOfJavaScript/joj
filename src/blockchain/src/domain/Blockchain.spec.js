@@ -19,6 +19,19 @@ describe('Blockchain Spec', () => {
     assert.isOk(ledger.validate())
   })
 
+  it('Generates 20 blocks', async () => {
+    const chain = new Blockchain()
+    let i = 0
+    for (const block of chain.newBlock()) {
+      console.log("Generated new block", block.hash)
+      if (i >= 19) {
+        break
+      }
+      i++
+    }
+    assert.equal(chain.height(), 21) // 20 blocks plus generis
+  })
+
   it('Should fail validation of two consecutive blocks', async () => {
     const chain = new Blockchain()
     let top = chain.push(new Block(chain.height() + 1, chain.top.hash, []))
