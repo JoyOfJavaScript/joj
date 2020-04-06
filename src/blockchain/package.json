@@ -8,19 +8,19 @@
   "license": "ISC",
   "devDependencies": {
     "@babel/cli": "^7.8.4",
-    "@babel/core": "^7.8.4",
-    "@babel/node": "^7.8.4",
+    "@babel/core": "^7.9.0",
+    "@babel/node": "^7.8.7",
     "@babel/plugin-proposal-class-properties": "^7.7.4",
     "@babel/plugin-proposal-function-bind": "^7.8.3",
     "@babel/plugin-proposal-numeric-separator": "^7.7.4",
-    "@babel/plugin-proposal-optional-chaining": "^7.8.3",
+    "@babel/plugin-proposal-optional-chaining": "^7.9.0",
     "@babel/plugin-proposal-pipeline-operator": "^7.7.7",
     "@babel/plugin-syntax-dynamic-import": "^7.7.4",
-    "@babel/preset-env": "^7.8.4",
-    "@babel/preset-flow": "^7.7.4",
-    "@babel/register": "^7.7.7",
+    "@babel/preset-env": "^7.9.0",
+    "@babel/preset-flow": "^7.9.0",
+    "@babel/register": "^7.9.0",
     "babel-eslint": "^8.2.6",
-    "babel-loader": "^8.0.6",
+    "babel-loader": "^8.1.0",
     "chai": "^4.1.0",
     "eslint": "^4.19.1",
     "eslint-plugin-flowtype": "^2.50.3",
@@ -32,11 +32,11 @@
     "mocha": "7.0.0-esm1",
     "nodemon": "^1.19.4",
     "standard": "^11.0.1",
-    "webpack": "^4.41.2",
-    "webpack-cli": "^3.3.9"
+    "webpack": "^4.42.1",
+    "webpack-cli": "^3.3.11"
   },
   "dependencies": {
-    "@babel/polyfill": "^7.7.0",
+    "@babel/polyfill": "^7.8.7",
     "core-js": "^3.6.4"
   },
   "scripts": {
@@ -56,6 +56,6 @@
   },
   "_moduleAliases": {
     "~util": "src/util",
-    "~domain": "src/domain.js"
+    "~domain": "src/domain"
   }
 }

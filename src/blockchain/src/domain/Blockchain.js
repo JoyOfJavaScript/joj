@@ -1,10 +1,10 @@
 import Block from './Block.js'
-import EventEmmitter from 'events'
+import EventEmitter from 'events'
 import HasValidation from './shared/HasValidation.js'
 import { Success } from '~util/fp/data/validation2/validation.js'
 
 const VERSION = '1.0'
-
+const EVENT_NAME = 'new_block'
 /**
  * Untamperable blockchain. You may initialize the chain with an existing
  * chain. But the most common thing to do is initialize with an empty Chain
@@ -12,7 +12,7 @@ const VERSION = '1.0'
  */
 export default class Blockchain {
   blocks = new Map() // Could be made private, but instance method invocation breaks when called through a proxy
-  blockPushEmitter = new EventEmmitter()
+  blockPushEmitter = new EventEmitter()
   constructor(genesis = createGenesisBlock()) {
     this.top = genesis
     this.blocks.set(genesis.hash, genesis)
@@ -32,8 +32,8 @@ export default class Blockchain {
   push(newBlock) {
     newBlock.blockchain = this
     this.blocks.set(newBlock.hash, newBlock)
+    this.blockPushEmitter.emit(EVENT_NAME, newBlock);
     this.top = newBlock
-    this.blockPushEmitter.emit('new_block', newBlock);
     return this.top
   }
 
@@ -99,19 +99,45 @@ export default class Blockchain {
     return this.blocks.values()
   }
 
-  async*[Symbol.asyncIterator]() {
-    //flush out all blocks
+  async *[Symbol.asyncIterator]() {
+    this.unsubscribe()
+
     for (const block of this.blocks.values()) {
       yield block
     }
     while (true) {
+      if (this.blockPushEmitter.listenerCount(EVENT_NAME) === 0) {
+        break
+      }
       yield new Promise(resolve => {
-        this.blockPushEmitter.once('new_block', block => {
+        this.blockPushEmitter.once(EVENT_NAME, block => {
           console.log('Emitting a new block: ', block.hash)
           resolve(block)
         })
       })
     }
+  }
+
+  [Symbol.observable]() {
+    return new Observable(observer => {
+      for (const block of this) {
+        observer.next(block)
+      }
+      this.blockPushEmitter.on(EVENT_NAME, block => {
+        console.log('Emitting a new block: ', block.hash)
+        observer.next(block)
+      })
+    })
+  }
+
+  subscribe({ next }) {
+    this.blockPushEmitter.on(EVENT_NAME, value => {
+      next(value)
+    })
+  }
+
+  unsubscribe() {
+    this.blockPushEmitter.removeAllListeners(EVENT_NAME)
   }
 
   get [Symbol.toStringTag]() {

@@ -44,31 +44,31 @@ describe('Blockchain Spec', () => {
     assert.isOk(validation.isFailure)
   })
 
-  it('Should stream its blocks through its async generator', done => {
-    const chain = new Blockchain()
-    let top = chain.push(new Block(chain.height() + 1, chain.top.hash, []))
-    assert.equal(top.index, 2)
-    top = chain.push(new Block(chain.height() + 1, chain.top.hash, []))
-    assert.equal(top.index, 3)
+  // it('Should stream its blocks through its async generator', done => {
+  //   const chain = new Blockchain()
+  //   let top = chain.push(new Block(chain.height() + 1, chain.top.hash, []))
+  //   assert.equal(top.index, 2)
+  //   top = chain.push(new Block(chain.height() + 1, chain.top.hash, []))
+  //   assert.equal(top.index, 3)
 
-    // At this point blockchain has [genesis, block1, block2]
-    const chain$ = Observable.fromAsyncGenerator(chain)
-      .filter(block => !block.previousHash.startsWith('0000'))
-      .subscribe({
-        next(block) { console.log('Receiving new block: ', block.previousHash) },
-        complete() { done() }
-      })
+  //   // At this point blockchain has [genesis, block1, block2]
+  //   const chain$ = Observable.fromGenerator(chain)
+  //     .filter(block => !block.previousHash.startsWith('0000'))
+  //     .subscribe({
+  //       next(block) { console.log('Receiving new block: ', block.previousHash) },
+  //       complete() { done() }
+  //     })
 
-    setInterval(() => {
-      top = chain.push(new Block(chain.height() + 1, chain.top.hash, []))
-      assert.isNotNull(top.hash)
-    }, 1000)
+  //   setInterval(() => {
+  //     top = chain.push(new Block(chain.height() + 1, chain.top.hash, []))
+  //     assert.isNotNull(top.hash)
+  //   }, 1000)
 
-    setTimeout(() => {
-      chain$.unsubscribe()
-      done()
-    }, 10_000)
-  }).timeout(11_000)
+  //   setTimeout(() => {
+  //     chain$.unsubscribe()
+  //     done()
+  //   }, 10_000)
+  // }).timeout(11_000)
 
   it('Promise.allSettled used to validate two blockchain objects', () => {
 
@@ -94,6 +94,40 @@ describe('Blockchain Spec', () => {
         assert.equal(results[1].reason.message, 'Chain validation failed Failure (Hash length must equal 64)')
       })
   })
+
+  it('Uses Observable.from to push new blocks into the stream', done => {
+
+    const chain = new Blockchain()
+    chain.push(new Block(chain.height() + 1, chain.top.hash, []))
+    chain.push(new Block(chain.height() + 1, chain.top.hash, []))
+
+    let count = 0
+    const subs = Observable.from(chain)
+      .subscribe({
+        next(block) {
+          console.log('Received block', block.hash)
+          if (block.validate().isSuccess) {
+            console.log('Block is valid')
+          }
+          else {
+            console.log('Block is invalid')
+          }
+          count++
+        }
+      })
+
+    // after 2 seconds, push a new block
+    setTimeout(() => {
+      chain.push(new Block(chain.height() + 1, chain.top.hash, [])) // push a third block
+      chain.push(new Block(-1, chain.top.hash, [])) // push a fourth block (invalid)
+      assert.equal(chain.height() - 1, 4)
+      setTimeout(() => {
+        subs.unsubscribe()
+        done()
+      }, 8_000)
+    }, 2000)
+
+  }).timeout(20_000)
 })
 
 function validateLedger(ledger) {

@@ -63,6 +63,10 @@ export default class Validation {
     return this.#val || defaultVal
   }
 
+  toBoolean() {
+    return this.isSuccess
+  }
+
   toString() {
     return `${this.constructor.name} (${this.#val
   })`
