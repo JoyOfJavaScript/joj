@@ -40,7 +40,7 @@ describe('Signature', () => {
     const luke = Key('luke-public.pem')
 
     const transaction = new Transaction(coinbase, luke, Money('USD', 30), null)
-    transaction.signTransaction(privateKey, 'coinbase')
+    transaction.signTransaction(privateKey)
     assert.isNotEmpty(transaction.signature)
     const result = transaction.verifySignature(coinbase)
     assert.isOk(result)
@@ -52,7 +52,7 @@ describe('Signature', () => {
 
     const transaction = new Transaction(null, publicKey, Money('USD', 30), null)
     assert.isNotEmpty(transaction.id)
-    transaction.signTransaction(privateKey, 'coinbase')
+    transaction.signTransaction(privateKey)
     assert.isNotEmpty(transaction.signature)
     const result = transaction.verifySignature(publicKey)
     assert.isOk(result)

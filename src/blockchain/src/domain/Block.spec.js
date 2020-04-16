@@ -11,12 +11,25 @@ describe('Block Spec', () => {
     const b = new Block(1, '-1', [])
     assert.equal(b.previousHash, '-1')
   })
-  it('Should create a new  block using Builders', () => {
-    const b = new Builder.Block()
+  it('Should create a new block using Builders', () => {
+    const { Block: BlockBuilder } = Builder
+    const b = Object.create(BlockBuilder)
       .at(1)
       .linkedTo('-1')
       .withPendingTransactions([])
       .build()
+    assert.equal(b.previousHash, '-1')
+    assert.isEmpty(b.data)
+  })
+
+  it('Should create a new  block using Builders with bind operator', () => {
+    const { Block: BlockBuilder } = Builder
+    const { at, linkedTo, withPendingTransactions, build } = BlockBuilder
+    const b = {}
+      :: at(1)
+      :: linkedTo('-1')
+      :: withPendingTransactions([])
+      :: build()
     assert.equal(b.previousHash, '-1')
     assert.isEmpty(b.data)
   })

@@ -45,7 +45,7 @@ export default class Transaction {
 
   /**
    * Sign this transaction 
-   * @param privateKey 
+   * @param string privateKey 
    */
   signTransaction(privateKey) {
     this.signature = this.sign(privateKey)

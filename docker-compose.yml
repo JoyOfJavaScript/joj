@@ -20,4 +20,6 @@ services:
         - NPM_CONFIG_LOGLEVEL=error
       volumes:
         - ./src:/home/joj/src
-      command: bash -c  "npm --prefix /home/joj/src/blockchain run build ; npm --prefix /home/joj/src/chapter-listings install --silent --progress=false ; npm --prefix /home/joj/src/chapter-listings run test-all"
+      command: bash -c  "npm --prefix /home/joj/src/blockchain install; npm --prefix /home/joj/src/blockchain run build ; npm --prefix /home/joj/src/chapter-listings install --silent --progress=false ; npm --prefix /home/joj/src/chapter-listings run test-all"
+networks:
+  tjoj-network:

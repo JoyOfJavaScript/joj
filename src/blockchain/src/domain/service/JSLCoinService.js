@@ -1,9 +1,14 @@
 import { buffer, join, toArray, toJson } from '~util/helpers.js'
-import Builder from '../../domain.js'
+import Builders from '../../domain.js'
 import Key from '../value/Key.js'
 import Money from '../value/Money.js'
 import Transaction from '../Transaction.js'
 import Wallet from '../Wallet.js'
+
+const { Block: BlockBuilder, Transaction2: TransactionBuilder } = Builders
+
+const { at, linkedTo, withPendingTransactions, withDifficulty, build: buildBlock } = BlockBuilder
+const { from, to, having, withDescription, signWith, build: buildTransaction } = TransactionBuilder
 
 /**
  * Constructs a JSLCoinService instance with the specified blockchain ledger
@@ -135,81 +140,84 @@ const JSLCoinService = ledger => {
 
   // Promise-based implementation of minePendingTransactions
   function minePendingTransactions(rewardAddress, proofOfWorkDifficulty = 2) {
+
     return mineNewBlockIntoChain(
-      new Builder.Block()
-        .at(ledger.height() + 1)
-        .linkedTo(ledger.top.hash)
-        .withPendingTransactions(ledger.pendingTransactions)
-        .withDifficulty(proofOfWorkDifficulty)
-        .build()
+      {}
+        :: at(ledger.height() + 1)
+        :: linkedTo(ledger.top.hash)
+        :: withPendingTransactions(ledger.pendingTransactions)
+        :: withDifficulty(proofOfWorkDifficulty)
+        :: buildBlock()
     )
       .then(:: ledger.validate)
-      //  => {
-      //   return ledger.validate()
-      // })
-      .then(validation => {
-        if (validation.isSuccess) {
-          return import('../../common/settings.js')
-            .then(({ MINING_REWARD }) => {
-              const fee =
-                Math.abs(
-                  ledger.pendingTransactions
-                    .filter(tx => tx.amount() < 0)
-                    .map(tx => tx.amount())
-                    .reduce((a, b) => a + b, 0)
-                ) *
-                ledger.pendingTransactions.length *
-                0.02
+  //  => {
+  //   return ledger.validate()
+  // })
+  .then(validation => {
+    if (validation.isSuccess) {
+      return import('../../common/settings.js')
+        .then(({ MINING_REWARD }) => {
+          const fee =
+            Math.abs(
+              ledger.pendingTransactions
+                .filter(tx => tx.amount() < 0)
+                .map(tx => tx.amount())
+                .reduce((a, b) => a + b, 0)
+            ) *
+            ledger.pendingTransactions.length *
+            0.02
 
-              const reward = new Transaction(
-                network.address,
-                rewardAddress,
-                Money.sum(Money('jsl', fee), MINING_REWARD),
-                'Mining Reward'
-              )
-              reward.signTransaction(network.privateKey)
+          const reward = new Transaction(
+            network.address,
+            rewardAddress,
+            Money.sum(Money('jsl', fee), MINING_REWARD),
+            'Mining Reward'
+          )
+          reward.signTransaction(network.privateKey)
 
-              ledger.pendingTransactions = [reward]
-            })
-        }
-        else {
-          new Error(`Chain validation failed ${validation.toString()}`)
-        }
-      })
-  }
-
-
-  // eslint-disable-next-line max-statements
-  function transferFunds(walletA, walletB, funds, description, transferFee = 0.02) {
-    console.log(`Executing transaction ${description}`)
-
-    if (Money.compare(walletA.balance(ledger), funds) < 0) {
-      throw new RangeError(`Insufficient funds for address ${walletA.address}`)
+          ledger.pendingTransactions = [reward]
+        })
     }
-
-    return ledger.pendingTransactions.push(
-      new Builder.Transaction()
-        .from(walletA.address)
-        .to(walletB.address)
-        .having(funds)
-        .withDescription(description)
-        .signWith(walletA.privateKey)
-        .build(),
-      new Builder.Transaction()
-        .from(walletA.address)
-        .to(network.address)
-        .having(Money.multiply(funds, Money('jsl', transferFee)))
-        .withDescription('Transaction Fee')
-        .signWith(walletA.privateKey)
-        .build()
-    )
+    else {
+      new Error(`Chain validation failed ${validation.toString()}`)
+    }
+  })
   }
 
-  function serializeLedger(delimeter = ';') {
 
-    return ledger |> toArray |> join(toJson, delimeter) |> buffer
-    // return compose(buffer, csv(toJson), toArray)(ledger)
+// eslint-disable-next-line max-statements
+function transferFunds(walletA, walletB, funds, description, transferFee = 0.02) {
+
+  console.log(`Executing transaction ${description}`)
+
+  if (Money.compare(walletA.balance(ledger), funds) < 0) {
+    throw new RangeError(`Insufficient funds for address ${walletA.address}`)
   }
+
+  return ledger.pendingTransactions.push(
+    {}
+      :: from(walletA.address)
+      :: to(walletB.address)
+      :: having(funds)
+      :: withDescription(description)
+      :: signWith(walletA.privateKey)
+      :: buildTransaction(),
+
+    {}
+      :: from(walletA.address)
+      :: to(network.address)
+      :: having(Money.multiply(funds, Money('jsl', transferFee)))
+      :: withDescription('Transaction Fee')
+      :: signWith(walletA.privateKey)
+      :: buildTransaction()
+  )
+}
+
+function serializeLedger(delimeter = ';') {
+
+  return ledger |> toArray |> join(toJson, delimeter) |> buffer
+  // return compose(buffer, csv(toJson), toArray)(ledger)
+}
 }
 
 // Helpers

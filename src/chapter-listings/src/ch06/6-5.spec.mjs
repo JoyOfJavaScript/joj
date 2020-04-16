@@ -1,9 +1,10 @@
-import Builder, { Block, Transaction } from '@joj/blockchain/domain.js'
+import Builders, { Block, Transaction } from '@joj/blockchain/domain.js'
 import { makeChain, makeMoney } from './factory_functions.mjs'
 import Money from '@joj/blockchain/domain/value/Money.js'
 import chai from 'chai'
 
 const { assert } = chai
+const { Block: BlockBuilder, Transaction: TransactionBuilder } = Builders
 
 describe('6.5 - Import patterns', () => {
 
@@ -35,7 +36,7 @@ describe('6.5 - Import patterns', () => {
 
   it('Builder functions', () => {
     // Block
-    const b = new Builder.Block()
+    const b = Object.create(BlockBuilder)
       .at(1)
       .linkedTo('-1')
       .withPendingTransactions([])
@@ -44,7 +45,7 @@ describe('6.5 - Import patterns', () => {
     assert.isEmpty(b.data)
 
     // Transaction
-    const tx = new Builder.Transaction()
+    const tx = new TransactionBuilder()
       .from('sally')
       .to('luke')
       .having(Money('₿', 0.1))
