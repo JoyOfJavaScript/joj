@@ -11,6 +11,9 @@ services:
       volumes:
         - ./src:/home/joj/src
       command: bash -c  "npm --prefix /home/joj/src/blockchain install --silent --progress=false ; npm --prefix /home/joj/src/blockchain run test-all"
+      networks:
+        - tjoj-network
+    
     chapter_listings:
       image: "node:13.2.0-slim"
       user: "node"
@@ -21,5 +24,7 @@ services:
       volumes:
         - ./src:/home/joj/src
       command: bash -c  "npm --prefix /home/joj/src/blockchain install; npm --prefix /home/joj/src/blockchain run build ; npm --prefix /home/joj/src/chapter-listings install --silent --progress=false ; npm --prefix /home/joj/src/chapter-listings run test-all"
+      networks:
+      - tjoj-network
 networks:
   tjoj-network:
