@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+
 import Block from './Block.js'
 import EventEmitter from 'events'
 import HasValidation from './shared/HasValidation.js'
@@ -13,7 +15,9 @@ const EVENT_NAME = 'new_block'
 export default class Blockchain {
   blocks = new Map() // Could be made private, but instance method invocation breaks when called through a proxy
   blockPushEmitter = new EventEmitter()
+
   constructor(genesis = createGenesisBlock()) {
+    genesis.blockchain = this
     this.top = genesis
     this.blocks.set(genesis.hash, genesis)
     this.timestamp = Date.now()
@@ -75,8 +79,6 @@ export default class Blockchain {
    *
    * @return {boolean} Whether the chain is valid
    */
-  // TODO: Use an iterator to check all blocks instead of toArray. Delete toArray method and use ...blockchain to invoke the iterator
-  // TODO: You can use generators to run a simulation
   isValid() {
     return Success.of(this.height() > 0)
 

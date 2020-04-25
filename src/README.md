@@ -1,3 +1,5 @@
+![TjoJ Cover](./img/cover.jpg =250x250)
+
 # Source code for Joy of JavaScript (JoJ)
 The book uses two projects:
 
