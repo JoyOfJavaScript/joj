@@ -15,6 +15,7 @@ I hope you enjoy JoJ and that it occupies an important place on your digital (an
 <p align="center">
     <img src="https://github.com/JoyOfJavaScript/joj/blob/master/img/cover.jpg" height="450" width="400" align="center" />
 </p>
+
 # Running the code
 You have a couple of options to run the code. If you have Node.js v10 installed locally in your system, feel free to run the tests locally; otherwise, you can run the code housed in a Docker container.
 
