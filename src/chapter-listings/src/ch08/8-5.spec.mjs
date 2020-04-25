@@ -148,6 +148,11 @@ describe('8.5 - Async iteration', () => {
   })
 
   it('Async iterator 2', async () => {
+    function delay(value, time) {
+      return new Promise(resolve => {
+        setTimeout(resolve, time, { value, done: false })
+      })
+    }
     function delayedIterator(tasks) {
       return {
         next: async function () {
