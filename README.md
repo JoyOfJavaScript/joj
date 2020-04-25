@@ -12,7 +12,7 @@ Obviously I can’t cover everything because that would easily take three books,
 
 I hope you enjoy JoJ and that it occupies an important place on your digital (and physical!) bookshelf. If you have any questions, comments, or suggestions, please share them in Manning’s Author Online forum for my book: (Manning will fill in the URL.)
 
-![TjoJ Cover](./img/cover.jpg =250x250)
+![TjoJ Cover](https://github.com/JoyOfJavaScript/joj/blob/master/img/cover.jpg =300x250)
 
 # Running the code
 You have a couple of options to run the code. If you have Node.js v10 installed locally in your system, feel free to run the tests locally; otherwise, you can run the code housed in a Docker container.
