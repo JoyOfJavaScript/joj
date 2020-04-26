@@ -1,14 +1,7 @@
-import Block from '@joj/blockchain/domain/Block.js'
-import Builders, { Blockchain } from '@joj/blockchain/domain.js'
-import Key from '@joj/blockchain/domain/value/Key.js'
-import Money from '@joj/blockchain/domain/value/Money.js'
+import Blockchain from '@joj/blockchain/domain/Blockchain.js'
 import chai from 'chai'
 
 const { assert } = chai
-
-const { Transaction2: TransactionBuilder } = Builders
-
-const { from, to, having, withDescription, signWith, build: buildTransaction } = TransactionBuilder
 
 
 describe('9.2.2 - Creting iterable objects', () => {
@@ -23,7 +16,6 @@ describe('9.2.2 - Creting iterable objects', () => {
       i++
     }
     assert.equal(chain.height(), 21)
-
 
   })
 })

@@ -1,13 +1,7 @@
-import Builders from '@joj/blockchain/domain.js'
-import chai from 'chai'
 import Validation from '@joj/blockchain/util/fp/data/validation2/validation.js'
+import chai from 'chai'
 
 const { assert } = chai
-
-const { Transaction2: TransactionBuilder } = Builders
-
-const { from, to, having, withDescription, signWith, build: buildTransaction } = TransactionBuilder
-
 
 describe('9.2 - Generators', () => {
   it('Generator is a simple function', () => {
