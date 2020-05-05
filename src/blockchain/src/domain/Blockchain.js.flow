@@ -1,0 +1,13 @@
+// @flow
+
+import type Block from './Block.js.flow';
+
+declare class Blockchain {
+    constructor(genesis?: Block): Blockchain;
+    push(newBlock: Block): Block;
+    validate: (void) => boolean;
+    height: (void) => number;
+    top: Block;
+}
+
+declare export default typeof Blockchain;

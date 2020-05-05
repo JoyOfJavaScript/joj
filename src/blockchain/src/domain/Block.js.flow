@@ -1,0 +1,13 @@
+// @flow
+
+declare type Difficulty = 1 | 2 | 3;
+
+declare class Block {
+    constructor(urlStr: number, previousHash: string, data: Array<mixed>, difficulty?: Difficulty): Block;
+    previousHash: string;
+    index: number,
+    validate: (void) => boolean;
+    hash: string;
+}
+
+declare export default typeof Block;

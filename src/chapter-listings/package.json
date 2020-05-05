@@ -5,12 +5,12 @@
   "type": "module",
   "devDependencies": {
     "@babel/cli": "^7.8.4",
-    "@babel/core": "^7.9.0",
+    "@babel/core": "^7.9.6",
     "@babel/node": "^7.8.7",
     "@babel/plugin-proposal-class-properties": "^7.8.3",
     "@babel/plugin-proposal-function-bind": "^7.8.3",
     "@babel/plugin-proposal-numeric-separator": "^7.8.3",
-    "@babel/plugin-proposal-object-rest-spread": "^7.9.0",
+    "@babel/plugin-proposal-object-rest-spread": "^7.9.6",
     "@babel/plugin-proposal-optional-chaining": "^7.9.0",
     "@babel/plugin-proposal-pipeline-operator": "^7.8.3",
     "@babel/plugin-proposal-throw-expressions": "^7.8.3",
@@ -18,7 +18,7 @@
     "@babel/plugin-syntax-throw-expressions": "^7.8.3",
     "@babel/plugin-transform-regenerator": "^7.8.7",
     "@babel/polyfill": "^7.8.7",
-    "@babel/preset-env": "^7.9.0",
+    "@babel/preset-env": "^7.9.6",
     "@babel/preset-flow": "^7.9.0",
     "@babel/register": "^7.9.0",
     "babel-eslint": "^8.2.3",
@@ -46,7 +46,9 @@
     "build": "babel src --out-dir _babel/src --keep-file-extension --copy-files",
     "test": "mocha",
     "test-all": "rm -rf _babel && npm run build; mocha \"_babel/**/*spec.mjs\"; rm -rf _babel",
+    "check": "npm run flow-stop ; npm run flow",
     "flow-init": "flow init",
-    "flow-status": "flow status"
+    "flow-status": "flow status",
+    "flow-stop": "flow stop"
   }
 }
