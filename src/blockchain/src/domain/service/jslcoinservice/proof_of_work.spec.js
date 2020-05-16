@@ -12,7 +12,7 @@ function randomId() {
 describe('Proof of work', () => {
   it('Calls proof of work with low difficulty', () => {
     const block = new Block(1, randomId(), ['a', 'b', 'c'], 2)
-    proofOfWork(block, ''.padStart(block.difficulty, '0'))
+    proofOfWork(block)
     assert.isOk(block.nonce > 0)
   })
 
@@ -54,7 +54,7 @@ describe('Proof of work', () => {
 function proofOfWorkAsync(block, after = 1000) {
   return new Promise((resolve) => {
     setTimeout(() => {
-      resolve(proofOfWork(block, ''.padStart(block.difficulty, '0')))
+      resolve(proofOfWork(block))
     }, after)
   })
 }

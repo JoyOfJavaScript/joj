@@ -1,3 +1,14 @@
 //@flow
-declare type Money = (currency: string, amount: number) => { currency: string, amount: number, equals: (other: mixed) => boolean };
-declare export default Money;
+
+export type MoneyData = {
+    currency: string,
+    amount: number,
+    equals: boolean,
+    round: MoneyData,
+    minus: MoneyData,
+    plus: MoneyData
+}
+
+declare function Money(currency: string, amount: number): MoneyData;
+
+declare export default typeof Money;

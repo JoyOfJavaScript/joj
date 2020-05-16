@@ -1,5 +1,5 @@
-declare type Success<T> = { isSuccess: true, isFailure: false, get: (void) => T };
-declare type Failed = { isSuccess: false, isFailure: true, toString: (void) => string };
+//@flow
 
-declare type Validation<T> = Success<T> | Failure;
-declare export default Validation;
+export type Success<T> = { isSuccess: true, isFailure: false, get: (void) => T, toString: (void) => string };
+export type Failure = { isSuccess: false, isFailure: true, get: (void) => Error, toString: (void) => string };
+export type Validation<T> = Success<T> | Failure;

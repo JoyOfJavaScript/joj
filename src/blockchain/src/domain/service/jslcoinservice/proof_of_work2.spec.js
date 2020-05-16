@@ -5,7 +5,7 @@ import {
 } from 'worker_threads'
 import chai from 'chai'
 import crypto from 'crypto'
-import proofOfWorfk from './proof_of_work2.js'
+import proofOfWork from './proof_of_work2.js'
 
 const { assert } = chai
 
@@ -16,7 +16,7 @@ function randomId() {
 describe('Proof of work (2)', () => {
   it('Calls proof of work with low difficulty', () => {
     const block = new Block(1, randomId(), [], 2)
-    proofOfWorfk(block, ''.padStart(block.difficulty, '0'))
+    proofOfWork(block)
     assert.isOk(block.nonce > 0)
   })
 

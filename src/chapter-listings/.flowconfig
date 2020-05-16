@@ -1,11 +1,5 @@
 [ignore]
+.*/_babel/.*
 
 [include]
-
-[libs]
-
-[lints]
-
-[options]
-
-[strict]
+../node_modules/**/@joj/

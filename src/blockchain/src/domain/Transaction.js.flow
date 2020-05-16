@@ -1,9 +1,9 @@
 // @flow
 
-import type Money from './value/Money.js.flow';
+import type { MoneyData } from './value/Money.js.flow';
 
 declare class Transaction {
-    constructor(sender: string, recipient: string, funds: Money, description?: string): Transaction;
+    constructor(sender: string, recipient: string, funds: MoneyData, description?: string): Transaction;
     signTransaction(privateKey: string): void;
     signature: string;
     validate: (void) => boolean;

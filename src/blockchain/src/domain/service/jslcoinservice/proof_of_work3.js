@@ -1,7 +1,8 @@
 // TODO: use trampolining to simulate TCO in order to reach mining difficulty 4
-export const proofOfWork = (block, hashPrefix) => {
+export const proofOfWork = (block) => {
+  const hashPrefix = ''.padStart(block.difficulty, '0')
   do {
-    block.nonce += nextNonce()
+    block.nonce += nextNonce()  //#A
     block.hash = block.calculateHash()
   } while (!block.hash.toString().startsWith(hashPrefix))
   return block

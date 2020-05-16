@@ -32,7 +32,7 @@ describe('9.4.7 - Pipeable operators', () => {
       yield 'JavaScript'
     }
 
-    Observable.fromGenerator(words()) |> skip(1) |> map(toUpper) |> ($ => $.subscribe({ next(word) { assert.isNotEmpty(word); count++ }, complete: done }))
+    Observable.fromGenerator(words()) |> skip(1) |> map(toUpper) |> ($ => $.subscribe({ next(word) { assert.isNotEmpty(word) }, complete: done }))
   })
 
   it('Piping using bind operator', done => {

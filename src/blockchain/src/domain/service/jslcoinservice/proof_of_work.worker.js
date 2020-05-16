@@ -15,6 +15,6 @@ const block = {}
     :: withDifficulty(workerData.difficulty)
     :: newBlock()
 
-proofOfWork(block, ''.padStart(workerData.difficulty, '0'))
+proofOfWork(block)
 
 parentPort.postMessage(block)

@@ -27,11 +27,12 @@
     "eslint-plugin-flowtype": "^2.50.3",
     "eslint-plugin-flowtype-errors": "^3.6.0",
     "eslint-plugin-fp": "^2.3.0",
-    "flow-bin": "^0.59.0",
-    "flow-typed": "^2.6.2",
+    "flow-bin": "0.124.0",
+    "flow-typed": "^3.1.0",
     "link-module-alias": "^1.2.0",
-    "mocha": "7.0.0-esm1",
-    "nodemon": "^1.19.4"
+    "mocha": "^7.1.2",
+    "nodemon": "^1.19.4",
+    "rxjs": "^6.5.5"
   },
   "dependencies": {
     "@joj/blockchain": "file:../blockchain/dist",
@@ -45,10 +46,11 @@
     "flow": "flow",
     "build": "babel src --out-dir _babel/src --keep-file-extension --copy-files",
     "test": "mocha",
-    "test-all": "rm -rf _babel && npm run build; mocha \"_babel/**/*spec.mjs\"; rm -rf _babel",
+    "test-all": "npm run check ; rm -rf _babel && npm run build; mocha \"_babel/**/*spec.mjs\"; rm -rf _babel",
     "check": "npm run flow-stop ; npm run flow",
     "flow-init": "flow init",
     "flow-status": "flow status",
-    "flow-stop": "flow stop"
+    "flow-stop": "flow stop",
+    "flow-typed": "flow-typed"
   }
 }
