@@ -1,14 +1,14 @@
 // @flow
 
-import type { Failure, Success } from '../util/fp/data/validation2/Validation.js.flow'
-import type Block from './Block.js.flow';
+import type Block from './Block.js.flow'
+import type { Validation } from '../util/fp/data/validation2/validation.js.flow'
 
 declare class Blockchain {
     constructor(genesis?: Block): Blockchain;
     push(newBlock: Block): Block;
-    validate: (void) => Success<boolean> | Failure,
-        height: (void) => number;
-top: Block;
+    validate: (void) => Validation<boolean>,
+    height: (void) => number;
+    top: Block;
 }
 
 declare export default typeof Blockchain;

@@ -31,8 +31,7 @@
     "flow-typed": "^3.1.0",
     "link-module-alias": "^1.2.0",
     "mocha": "^7.1.2",
-    "nodemon": "^1.19.4",
-    "rxjs": "^6.5.5"
+    "nodemon": "^1.19.4"
   },
   "dependencies": {
     "@joj/blockchain": "file:../blockchain/dist",

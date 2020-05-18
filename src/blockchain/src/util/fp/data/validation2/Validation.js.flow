@@ -1,5 +1,20 @@
 //@flow
 
-export type Success<T> = { isSuccess: true, isFailure: false, get: (void) => T, toString: (void) => string };
-export type Failure = { isSuccess: false, isFailure: true, get: (void) => Error, toString: (void) => string };
-export type Validation<T> = Success<T> | Failure;
+export class Success<T> {
+    isSuccess: true;
+    isFailure: false;
+    get: (void) => T;
+    toString: (void) => string;
+    map: <Z>(T => Z) => Success<Z>;
+    static of: (T) => Success<T>;
+}
+
+export class Failure {
+    isSuccess: false;
+    isFailure: true;
+    get: (void) => Error;
+    toString: (void)=> string;
+    map: (any => any) => Failure;
+}
+
+export type Validation<T> = Success<T> | Failure
