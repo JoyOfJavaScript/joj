@@ -29,7 +29,6 @@ interface IObservable<T> {
 
 interface ISubscription {
     unsubscribe(): void;
-    get closed() : boolean;
 }
 
 describe('10 - Typed JavaScript<T>', () => {
@@ -154,7 +153,6 @@ describe('10 - Typed JavaScript<T>', () => {
 
     it('Shows Validaton.map', () => {
         const success: Success<number> = Success.of(2)
-        const fn = 'foo'
-        assert.equal(success.map(fn).get(), 4)
+        assert.equal(success.map(x => x ** 2).get(), 4)
     })
 })
