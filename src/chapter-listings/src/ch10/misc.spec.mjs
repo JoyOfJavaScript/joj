@@ -17,19 +17,6 @@ import chai from 'chai'
 
 const { assert } = chai
 
-type Observer<T> = {
-    next: (value: T) => void,
-    error?: (error: Error) => void,
-    complete?: () => void
-}
-
-interface IObservable<T> {
-    subscribe(observer: Observer<T>): ISubscription;
-}
-
-interface ISubscription {
-    unsubscribe(): void;
-}
 
 describe('10 - Typed JavaScript<T>', () => {
 
@@ -87,7 +74,12 @@ describe('10 - Typed JavaScript<T>', () => {
     })
 
     it('Shows Block class example', () => {
-        class MyBlock {
+
+        interface Serializable {
+            toJson(): string
+        }
+
+        class MyBlock implements Serializable {
             index: number = 0
             previousHash: string
             timestamp: number
@@ -114,6 +106,10 @@ describe('10 - Typed JavaScript<T>', () => {
             isValid(): Success<MyBlock> | Failure {
                 return Success.of(this)
             }
+
+            toJson() {
+                return JSON.stringify(this)
+            }
         }
         const block: MyBlock = new MyBlock(1, '0'.repeat(64), ['a', 'b', 'c'], 1)
         assert.isOk(block.isGenesis())
@@ -131,28 +127,53 @@ describe('10 - Typed JavaScript<T>', () => {
     })
 
     it('Combining map, filter, reduce', done => {
+
+        type Observer<T> = {
+            next: (value: T) => void,
+            error?: (error: Error) => void,
+            complete?: () => void
+        }
+
+        interface IObservable<T> {
+            skip(count: number): IObservable<T>;
+            filter(predicate: T => boolean): IObservable<T>;
+            map<Z>(fn: T => Z): IObservable<Z>;
+            reduce<Z>(acc: (
+                accumulator: Z,
+                value: T,
+                index?: number,
+                array?: Array<T>
+            ) => Z, startwith?: T): IObservable<T>;
+            subscribe(observer: Observer<T>): ISubscription;
+        }
+
+        interface ISubscription {
+            unsubscribe(): void;
+        }
+
         const square = num => num ** 2
         const isEven = num => num % 2 === 0
         const add = (x, y) => x + y
+        const toUpper = x => x.toUpperCase()
 
-        const subs: IObservable<number> = Observable.of(1, 2, 3, 4)
-            .skip(1)
+        const numbers: IObservable<number> = Observable.of(1, 2, 3, 4)
+
+        numbers.skip(1)
             .filter(isEven)
             .map(square)
             .reduce(add, 0)
-
-        subs.subscribe({
-            next(value) {
-                assert.equal(value, 20)
-            },
-            complete() {
-                done()
-            }
-        })
+            .subscribe({
+                next(value) {
+                    assert.equal(value, 20)
+                },
+                complete() {
+                    done()
+                }
+            })
     })
 
     it('Shows Validaton.map', () => {
         const success: Success<number> = Success.of(2)
-        assert.equal(success.map(x => x ** 2).get(), 4)
+        assert.equal(success.map(x => x + 1).map(x => x ** 2).get(), 9)
     })
 })
