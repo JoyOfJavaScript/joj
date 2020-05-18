@@ -1,6 +1,6 @@
 //@flow
 
-export class Success<T> {
+export class Success<T>  {
     isSuccess: true;
     isFailure: false;
     get: (void) => T;
