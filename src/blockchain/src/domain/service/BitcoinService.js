@@ -11,15 +11,15 @@ const { at, linkedTo, withPendingTransactions, withDifficulty, build: buildBlock
 const { from, to, having, withDescription, signWith, build: buildTransaction } = TransactionBuilder
 
 /**
- * Constructs a JSLCoinService instance with the specified blockchain ledger
+ * Constructs a BitcoinService instance with the specified blockchain ledger
  * @param {Blockchain} ledger Ledger to manage
- * @return {JSLCoinService} New service instance
+ * @return {BitcoinService} New service instance
  */
-const JSLCoinService = ledger => {
+const BitcoinService = ledger => {
   const network = new Wallet(Key('jsl-public.pem'), Key('jsl-private.pem'))
 
   return {
-    [Symbol.toStringTag]: 'JSLCoinService',
+    [Symbol.toStringTag]: 'BitcoinService',
     mineNewBlockIntoChain,
     calculateBalanceOfWallet,
     minePendingTransactions,
@@ -37,18 +37,14 @@ const JSLCoinService = ledger => {
    */
   async function mineNewBlockIntoChain(newBlock) {
     console.log(`Found ${newBlock.data.length} pending transactions in block`)
-    // Check that this block index does not already exist
-    // if (ledger.lookUpByIndex(newBlock.index)) {
-    //   throw new Error('Block rejected since it had already been mined!')
-    // }    
     let proofOfWorkModule
     switch (newBlock[Symbol.for('version')]) {
       case '2.0': {
-        proofOfWorkModule = await import('./jslcoinservice/proof_of_work3.js')
+        proofOfWorkModule = await import('./bitcoinService/proof_of_work3.js')
         break;
       }
       default: case '1.0':
-        proofOfWorkModule = await import('./jslcoinservice/proof_of_work2.js')
+        proofOfWorkModule = await import('./bitcoinService/proof_of_work2.js')
         break;
     }
     const { proofOfWork } = proofOfWorkModule
@@ -129,7 +125,7 @@ const JSLCoinService = ledger => {
   //   const reward = new Transaction(
   //     network.address,
   //     rewardAddress,
-  //     Money.sum(Money('jsl', fee), MINING_REWARD),
+  //     Money.sum(Money('₿', fee), MINING_REWARD),
   //     'Mining Reward'
   //   )
   //   reward.signTransaction(network.privateKey)
@@ -170,7 +166,7 @@ const JSLCoinService = ledger => {
           const reward = new Transaction(
             network.address,
             rewardAddress,
-            Money.sum(Money('jsl', fee), MINING_REWARD),
+            Money.sum(Money('₿', fee), MINING_REWARD),
             'Mining Reward'
           )
           reward.signTransaction(network.privateKey)
@@ -206,7 +202,7 @@ function transferFunds(walletA, walletB, funds, description, transferFee = 0.02)
     {}
       :: from(walletA.address)
       :: to(network.address)
-      :: having(Money.multiply(funds, Money('jsl', transferFee)))
+      :: having(Money.multiply(funds, Money('₿', transferFee)))
       :: withDescription('Transaction Fee')
       :: signWith(walletA.privateKey)
       :: buildTransaction()
@@ -231,4 +227,4 @@ function validateLedger(ledger) {
   })
 }
 
-export default JSLCoinService
+export default BitcoinService

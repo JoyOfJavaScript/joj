@@ -11,8 +11,8 @@ function randomId() {
 
 describe('Proof of work', () => {
   it('Calls proof of work with low difficulty', () => {
-    const block = new Block(1, randomId(), ['a', 'b', 'c'], 2)
-    proofOfWork(block)
+    let block = new Block(1, randomId(), ['a', 'b', 'c'], 2)
+    block = proofOfWork(block)
     assert.isOk(block.nonce > 0)
   })
 

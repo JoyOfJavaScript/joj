@@ -1,7 +1,7 @@
 import Block from './Block.js'
 import Blockchain from './Blockchain.js'
 import Builder from '../domain.js'
-import JSLCoinService from './service/JSLCoinService.js'
+import BitcoinService from './service/BitcoinService.js'
 import chai from 'chai'
 
 const { assert } = chai
@@ -62,13 +62,13 @@ describe('Block Spec', () => {
     console.log('Hash: ', b.hash)
     assert.ok(b.hash.length > 0)
     assert.notEqual(currentHash, b.hash)
-    assert.ok(JSON.parse(b[Symbol.for('toJson')]()).previousHash)
-    assert.notOk(JSON.parse(b[Symbol.for('toJson')]()).difficulty)
+    assert.ok(JSON.parse(b[Symbol.for('toJSON')]()).previousHash)
+    assert.notOk(JSON.parse(b[Symbol.for('toJSON')]()).difficulty)
   })
 
   it('Should validate block', async () => {
     const chain = new Blockchain()
-    const bitcoin = JSLCoinService(chain)
+    const bitcoin = BitcoinService(chain)
     await bitcoin.mineNewBlockIntoChain(
       new Block(chain.height() + 1, chain.top.hash, [])
     )

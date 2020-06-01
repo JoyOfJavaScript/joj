@@ -26,8 +26,8 @@ describe('6.5 - Import patterns', () => {
   })
 
   it('Factory functions', () => {
-    const m = makeMoney('jsl', 10)
-    assert.equal(m.currency, 'jsl')
+    const m = makeMoney('₿', 10)
+    assert.equal(m.currency, '₿')
     assert.equal(m.amount, 10)
 
     const chain = makeChain()

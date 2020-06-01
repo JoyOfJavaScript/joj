@@ -9,7 +9,7 @@ describe('1.3.1 - No blueprints, just prototypes', () => {
             toString: function () {
                 return `Collection: ${this.items.join(', ')}`
             }
-        }
+        };
 
         const DedupCollection = Object.create(Collection)
         DedupCollection.of = function (...elements) {

@@ -161,7 +161,7 @@ describe('6.2 -  Module patterns', () => {
       testing this service, you can visit the blockchain project in the repository for more
       comprehensive testing of the functionality
     */
-    const JSLCoinService = ledger => {
+    const BitcoinService = ledger => {
       //#A
       //const network = new Wallet(Key('jsl-public.pem'), Key('jsl-private.pem')) //#A
 
@@ -188,21 +188,21 @@ describe('6.2 -  Module patterns', () => {
         //...
         assert.isNotNull(walletA)
         assert.isNotNull(walletB)
-        assert.equal(funds.currency, 'jsl')
+        assert.equal(funds.currency, '₿')
         assert.isNotEmpty(description)
         console.log('Running', arguments[3])
       }
     }
-    const service = JSLCoinService(new Blockchain())
+    const service = BitcoinService(new Blockchain())
     assert.isNotNull(service.mineNewBlockIntoChain)
     assert.isNotNull(service.minePendingTransactions)
     assert.isNotNull(service.transferFunds)
 
     const transfers = [
-      ['luke', 'ana', (5).jsl(), 'Transfer 5 JSL from Luke to Ana'],
-      ['ana', 'luke', (2.5).jsl(), 'Transfer 2.5 JSL from Ana to Luke'],
-      ['ana', 'matt', (10).jsl(), 'Transfer 10 JSL from Ana to Matthew'],
-      ['matt', 'luke', (20).jsl(), 'Transfer 20 JSL from Matthew to Luke']
+      ['luke', 'ana', (5).btc(), 'Transfer 5 JSL from Luke to Ana'],
+      ['ana', 'luke', (2.5).btc(), 'Transfer 2.5 JSL from Ana to Luke'],
+      ['ana', 'matt', (10).btc(), 'Transfer 10 JSL from Ana to Matthew'],
+      ['matt', 'luke', (20).btc(), 'Transfer 20 JSL from Matthew to Luke']
     ]
 
     function runBatchTransfers(transfers, batchOperation) {

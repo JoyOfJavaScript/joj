@@ -123,7 +123,7 @@ it('Shows error case in observer', () => {
     yield 'The'
     yield 'Joy'
     yield 'of'
-    yield null
+    yield 42
   }
 
   Observable.fromGenerator(words())

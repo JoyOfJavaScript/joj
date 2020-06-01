@@ -86,7 +86,7 @@ export default class Block {
    * Returns the minimal JSON representation of this object
    * @return {Object} JSON object
    */
-  [Symbol.for('toJson')]() {
+  [Symbol.for('toJSON')]() {
     return JSON.stringify({
       index: this.index,
       previousHash: this.previousHash,

@@ -7,8 +7,8 @@ const { assert } = chai
 
 describe('4.4 - Working with immutable objects', () => {
   it('Working with Money Value Object', () => {
-    assert.equal(Money('jsl', 1.0).currency, 'jsl')
-    assert.equal(Money('jsl', 1.0).amount, 1)
+    assert.equal(Money('₿', 1.0).currency, '₿')
+    assert.equal(Money('₿', 1.0).amount, 1)
     assert.equal(Money('$', 1.0).currency, '$')
     assert.equal(Money('$', 1.0).amount, 1)
     assert.equal(Money.zero('$').amount, 0)

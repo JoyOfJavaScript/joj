@@ -32,7 +32,7 @@ export default class Wallet {
     return /*#__PURE__*/ computeBalance(this.publicKey)([...ledger])
   }
 
-  [Symbol.for('toJson')]() {
+  [Symbol.for('toJSON')]() {
     return JSON.stringify({
       address: this.publicKey,
       version: VERSION

@@ -1,13 +1,13 @@
+import BitcoinService from './BitcoinService.js'
 import Block from '../Block.js'
 import Blockchain from '../Blockchain.js'
-import JSLCoinService from './JSLCoinService.js'
 import chai from 'chai'
 import fs from 'fs'
 import path from 'path'
 
 const { assert } = chai
 
-describe('JSLCoinService Spec', () => {
+describe('BitcoinService Spec', () => {
   it('Write a chain object to a file', () => {
     const compose = (...fns) => arg => fns.reduceRight((c, f) => f(c), arg)
     const decode = (charset = 'utf8') => buffer => (!buffer ? '' : buffer.toString(charset))
@@ -28,7 +28,7 @@ describe('JSLCoinService Spec', () => {
     chain.push(new Block(chain.height() + 1, chain.top.hash, []))
     chain.push(new Block(chain.height() + 1, chain.top.hash, []))
     assert.equal(chain.height(), 3)
-    const service = JSLCoinService(chain)
+    const service = BitcoinService(chain)
     const file = path.join(process.cwd(), 'src/domain/service', 'file.txt')
     const rawLedger = service.serializeLedger()
     try {
@@ -45,7 +45,7 @@ describe('JSLCoinService Spec', () => {
   })
 
   it('Uses Symbol.toStringTag', () => {
-    const service = JSLCoinService(null)
-    assert.equal(service.toString(), '[object JSLCoinService]')
+    const service = BitcoinService(null)
+    assert.equal(service.toString(), '[object BitcoinService]')
   })
 })

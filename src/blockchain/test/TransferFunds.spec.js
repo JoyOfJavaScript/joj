@@ -1,6 +1,5 @@
-//import { MethodCounter, TraceLog } from '../src/common/proxies'
+import BitcoinService from '../src/domain/service/BitcoinService.js'
 import Blockchain from '../src/domain/Blockchain.js'
-import JSLCoinService from '../src/domain/service/JSLCoinService.js'
 import Key from '../src/domain/value/Key.js'
 import Money from '../src/domain/value/Money.js'
 import Transaction from '../src/domain/Transaction.js'
@@ -51,14 +50,14 @@ describe('Transfer Funds Test suite', () => {
     // Some miner's digital wallet
     const miner = new Wallet(Key('miner-public.pem'), Key('miner-private.pem'))
 
-    const first = new Transaction(null, miner.address, (100).jsl(), 'First transaction')
+    const first = new Transaction(null, miner.address, (100).btc(), 'First transaction')
     first.signTransaction(miner.privateKey)
 
     const ledger = await makeLedgerP()
 
     ledger.addPendingTransaction(first)
 
-    const service = JSLCoinService(ledger)
+    const service = BitcoinService(ledger)
 
     // Mine some initial block, after mining the reward is BTC 100 for wa
     await service.minePendingTransactions(miner.address, 2)
@@ -67,23 +66,23 @@ describe('Transfer Funds Test suite', () => {
 
     // Balance is zero because the reward has not been mined in the blockchain
     console.log('Miner starts out with', balance)
-    assert.isOk(balance.equals((100).jsl()))
+    assert.isOk(balance.equals((100).btc()))
 
     // Mine the next block to retrieve reward
     await service.minePendingTransactions(miner.address, 2)
 
-    service.transferFunds(miner, luke, Money('jsl', 20), 'Transfer 20 JSL to Luke')
+    service.transferFunds(miner, luke, Money('₿', 20), 'Transfer ₿20  to Luke')
     await service.minePendingTransactions(miner.address, 2)
 
     let lukeBalance = luke.balance(ledger)
     console.log("Luke's balance is", lukeBalance)
-    assert.isOk(lukeBalance.equals((20).jsl()))
+    assert.isOk(lukeBalance.equals((20).btc()))
 
     let minerBalance = miner.balance(ledger)
-    assert.isOk(minerBalance.equals((104.6).jsl()), `Miner's balance is ${minerBalance}`)
+    assert.isOk(minerBalance.equals((104.6).btc()), `Miner's balance is ${minerBalance}`)
 
     // Transfer funds between Luke and Ana
-    service.transferFunds(luke, ana, Money('jsl', 10), 'Transfer ₿20 from Luke to Ana')
+    service.transferFunds(luke, ana, Money('₿', 10), 'Transfer ₿20 from Luke to Ana')
     await service.minePendingTransactions(miner.address, 2)
 
     let anaBalance = service.calculateBalanceOfWallet(ana.address)
@@ -91,16 +90,16 @@ describe('Transfer Funds Test suite', () => {
     lukeBalance = service.calculateBalanceOfWallet(luke.address)
 
     assert.isOk(
-      anaBalance.equals((10).jsl()),
+      anaBalance.equals((10).btc()),
       `Ana's balance should be ₿10.00 and was ${anaBalance}`
     )
     assert.isOk(
-      lukeBalance.equals((9.8).jsl()),
+      lukeBalance.equals((9.8).btc()),
       `Luke's balance should be ₿9.8 and was ${lukeBalance}`
     )
 
     // Both wallets currently have about 10 BTC
-    service.transferFunds(luke, ana, (5).jsl(), 'Transfer ₿5 from Luke to Ana')
+    service.transferFunds(luke, ana, (5).btc(), 'Transfer ₿5 from Luke to Ana')
     await service.minePendingTransactions(miner.address, 2)
 
     anaBalance = service.calculateBalanceOfWallet(ana.address)
@@ -109,17 +108,17 @@ describe('Transfer Funds Test suite', () => {
 
     // Assert Ana has BTC 70 and Luke has BTC 30
     assert.isOk(
-      anaBalance.equals((15).jsl()),
+      anaBalance.equals((15).btc()),
       `Ana's balance should be ₿15.00 and was ${anaBalance}`
     )
     assert.isOk(
-      lukeBalance.equals((4.7).jsl()),
+      lukeBalance.equals((4.7).btc()),
       `Luke's balance should be ₿4.7 and was ${lukeBalance}`
     )
 
     // Ana sends Luke some BTC 5, then Luke returns 3
-    service.transferFunds(ana, luke, Money('jsl', 5), 'Transfer ₿5 from Ana back to Luke')
-    service.transferFunds(luke, ana, Money('jsl', 3), 'Transfer ₿3 from Luke back to Ana')
+    service.transferFunds(ana, luke, Money('₿', 5), 'Transfer ₿5 from Ana back to Luke')
+    service.transferFunds(luke, ana, Money('₿', 3), 'Transfer ₿3 from Luke back to Ana')
     await service.minePendingTransactions(miner.address, 2)
 
     anaBalance = service.calculateBalanceOfWallet(ana.address)
@@ -128,22 +127,22 @@ describe('Transfer Funds Test suite', () => {
 
     // Assert Ana has BTC 80 and Luke has BTC 20
     assert.isOk(
-      anaBalance.equals((12.9).jsl()),
+      anaBalance.equals((12.9).btc()),
       `Ana's balance should be ₿17.00 and was ${anaBalance}`
     )
     assert.isOk(
-      lukeBalance.equals((6.64).jsl()),
+      lukeBalance.equals((6.64).btc()),
       `Luke's balance should be ₿6.64 and was ${lukeBalance}`
     )
 
     // No funds left to transfer!
     assert.throws(
-      () => service.transferFunds(luke, ana, (30).jsl(), 'Transfer ₿30 from Luke to Ana'),
+      () => service.transferFunds(luke, ana, (30).btc(), 'Transfer ₿30 from Luke to Ana'),
       RangeError
     )
 
     minerBalance = service.calculateBalanceOfWallet(miner.address)
-    assert.isOk(minerBalance.equals((142.1).jsl()), `Miner's balance is ${minerBalance}`)
+    assert.isOk(minerBalance.equals((142.1).btc()), `Miner's balance is ${minerBalance}`)
 
     // Print ledger
     // TODO:  Use ES7 String padding to format this output

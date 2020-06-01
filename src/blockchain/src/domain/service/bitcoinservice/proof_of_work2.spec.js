@@ -138,7 +138,7 @@ function rejectAfter(seconds) {
 
 function proofOfWorkAsync(block) {
   return new Promise((resolve, reject) => {
-    const worker = new Worker('./dist/domain/service/jslcoinservice/proof_of_work.worker.js', {
+    const worker = new Worker('./dist/domain/service/bitcoinservice/proof_of_work.worker.js', {
       workerData: block
     });
     worker.on('message', resolve);

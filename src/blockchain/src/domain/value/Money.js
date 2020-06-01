@@ -3,8 +3,8 @@ import { currencyMatch, isNumber, notNaN } from './money/validations.js'
 import Validation from '~util/fp/data/validation2/validation.js'
 import precisionRound from './money/precision_round.js'
 
-export const JS_LITE = 'jsl'
 export const US_DOLLAR = '$'
+export const BTC = '₿'
 
 /**
  * Money value object
@@ -37,10 +37,10 @@ const Money = curry((currency, amount) =>
 )
 
 // Zero
-Money.zero = (currency = JS_LITE) => Money(currency, 0)
+Money.zero = (currency = BTC) => Money(currency, 0)
 Money.Currencies = {
-  [JS_LITE]: 'JS Lite',
-  [US_DOLLAR]: 'USD'
+  [US_DOLLAR]: 'USD',
+  [BTC]: 'Bitcoin'
 }
 Money.round = m => m.round()
 
@@ -71,19 +71,20 @@ Money.multiply = (m1, m2) =>
     .get()
 
 // Language extension for Number.prototype
-if (typeof Number.prototype.jsl !== 'function') {
+if (typeof Number.prototype.bitcoin !== 'function') {
   // Must be:
   // - writable: false
   // - enumerable: false
   // - configurable: false
-  Object.defineProperty(Number.prototype, 'jsl', {
-    value: function JsLiteCoin() {
-      return Money(JS_LITE, this)
+  Object.defineProperty(Number.prototype, 'btc', {
+    value: function Bitcoin() {
+      return Money(BTC, this)
     },
     writable: false,
     configurable: false
   })
 }
+
 
 const validateAmount = composeM(isNumber, notNaN)
 

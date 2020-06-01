@@ -3,8 +3,8 @@ import { curry, isFunction } from './fp/combinators.js'
 export const toArray = a => [...a]
 
 export const toJson = obj => {
-    return isFunction(obj[Symbol.for('toJson')])
-        ? obj[Symbol.for('toJson')]()
+    return isFunction(obj[Symbol.for('toJSON')])
+        ? obj[Symbol.for('toJSON')]()
         : JSON.stringify(obj)
 }
 

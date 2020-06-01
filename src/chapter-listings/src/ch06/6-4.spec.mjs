@@ -60,11 +60,11 @@ describe('6.4 - Out with the old and in with the new', () => {
     }
 
     const ledger = new Blockchain()
-    const tx1 = new Transaction('sender123', 'recipient123', (10).jsl(), 'Test')
-    const tx2 = new Transaction('sender123', 'recipient123', (10).jsl(), 'Test2')
+    const tx1 = new Transaction('sender123', 'recipient123', (10).btc(), 'Test')
+    const tx2 = new Transaction('sender123', 'recipient123', (10).btc(), 'Test2')
     ledger.addPendingTransactions(tx1, tx2)
     ledger.newBlock().next()
-    assert.ok(computeBalance('sender123')([...ledger]).equals((-20).jsl()))
-    assert.ok(computeBalance('recipient123')([...ledger]).equals((20).jsl()))
+    assert.ok(computeBalance('sender123')([...ledger]).equals((-20).btc()))
+    assert.ok(computeBalance('recipient123')([...ledger]).equals((20).btc()))
   }
 })

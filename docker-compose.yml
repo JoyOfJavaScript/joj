@@ -2,7 +2,7 @@
 version: "2"
 services:  
     blockchain_tests:
-      image: "node:13.2.0-slim"
+      image: "node:14.3.0-slim"
       user: "node"
       working_dir: /home/joj/src
       environment:
@@ -15,7 +15,7 @@ services:
         - tjoj-network
     
     chapter_listings:
-      image: "node:13.2.0-slim"
+      image: "node:14.3.0-slim"
       user: "node"
       working_dir: /home/joj/src
       environment:

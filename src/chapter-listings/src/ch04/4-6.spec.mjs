@@ -27,8 +27,8 @@ describe('4.6 - Imperative to functional transformation', () => {
 
   beforeEach(() => {
     ledger = new Blockchain()
-    const tx1 = new Transaction('sender123', 'recipient123', (10).jsl(), 'Test')
-    const tx2 = new Transaction('sender123', 'recipient123', (10).jsl(), 'Test2')
+    const tx1 = new Transaction('sender123', 'recipient123', (10).btc(), 'Test')
+    const tx2 = new Transaction('sender123', 'recipient123', (10).btc(), 'Test2')
     ledger.addPendingTransactions(tx1, tx2)
     ledger.newBlock().next()
   })
@@ -42,8 +42,8 @@ describe('4.6 - Imperative to functional transformation', () => {
         .reduce(Money.sum, Money.zero()) //#F
         .round() //#G
     }
-    assert.isTrue(computeBalance(ledger, 'sender123').equals((-20).jsl()))
-    assert.isTrue(computeBalance(ledger, 'recipient123').equals((20).jsl()))
+    assert.isTrue(computeBalance(ledger, 'sender123').equals((-20).btc()))
+    assert.isTrue(computeBalance(ledger, 'recipient123').equals((20).btc()))
   })
 
   it('Calculate balance in Wallet using FP with flatMap', () => {
@@ -56,8 +56,8 @@ describe('4.6 - Imperative to functional transformation', () => {
         .round()
     }
 
-    assert.isTrue(computeBalance(ledger, 'sender123').equals((-20).jsl()))
-    assert.isTrue(computeBalance(ledger, 'recipient123').equals((20).jsl()))
+    assert.isTrue(computeBalance(ledger, 'sender123').equals((-20).btc()))
+    assert.isTrue(computeBalance(ledger, 'recipient123').equals((20).btc()))
   })
 
   it('Calculate balance in Wallet using FP in point-free style', () => {
@@ -80,6 +80,6 @@ describe('4.6 - Imperative to functional transformation', () => {
       )
 
     const computeBalanceForSender123 = computeBalance('sender123')
-    assert.isTrue(computeBalanceForSender123(ledger).equals((-20).jsl()))
+    assert.isTrue(computeBalanceForSender123(ledger).equals((-20).btc()))
   })
 })
