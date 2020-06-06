@@ -23,6 +23,8 @@ describe('1.2 - Blockchain transfers', () => {
         // Some miner's digital wallet
         const miner = new Wallet(Key('miner-public.pem'), Key('miner-private.pem'))
 
+        let ledger = new Blockchain()
+
         ledger.addPendingTransaction(
             {}
               :: from(null)
@@ -33,7 +35,7 @@ describe('1.2 - Blockchain transfers', () => {
               :: build()
         )
 
-        const service = BitcoinService(new Blockchain())
+        const service = BitcoinService(ledger)
 
         // Mine some initial block, after mining the reward is BTC 100 for wa
         ledger = await service.minePendingTransactions(miner.address, 2)
