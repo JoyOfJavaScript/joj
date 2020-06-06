@@ -172,6 +172,8 @@ const BitcoinService = ledger => {
           reward.signTransaction(network.privateKey)
 
           ledger.pendingTransactions = [reward]
+
+          return ledger;
         })
     }
     else {

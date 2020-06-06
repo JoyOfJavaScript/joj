@@ -23,8 +23,6 @@ describe('1.2 - Blockchain transfers', () => {
         // Some miner's digital wallet
         const miner = new Wallet(Key('miner-public.pem'), Key('miner-private.pem'))
 
-        const ledger = new Blockchain()
-
         ledger.addPendingTransaction(
             {}
               :: from(null)
@@ -35,10 +33,14 @@ describe('1.2 - Blockchain transfers', () => {
               :: build()
         )
 
-        const service = BitcoinService(ledger)
+        const service = BitcoinService(new Blockchain())
 
         // Mine some initial block, after mining the reward is BTC 100 for wa
-        await service.minePendingTransactions(miner.address, 2)
+        ledger = await service.minePendingTransactions(miner.address, 2)
+
+        console.log('Pending transactions', ledger.pendingTransactions);
+
+        assert.equal(ledger.pendingTransactions.length, 1);
 
         const balance = miner.balance(ledger)
 
@@ -60,7 +62,8 @@ describe('1.2 - Blockchain transfers', () => {
 
         // Transfer funds between Luke and Ana
         service.transferFunds(luke, ana, Money('₿', 10), 'Transfer ₿20 from Luke to Ana')
-        await service.minePendingTransactions(miner.address, 2)
+        ledger = await service.minePendingTransactions(miner.address, 2)
+        assert.equal(ledger.pendingTransactions.length, 1);
 
         const anaBalance = service.calculateBalanceOfWallet(ana.address)
 
