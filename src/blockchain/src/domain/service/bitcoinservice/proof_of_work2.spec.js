@@ -28,7 +28,7 @@ describe('Proof of work (2)', () => {
       })
     assert.equal(block.nonce, 0)
     return ret
-  })
+  }).timeout(10_000)
 
   it('Run two proof of work in parallel', () => {
     return Promise.all([
@@ -52,7 +52,7 @@ describe('Proof of work (2)', () => {
         assert.isOk(blockWinner.nonce > 0)
         assert.equal(blockWinner.index, 1)
       })
-  })
+  }).timeout(10_000)
 
   it('Get fastest result', () => {
     const block = new Block(1, randomId(), [], 6)
@@ -95,7 +95,7 @@ describe('Proof of work (2)', () => {
         assert.equal(block.index, 1)
         assert.equal(block.difficulty, 1)
       })
-  })
+  }).timeout(10_000)
 
   // it('Promise.any with rejection', () => {
   //   return Promise.any([

@@ -177,5 +177,5 @@ describe('Transfer Funds Test suite', () => {
         console.log(`${file} was deleted`)
       })
     }
-  })
+  }).timeout(20_000)
 })
