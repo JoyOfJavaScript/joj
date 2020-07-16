@@ -1,13 +1,13 @@
 import { buffer, join, toArray, toJson } from '~util/helpers.js'
+import Block from '../Block.js'
 import Builders from '../../domain.js'
 import Key from '../value/Key.js'
 import Money from '../value/Money.js'
 import Transaction from '../Transaction.js'
 import Wallet from '../Wallet.js'
 
-const { Block: BlockBuilder, Transaction2: TransactionBuilder } = Builders
+const { Transaction2: TransactionBuilder } = Builders
 
-const { at, linkedTo, withPendingTransactions, withDifficulty, build: buildBlock } = BlockBuilder
 const { from, to, having, withDescription, signWith, build: buildTransaction } = TransactionBuilder
 
 /**
@@ -135,65 +135,98 @@ const BitcoinService = ledger => {
   // }
 
   // Promise-based implementation of minePendingTransactions
+  //   function minePendingTransactions(rewardAddress, proofOfWorkDifficulty = 2) {
+  //     const newBlock = {}  
+  //       :: at(ledger.height() + 1)
+  //       :: linkedTo(ledger.top.hash) 
+  //       :: withPendingTransactions(ledger.pendingTransactions)
+  //       :: withDifficulty(proofOfWorkDifficulty)
+  //       :: buildBlock();  //#B
+
+  // return mineNewBlockIntoChain(newBlock) //#A
+  //   .then(:: ledger.validate) //#C
+  //   .then(validation => {
+  //     if (validation.isSuccess) {
+  //       return import('../../common/settings.js') //#D
+  //         .then(({ MINING_REWARD }) => { //#E
+  //           const fee =
+  //             Math.abs(
+  //               ledger.pendingTransactions
+  //                 .filter(tx => tx.amount() < 0)
+  //                 .map(tx => tx.amount())
+  //                 .reduce((a, b) => a + b, 0)
+  //             ) *
+  //             ledger.pendingTransactions.length * //#F
+  //             0.02
+
+  //           const reward = {}
+  //             :: from(network.address)
+  //             :: to(rewardAddress)
+  //             :: having(Money.sum(Money('₿', fee), MINING_REWARD))
+  //             :: withDescription('Mining Reward')
+  //             :: signWith(network.privateKey)
+  //             :: buildTransaction();
+
+  //           ledger.pendingTransactions = [reward] //#H
+
+  //           return ledger;
+  //         })
+  //     }
+  //     else {
+  //       new Error(`Chain validation failed ${validation.toString()}`)
+  //     }
+  //   })
+  //   .catch(({ message }) => console.error(message))
+  //   }
+
   function minePendingTransactions(rewardAddress, proofOfWorkDifficulty = 2) {
+    const newBlock = new Block(ledger.height() + 1, ledger.top.hash,
+      ledger.pendingTransactions, proofOfWorkDifficulty);
 
-    return mineNewBlockIntoChain(
+    return mineNewBlockIntoChain(newBlock) //#A
+      .then(:: ledger.validate) //#B
+      .then(validation => {
+        if (validation.isSuccess) {
+          return import('../../common/settings.js') //#C
+            .then(({ MINING_REWARD }) => { //#D
+              const fee =
+                Math.abs(
+                  ledger.pendingTransactions
+                    .filter(tx => tx.amount() < 0)
+                    .map(tx => tx.amount())
+                    .reduce((a, b) => a + b, 0)
+                ) *
+                ledger.pendingTransactions.length * //#E
+                0.02
+
+              const reward = new Transaction(network.address, rewardAddress, //#F
+                Money.sum(Money('₿', fee), MINING_REWARD), 'Mining Reward')
+              reward.signTransaction(network.privateKey)
+
+              ledger.pendingTransactions = [reward] //#G
+
+              return ledger;
+            })
+        }
+        else {
+          new Error(`Chain validation failed ${validation.toString()}`)
+        }
+      })
+      .catch(({ message }) => console.error(message))
+  }
+
+
+  // eslint-disable-next-line max-statements
+  function transferFunds(walletA, walletB, funds, description, transferFee = 0.02) {
+
+    console.log(`Executing transaction ${description}`)
+
+    if (Money.compare(walletA.balance(ledger), funds) < 0) {
+      throw new RangeError(`Insufficient funds for address ${walletA.address}`)
+    }
+
+    return ledger.pendingTransactions.push(
       {}
-        :: at(ledger.height() + 1)
-        :: linkedTo(ledger.top.hash)
-        :: withPendingTransactions(ledger.pendingTransactions)
-        :: withDifficulty(proofOfWorkDifficulty)
-        :: buildBlock()
-    )
-      .then(:: ledger.validate)
-  //  => {
-  //   return ledger.validate()
-  // })
-  .then(validation => {
-    if (validation.isSuccess) {
-      return import('../../common/settings.js')
-        .then(({ MINING_REWARD }) => {
-          const fee =
-            Math.abs(
-              ledger.pendingTransactions
-                .filter(tx => tx.amount() < 0)
-                .map(tx => tx.amount())
-                .reduce((a, b) => a + b, 0)
-            ) *
-            ledger.pendingTransactions.length *
-            0.02
-
-          const reward = new Transaction(
-            network.address,
-            rewardAddress,
-            Money.sum(Money('₿', fee), MINING_REWARD),
-            'Mining Reward'
-          )
-          reward.signTransaction(network.privateKey)
-
-          ledger.pendingTransactions = [reward]
-
-          return ledger;
-        })
-    }
-    else {
-      new Error(`Chain validation failed ${validation.toString()}`)
-    }
-  })
-  }
-
-
-// eslint-disable-next-line max-statements
-function transferFunds(walletA, walletB, funds, description, transferFee = 0.02) {
-
-  console.log(`Executing transaction ${description}`)
-
-  if (Money.compare(walletA.balance(ledger), funds) < 0) {
-    throw new RangeError(`Insufficient funds for address ${walletA.address}`)
-  }
-
-  return ledger.pendingTransactions.push(
-    {}
       :: from(walletA.address)
       :: to(walletB.address)
       :: having(funds)
@@ -201,7 +234,7 @@ function transferFunds(walletA, walletB, funds, description, transferFee = 0.02)
       :: signWith(walletA.privateKey)
       :: buildTransaction(),
 
-    {}
+  {}
       :: from(walletA.address)
       :: to(network.address)
       :: having(Money.multiply(funds, Money('₿', transferFee)))

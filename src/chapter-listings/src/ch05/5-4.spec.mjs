@@ -1,5 +1,7 @@
+import Functor from '@joj/blockchain/util/fp/data/contract/Functor.js'
 import chai from 'chai'
 import { compose } from '@joj/blockchain/util/fp/combinators.js'
+
 
 const { assert } = chai
 
@@ -32,27 +34,6 @@ class Id {
   }
 }
 
-const Monad = () => ({
-  flatMap(f) {
-    return this.map(f).get() // #A
-  },
-  chain(f) {
-    //#B
-    return this.flatMap(f)
-  },
-  bind(f) {
-    //#B
-    return this.flatMap(f)
-  }
-})
-
-const Functor = () => ({
-  map(f = identity) {
-    //#A
-    return this.constructor.of(f(this.get())) //#B
-  }
-})
-
 describe('5.4 - Universal protocols', () => {
   it('5.4.1 - Functors: identity and composition', () => {
     assert.deepEqual(['aa', 'bb', 'cc'].map(identity), ['aa', 'bb', 'cc'])
@@ -75,7 +56,7 @@ describe('5.4 - Universal protocols', () => {
     )
   })
   it('Functor mixin', () => {
-    Object.assign(Id.prototype, Functor())
+    Object.assign(Id.prototype, Functor)
 
     assert.equal(
       Id.of('aabbcc')
@@ -108,7 +89,23 @@ describe('5.4 - Universal protocols', () => {
   })
 
   it('Monad mixin', () => {
-    Object.assign(Id.prototype, Functor(), Monad())
+
+    const FullMonad = Object.assign({}, Functor, {
+      flatMap(f) {
+        return this.map(f).get()
+      },
+      chain(f) {
+        //#B
+        return this.flatMap(f)
+      },
+      bind(f) {
+        //#B
+        return this.flatMap(f)
+      }
+    });
+
+    Object.assign(Id.prototype, FullMonad);
+
     assert.equal(
       Id.of(2)
         .flatMap(square)
@@ -123,5 +120,12 @@ describe('5.4 - Universal protocols', () => {
         .get(),
       12
     )
+  })
+
+  it('Id class with Functor mixin using bind operator', () => {
+    const { map } = Functor;
+
+    // Using bind operator
+    assert.equal((new Id('HELLO')):: map(v => v.toLowerCase()).get(), 'hello');
   })
 })

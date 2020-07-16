@@ -7,15 +7,11 @@ import { getSpeciesConstructor } from './shared.js'
  * @return {Object} Object
  */
 
-const Functor = (shortCircuit = false) => ({
+const Functor = {
   map(f = x => x) {
-    if (!shortCircuit) {
-      const C = getSpeciesConstructor(this)
-      return C.of(f(this.get()))
-    } else {
-      return this
-    }
+    const C = getSpeciesConstructor(this)
+    return C.of(f(this.get()))
   }
-})
+}
 
 export default Functor

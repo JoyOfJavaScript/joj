@@ -92,7 +92,7 @@ export class Success extends Validation {
   }
 }
 
-Object.assign(Success.prototype, Applicative(), Functor(), Monad())
+Object.assign(Success.prototype, Applicative(), Functor, Monad)
 
 export class Failure extends Validation {
     get isFailure() {
@@ -112,10 +112,30 @@ getOrElse(defaultVal) {
 }
 }
 
+const NoopFunctor = {
+  map() {
+    return this;
+  }
+}
+
+const NoopMonad = {
+  flatMap(f) {
+    return this;
+  },
+  chain(f) {
+    //#B
+    return this.flatMap(f);
+  },
+  bind(f) {
+    //#B
+    return this.flatMap(f);
+  }
+}
+
 Failure.SHORT_CIRCUIT = true
 Object.assign(
   Failure.prototype,
   Applicative(Failure.SHORT_CIRCUIT),
-  Functor(Failure.SHORT_CIRCUIT),
-  Monad(Failure.SHORT_CIRCUIT)
+  NoopFunctor,
+  NoopMonad
 )

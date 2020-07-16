@@ -1,4 +1,4 @@
-import computeBalance from './wallet/compute_balance.js'
+import computeBalance from './wallet/compute_balance6.js'
 
 const VERSION = '1.0'
 
@@ -29,7 +29,7 @@ export default class Wallet {
   }
 
   balance(ledger) {
-    return /*#__PURE__*/ computeBalance(this.publicKey)([...ledger])
+    return /*#__PURE__*/ computeBalance(this.address)([...ledger])
   }
 
   [Symbol.for('toJSON')]() {

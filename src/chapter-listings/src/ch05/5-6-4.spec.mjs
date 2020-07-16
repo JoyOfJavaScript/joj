@@ -1,5 +1,8 @@
+
 import Blockchain from '@joj/blockchain/domain/Blockchain.js'
+import Functor from '@joj/blockchain/util/fp/data/contract/Functor.js'
 import HasHash from '@joj/blockchain/domain/shared/HasHash.js'
+import Monad from '@joj/blockchain/util/fp/data/contract/Monad.js'
 import chai from 'chai'
 import { curry } from '@joj/blockchain/util/fp/combinators.js'
 
@@ -91,27 +94,6 @@ class Block {
 
 Object.assign(Block.prototype, HasHash(['index', 'timestamp', 'previousHash', 'nonce', 'data']))
 
-const Monad = () => ({
-  flatMap(f) {
-    return this.map(f).get() // #A
-  },
-  chain(f) {
-    //#B
-    return this.flatMap(f)
-  },
-  bind(f) {
-    //#B
-    return this.flatMap(f)
-  }
-})
-
-const Functor = () => ({
-  map(f = identity) {
-    //#A
-    return this.constructor.of(f(this.get())) //#B
-  }
-})
-
 class Validation {
   #val //#A
   constructor(value) {
@@ -164,7 +146,8 @@ class Validation {
   }
 
   toString() {
-    return `${this.constructor.name} (${this.#val})`
+    return `${this.constructor.name} (${this.#val
+  })`
   }
 }
 
@@ -193,15 +176,35 @@ class Failure extends Validation {
     throw new Error(`Can't extract the value of a Failure`)
   }
 
-  getOrElse(defaultVal) {
-    //#C
-    return defaultVal
+getOrElse(defaultVal) {
+  //#C
+  return defaultVal
+}
+}
+
+Object.assign(Success.prototype, Functor, Monad)
+
+const NoopFunctor = {
+  map() {
+    return this;
   }
 }
 
-Object.assign(Success.prototype, Functor(), Monad())
-Failure.SHORT_CIRCUIT = true
-Object.assign(Failure.prototype, Functor(Failure.SHORT_CIRCUIT), Monad(Failure.SHORT_CIRCUIT))
+const NoopMonad = {
+  flatMap(f) {
+    return this;
+  },
+  chain(f) {
+    //#B
+    return this.flatMap(f);
+  },
+  bind(f) {
+    //#B
+    return this.flatMap(f);
+  }
+}
+
+Object.assign(Failure.prototype, NoopFunctor, NoopMonad)
 
 const { assert } = chai
 

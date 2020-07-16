@@ -20,7 +20,6 @@ const Money = curry((currency, amount) =>
   )({
     amount,
     currency,
-    constructor: Money,
     equals: other => Object.is(currency, other.currency) && Object.is(amount, other.amount),
     inspect: () => `${currency} ${amount}`,
     serialize: () => JSON.stringify({ amount, currency }),
@@ -30,9 +29,10 @@ const Money = curry((currency, amount) =>
     times: m => Money(currency, amount * m.amount),
     compareTo: other => amount - other.amount,
     asNegative: () => Money(currency, amount * -1),
-    toString: () => `${amount} ${Money.Currencies[currency]}`,
+    valueOf: () => precisionRound(amount, 2),
+    toString: () => `${currency}${amount}`,
     [Symbol.toPrimitive]: () => precisionRound(amount, 2),
-    [Symbol.hasInstance]: i => i.constructor.name === 'Money'
+    [Symbol.toStringTag]: `${currency}${amount}`
   })
 )
 

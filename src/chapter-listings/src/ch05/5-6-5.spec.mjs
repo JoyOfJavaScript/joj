@@ -1,6 +1,8 @@
 import { composeM, curry } from '@joj/blockchain/util/fp/combinators.js'
 import Blockchain from '@joj/blockchain/domain/Blockchain.js'
+import Functor from '@joj/blockchain/util/fp/data/contract/Functor.js'
 import HasHash from '@joj/blockchain/domain/shared/HasHash.js'
+import Monad from '@joj/blockchain/util/fp/data/contract/Monad.js'
 import chai from 'chai'
 
 const VERSION = '1.0'
@@ -93,34 +95,6 @@ class Block {
 
 Object.assign(Block.prototype, HasHash(['index', 'timestamp', 'previousHash', 'nonce', 'data']))
 
-const getSpeciesConstructor = original =>
-  original.constructor[Symbol.species] || original.constructor
-
-const Monad = shortCircuit => ({
-  flatMap(f = x => x) {
-    return !shortCircuit ? this.map(f).get() : this
-  },
-  chain(f) {
-    //#B
-    return this.flatMap(f)
-  },
-  bind(f) {
-    //#B
-    return this.flatMap(f)
-  }
-})
-
-const Functor = (shortCircuit = false) => ({
-  map(f = x => x) {
-    if (!shortCircuit) {
-      const C = getSpeciesConstructor(this)
-      return C.of(f(this.get()))
-    } else {
-      return this
-    }
-  }
-})
-
 class Validation {
   #val //#A
   constructor(value) {
@@ -173,7 +147,8 @@ class Validation {
   }
 
   toString() {
-    return `${this.constructor.name} (${this.#val})`
+    return `${this.constructor.name} (${this.#val
+  })`
   }
 }
 
@@ -202,15 +177,36 @@ class Failure extends Validation {
     throw new Error(`Can't extract the value of a Failure`)
   }
 
-  getOrElse(defaultVal) {
-    //#C
-    return defaultVal
+getOrElse(defaultVal) {
+  //#C
+  return defaultVal
+}
+}
+
+Object.assign(Success.prototype, Functor, Monad)
+
+
+const NoopFunctor = {
+  map() {
+    return this;
   }
 }
 
-Object.assign(Success.prototype, Functor(), Monad())
-Failure.SHORT_CIRCUIT = true
-Object.assign(Failure.prototype, Functor(Failure.SHORT_CIRCUIT), Monad(Failure.SHORT_CIRCUIT))
+const NoopMonad = {
+  flatMap(f) {
+    return this;
+  },
+  chain(f) {
+    //#B
+    return this.flatMap(f);
+  },
+  bind(f) {
+    //#B
+    return this.flatMap(f);
+  }
+}
+
+Object.assign(Failure.prototype, NoopFunctor, NoopMonad)
 
 const { assert } = chai
 

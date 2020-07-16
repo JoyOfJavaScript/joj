@@ -1,18 +1,12 @@
-import { implementsContract } from './shared.js'
-
 /**
  * Provides flatMap/chain/bind extension
  *
  * @see https://github.com/fantasyland/fantasy-land#monad
  * @return {Object} Object
  */
-const Monad = (shortCircuit = false) => ({
+const Monad = {
   flatMap(f) {
-    if (!shortCircuit) {
-      return this.map(f).get()
-    } else {
-      return this
-    }
+    return this.map(f).get()
   },
   chain(f) {
     //#B
@@ -22,6 +16,6 @@ const Monad = (shortCircuit = false) => ({
     //#B
     return this.flatMap(f)
   }
-})
+}
 
 export default Monad

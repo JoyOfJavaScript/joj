@@ -1,7 +1,7 @@
 // Function combinators
 export const identity = a => a
-export const isFunction = a =>
-  a && typeof a === 'function' && Object.prototype.toString.call(a) === '[object Function]'
+export const isFunction = f =>
+  f && typeof f === 'function' && Object.prototype.toString.call(f) === '[object Function]'
 export const compose2 = (f, g) => (...args) => f(g(...args))
 export const compose = (...fns) => fns.reduce(compose2)
 export const pipe = (...fns) => fns.reduceRight(compose2)
@@ -9,9 +9,9 @@ export const curry = fn => (...args1) =>
   args1.length === fn.length
     ? fn(...args1)
     : (...args2) => {
-        const args = [...args1, ...args2]
-        return args.length >= fn.length ? fn(...args) : curry(fn)(...args)
-      }
+      const args = [...args1, ...args2]
+      return args.length >= fn.length ? fn(...args) : curry(fn)(...args)
+    }
 
 // ADT helpers
 export const not = curry((f, a) => !f(a))

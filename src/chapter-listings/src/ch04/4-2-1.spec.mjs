@@ -41,9 +41,7 @@ describe('4.2.1 - Decomposing complex code', () => {
     }
     const tx = new Transaction('luke', 'ana', 10)
 
-    function assemble({ sender, recipient, funds }) {
-      return [sender, recipient, funds].join('')
-    }
+    const assemble = ({ sender, recipient, funds }) => [sender, recipient, funds].join('')
 
     function computeCipher(data) {
       let hash = 0,

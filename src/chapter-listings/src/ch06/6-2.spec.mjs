@@ -209,6 +209,8 @@ describe('6.2 -  Module patterns', () => {
       transfers.map(transferData => batchOperation(...transferData))
     }
 
-    runBatchTransfers(transfers, service.transferFunds) //#A
+    const { transferFunds } = service
+
+    runBatchTransfers(transfers, transferFunds) //#A
   })
 })

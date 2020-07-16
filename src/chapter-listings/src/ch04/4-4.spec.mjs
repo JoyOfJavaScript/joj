@@ -30,7 +30,7 @@ describe('4.4 - Working with immutable objects', () => {
         threeDollars.amount = 5
       },
       TypeError,
-      "Cannot assign to read only property 'amount' of object '[object Object]'"
+      "Cannot assign to read only property 'amount' of object '[object $3]'"
     )
 
     assert.isTrue(Object.isFrozen(threeDollars))
@@ -48,7 +48,7 @@ describe('4.4 - Working with immutable objects', () => {
         delete threeDollars.plus
       },
       TypeError,
-      "Cannot delete property 'plus' of [object Object]"
+      "Cannot delete property 'plus' of [object $3]"
     )
 
     assert.isTrue(Object.isSealed(threeDollars))

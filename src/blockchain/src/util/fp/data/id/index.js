@@ -42,4 +42,4 @@ export default class Id {
   }
 }
 
-Object.assign(Id.prototype, Functor())
+Object.assign(Id.prototype, Functor)
