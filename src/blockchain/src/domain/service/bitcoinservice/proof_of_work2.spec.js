@@ -6,6 +6,7 @@ import {
 import chai from 'chai'
 import crypto from 'crypto'
 import proofOfWork from './proof_of_work2.js'
+import { toJson } from '~util/helpers.js'
 
 const { assert } = chai
 
@@ -67,6 +68,7 @@ describe('Proof of work (2)', () => {
       }, cancellationError => {
         assert.equal(cancellationError.message, 'Operation timed out after 2 seconds')
       })
+      .catch(console.error)
   }).timeout(10_000)
 
 
@@ -137,9 +139,10 @@ function rejectAfter(seconds) {
 }
 
 function proofOfWorkAsync(block) {
+  console.log('JSON debug', JSON.parse(toJson(block)));
   return new Promise((resolve, reject) => {
     const worker = new Worker('./dist/domain/service/bitcoinservice/proof_of_work.worker.js', {
-      workerData: block
+      workerData: toJson(block)
     });
     worker.on('message', resolve);
     worker.on('error', reject);

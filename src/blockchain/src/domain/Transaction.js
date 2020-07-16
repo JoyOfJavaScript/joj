@@ -4,6 +4,7 @@ import HasSignature from './shared/HasSignature.js'
 import HasValidation from './shared/HasValidation.js'
 import { checkSignature } from './transaction/validations.js'
 import { checkTampering } from './shared/validations.js'
+import { toJson } from '~util/helpers.js'
 
 const VERSION = '1.0'
 
@@ -24,7 +25,7 @@ export default class Transaction {
     this.funds = funds
     this.description = description
     this.signature = undefined
-    this.id = this.hash = /*#__PURE__*/ this.calculateHash()
+    this.id = this.hash = /*#__PURE__*/this.calculateHash()
   }
 
   /**
@@ -63,8 +64,8 @@ export default class Transaction {
 
   isValid() {
     return Validation.of(this)
-      .flatMap(/*#__PURE__*/ checkSignature)
-      .flatMap(/*#__PURE__*/ checkTampering)
+      .flatMap(/*#__PURE__*/checkSignature)
+      .flatMap(/*#__PURE__*/checkTampering)
   }
 
   // isValid() {
@@ -88,6 +89,8 @@ export default class Transaction {
       from: this.sender,
       to: this.recipient,
       id: this.id,
+      funds: toJson(this.funds),
+      description: this.description,
       version: VERSION
     }
     )

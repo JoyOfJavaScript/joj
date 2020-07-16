@@ -1,8 +1,11 @@
+import BitcoinService from './service/BitcoinService.js'
 import Block from './Block.js'
 import Blockchain from './Blockchain.js'
 import Builder from '../domain.js'
-import BitcoinService from './service/BitcoinService.js'
+import Money from './value/Money.js'
+import Transaction from './Transaction.js'
 import chai from 'chai'
+import { toJson } from '~util/helpers.js'
 
 const { assert } = chai
 
@@ -32,6 +35,24 @@ describe('Block Spec', () => {
       :: build()
     assert.equal(b.previousHash, '-1')
     assert.isEmpty(b.data)
+  })
+
+  it('Should serialize a block and its contained transaction data', () => {
+    const { Block: BlockBuilder } = Builder
+    const { at, linkedTo, withPendingTransactions, build } = BlockBuilder
+    const b = {}
+      :: at(1)
+      :: linkedTo('-1')
+      :: withPendingTransactions(new Transaction('sally', 'luke', Money('₿', 0.1), null))
+      :: build()
+    const blockJsonStr = toJson(b);
+    assert.ok(blockJsonStr.length > 1)
+    assert.equal(JSON.parse(blockJsonStr).hash, b.hash);
+    assert.equal(JSON.parse(blockJsonStr).dataCount, 1);
+
+    const txJson = JSON.parse(JSON.parse(blockJsonStr).data);
+    assert.equal(txJson.id, b.data[0].id);
+    assert.isNotEmpty(b.data)
   })
 
   it('Should init a new block', () => {
