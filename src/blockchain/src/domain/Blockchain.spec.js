@@ -101,7 +101,6 @@ describe('Blockchain Spec', () => {
     chain.push(new Block(chain.height() + 1, chain.top.hash, []))
     chain.push(new Block(chain.height() + 1, chain.top.hash, []))
 
-    let count = 0
     const subs = Observable.from(chain)
       .subscribe({
         next(block) {
@@ -112,7 +111,6 @@ describe('Blockchain Spec', () => {
           else {
             console.log('Block is invalid')
           }
-          count++
         }
       })
 

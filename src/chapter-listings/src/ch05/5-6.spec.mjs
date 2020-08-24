@@ -254,4 +254,14 @@ describe('5.6 - Implementing the Validation ADT', () => {
     block.data = ['data compromised']
     assert.isFalse(block.isValid())
   })
+
+  it('Validation#isFailure', () => {
+    const toUpper = word => word.toUpperCase()
+    const fromNullable = value => (typeof value === 'undefined' || value === null)
+      ? Failure.of('Expected non-null value')
+      : Success.of(value);
+
+    assert.equal('Success (J)', fromNullable('j').map(toUpper).toString());
+    assert.equal('Failure (Expected non-null value)', fromNullable(null).map(toUpper).toString());
+  })
 })

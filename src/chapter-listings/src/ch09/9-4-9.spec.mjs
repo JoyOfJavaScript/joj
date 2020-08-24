@@ -1,5 +1,8 @@
+import Block from '@joj/blockchain/domain/Block.js'
+import Blockchain from '@joj/blockchain/domain/Blockchain.js'
 import chai from 'chai'
 import reactivize from './reactivize.mjs'
+import 'core-js/modules/esnext.observable.js';
 
 const { assert } = chai
 
@@ -31,4 +34,39 @@ describe('9.4.9 - Dynamic steamification', () => {
     subs.unsubscribe()
     done()
   }).timeout(10_000)
+
+  it('Creates a Reactive Blockchain', done => {
+    let count = 0;
+    const chain = new Blockchain();
+    const chain$ = reactivize(chain);
+    const subs = Observable.from(chain$)
+      .subscribe({
+        next(block) {
+          console.log('Reactive chain: Received block', block.hash)
+          if (block.validate().isSuccess) {
+            console.log('Block is valid')
+          }
+          else {
+            console.log('Block is invalid')
+          }
+          count++
+        }
+      });
+
+    setTimeout(() => {
+      console.log('Pushing 1');
+      console.log('Top is', chain$.top.hash)
+      chain$.push(new Block(1, chain$.top.hash, [])) // push a second block
+      console.log('Top is', chain$.top.hash)
+      console.log('Pushing 2');
+      chain$.push(new Block(-1, chain$.top.hash, [])) // push a third block (invalid)
+      console.log('Asserting height');
+      assert.equal(chain.height() - 1, 2)
+      setTimeout(() => {
+        subs.unsubscribe()
+        assert.equal(3, count); // genesis + 2 additional blocks
+        done()
+      }, 8_000)
+    }, 2000)
+  }).timeout(20_000)
 })

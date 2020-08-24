@@ -25,7 +25,7 @@ export const reactivize = obj => {
             if (key === 'push') {
                 const pushRef = target[key]
                 return (...capturedArgs) => {
-                    const result = pushRef.call(target, ...[capturedArgs])
+                    const result = pushRef.call(target, ...capturedArgs)
                     emitter.emit(ON_EVENT, ...capturedArgs)
                     return result
                 }
@@ -33,7 +33,7 @@ export const reactivize = obj => {
             return Reflect.get(...args)
 
         }
-    })
+    });
     const observable = {
         [Symbol.observable]() {
             return new Observable(observer => {
@@ -54,9 +54,9 @@ export const reactivize = obj => {
                     console.groupEnd(LOG_LABEL)
                     emitter.removeAllListeners(ON_EVENT, END_EVENT)
                 }
-            })
+            });
         }
-    }
+    };
     return Object.assign(pushProxy, observable)
 }
 

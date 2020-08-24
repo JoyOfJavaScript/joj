@@ -77,7 +77,8 @@ describe('9.4.6 - Representing push streams using generators', () => {
 
     const chain = new Blockchain()
     const validateBlock = block => block.validate()
-    const validationToNumber = validation => Number(validation.isSuccess)
+    const isSuccess = validation => validation.isSuccess;
+    const boolToInt = bool => bool ? 1 : 0;
     const add = (x, y) => x + y
 
     const addBlockToChain = curry((chain, blockData) => {
@@ -95,7 +96,7 @@ describe('9.4.6 - Representing push streams using generators', () => {
     .map(addBlockToChain(chain))
     .map(validateBlock)
     .filter(prop('isSuccess'))
-    .map(validationToNumber)
+    .map(compose(boolToInt, isSuccess))
     .reduce(add, 0)
 
   validBlocks$.subscribe({
