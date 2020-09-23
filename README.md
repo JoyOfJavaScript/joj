@@ -51,7 +51,7 @@ You can also run the `blockchain` tests by navigating to that folder and running
 You should see around 100 unit tests passing. 
 
 #### Running an individual test
-The Joy of JavaScript teaches some a few non-standard, future features. Hence, to run an individual chapter listing test file, you must first transpile the code with Babel. 
+The Joy of JavaScript teaches a few non-standard, future features. Hence, to run an individual chapter listing test file, you must first transpile the code with Babel. 
 In `chapter-listings` , run `npm run build`. This will transpile all files into `_babel` directory. 
 To run a test, execute `npm run test ./_babel/src/ch05/[listing-number].spec.mjs`
 
