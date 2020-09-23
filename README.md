@@ -55,7 +55,7 @@ The Joy of JavaScript teaches a few non-standard, future features. Hence, to run
 In `chapter-listings` , run `npm run build`. This will transpile all files into `_babel` directory. 
 To run a test, execute `npm run test ./_babel/src/ch05/[listing-number].spec.mjs`
 
-## Running insinde a container
+## Running inside a container
 If for some reason you can't upgrade your system's Node.js version, you can run the code inside a Docker container. 
 
 First, you need to download and install the Docker Desktop plugin corresponding to your platform (MacOS, Windows, etc). You can find that in [https://www.docker.com/products/docker-desktop]
