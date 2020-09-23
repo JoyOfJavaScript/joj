@@ -1,5 +1,5 @@
 // TODO: use trampolining to simulate TCO in order to reach mining difficulty 4
-function proofOfWork(block) {
+function proofOfWork(block = throw new Error('Provide a non-null block object!')) {
   function runPoW(hashPrefix) {
     if (block.hash && block.hash.toString().startsWith(hashPrefix)) {
       return block

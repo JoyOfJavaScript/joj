@@ -98,8 +98,8 @@ describe('3.2.2 - Implicit Delegation', () => {
       init(sender, recipient, funds = 0.0) {
         const _feePercent = 0.6
 
-        this.sender = _validateEmail(sender)
-        this.recipient = _validateEmail(recipient)
+        this.sender = Transaction.validateEmail(sender)
+        this.recipient = Transaction.validateEmail(recipient)
         this.funds = Number(funds)
 
         this.netTotal = function () {
@@ -110,16 +110,17 @@ describe('3.2.2 - Implicit Delegation', () => {
           const factor = Math.pow(10, precision)
           return Math.round(number * factor) / factor
         }
-
-        function _validateEmail(email) {
-          return util.emailValidator(email)
-        }
-
         return this
       },
       displayTransaction() {
         return `Transaction from ${this.sender} to ${this.recipient} for ${this.funds}`
       }
+    }
+    Transaction.validateEmail = function (email) {
+      if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+        throw new Error(`Invalid argument error. Must provide valid email: ${email}`)
+      }
+      return email;
     }
 
     const HashTransaction = Object.create(Transaction)

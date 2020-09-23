@@ -11,9 +11,11 @@ describe('Validation', () => {
   it('Constructor', () => {
     const result = Validation.Success(2).get()
     assert.equal(result, 2)
+
     assert.throws(() => {
       new Validation(42)
     }, `Can't directly instantiate a Validation. Please use constructor Validation.of`)
+
     assert.throws(() => {
       Validation.Failure(42).get()
     }, `Can't extract the value of a Failure`)
@@ -32,20 +34,6 @@ describe('Validation', () => {
   it('Validation#map (with strings)', () => {
     assert.equal(notNull('JavaScript').flatMap(notEmpty).map(toLower).get(), 'javascript')
     assert.isOk(notNull(null).flatMap(notEmpty).map(toLower).isFailure)
-  })
-
-  it('Validation#ap', () => {
-    const add = x => y => x + y
-    const val = Validation.Success(add)
-      .ap(Validation.Success(1))
-      .ap(Validation.Success(3))
-    assert.equal(val.get(), 4)
-  })
-
-  it('Validation#equals', () => {
-    assert.isNotOk(Validation.Success(1) === Validation.Success(1))
-    assert.isNotOk(Validation.Success(1) === Validation.Success(1))
-    assert.isOk(Validation.Success(1).equals(Validation.Success(1)))
   })
 
   it('Validation#toString', () => {

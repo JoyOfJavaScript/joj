@@ -20,31 +20,46 @@ Finally, if you have any questions, comments, or suggestions, please share them 
 </p>
 
 # Running the code
-You have a couple of options to run the code. If you have Node.js v10 installed locally in your system, feel free to run the tests locally; otherwise, you can run the code housed in a Docker container.
+You have a couple of options to run the code. If you have Node.js v14 installed locally in your system or would like to upgrade, feel free to run the tests locally; otherwise, if for some reason you can't upgrade your system's Node.js version, you can run the code housed in a Docker container.
 
-### Running locally
-
-The repo contains two projects: chapter-listings and blockchain. You must first initialize each project by running: `npm install`
-
-### Running a chapter listing
+Assuming you have Git installed, you can download the code with the following git command:
 ~~~
-// src/chapter-listings
-npm test src/ch02/2-1.js
+git clone https://github.com/JoyOfJavaScript/joj.git
 ~~~
 
-### Running all chapter listings
-~~~
-// src/chapter-listings
-npm run test-all
-~~~
+## Upgrading to Node.js 14
+If you'd like to upgrade your system to Node.js 14, please follow these instructions: 
+
+1. Run `node -v` to confirm your existing Node.js version
+2. Run `sudo npm install -g n` to install the `n` package. This library makes upgrading Node.js simple
+3. Upgrade to latest 14.x.x version running `sudo n 14.12.0`
+
+### Running locally with your own installed version of Node.js
+The repo contains two projects: *blockchain* and *chapter-listings* in `src` folder. You must first initialize *blockchain*. 
+
+`cd` to the `blockchain` project and run: `npm install; npm run build`
+
+Next, `cd` into `chapter-listings` projects and run `npm install`.
+
+#### Running all tests
+Now, you should be able to run all chapter listings by running: `npm run test-all`
+
+You should > 200 unit tests passing. 
+
+You can also run the `blockchain` tests by navigating to that folder and running the same command `npm run test-all`
+
+You should see around 100 unit tests passing. 
+
+#### Running an individual test
+The Joy of JavaScript teaches some a few non-standard, future features. Hence, to run an individual chapter listing test file, you must first transpile the code with Babel. 
+In `chapter-listings` , run `npm run build`. This will transpile all files into `_babel` directory. 
+To run a test, execute `npm run test ./_babel/src/ch05/[listing-number].spec.mjs`
 
 ## Running insinde a container
+If for some reason you can't upgrade your system's Node.js version, you can run the code inside a Docker container. 
 
-If you don't have Node.js v10 and don't care for upgrading just yet, you can run the tests inside a container. Install the Docker plugin corresponding to your platform (MacOS, Windows, etc). Then run: 
+First, you need to download and install the Docker Desktop plugin corresponding to your platform (MacOS, Windows, etc). You can find that in [https://www.docker.com/products/docker-desktop]
 
-```
-docker-compose up
-```
-
-# About this book
-TBD
+Once installed, navigate to the top level folder `joj` of the cloned repository. There you will find a `docker-compose.yml` file. 
+With Docker, you only have the option to run all tests. To do so, just run: `docker-compose up`. This will run all *blockchain* tests first, then all *chapter-listings* tests. 
+Afterwards, you can run `docker-compose down` to tear down the enrivonment. 

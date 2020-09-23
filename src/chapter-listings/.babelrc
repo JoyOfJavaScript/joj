@@ -12,12 +12,10 @@
     ],
     "@babel/preset-flow"
   ],
-  "plugins": [
-    "@babel/plugin-syntax-dynamic-import",
+  "plugins": [    
     "@babel/plugin-proposal-class-properties", 
     "@babel/plugin-proposal-function-bind",
-    "@babel/plugin-proposal-throw-expressions",
-    "@babel/plugin-proposal-optional-chaining",
+    "@babel/plugin-proposal-throw-expressions",    
     "@babel/plugin-proposal-numeric-separator",
     ["@babel/plugin-proposal-pipeline-operator", { "proposal": "minimal" }]
   ],

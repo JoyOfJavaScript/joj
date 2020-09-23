@@ -1,7 +1,6 @@
+import { Failure, Success } from '@joj/blockchain/util/fp/data/validation2/validation.js'
 import Blockchain from '@joj/blockchain/domain/Blockchain.js'
-import Functor from '@joj/blockchain/util/fp/data/contract/Functor.js'
 import HasHash from '@joj/blockchain/domain/shared/HasHash.js'
-import Monad from '@joj/blockchain/util/fp/data/contract/Monad.js'
 import chai from 'chai'
 import { curry } from '@joj/blockchain/util/fp/combinators.js'
 import fs from 'fs'
@@ -97,118 +96,6 @@ class Block {
 }
 
 Object.assign(Block.prototype, HasHash(['index', 'timestamp', 'previousHash', 'nonce', 'data']))
-
-class Validation {
-  #val //#A
-  constructor(value) {
-    this.#val = value
-    if (![Success.name, Failure.name].includes(new.target.name)) {
-      //#B
-      throw new Error(
-        `Can't directly constructor a Validation. 
-            Please use constructor Validation.of`
-      )
-    }
-  }
-
-  get() {
-    //#C
-    return this.#val
-  }
-
-  static of(value) {
-    //#D
-    return Validation.Success(value)
-  }
-
-  static Success(a) {
-    return Success.of(a)
-  }
-
-  static Failure(error) {
-    return Failure.of(error)
-  }
-
-  get isSuccess() {
-    //#E
-    return false
-  }
-
-  get isFailure() {
-    //#E
-    return false
-  }
-
-  equals(otherValidation) {
-    //#F
-    return this.#val === otherValidation.get()
-  }
-
-  getOrElse(defaultVal) {
-    //#G
-    return this.#val || defaultVal
-  }
-
-  toString() {
-    return `${this.constructor.name} (${this.#val
-  })`
-  }
-}
-
-class Success extends Validation {
-  static of(a) {
-    return new Success(a)
-  }
-
-  get isSuccess() {
-    return true //#A
-  }
-}
-
-class Failure extends Validation {
-  get isFailure() {
-    //#A
-    return true
-  }
-
-  static of(b) {
-    return new Failure(b)
-  }
-
-  get() {
-    //#B
-    throw new Error(`Can't extract the value of a Failure`)
-  }
-
-getOrElse(defaultVal) {
-  //#C
-  return defaultVal
-}
-}
-
-Object.assign(Success.prototype, Functor, Monad)
-
-const NoopFunctor = {
-  map() {
-    return this;
-  }
-}
-
-const NoopMonad = {
-  flatMap(f) {
-    return this;
-  },
-  chain(f) {
-    //#B
-    return this.flatMap(f);
-  },
-  bind(f) {
-    //#B
-    return this.flatMap(f);
-  }
-}
-
-Object.assign(Failure.prototype, NoopFunctor, NoopMonad)
 
 const { assert } = chai
 

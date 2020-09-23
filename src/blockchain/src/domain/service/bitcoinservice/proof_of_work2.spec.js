@@ -15,6 +15,12 @@ function randomId() {
 }
 
 describe('Proof of work (2)', () => {
+  it('Simple test on optional chaining with null coallesce', () => {
+    const block = {};
+    assert.equal('00', ''.padStart(block ?.difficulty ?? 2, '0'));
+    block.difficulty = 3;
+    assert.equal('000', ''.padStart(block ?.difficulty ?? 2, '0'));
+  })
   it('Calls proof of work with low difficulty', () => {
     const block = new Block(1, randomId(), [], 2)
     proofOfWork(block)

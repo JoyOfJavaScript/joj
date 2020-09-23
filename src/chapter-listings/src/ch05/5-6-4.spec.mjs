@@ -209,7 +209,7 @@ Object.assign(Failure.prototype, NoopFunctor, NoopMonad)
 const { assert } = chai
 
 describe('5.6.4 - Higher-kinded composition with Validation', () => {
-  it('Shows isValid using flatMapo', () => {
+  it('Shows isValid using flatMap', () => {
     const ledger = new Blockchain()
     let block = new Block(ledger.height() + 1, ledger.top.hash, ['some data'])
     block = ledger.push(block)

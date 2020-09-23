@@ -8,7 +8,7 @@ export default class Validation {
     this.#val = value // detect if called from a derived, otherwise throw exception new.target ?
     if (![Success.name, Failure.name].includes(new.target.name)) {
       throw new Error(
-        `Can't directly constructor a Validation. Please use constructor Validation.of`
+        `Can't directly instantiate a Validation. Please use constructor Validation.of`
       )
     }
   }
@@ -60,7 +60,7 @@ export default class Validation {
   }
 
   getOrElse(defaultVal) {
-    return this.#val || defaultVal
+    return this.#val ?? defaultVal
   }
 
   toBoolean() {
