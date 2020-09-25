@@ -8,42 +8,43 @@ function dateFormat(date) {
   return ((date.getMonth() > 8) ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1))) + '/' + ((date.getDate() > 9) ? date.getDate() : ('0' + date.getDate())) + '/' + date.getFullYear()
 }
 
-describe('7.7 - Aspect-oriented programming', () => {
-  it('Aspects/advise/joinpoint', () => {
+describe('7.7 - Method decorators', () => {
+  it('Validation decorator', () => {
 
-    const pointcut = (aspect, obj) => new Proxy(obj, {
+    const decorate = (decorator, obj) => new Proxy(obj, {
       get(target, key) {
-        if (!aspect.joinpoints.includes(key)) {
-          return Reflect.get(...arguments)
+        if (!decorator.methods.includes(key)) {
+          return Reflect.get(...arguments);
         }
-        const methodRef = target[key]
-        return (...capturedArgs) => {
-          const newArgs = aspect.advise.before.call(target, ...capturedArgs)
-          const result = methodRef.call(target, ...[newArgs])
-          return aspect.advise.after.call(target, result)
+        const methodRef = target[key];  //#A
+        return (...capturedArgs) => {  //#B
+          const newArgs =  //#C
+            decorator.actions ?.before.call(target, ...capturedArgs);
+          const result = methodRef.call(target, ...[newArgs]); //#D
+          return decorator.actions ?.after.call(target, result) ;//#E
         };
       }
-    });
+    })
+
 
     const { isFinite, isInteger } = Number
 
     const checkLimit = (value = 1) => (isFinite(value) && isInteger(value) && value >= 0) ? value : throw new RangeError('Expected a positive number')
 
-    const aspect = {
-      advise: {
-        before: identity,
+    // const decorator = {
+    //   actions: {
+    //     before: [function],
+    //     after: [functin]
+    //   },
+    //   methods: [],
+    // }
+
+    const validation = {
+      actions: {
+        before: checkLimit,
         after: identity
       },
-      joinpoints: [],
-    }
-
-    const myAspect = {
-      ...aspect,
-      advise: {
-        ...aspect.advise,
-        before: checkLimit,
-      },
-      joinpoints: ['inc', 'dec']
+      methods: ['inc', 'dec']
     }
 
     const _count = Symbol('count')
@@ -60,7 +61,7 @@ describe('7.7 - Aspect-oriented programming', () => {
     }
 
 
-    const counter$Proxy = pointcut(myAspect, new Counter(3));
+    const counter$Proxy = decorate(validation, new Counter(3));
     assert.equal(counter$Proxy.inc(), 4)
     assert.equal(counter$Proxy.dec(), 3)
     assert.equal(counter$Proxy.dec(), 2)
