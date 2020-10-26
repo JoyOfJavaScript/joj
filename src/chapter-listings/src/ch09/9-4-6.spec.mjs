@@ -1,6 +1,7 @@
 import './rx.mjs'
 import { compose, curry, prop } from '@joj/blockchain/util/fp/combinators.js'
 import Blockchain from '@joj/blockchain/domain/Blockchain.js'
+import Block from '@joj/blockchain/domain/Block.js'
 import Builders from '@joj/blockchain/domain.js'
 import chai from 'chai'
 import fs from 'fs'
@@ -82,98 +83,94 @@ describe('9.4.6 - Representing push streams using generators', () => {
     const add = (x, y) => x + y
 
     const addBlockToChain = curry((chain, blockData) => {
-      const block = {}
-        :: at(blockData.index)
-        :: linkedTo(chain.top.hash)
-        :: withPendingTransactions(blockData.data)
-        :: withDifficulty(blockData.difficulty)
-        :: buildBlock()
-    return chain.push(block)
-  })
-
-  const validBlocks$ = Observable.fromGenerator(generateBlocksFromFile(filename))
-    .skip(1)
-    .map(addBlockToChain(chain))
-    .map(validateBlock)
-    .filter(prop('isSuccess'))
-    .map(compose(boolToInt, isSuccess))
-    .reduce(add, 0)
-
-  validBlocks$.subscribe({
-    next(validBlocks) {
-      assert.equal(validBlocks, 2)
-      console.log('Valid blocks: ', validBlocks)
-      if (validBlocks === chain.height() - 1) {
-        console.log('All blocks are valid!')
-      }
-    },
-    error(error) {
-      console.log(error)
-    },
-    complete() {
-      console.log('Done validating block stream!')
-      done()
-    }
-  })
-})
-
-it('Shows error case in observer', () => {
-  const toUpper = word => word.toUpperCase()
-
-  function* words() {
-    yield 'The'
-    yield 'Joy'
-    yield 'of'
-    yield 42
-  }
-
-  Observable.fromGenerator(words())
-    .map(toUpper)
-    .subscribe({
-      next: :: console.log,
-      error: ({ message }) => { assert.equal('word.toUpperCase is not a function', message) }
+      const block = new Block(
+        blockData.index,
+        chain.top.hash, blockData.data, blockData.difficulty
+      )
+      return chain.push(block)
     })
-})
 
-it('Using map with compose', done => {
-  const filename = path.join(process.cwd(), 'res', 'blocks.txt')
+    const validBlocks$ = Observable.fromGenerator(generateBlocksFromFile(filename))
+      .skip(1)
+      .map(addBlockToChain(chain))
+      .map(validateBlock)
+      .filter(prop('isSuccess'))
+      .map(compose(boolToInt, isSuccess))
+      .reduce(add, 0)
 
-  const chain = new Blockchain()
-  const validateBlock = block => block.validate()
-  const validationToNumber = validation => Number(validation.isSuccess)
-  const add = (x, y) => x + y
-
-  const addBlockToChain = curry((chain, blockData) => {
-    const block = {}
-      :: at(blockData.index)
-      :: linkedTo(chain.top.hash)
-      :: withPendingTransactions(blockData.data)
-      :: withDifficulty(blockData.difficulty)
-      :: buildBlock()
-  return chain.push(block)
-})
-
-Observable.fromGenerator(generateBlocksFromFile(filename))
-  .skip(1)
-  .map(compose(validateBlock, addBlockToChain(chain)))
-  .filter(prop('isSuccess'))
-  .map(validationToNumber)
-  .reduce(add, 0)
-  .subscribe({
-    next(validBlocks) {
-      assert.equal(validBlocks, 2)
-      console.log('Valid blocks: ', validBlocks)
-      if (validBlocks === chain.height() - 1) {
-        console.log('All blocks are valid!')
+    validBlocks$.subscribe({
+      next(validBlocks) {
+        assert.equal(validBlocks, 2)
+        console.log('Valid blocks: ', validBlocks)
+        if (validBlocks === chain.height() - 1) {
+          console.log('All blocks are valid!')
+        }
+      },
+      error(error) {
+        console.log(error)
+      },
+      complete() {
+        console.log('Done validating block stream!')
+        done()
       }
-    },
-    error(error) {
-      console.log(error)
-    },
-    complete() {
-      console.log('Done validating block stream!')
-      done()
+    })
+  }).timeout(10000);
+
+  it('Shows error case in observer', () => {
+    const toUpper = word => word.toUpperCase()
+
+    function* words() {
+      yield 'The'
+      yield 'Joy'
+      yield 'of'
+      yield 42
     }
+
+    Observable.fromGenerator(words())
+      .map(toUpper)
+      .subscribe({
+        next: :: console.log,
+        error: ({ message }) => { assert.equal('word.toUpperCase is not a function', message) }
+      })
   })
-})
+
+  it('Using map with compose', done => {
+    const filename = path.join(process.cwd(), 'res', 'blocks.txt')
+
+    const chain = new Blockchain()
+    const validateBlock = block => block.validate()
+    const validationToNumber = validation => Number(validation.isSuccess)
+    const add = (x, y) => x + y
+
+    const addBlockToChain = curry((chain, blockData) => {
+      const block = new Block(
+        blockData.index,
+        chain.top.hash, blockData.data, blockData.difficulty
+      )
+      return chain.push(block)
+    })
+
+    Observable.fromGenerator(generateBlocksFromFile(filename))
+      .skip(1)
+      .map(compose(validateBlock, addBlockToChain(chain)))
+      .filter(prop('isSuccess'))
+      .map(validationToNumber)
+      .reduce(add, 0)
+      .subscribe({
+        next(validBlocks) {
+          assert.equal(validBlocks, 2)
+          console.log('Valid blocks: ', validBlocks)
+          if (validBlocks === chain.height() - 1) {
+            console.log('All blocks are valid!')
+          }
+        },
+        error(error) {
+          console.log(error)
+        },
+        complete() {
+          console.log('Done validating block stream!')
+          done()
+        }
+      })
+  }).timeout(10000);
 })

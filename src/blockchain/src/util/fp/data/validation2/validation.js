@@ -55,12 +55,8 @@ export default class Validation {
     return false
   }
 
-  equals(otherValidation) {
-    return this.#val === otherValidation.get()
-  }
-
   getOrElse(defaultVal) {
-    return this.#val ?? defaultVal
+    return this.isSuccess ? this.#val: defaultVal;
   }
 
   toBoolean() {
@@ -69,7 +65,7 @@ export default class Validation {
 
   toString() {
     return `${this.constructor.name} (${this.#val
-  })`
+  })`;
   }
 
   [Symbol.toPrimitive](hint) {

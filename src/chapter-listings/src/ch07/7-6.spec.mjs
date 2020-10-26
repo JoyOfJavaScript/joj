@@ -88,7 +88,7 @@ describe('7.6 - Dynamic introspection and reflection', () => {
   })
 
   it('Smart block', () => {
-    const block = new Block(1, '123', [])  // 698d17ad24c9bf0451fba3d7ced1244877a3407e736ec24f99e54d359bc74fa8
+    const block = new Block(1, '123', [])
     assert.equal(block.previousHash, '123')
     assert.equal(block.hash, block.calculateHash());
     const oldHash = block.hash

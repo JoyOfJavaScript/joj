@@ -98,7 +98,7 @@ export default class Blockchain {
   }
 
   [Symbol.iterator]() {
-    return this.blocks.values()
+    return this.blocks.values()[Symbol.iterator]()
   }
 
   async *[Symbol.asyncIterator]() {

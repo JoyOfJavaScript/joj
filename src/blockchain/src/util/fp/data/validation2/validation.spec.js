@@ -42,12 +42,6 @@ describe('Validation', () => {
     assert.equal(val.get(), 4)
   })
 
-  it('Validation#equals', () => {
-    assert.isNotOk(Validation.Success(1) === Validation.Success(1))
-    assert.isNotOk(Validation.Success(1) === Validation.Success(1))
-    assert.isOk(Validation.Success(1).equals(Validation.Success(1)))
-  })
-
   it('Validation#toString', () => {
     assert.equal(Validation.Success(1).toString(), 'Success (1)')
   })

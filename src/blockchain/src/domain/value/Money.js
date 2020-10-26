@@ -17,24 +17,32 @@ const Money = curry((currency, amount) =>
   compose(
     Object.seal,
     Object.freeze
-  )({
-    amount,
-    currency,
-    equals: other => Object.is(currency, other.currency) && Object.is(amount, other.amount),
-    inspect: () => `${currency} ${amount}`,
-    serialize: () => JSON.stringify({ amount, currency }),
-    round: (precision = 2) => Money(currency, precisionRound(amount, precision)),
-    minus: m => Money(currency, amount - m.amount),
-    plus: m => Money(currency, amount + m.amount),
-    times: m => Money(currency, amount * m.amount),
-    compareTo: other => amount - other.amount,
-    asNegative: () => Money(currency, amount * -1),
-    valueOf: () => precisionRound(amount, 2),
-    toString: () => `${currency}${amount}`,
-    [Symbol.toPrimitive]: () => precisionRound(amount, 2),
-    [Symbol.toStringTag]: `${currency}${amount}`
-  })
+  )(Object.assign(Object.create(null),
+    {
+      amount,
+      currency,
+      equals: other => Object.is(currency, other.currency) && Object.is(amount, other.amount),
+      inspect: () => `${currency} ${amount}`,
+      serialize: () => JSON.stringify({ amount, currency }),
+      round: (precision = 2) => Money(currency, precisionRound(amount, precision)),
+      minus: m => Money(currency, amount - m.amount),
+      plus: m => Money(currency, amount + m.amount),
+      times: m => Money(currency, amount * m.amount),
+      compareTo: other => amount - other.amount,
+      asNegative: () => Money(currency, amount * -1),
+      valueOf: () => precisionRound(amount, 2),
+      toString: () => `${currency}${amount}`,
+      [Symbol.toPrimitive]: () => precisionRound(amount, 2),
+      [Symbol.toStringTag]: `${currency}${amount}`
+    }
+  ))
 )
+
+/*
+const obj2 = Object.create(null);
+console.log(obj2.__proto__)              // undefined
+console.log(Object.getPrototypeOf(obj2)) // null
+*/
 
 // Zero
 Money.zero = (currency = BTC) => Money(currency, 0)

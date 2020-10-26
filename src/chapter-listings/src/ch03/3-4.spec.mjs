@@ -74,7 +74,7 @@ describe('3.4 - Assembling objects using mixins', () => {
       displayTransaction() {
         return `Transaction ${this.description} from ${this.sender} to ${this.recipient} for ${
           this.funds
-        }`
+          }`
       }
 
       get netTotal() {

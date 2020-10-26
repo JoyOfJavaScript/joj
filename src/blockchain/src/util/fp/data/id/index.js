@@ -29,10 +29,6 @@ export default class Id {
     return ['map']
   }
 
-  static get [Symbol.species]() {
-    return this
-  }
-
   get tag() {
     return this.#tag
   }

@@ -216,6 +216,23 @@ describe('5.6.4 - Higher-kinded composition with Validation', () => {
     console.log(block)
     assert.isTrue(block.isValid().isSuccess)
     block.data = ['data compromised']
-    assert.isFalse(block.isValid().isSuccess)
+    assert.isTrue(block.isValid().isFailure)
+    assert.equal('Failure (Block hash is invalid)', block.isValid().toString());
+  })
+  it('Shows error handling', () => {
+
+    const toUpper = word => word.toUpperCase()
+    const fromNullable = value => (typeof value === 'undefined' || value === null)
+      ? Failure.of('Expected non-null value')
+      : Success.of(value);
+
+    const MyLogger = {
+      defaultLogger: :: console.log
+    };
+
+    assert.equal('Success (JOJ)', fromNullable('joj').map(toUpper).toString());
+    assert.equal('Failure (Expected non-null value)', fromNullable(null).map(toUpper).toString());
+
+
   })
 })

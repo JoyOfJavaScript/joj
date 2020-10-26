@@ -39,7 +39,7 @@ describe('5.6.7 - Third party integration', () => {
     assert.equal(map2.call(Success.of(2), x => x * 2).get(), 4);
     assert.equal(map2.call(map2.call(Success.of(2), x => x * 2), x => x ** 2).get(), 16);
 
-    const apply = fn => F => map2.call(F, fn);
+    const apply = curry((fn, F) => map2.call(F, fn));
     assert.equal(apply(x => x * 2)(Success.of(2)).get(), 4);
     assert.equal(compose(apply(x => x ** 2), apply(x => x * 2))(Success.of(2)).get(), 16);
     assert.equal(Success.of(2) :: map2(x => x * 2).get(), 4);
