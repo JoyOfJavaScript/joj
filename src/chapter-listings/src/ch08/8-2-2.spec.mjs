@@ -13,7 +13,7 @@ describe('8.2.2 - Are promises algebraic?', () => {
     assert.ok(makeQueryablePromise(p).isPending())
   })
 
-  const unique = letters => Array.from(new Set([...letters]))
+  const unique = letters => Array.from(new Set(letters))
   const join = arr => arr.join('')
   const toUpper = str => str.toUpperCase()
   const identity = x => x

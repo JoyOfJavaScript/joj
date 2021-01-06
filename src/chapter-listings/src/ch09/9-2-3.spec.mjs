@@ -1,5 +1,5 @@
 import Blockchain from '@joj/blockchain/domain/Blockchain.js'
-import Builders from '@joj/blockchain/domain.js'
+import Builders, { Block } from '@joj/blockchain/domain.js'
 import chai from 'chai'
 import { curry } from '@joj/blockchain/util/fp/combinators.js'
 import fs from 'fs'
@@ -73,12 +73,7 @@ describe('9.2.3 - Async generators', () => {
 
       console.log('BlockData is', blockData)
 
-      const block = {}
-            :: at(blockData.index)
-            :: linkedTo(chain.top.hash)
-            :: withPendingTransactions(blockData.data)
-            :: withDifficulty(blockData.difficulty)
-            :: buildBlock()
+      const block = new Block(blockData.index, chain.top.hash, blockData.data, blockData.difficulty);            
       chain.push(block)
 
       if (block.validate().isFailure) {

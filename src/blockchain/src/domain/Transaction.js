@@ -63,7 +63,7 @@ export default class Transaction {
   }
 
   isValid() {
-    return Validation.of(this)
+    return Validation.of(Object.freeze(this))
       .flatMap(/*#__PURE__*/checkSignature)
       .flatMap(/*#__PURE__*/checkTampering)
   }

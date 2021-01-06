@@ -3,7 +3,7 @@ import chai from 'chai'
 const { assert } = chai
 
 const toUpper = str => str.toUpperCase()
-const unique = letters => Array.from(new Set([...letters]))
+const unique = letters => Array.from(new Set(letters))
 
 describe('5.2 - New Array APIs: {flat, flatMap}', () => {
   it('Intro', () => {

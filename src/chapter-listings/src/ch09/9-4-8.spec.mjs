@@ -20,7 +20,7 @@ describe('9.4.8 - Streamifying objects', () => {
       .subscribe({
         next(value) {
           assert.isOk(value === 20 || value === 30)
-          console.log('Pair elements: ', value)
+          console.log('Pair element: ', value)
         },
         complete() {
           done()

@@ -3,7 +3,7 @@ import chai from 'chai'
 
 const { assert } = chai
 
-const unique = letters => Array.from(new Set([...letters])) //#A
+const unique = letters => Array.from(new Set(letters)) //#A
 const join = arr => arr.join('')
 const toUpper = str => str.toUpperCase()
 

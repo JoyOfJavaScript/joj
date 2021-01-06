@@ -21,7 +21,7 @@ const Money = curry((currency, amount) =>
     {
       amount,
       currency,
-      equals: other => Object.is(currency, other.currency) && Object.is(amount, other.amount),
+      equals: other => currency === other.currency && amount === other.amount,
       inspect: () => `${currency} ${amount}`,
       serialize: () => JSON.stringify({ amount, currency }),
       round: (precision = 2) => Money(currency, precisionRound(amount, precision)),
