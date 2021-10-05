@@ -49,5 +49,8 @@
     "flow-status": "flow status",
     "flow-stop": "flow stop",
     "flow-typed": "flow-typed"
+  },
+  "quokka": {
+    "babel": false
   }
 }
