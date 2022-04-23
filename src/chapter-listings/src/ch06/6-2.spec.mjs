@@ -98,6 +98,8 @@ describe('6.2 -  Module patterns', () => {
     assert.equal(tx.transactionId, 90047400839578080)
   })
   it('3. IIFE mixins', () => {
+    class Date { static now() { return 42; } }
+
     const BlockchainApp = {}
     BlockchainApp.domain = {}
     BlockchainApp.domain.Transaction = class {
@@ -110,7 +112,7 @@ describe('6.2 -  Module patterns', () => {
         this.timestamp = Date.now()
         this.transactionId = this.calculateHash(
           //#D
-          [this.sender, this.recipient, this.funds].join()
+          //[this.sender, this.recipient, this.funds].join()
         )
       }
 
@@ -132,7 +134,7 @@ describe('6.2 -  Module patterns', () => {
           encoding: 'hex'
         }
 
-        this.calculateHash = () => {
+        this.calculateHash = function calculateHash() {
           // #A
           const objToHash = Object.fromEntries(new Map(keys.map(k => [k, prop(k, this)])))
           return compose(
@@ -152,7 +154,7 @@ describe('6.2 -  Module patterns', () => {
     const tx = new BlockchainApp.domain.Transaction('luis', 'luke', 10)
     assert.equal(
       tx.transactionId,
-      '6cd8cec706fa11110d83fb46f97df1f9be43b4c570f3390e7c7f6a5173f595e6'
+      'e4e841c87b265b2c1e2ff9558688f800e3138cc28d5c58895ae9320913a3b8ff'
     )
   })
   it('4. Factory functions (structure only)', () => {
