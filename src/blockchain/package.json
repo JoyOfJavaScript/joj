@@ -28,7 +28,7 @@
     "esm": "^3.2.25",
     "flow-bin": "0.124.0",
     "link-module-alias": "^1.2.0",
-    "mocha": "^7.2.0",
+    "mocha": "^10.2.0",
     "nodemon": "^1.19.4",
     "standard": "^11.0.1",
     "webpack": "^4.44.2",
